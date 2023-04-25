@@ -12,22 +12,35 @@ const Home = () => {
         <img src={netflixLogo} alt="netflix logo" className="w-36" />
       </header>
 
-      <section className="bg-netflix-home bg-no-repeat bg-cover rounded-md p-24 space-y-4">
-        <h1 className="font-bold">
-          Unlimited movies,
-          <br /> TV shows and more
-        </h1>
-        <p className="font-bold text-2xl">Watch anywhere. Cancel anytime.</p>
-        <p className="text-2xl">
-          Ready to watch? Enter your email to create or restart your <br />{" "}
-          membership.
-        </p>
-        <form>
-          <input type="email" className="max-w-24 p-4 border-2 rounded" />
-          <button type="submit" className="p-4 bg-red-600 rounded text-white">
-            Get Started
-          </button>
-        </form>
+      <section className="">
+        <div className="bg-netflix-home bg-no-repeat bg-cover rounded-md p-24 space-y-4">
+          <h1 className="font-bold">
+            Unlimited movies,
+            <br /> TV shows and more
+          </h1>
+          <p className="font-bold text-2xl">Watch anywhere. Cancel anytime.</p>
+          <p className="text-2xl text-bold">
+            Ready to watch? Enter your email to create or restart your <br />{" "}
+            membership.
+          </p>
+          <form className="flex gap-4">
+            <div className="bg-[#1C0F17] w-80 border-2 rounded text-sm text-slate-500 p-2">
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                className="bg-transparent focus:outline-none w-full"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="align-middle text-2xl px-6 font-bold bg-red-600 rounded text-white "
+            >
+              Get Started
+              <StartIcon />
+            </button>
+          </form>
+        </div>
       </section>
 
       <section>
@@ -151,3 +164,24 @@ const Home = () => {
 };
 
 export default Home;
+
+const StartIcon = () => {
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="inline w-6 h-6 font-extrabold"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M8.25 4.5l7.5 7.5-7.5 7.5"
+        />
+      </svg>
+    </>
+  );
+};
