@@ -7,19 +7,23 @@ import Accordian from "./components/accordian/accordian";
 
 const Home = () => {
   return (
-    <div className="p-6 bg-[#00081D] text-white">
+    <div className="p-12 bg-[#00081D] text-white">
       <header>
-        <img src={netflixLogo} alt="netflix logo" className="w-32" />
+        <img src={netflixLogo} alt="netflix logo" className="w-36" />
       </header>
 
-      <section>
-        <h2 className="font-bold">Unlimited movies, TV shows and more</h2>
-        <p className="font-bold">Watch anywhere. Cancel anytime.</p>
-        <p className="text-xl">
-          Ready to watch? Enter your email to create or restart your membership.
+      <section className="bg-netflix-home bg-no-repeat bg-cover rounded-md p-24 space-y-4">
+        <h1 className="font-bold">
+          Unlimited movies,
+          <br /> TV shows and more
+        </h1>
+        <p className="font-bold text-2xl">Watch anywhere. Cancel anytime.</p>
+        <p className="text-2xl">
+          Ready to watch? Enter your email to create or restart your <br />{" "}
+          membership.
         </p>
         <form>
-          <input type="email" className="p-4 border-2 rounded" />
+          <input type="email" className="max-w-24 p-4 border-2 rounded" />
           <button type="submit" className="p-4 bg-red-600 rounded text-white">
             Get Started
           </button>
