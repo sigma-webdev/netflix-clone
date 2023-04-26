@@ -1,9 +1,9 @@
-import netflixLogo from "./assets/netflix_logo.png";
-import show1 from "./assets/images/show1.png";
-import show2 from "./assets/images/show2.png";
-import show3 from "./assets/images/show3.png";
-import show4 from "./assets/images/show4.png";
-import Accordian from "./components/accordian/accordian";
+import netflixLogo from ".././assets/netflix_logo.png";
+import show1 from ".././assets/images/show1.png";
+import show2 from ".././assets/images/show2.png";
+import show3 from ".././assets/images/show3.png";
+import show4 from ".././assets/images/show4.png";
+import Accordian from ".././components/accordian/accordian";
 
 const Home = () => {
   return (
