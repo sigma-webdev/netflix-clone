@@ -1,17 +1,15 @@
-import netflixLogo from ".././assets/netflix_logo.png";
 import show1 from ".././assets/images/show1.png";
 import show2 from ".././assets/images/show2.png";
 import show3 from ".././assets/images/show3.png";
 import show4 from ".././assets/images/show4.png";
-import Accordian from ".././components/accordian/accordian";
+import Accordian from ".././components/accordian/Accordian";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
 
 const Home = () => {
   return (
     <div className="p-12 bg-[#00081D] text-white">
-      <header>
-        <img src={netflixLogo} alt="netflix logo" className="w-36" />
-      </header>
-
+      <Header></Header>
       <section className="">
         <div className="bg-netflix-home bg-no-repeat bg-cover rounded-md p-24 space-y-4">
           <h1 className="font-bold">
@@ -119,56 +117,7 @@ const Home = () => {
           </button>
         </form>
       </section>
-
-      <footer>
-        <ul className="grid grid-rows-4 grid-cols-4 grid-flow-col underline">
-          <li>
-            <a href="#">FAQ</a>
-          </li>
-          <li>
-            <a href="#">Investor Relations</a>
-          </li>
-          <li>
-            <a href="#">Privacy</a>
-          </li>
-          <li>
-            <a href="#">Speed Test</a>
-          </li>
-          <li>
-            <a href="#">Help Centre</a>
-          </li>
-          <li>
-            <a href="#">Jobs</a>
-          </li>
-          <li>
-            <a href="#">Cookie Preferences</a>
-          </li>
-          <li>
-            <a href="#">Legal Notices</a>
-          </li>
-          <li>
-            <a href="#">Account</a>
-          </li>
-          <li>
-            <a href="#">Ways to Watch</a>
-          </li>
-          <li>
-            <a href="#">Corporate Information</a>
-          </li>
-          <li>
-            <a href="#">Only on Netflix</a>
-          </li>
-          <li>
-            <a href="#">Media Centre</a>
-          </li>
-          <li>
-            <a href="#">Terms of Use</a>
-          </li>
-          <li>
-            <a href="#">Contact Us</a>
-          </li>
-        </ul>
-      </footer>
+      <Footer></Footer>
     </div>
   );
 };

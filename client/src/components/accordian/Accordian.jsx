@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AccordianItem from "./accordian-item";
+import AccordianItem from "./Accordian-Item";
 
 const data = [
   {
