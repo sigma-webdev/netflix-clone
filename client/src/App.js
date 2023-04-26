@@ -1,9 +1,11 @@
-import Home from "./pages/Home";
+import Home from "./Home";
+import Login from "./pages/Login";
 
 function App() {
   return (
     <main>
-      <Home />  
+      {/* <Home />   */}
+      <Login />
     </main>
   );
 }
