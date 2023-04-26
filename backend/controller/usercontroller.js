@@ -90,12 +90,12 @@ const resetPassword = async (req, res, next) => {
   await user.save();
 
   // create jwt token and send  to client,
-  const token = user.getJwtToken();
-  res.status(200).cookie("Token", token, cookieOptions).json({
+  const JwtToken = user.getJwtToken();
+  res.status(200).cookie("Token", JwtToken, cookieOptions).json({
     success: true,
     message: "successfuly updated the password",
     Token: token
   });
 };
 
-module.exports = { singIn, signUp };
+module.exports = { singIn, signUp, resetPassword };
