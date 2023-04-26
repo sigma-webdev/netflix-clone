@@ -51,7 +51,6 @@ const contentSchema = new Schema(
     },
     language: {
       type: String,
-      enum: ["English", "Hindi", "Kannada", "Telegu", "Spanish", "Korean"],
     },
     trailer: {
       type: String,
