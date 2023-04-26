@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'netflix-home': "url('/src/assets/netflix-bg.jpg')",
+        'netflix-home': "url('/src/assets/netflix-bg.png')",
       }
     },
   },
