@@ -23,13 +23,23 @@ const Home = () => {
             Ready to watch? Enter your email to create or restart your <br />{" "}
             membership.
           </p>
+
           <form className="flex gap-4">
-            <div className="bg-[#1C0F17] w-80 border-2 rounded text-sm text-slate-500 p-2">
-              <label htmlFor="email">Email Address</label>
+            <div className="relative z-0 w-72 mb-6 group bg-[#1C0F17] border-2 rounded text-sm text-slate-500 p-2">
               <input
                 type="email"
-                className="bg-transparent focus:outline-none w-full"
+                name="floating_email"
+                id="floating_email"
+                className="block p-2 w-full text-sm text-gray-900 bg-transparent appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+                required
               />
+              <label
+                for="floating_email"
+                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+              >
+                Email address
+              </label>
             </div>
 
             <button
