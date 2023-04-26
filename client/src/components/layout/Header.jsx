@@ -2,7 +2,7 @@ import netflixLogo from "./../../assets/netflix_logo.png";
 
 const Header = () => {
   return (
-    <header className="flex justify-between h-28">
+    <header className="flex justify-between h-16">
       <div>
         <img src={netflixLogo} alt="netflix logo" className="w-36" />
       </div>

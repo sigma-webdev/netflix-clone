@@ -3,7 +3,7 @@ import Header from "./Header";
 
 const Layout = ({ children, bgcolor, padding }) => {
   return (
-    <div className={`bg-[${bgcolor}] p-${padding}`}>
+    <div className={`${bgcolor} ${padding}`}>
       <Header></Header>
       <main>{children}</main>
       <Footer></Footer>

@@ -7,10 +7,11 @@ import Layout from "../components/layout/Layout";
 
 const Home = () => {
   return (
-    <Layout bgcolor="#00081D" padding="12">
+    <Layout bgcolor="bg-[#00081D]" padding="p-12">
       <div className="text-white">
-        <section>
-          <div className="bg-netflix-home bg-no-repeat bg-cover rounded-md p-24 space-y-4">
+        <section className="relative h-fit">
+          <div className="w-full h-full bg-netflix-home bg-no-repeat bg-cover rounded-md p-24 space-y-4 opacity-50"></div>
+          <div>
             <h1 className="font-bold">
               Unlimited movies,
               <br /> TV shows and more
