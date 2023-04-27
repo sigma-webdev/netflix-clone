@@ -47,7 +47,7 @@ const Home = () => {
                 type="submit"
                 className="align-middle text-2xl px-6 font-bold bg-red-600 rounded text-white "
               >
-                <Link to="/signup">Get Started</Link>
+                <Link to="/signup/">Get Started</Link>
                 <StartIcon />
               </button>
             </form>
