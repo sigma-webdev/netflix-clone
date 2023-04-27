@@ -42,7 +42,7 @@ const Accordian = () => {
   };
 
   return (
-    <ul className="space-y-2 max-w-5xl mx-auto">
+    <ul className="space-y-2 w-full mx-auto">
       {data.map((item) => {
         return (
           <AccordianItem
