@@ -1,10 +1,10 @@
 import React from "react";
-import Step1 from "../components/signin/Step1";
+import Step1_1 from "../components/signin/Step1_1";
 
 const Signup = () => {
-  return (
+  return ( 
     <div className="flex justify-center">
-      <Step1 />
+      <Step1_1 />
     </div>
   );
 };
