@@ -1,6 +1,6 @@
 import React from 'react'
 
-const step2 = () => {
+const Step1 = () => {
   return (
     <div className="flex justify-center">
     <div>
@@ -43,4 +43,4 @@ const step2 = () => {
   )
 }
 
-export default step2
+export default Step1
