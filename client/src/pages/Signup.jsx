@@ -1,7 +1,5 @@
 import React from "react";
-import Step1_1 from "../components/signup/Step1_1";
-import Step1_2 from "../components/signup/Step1_2";
-import { Route, Routes } from "react-router-dom";
+import Layout from "../components/layout/Layout";
 
 const Signup = () => {
   return ( 
