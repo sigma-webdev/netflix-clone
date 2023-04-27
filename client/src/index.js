@@ -1,26 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import { BrowserRouter } from "react-router-dom";
 
-import Login from './pages/Login';
-import Home from './pages/Home';
-
-import {
-    createBrowserRouter,
-    RouterProvider,
-  } from "react-router-dom";
-
-  
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-    },
-    {
-        path: "/login",
-        element: <Login />,
-      }
-  ]);
-  
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render( <RouterProvider router={router} />);
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);

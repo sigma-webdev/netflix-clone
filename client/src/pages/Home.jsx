@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import show1 from ".././assets/images/show1.png";
 import show2 from ".././assets/images/show2.png";
 import show3 from ".././assets/images/show3.png";
@@ -46,7 +47,7 @@ const Home = () => {
                 type="submit"
                 className="align-middle text-2xl px-6 font-bold bg-red-600 rounded text-white "
               >
-                Get Started
+                <Link to="/signup">Get Started</Link>
                 <StartIcon />
               </button>
             </form>
