@@ -51,6 +51,7 @@ const Accordian = () => {
             question={item.question}
             answer={item.answer}
             id={item.id}
+            key={item.id}
           ></AccordianItem>
         );
       })}
