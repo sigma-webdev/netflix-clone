@@ -11,12 +11,17 @@ const Signup = () => {
         </div>
         <div>Enter your password and you'll be watching in no time.</div>
         <form>
-            <div className="my-4">
-                <label>Email</label>
-                <br />
-                <input type="email" name="email" id="email" value="nasikh@ineuron.ai" />
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
+          <div className="my-4">
+            <label>Email</label>
+            <br />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value="nasikh@ineuron.ai"
+            />
+          </div>
+          <div class="relative z-0 w-full mb-6 group">
             <input
               type="password"
               name="floating_password"
@@ -29,14 +34,13 @@ const Signup = () => {
               for="floating_password"
               class="peer-focus:font-medium absolute text-sm px-4 z-10 text-[#717171] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
             >
-             Password
+              Password
             </label>
           </div>
-          <div className="text-blue-500 mb-4"> 
-            Forgot your password?
+          <div className="text-blue-500 mb-4">Forgot your password?</div>
+          <div className="bg-[#E50914] rounded text-white text-xl  w-[430px] text-center py-3">
+            Next
           </div>
-          <div className="bg-[#E50914] rounded text-white text-xl  w-[430px] text-center py-3">Next</div>
-            
         </form>
       </div>
     </div>
