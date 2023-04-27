@@ -1,24 +1,35 @@
 const asyncHandler = require("../middleware/asyncHandler.js");
 const userModel = require("../model/userSchema.js");
-const customError = require("../utils/customerror.js");
+const customError = require("../utils/customError.js");
+const bcrypt = require("bcrypt");
+const cookieOptions = require("../utils/cookieOption.js");
 
 const signUp = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const userInfo = userModel({ email, password });
-  await userInfo.save();
+  const result = await userInfo.save();
+  result.password = undefined;
+  return res.status(200).json({ success: true, data: result });
 });
 
-const singIn = asyncHandler(async (req, res) => {
+const signIn = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
   // check user exist or not
   const user = await userModel.findOne({ email }).select("+password");
+  if (!user)
+    return next(
+      customError(
+        "sorry we can't find you account with this email address please try again or create a new account",
+        400
+      )
+    );
+  // check the password is correct or not
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
-  if (!user) return next(customError("user not found", 400));
+  if (!isPasswordCorrect)
+    return next(customError("please try again or reset password", 400));
 
-  const jwtToken = user.jwtToken();
-
-  res.cookie("token", token, cookieOptions);
+  const jwtToken = user.generateJwtToken();
+  res.cookie("token", jwtToken, cookieOptions);
   res.status(200).json({ success: true, data: user });
 });
 
@@ -38,7 +49,7 @@ const forgotPassword = async (req, res, next) => {
   const mailOptions = {
     from: process.env.EMAIL_ID,
     to: user.email,
-    subject: "Event managment Reset password",
+    subject: "Netflix reset password",
     html: `<b>Hello ${user.name}</b><br>
              <a href="${resetUrl}" target ="_blank" >Click here to reset password</a>`
   };
@@ -53,7 +64,7 @@ const forgotPassword = async (req, res, next) => {
     }
     return res.status(200).json({
       success: true,
-      message: "Furthre instrunctions sent on you email " + email
+      message: "Further instructions sent on you email " + email
     });
   });
 };
@@ -93,9 +104,9 @@ const resetPassword = async (req, res, next) => {
   const JwtToken = user.getJwtToken();
   res.status(200).cookie("Token", JwtToken, cookieOptions).json({
     success: true,
-    message: "successfuly updated the password",
+    message: "successfully updated the password",
     Token: token
   });
 };
 
-module.exports = { singIn, signUp, resetPassword };
+module.exports = { signUp, signIn, forgotPassword };

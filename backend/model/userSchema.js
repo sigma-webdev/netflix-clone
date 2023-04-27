@@ -7,9 +7,8 @@ const userSchema = new Schema(
   {
     name: {
       type: String,
-      require: [true, "user name is Required"],
       minLength: [5, "Name must be at least 5 characters"],
-      maxLenght: [50, "Name must be less than 50 characters"],
+      maxLength: [50, "Name must be less than 50 characters"],
       trim: true
     },
     email: {
@@ -38,7 +37,7 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next) {
   // If password is not modified then do not hash it
   if (!this.isModified("password")) return next();
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   return next();
 });
 
@@ -60,7 +59,7 @@ userSchema.methods = {
   },
   generateJwtToken() {
     const token = JWT.sign(
-      { id: user._id, email: user.email },
+      { id: this._id, email: this.email },
       process.env.SECRETE,
       { expiresIn: 24 * 60 * 60 * 1000 } //24
     );
