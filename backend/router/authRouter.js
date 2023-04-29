@@ -3,11 +3,13 @@ const authRoute = express.Router();
 const {
   signUp,
   signIn,
-  forgotPassword
+  forgotPassword,
+  resetPassword
 } = require("../controller/userController.js");
 
 authRoute.post("/signup", signUp);
 authRoute.post("/signin", signIn);
-authRoute.post("/forgotPassword", forgotPassword);
+authRoute.post("/forgotpassword", forgotPassword);
+authRoute.post("/resetpassword/:token", resetPassword);
 
 module.exports = authRoute;

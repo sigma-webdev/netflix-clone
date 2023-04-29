@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const userSchema = new Schema(
   {
@@ -52,7 +53,7 @@ userSchema.methods = {
       .digest("hex");
 
     /// forgot password expiry date
-    this.forgotPasswordExpiryDate = Date.now() + 20 * 60 * 1000; // 20min
+    this.forgotPasswordExpiryDate = new Date(Date.now() + 20 * 60 * 1000); // 20min
 
     //step 2 - return values to user
     return forgotToken;

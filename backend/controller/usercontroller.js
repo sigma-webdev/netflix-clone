@@ -3,6 +3,9 @@ const userModel = require("../model/userSchema.js");
 const customError = require("../utils/customError.js");
 const bcrypt = require("bcrypt");
 const cookieOptions = require("../utils/cookieOption.js");
+const transporter = require("../config/emailonfig.js");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 const signUp = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -12,7 +15,7 @@ const signUp = asyncHandler(async (req, res) => {
   return res.status(200).json({ success: true, data: result });
 });
 
-const signIn = asyncHandler(async (req, res) => {
+const signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   // check user exist or not
   const user = await userModel.findOne({ email }).select("+password");
@@ -26,7 +29,7 @@ const signIn = asyncHandler(async (req, res) => {
   // check the password is correct or not
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
   if (!isPasswordCorrect)
-    return next(customError("please try again or reset password", 400));
+    return next(new customError("please try again or reset password", 400));
 
   const jwtToken = user.generateJwtToken();
   res.cookie("token", jwtToken, cookieOptions);
@@ -35,12 +38,12 @@ const signIn = asyncHandler(async (req, res) => {
 
 const forgotPassword = async (req, res, next) => {
   const { email } = req.body;
-  if (!email) return next(CustomError("Email is required", 400));
+  if (!email) return next(customError("Email is required", 400));
   const user = await userModel.findOne({ email });
   if (!user) {
-    return next(new CustomError("User not found", 404));
+    return next(new customError("User not found", 404));
   }
-  const resetToken = user.generateForgotPasswordToken();
+  const resetToken = user.getForgotPasswordToken();
   await user.save();
 
   const resetUrl = `${req.headers.referer}reset_password/${resetToken}`;
@@ -71,27 +74,28 @@ const forgotPassword = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
   const { token } = req.params;
-  const { password, confirmPassword } = req.body;
+  const { password, conformPassword } = req.body;
 
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(token)
     .digest("hex");
 
-  if (!password || !confirmPassword) {
+  if (!password || !conformPassword) {
     return next(
-      new CustomError("password and conform Password is Required", 400)
+      new customError("password and conform Password is Required", 400)
     );
   }
 
   // check user is exist
   const user = await userModel.findOne({
     forgotPasswordToken: resetPasswordToken,
-    forgotPasswordExpiry: { $gt: new Date(Date.now()) }
+    forgotPasswordExpiryDate: { $gt: new Date(Date.now()) }
   });
+
   if (!user) {
     return next(
-      new CustomError("forgot password token is invalid or expired", 400)
+      new customError("forgot password token is invalid or expired", 400)
     );
   }
 
@@ -101,7 +105,7 @@ const resetPassword = async (req, res, next) => {
   await user.save();
 
   // create jwt token and send  to client,
-  const JwtToken = user.getJwtToken();
+  const JwtToken = user.generateJwtToken();
   res.status(200).cookie("Token", JwtToken, cookieOptions).json({
     success: true,
     message: "successfully updated the password",
@@ -109,4 +113,4 @@ const resetPassword = async (req, res, next) => {
   });
 };
 
-module.exports = { signUp, signIn, forgotPassword };
+module.exports = { signUp, signIn, forgotPassword, resetPassword };
