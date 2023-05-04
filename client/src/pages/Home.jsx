@@ -5,22 +5,23 @@ import show3 from ".././assets/images/show3.png";
 import show4 from ".././assets/images/show4.png";
 import Accordian from ".././components/accordian/Accordian";
 import Layout from "../components/layout/Layout";
+import FeatureCard from "../components/card/FeatureCard";
 
 const Home = () => {
   return (
     <Layout bgcolor="bg-[#00081D]" padding="p-12">
-      <div className="text-white ">
+      <div className="text-white">
         <section className="relative">
-          <div className="bg-netflix-home md:h-[36rem] md:w-full opacity-40 rounded-lg"></div>
+          <div className="bg-netflix-home md:h-[36rem] w-full opacity-40 rounded-lg"></div>
           <div className="absolute top-0 left-0 z-10 w-full mt-28 ml-12 space-y-4">
-            <h1 className="font-bold">
+            <h1 className="font-bold text-4xl">
               Unlimited movies,
               <br /> TV shows and more
             </h1>
-            <p className="font-bold text-2xl">
+            <p className="font-bold md:text-2xl text-xl">
               Watch anywhere. Cancel anytime.
             </p>
-            <p className="text-2xl text-bold">
+            <p className="md:text-2xl text-xl text-bold">
               Ready to watch? Enter your email to create or restart your <br />{" "}
               membership.
             </p>
@@ -56,61 +57,32 @@ const Home = () => {
         </section>
 
         <section className="mx-28">
-          <article className="flex justify-center items-center gap-x-5">
-            <div className="basis-1/2">
-              <img src={show1} alt="banner" className="w-full" />
-            </div>
-            <div className="space-y-8 basis-1/2">
-              <h2 className="text-5xl font-bold">Enjoy on your TV.</h2>
-              <p className="text-2xl">
-                Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV,
-                Blu-ray players and more.
-              </p>
-            </div>
-          </article>
+          <FeatureCard
+            featureHeading="Enjoy on your TV."
+            featureImage={show1}
+            aboutFeature="Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV,
+                Blu-ray players and more."
+          ></FeatureCard>
 
-          <article className="flex justify-center items-center gap-x-5">
-            <div className="space-y-8 basis-1/2">
-              <h2 className="text-5xl font-bold">Watch everywhere.</h2>
-              <p className="text-2xl">
-                Stream unlimited movies and TV shows on your phone, tablet,
-                laptop, and TV.
-              </p>
-            </div>
-            <div>
-              <img src={show2} alt="banner" className="w-full" />
-            </div>
-          </article>
+          <FeatureCard
+            featureHeading="Watch everywhere."
+            featureImage={show2}
+            aboutFeature="Stream unlimited movies and TV shows on your phone, tablet,
+                laptop, and TV."
+          ></FeatureCard>
 
-          <article className="flex justify-center items-center gap-x-5">
-            <div>
-              <img src={show3} alt="banner" className="w-[500px]" />
-            </div>
-            <div className="space-y-8 basis-1/2">
-              <h2 className="text-5xl font-bold">
-                Create profiles for <br />
-                children.
-              </h2>
-              <p className="text-2xl">
-                Send children on adventures with their favourite characters in a
-                space made just for them—free with your membership.
-              </p>
-            </div>
-          </article>
+          <FeatureCard
+            featureHeading="Create profiles for children."
+            featureImage={show3}
+            aboutFeature="Send children on adventures with their favourite characters in a
+                space made just for them—free with your membership."
+          ></FeatureCard>
 
-          <article className="flex justify-center items-center gap-x-5">
-            <div className="space-y-4 basis-1/2">
-              <h2 className="text-5xl font-bold">
-                Download your shows to watch offline.
-              </h2>
-              <p className="text-2xl">
-                Save your favourites easily and always have something to watch.
-              </p>
-            </div>
-            <div>
-              <img src={show4} alt="banner" className="w-full" />
-            </div>
-          </article>
+          <FeatureCard
+            featureHeading="Download your shows to watch offline."
+            featureImage={show4}
+            aboutFeature="Save your favourites easily and always have something to watch."
+          ></FeatureCard>
         </section>
 
         <section className="mx-28 space-y-4">
