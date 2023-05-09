@@ -82,7 +82,7 @@ const Home = () => {
         <section className="relative">
           <div className="bg-netflix-home h-[36rem] w-full opacity-40 rounded-lg"></div>
           <div className="absolute top-0 left-0 z-10 w-auto mx-4 md:mx-8 lg:mx-12 my-8 md:my-12 lg:my-24 space-y-4">
-            <h1 className="font-bold text-4xl">
+            <h1 className="font-bold text-2xl sm:4xl md:text-6xl">
               Unlimited movies,
               <br /> TV shows and more
             </h1>
@@ -138,7 +138,7 @@ const Home = () => {
             })}
         </section>
 
-        <section className="mx-2 sm:mx-14 md:mx-28 md:space-y-4">
+        <section className="w-full mx-auto md:w-[80%] space-y-4">
           <h2 className="font-bold">Frequently Asked Questions</h2>
           <Accordian>
             {faqs.map((item) => {

@@ -7,7 +7,7 @@ const PlusIcon = () => {
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-10 h-10"
+        className="w-6 h-6 md:w-10 md:h-10"
       >
         :
         <path

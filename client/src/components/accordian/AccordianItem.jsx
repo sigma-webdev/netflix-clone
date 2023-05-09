@@ -18,15 +18,15 @@ const AccordianItem = ({
 
   return (
     <li onClick={tabHandler}>
-      <h2 className="flex justify-between p-6 text-2xl bg-[#132144] hover:bg-[#223362]">
+      <h5 className="flex justify-between px-6 py-4 sm:py-5 md:py-6 text-md sm:lg md:text-2xl bg-[#132144] hover:bg-[#223362]">
         <button>{question}</button>
         <span>{!isActive ? <PlusIcon /> : <CrossIcon />}</span>
-      </h2>
+      </h5>
       <p
         className={`${
           isActive
-            ? "bg-[#132144] p-6 text-2xl divide-solid divide-y-2 "
-            : "hidden transition-all delay-75 ease-in-out"
+            ? "bg-[#132144] p-6 text-md sm:text-lg md:text-2xl"
+            : "hidden"
         } `}
       >
         {answer}

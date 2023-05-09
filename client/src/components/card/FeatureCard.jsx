@@ -17,7 +17,7 @@ const FeatureCard = ({
         <img src={featureImage} alt="banner" className="w-full" />
       </div>
       <div className="space-y-8 basis-1/2">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+        <h2 className="text-xl sm:3xl md:text-5xl font-bold">
           {featureHeading}
         </h2>
         <p className="text-lg md:text-xl lg:text-2xl">{aboutFeature}</p>
