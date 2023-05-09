@@ -42,6 +42,33 @@ const faqs = [
   },
 ];
 
+const features = [
+  {
+    featureHeading: "Enjoy on your TV.",
+    featureImage: show1,
+    aboutFeature:
+      "Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players and more.",
+  },
+  {
+    featureHeading: "Watch everywhere.",
+    featureImage: show2,
+    aboutFeature:
+      "Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.",
+  },
+  {
+    featureHeading: "Create profiles for children.",
+    featureImage: show3,
+    aboutFeature:
+      "Send children on adventures with their favourite characters in a space made just for them—free with your membership.",
+  },
+  {
+    featureHeading: "Download your shows to watch offline.",
+    featureImage: show4,
+    aboutFeature:
+      "Save your favourites easily and always have something to watch.",
+  },
+];
+
 const Home = () => {
   const [activeItem, setActiveItem] = useState(-1);
 
@@ -50,11 +77,11 @@ const Home = () => {
   };
 
   return (
-    <Layout bgcolor="bg-[#00081D]" padding="p-12">
+    <Layout bgcolor="bg-[#00081D]" padding="p-4 sm:p-8 md:p-12">
       <div className="text-white">
         <section className="relative">
-          <div className="bg-netflix-home md:h-[36rem] w-full opacity-40 rounded-lg"></div>
-          <div className="absolute top-0 left-0 z-10 w-full mt-28 ml-12 space-y-4">
+          <div className="bg-netflix-home h-[36rem] w-full opacity-40 rounded-lg"></div>
+          <div className="absolute top-0 left-0 z-10 w-auto mx-4 md:mx-8 lg:mx-12 my-8 md:my-12 lg:my-24 space-y-4">
             <h1 className="font-bold text-4xl">
               Unlimited movies,
               <br /> TV shows and more
@@ -67,8 +94,8 @@ const Home = () => {
               membership.
             </p>
 
-            <form className="flex space-x-4">
-              <div className="relative z-0 w-96 mb-6 group bg-[#1C0F17] border-2 rounded text-sm">
+            <form className="flex flex-wrap md:space-x-4">
+              <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-[#1C0F17] border-2 rounded text-sm">
                 <input
                   type="email"
                   name="floating_email"
@@ -97,36 +124,21 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="mx-28">
-          <FeatureCard
-            featureHeading="Enjoy on your TV."
-            featureImage={show1}
-            aboutFeature="Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV,
-                Blu-ray players and more."
-          ></FeatureCard>
-
-          <FeatureCard
-            featureHeading="Watch everywhere."
-            featureImage={show2}
-            aboutFeature="Stream unlimited movies and TV shows on your phone, tablet,
-                laptop, and TV."
-          ></FeatureCard>
-
-          <FeatureCard
-            featureHeading="Create profiles for children."
-            featureImage={show3}
-            aboutFeature="Send children on adventures with their favourite characters in a
-                space made just for them—free with your membership."
-          ></FeatureCard>
-
-          <FeatureCard
-            featureHeading="Download your shows to watch offline."
-            featureImage={show4}
-            aboutFeature="Save your favourites easily and always have something to watch."
-          ></FeatureCard>
+        <section className="mx-8 md:mx-8 lg:mx-14">
+          {features &&
+            features.map((item, index) => {
+              return (
+                <FeatureCard
+                  featureHeading={item.featureHeading}
+                  featureImage={item.featureImage}
+                  aboutFeature={item.aboutFeature}
+                  currentIndex={index}
+                ></FeatureCard>
+              );
+            })}
         </section>
 
-        <section className="mx-28 space-y-4">
+        <section className="mx-2 sm:mx-14 md:mx-28 md:space-y-4">
           <h2 className="font-bold">Frequently Asked Questions</h2>
           <Accordian>
             {faqs.map((item) => {
