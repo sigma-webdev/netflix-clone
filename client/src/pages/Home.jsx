@@ -77,7 +77,7 @@ const Home = () => {
   };
 
   return (
-    <Layout bgcolor="bg-[#00081D]" padding="p-4 sm:p-8 md:p-12">
+    <Layout bgcolor="bg-netflix-blue" padding="p-4 sm:p-8 md:p-12">
       <div className="text-white">
         <section className="relative">
           <div className="bg-netflix-home h-[36rem] w-full opacity-40 rounded-lg"></div>
@@ -90,12 +90,12 @@ const Home = () => {
               Watch anywhere. Cancel anytime.
             </p>
             <p className="md:text-2xl text-xl text-bold">
-              Ready to watch? Enter your email to create or restart your <br />{" "}
+              Ready to watch? Enter your email to create or restart your
               membership.
             </p>
 
             <form className="flex flex-wrap md:space-x-4">
-              <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-[#1C0F17] border-2 rounded text-sm">
+              <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-black border-2 rounded text-sm opacity-75">
                 <input
                   type="email"
                   name="floating_email"
@@ -160,7 +160,7 @@ const Home = () => {
             membership.
           </p>
           <form className="flex space-x-4">
-            <div className="relative z-0 w-96 mb-6 group bg-[#1C0F17] border-2 rounded text-sm">
+            <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-black border-2 rounded text-sm opacity-75">
               <input
                 type="email"
                 name="floating_email"
@@ -171,7 +171,7 @@ const Home = () => {
               />
               <label
                 htmlFor="floating_email"
-                className="peer-focus:font-medium absolute text-xl px-4 pb-2 text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+                className="peer-focus:font-medium absolute text-xl px-4 pb-2 text-slate-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
               >
                 Email address
               </label>
