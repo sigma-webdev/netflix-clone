@@ -15,10 +15,14 @@ const contentSchema = new Schema(
       minLength: [15, "Content description must be at least 15 characters"],
       maxLength: [60, "Content description must be less than 60 characters "],
     },
-    cast: {
-      type: [String],
-      required: true,
-    },
+    cast: [
+      {
+        name: {
+          type: String,
+          required: [true, "At least one or more actor/actress must be added"],
+        },
+      },
+    ],
     categories: {
       type: String,
       enum: ["Movies", "TV shows"],
@@ -52,13 +56,27 @@ const contentSchema = new Schema(
     language: {
       type: String,
     },
-    trailer: {
-      type: String,
-    },
-    video: {
-      type: String,
-      required: [true, "video link must be provided"],
-    },
+    trailer: [
+      {
+        trailerUrl: {
+          type: String,
+          required: [true, "video link must be provided"],
+        },
+        trailerId: { type: String },
+        trailerDuration: { type: Number },
+      },
+    ],
+
+    content: [
+      {
+        contentURL: {
+          type: String,
+          required: [true, "video link must be provided"],
+        },
+        contentURL: { type: String },
+        contentDuration: { type: Number },
+      },
+    ],
   },
   { timestamps: true }
 );
