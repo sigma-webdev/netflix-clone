@@ -8,4 +8,4 @@ const connectDatabase = (() => {
     .catch((error) => console.log(error));
 })();
 
-module.exports = connectDatabase();
+module.exports = connectDatabase;
