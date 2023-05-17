@@ -18,7 +18,7 @@ const Login = () => {
                 required
               />
               <label
-                for="floating_email"
+                htmlFor="floating_email"
                 class="peer-focus:font-medium absolute text-sm px-4 z-10 text-[#717171] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
               >
                 Email or phone number
@@ -34,7 +34,7 @@ const Login = () => {
                 required
               />
               <label
-                for="floating_password"
+                htmlFor="floating_password"
                 class="peer-focus:font-medium absolute text-sm px-4 z-10 text-[#717171] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
               >
                 Password
