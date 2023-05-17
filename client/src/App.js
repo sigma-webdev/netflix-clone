@@ -1,6 +1,4 @@
-import Layout from "./components/layout/Layout";
-import Step1_1 from "./components/signup/Step1_1";
-import Step1_2 from "./components/signup/Step1_2";
+import Browse from "./pages/Browse";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -11,6 +9,9 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/signin" element={<Login />} />
+      <Route path="/browse" element={<Browse />} />
     </Routes>
   );
 }
