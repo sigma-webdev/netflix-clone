@@ -73,7 +73,10 @@ const contentSchema = new Schema(
           type: String,
           required: [true, "video link must be provided"],
         },
-        contentURL: { type: String },
+        contentID: {
+          type: String,
+          required: [true, "content ID must be provided"],
+        },
         contentDuration: { type: Number },
       },
     ],
