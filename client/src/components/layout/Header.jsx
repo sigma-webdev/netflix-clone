@@ -1,6 +1,8 @@
-import { BiDownArrow } from "react-icons/bi";
+import { BiBell, BiDownArrow } from "react-icons/bi";
 import GlobeIcon from "../icon/GlobeIcon";
 import netflixLogo from "./../../assets/netflix_logo.png";
+import { AiOutlineSearch } from "react-icons/ai";
+import { IconContext } from "react-icons/lib";
 
 const Header = ({ isLogin }) => {
   return (
@@ -45,7 +47,7 @@ const Header = ({ isLogin }) => {
         )}
       </div>
 
-      {!isLogin && (
+      {!isLogin ? (
         <div className="flex gap-x-2">
           <div className="flex items-center h-fit bg-black text-white border-2 border-white rounded px-3 py-1">
             <GlobeIcon />
@@ -61,6 +63,23 @@ const Header = ({ isLogin }) => {
             >
               <a href="/login">Sign In</a>
             </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex h-fit items-center gap-2">
+          <IconContext.Provider value={{ size: "25px" }}>
+            <div className="hidden md:block">
+              <AiOutlineSearch />
+            </div>
+            <div>
+              <BiBell />
+            </div>
+          </IconContext.Provider>
+          <div className="flex items-center gap-2">
+            <div>Mangesh Thakare</div>
+            <div>
+              <BiDownArrow />
+            </div>
           </div>
         </div>
       )}
