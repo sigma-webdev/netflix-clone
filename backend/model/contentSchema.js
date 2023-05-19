@@ -88,5 +88,7 @@ const contentSchema = new Schema(
   { timestamps: true }
 );
 
+contentSchema.index("name");
+
 const contentModel = mongoose.model("Content", contentSchema);
 module.exports = contentModel;

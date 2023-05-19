@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const userSchema = new Schema(
   {
     name: {
       type: String,
-      require: [true, "user name is Required"],
       minLength: [5, "Name must be at least 5 characters"],
-      maxLenght: [50, "Name must be less than 50 characters"],
+      maxLength: [50, "Name must be less than 50 characters"],
       trim: true
     },
     email: {
@@ -27,6 +27,11 @@ const userSchema = new Schema(
       type: String,
       select: false
     },
+    plan: {
+      type: String,
+      default: "NONE",
+      enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE"]
+    },
     role: { type: String, default: "USER", enum: ["ADMIN", "USER"] },
     plan: { type: String, enum: ["MOBILE", "BASIC", "STANDARD", "PREMIUM"] },
     forgotPasswordExpiryDate: { type: Date, select: false }
@@ -38,7 +43,7 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next) {
   // If password is not modified then do not hash it
   if (!this.isModified("password")) return next();
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   return next();
 });
 
@@ -53,14 +58,14 @@ userSchema.methods = {
       .digest("hex");
 
     /// forgot password expiry date
-    this.forgotPasswordExpiryDate = Date.now() + 20 * 60 * 1000; // 20min
+    this.forgotPasswordExpiryDate = new Date(Date.now() + 20 * 60 * 1000); // 20min
 
     //step 2 - return values to user
     return forgotToken;
   },
   generateJwtToken() {
     const token = JWT.sign(
-      { id: user._id, email: user.email },
+      { id: this._id, email: this.email },
       process.env.SECRETE,
       { expiresIn: 24 * 60 * 60 * 1000 } //24
     );
