@@ -1,12 +1,12 @@
-import CrossIcon from "../icon/CrossIcon";
-import PlusIcon from "../icon/PlusIcon";
+import { CrossIcon } from "../icons";
+import { PlusIcon } from "../icons";
 
 const AccordianItem = ({
   accordianHandler,
   isActive,
   question,
   answer,
-  id,
+  id
 }) => {
   const tabHandler = () => {
     if (!isActive) {

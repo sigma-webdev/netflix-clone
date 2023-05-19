@@ -1,20 +1,33 @@
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+// images
+import show1 from ".././assets/images/show1.png";
+import show2 from ".././assets/images/show2.png";
+import show3 from ".././assets/images/show3.png";
+import show4 from ".././assets/images/show4.png";
+// components
 import Accordian from ".././components/accordian/Accordian";
 import Layout from "../components/layout/Layout";
 import FeatureCard from "../components/card/FeatureCard";
 import AccordianItem from "../components/accordian/AccordianItem";
-import { useState } from "react";
+
+// icons
+import { StartIcon } from "../components/icons.jsx";
 
 import { faqs, features } from "../data";
 
 const Home = () => {
   const [activeItem, setActiveItem] = useState(-1);
+  const navigate = useNavigate();
 
   const accordianHandler = (id) => {
     setActiveItem(id);
   };
 
+  const handleSignin = (e) => {
+    e.preventDefault();
+    navigate("/signin");
+  };
   return (
     <Layout isLogin={false}>
       <div className="px-4 sm:px-8 md:px-12 text-white bg-netflix-blue">
@@ -33,19 +46,22 @@ const Home = () => {
               membership.
             </p>
 
-            <form className="flex flex-wrap md:space-x-4">
+            <form
+              className="flex flex-wrap md:space-x-4"
+              onSubmit={(e) => handleSignin(e)}
+            >
               <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-black border-2 rounded text-sm opacity-75">
                 <input
                   type="email"
                   name="floating_email"
                   id="floating_email"
-                  className="block p-4 w-full text-sm bg-transparent appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  className="block p-4 w-full bg-transparent appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                   required
                 />
                 <label
                   htmlFor="floating_email"
-                  className="peer-focus:font-medium absolute text-xl px-4 pb-2 text-slate-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+                  className="peer-focus:text-sm absolute text-xl px-4 pb-1 pt-1 text-slate-400 duration-300 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
                 >
                   Email address
                 </label>
@@ -55,7 +71,7 @@ const Home = () => {
                   type="submit"
                   className="align-middle text-2xl px-6 py-3 font-bold bg-red-600 rounded text-white hover:bg-red-700"
                 >
-                  <Link to="/signup">Get Started</Link>
+                  Get Started
                   <StartIcon />
                 </button>
               </div>
@@ -133,24 +149,3 @@ const Home = () => {
 };
 
 export default Home;
-
-const StartIcon = () => {
-  return (
-    <>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="inline w-6 h-6 font-extrabold"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M8.25 4.5l7.5 7.5-7.5 7.5"
-        />
-      </svg>
-    </>
-  );
-};

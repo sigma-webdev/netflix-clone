@@ -1,6 +1,7 @@
 import { BiDownArrow } from "react-icons/bi";
-import GlobeIcon from "../icon/GlobeIcon";
+import { GlobeIcon } from "../icons";
 import netflixLogo from "./../../assets/netflix_logo.png";
+import { Link } from "react-router-dom";
 
 const Header = ({ isLogin }) => {
   return (
@@ -9,7 +10,8 @@ const Header = ({ isLogin }) => {
         <div className={isLogin ? "w-24" : "w-32"}>
           <img src={netflixLogo} alt="netflix logo" className="w-full" />
         </div>
-        {isLogin && (
+        {/* login  */}
+        {isLogin ? (
           <div className="flex items-center">
             <nav>
               <ul className="hidden lg:flex gap-4 ">
@@ -37,15 +39,17 @@ const Header = ({ isLogin }) => {
               <div>Home</div>
               <div>
                 <div>
-                  <BiDownArrow />
+                  <Link to="/">
+                    <BiDownArrow />
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
-        )}
+        ) : null}
       </div>
 
-      {!isLogin && (
+      {!isLogin ? (
         <div className="flex gap-x-2">
           <div className="flex items-center h-fit bg-black text-white border-2 border-white rounded px-3 py-1">
             <GlobeIcon />
@@ -59,11 +63,11 @@ const Header = ({ isLogin }) => {
               type="submit"
               className="px-3 py-1 bg-red-600 rounded text-white border-2 border-red-600"
             >
-              <a href="/login">Sign In</a>
+              <Link to="/signin">Sign In</Link>
             </button>
           </div>
         </div>
-      )}
+      ) : null}
     </header>
   );
 };
