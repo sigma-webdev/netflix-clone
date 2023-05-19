@@ -56,6 +56,10 @@ const contentSchema = new Schema(
     language: {
       type: String,
     },
+    thumbnail: {
+      type: String,
+      required: true,
+    },
     trailer: [
       {
         trailerUrl: {
