@@ -12,7 +12,7 @@ import FeatureCard from "../components/card/FeatureCard";
 import AccordianItem from "../components/accordian/AccordianItem";
 
 // icons
-import { StartIcon } from "../components/icon/icon";
+import { StartIcon } from "../components/icons.jsx";
 
 import { faqs, features } from "../data";
 

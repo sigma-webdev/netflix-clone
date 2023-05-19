@@ -1,5 +1,5 @@
 import { BiDownArrow } from "react-icons/bi";
-import GlobeIcon from "../icon/GlobeIcon";
+import { GlobeIcon } from "../icons";
 import netflixLogo from "./../../assets/netflix_logo.png";
 import { Link } from "react-router-dom";
 
@@ -10,7 +10,8 @@ const Header = ({ isLogin }) => {
         <div className={isLogin ? "w-24" : "w-32"}>
           <img src={netflixLogo} alt="netflix logo" className="w-full" />
         </div>
-        {isLogin && (
+        {/* login  */}
+        {isLogin ? (
           <div className="flex items-center">
             <nav>
               <ul className="hidden lg:flex gap-4 ">
@@ -39,16 +40,16 @@ const Header = ({ isLogin }) => {
               <div>
                 <div>
                   <Link to="/">
-          <BiDownArrow />
+                    <BiDownArrow />
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
-        )}
-        </Link>
+        ) : null}
       </div>
 
-      {!isLogin && (
+      {!isLogin ? (
         <div className="flex gap-x-2">
           <div className="flex items-center h-fit bg-black text-white border-2 border-white rounded px-3 py-1">
             <GlobeIcon />
@@ -66,7 +67,7 @@ const Header = ({ isLogin }) => {
             </button>
           </div>
         </div>
-      )}
+      ) : null}
     </header>
   );
 };

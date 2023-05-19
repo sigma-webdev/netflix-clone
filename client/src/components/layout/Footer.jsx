@@ -1,4 +1,4 @@
-import GlobeIcon from "../icon/GlobeIcon";
+import { GlobeIcon } from "../icons";
 
 const Footer = () => {
   return (
