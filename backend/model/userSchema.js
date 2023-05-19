@@ -27,6 +27,11 @@ const userSchema = new Schema(
       type: String,
       select: false
     },
+    plan: {
+      type: String,
+      default: "NONE",
+      enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE"]
+    },
     role: { type: String, default: "USER", enum: ["ADMIN", "USER"] },
     plan: { type: String, enum: ["MOBILE", "BASIC", "STANDARD", "PREMIUM"] },
     forgotPasswordExpiryDate: { type: Date, select: false }

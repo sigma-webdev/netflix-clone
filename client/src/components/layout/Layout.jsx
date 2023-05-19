@@ -4,9 +4,9 @@ import Header from "./Header";
 const Layout = ({ children, bgcolor, padding }) => {
   return (
     <div className={`${bgcolor} ${padding}`}>
-      <Header></Header>
+      <Header />
       <main>{children}</main>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 };
