@@ -5,7 +5,7 @@ import { IconContext } from "react-icons/lib";
 
 const BrowseHeader = () => {
   return (
-    <header className="flex justify-between items-center h-32 px-8">
+    <header className="flex justify-between items-center h-32 px-8 ">
       <div className="flex h-fit gap-4 items-center">
         <div className="w-24">
           <img src={netflixLogo} alt="netflix logo" className="w-full" />

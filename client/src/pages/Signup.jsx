@@ -1,8 +1,7 @@
 import React from "react";
-import Layout from "../components/layout/Layout";
 
 const Signup = () => {
-  return ( 
+  return (
     <div className="flex justify-center">
       {/* <Routes>
         <Route extact path="/" element={<Step1_1 />} />
