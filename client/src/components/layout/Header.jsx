@@ -1,8 +1,9 @@
-import { BiDownArrow } from "react-icons/bi";
+import { BiBell, BiDownArrow } from "react-icons/bi";
 import { GlobeIcon } from "../icons";
 import netflixLogo from "./../../assets/netflix_logo.png";
 import { AiOutlineSearch } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
+import { Link } from "react-router-dom";
 
 const Header = ({ isLogin }) => {
   return (
