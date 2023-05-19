@@ -1,5 +1,4 @@
 import React from "react";
-// import Layout from "../components/layout/Layout";
 
 //components
 import Step1_2 from "../components/signup/Step1_2.jsx";
