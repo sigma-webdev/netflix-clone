@@ -8,6 +8,7 @@ module.exports = {
       },
       backgroundColor: {
         "netflix-blue": "#00081D",
+        "netflix-black": "#141414",
       },
     },
   },
