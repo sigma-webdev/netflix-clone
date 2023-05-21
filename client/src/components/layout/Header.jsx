@@ -1,6 +1,8 @@
-import { BiDownArrow } from "react-icons/bi";
+import { BiBell, BiDownArrow } from "react-icons/bi";
 import { GlobeIcon } from "../icons";
 import netflixLogo from "./../../assets/netflix_logo.png";
+import { AiOutlineSearch } from "react-icons/ai";
+import { IconContext } from "react-icons/lib";
 import { Link } from "react-router-dom";
 
 const Header = ({ isLogin }) => {
@@ -67,7 +69,24 @@ const Header = ({ isLogin }) => {
             </button>
           </div>
         </div>
-      ) : null}
+      ) : (
+        <div className="flex h-fit items-center gap-2">
+          <IconContext.Provider value={{ size: "25px" }}>
+            <div className="hidden md:block">
+              <AiOutlineSearch />
+            </div>
+            <div>
+              <BiBell />
+            </div>
+          </IconContext.Provider>
+          <div className="flex items-center gap-2">
+            <div>Mangesh Thakare</div>
+            <div>
+              <BiDownArrow />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
