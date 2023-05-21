@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   fileUpLoad({
     useTempFiles: true,
-    tempFileDir: "/tmp/",
+    tempFileDir: "/tmp/"
   })
 );
 

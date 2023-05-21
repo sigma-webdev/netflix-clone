@@ -1,18 +1,37 @@
 import { Link } from "react-router-dom";
 //components
 import Layout from "../components/layout/Layout";
+// packages
+import axios from "axios";
 
 const Signin = () => {
+  const URL = process.evn.REACT_APP_URL;
+  console.log(URL);
+  async function handleSignin(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    try {
+      const response = await axios({
+        method: "post",
+        headers: { "content-type": "application/json" },
+        withCredentials: true,
+        data: formData
+      });
+    } catch (error) {
+      console.oog(error);
+    }
+  }
+
   return (
     <Layout bgcolor="bg-[#00081D]" padding="p-12">
       <div className="flex  justify-center items-center bg-netflix-home h-screen bg-no-repeat bg-cover w-full">
         <div className="py-12 px-16 bg-black bg-opacity-90 h-fit rounded-lg">
           <div className="text-white text-3xl">Sign In</div>
-          <form className="flex flex-col">
+          <form className="flex flex-col" onSubmit={(e) => handleSignin(e)}>
             <div className="relative z-0 w-full my-6 group ">
               <input
                 type="email"
-                name="floating_email"
+                name="email"
                 id="floating_email"
                 className="block pt-4 pb-2 w-[300px] px-4 rounded bg-[#333333] text-white pt-2 appearance-none dark:text-white focus:outline-none focus:ring-0 peer"
                 placeholder=" "
@@ -28,7 +47,7 @@ const Signin = () => {
             <div className="relative z-0 w-full mb-6 group">
               <input
                 type="password"
-                name="floating_password"
+                name="password"
                 id="floating_password"
                 className="block pt-4 pb-2 w-[300px] px-4 rounded bg-[#333333] text-white pt-2 appearance-none dark:text-white focus:outline-none focus:ring-0 peer"
                 placeholder=" "
@@ -42,7 +61,10 @@ const Signin = () => {
               </label>
             </div>
 
-            <button className="w-[300px] py-2 rounded text-white bg-[#e50914]">
+            <button
+              type="submit"
+              className="w-[300px] py-2 rounded text-white bg-[#e50914]"
+            >
               Sign In
             </button>
           </form>

@@ -6,7 +6,7 @@ import show2 from ".././assets/images/show2.png";
 import show3 from ".././assets/images/show3.png";
 import show4 from ".././assets/images/show4.png";
 // components
-import Accordian from ".././components/accordian/Accordian";
+import Accordian from "../components/accordian/Accordian.jsx";
 import Layout from "../components/layout/Layout";
 import FeatureCard from "../components/card/FeatureCard";
 import AccordianItem from "../components/accordian/AccordianItem";
