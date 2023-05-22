@@ -2,14 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 // components
-import Accordian from ".././components/accordian/Accordian";
+import Accordian from "../components/accordian/Accordian";
 import Layout from "../components/layout/Layout";
 import FeatureCard from "../components/card/FeatureCard";
 import AccordianItem from "../components/accordian/AccordianItem";
 
 // icons
 import { StartIcon } from "../components/icons.jsx";
-
 import { faqs, features } from "../data";
 
 const Home = () => {
