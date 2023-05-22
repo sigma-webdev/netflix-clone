@@ -21,7 +21,7 @@ const signIn = asyncHandler(async (req, res, next) => {
   const user = await userModel.findOne({ email }).select("+password");
   if (!user)
     return next(
-      customError(
+      new customError(
         "sorry we can't find you account with this email address please try again or create a new account",
         400
       )

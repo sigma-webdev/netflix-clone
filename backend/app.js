@@ -4,12 +4,19 @@ const app = express();
 const authRouter = require("./router/authRouter");
 const morgan = require("morgan");
 const fileUpLoad = require("express-fileupload");
-
+const cors = require("cors");
 const contentRoute = require("./router/contentRouter");
 const errorHandler = require("./middleware/errorHandler.js");
 
 // database connection
 require("./config/databaseConnection");
+
+app.use(
+  cors({
+    origin: [process.env.CLIENT],
+    credentials: true
+  })
+);
 
 app.use(morgan("tiny"));
 app.use(express.json());

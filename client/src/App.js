@@ -1,5 +1,5 @@
 import Home from "./pages/Home";
-import Signin from "./pages/Signin";
+import SignIn from "./pages/SignIn";
 import Signup from "./pages/Signup";
 import Browse from "./pages/Browse";
 
@@ -10,7 +10,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/signin" element={<Signin />} />
+      <Route path="/signin" element={<SignIn />} />
       <Route path="/browse" element={<Browse />} />
     </Routes>
   );

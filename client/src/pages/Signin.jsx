@@ -4,21 +4,23 @@ import Layout from "../components/layout/Layout";
 // packages
 import axios from "axios";
 
-const Signin = () => {
-  const URL = process.evn.REACT_APP_URL;
-  console.log(URL);
-  async function handleSignin(e) {
+const SignIn = () => {
+  const URL = process.env.REACT_APP_URL;
+
+  async function handleSignIn(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     try {
       const response = await axios({
         method: "post",
+        url: URL + "/auth/signin",
         headers: { "content-type": "application/json" },
         withCredentials: true,
         data: formData
       });
+      console.log(response);
     } catch (error) {
-      console.oog(error);
+      console.log(error);
     }
   }
 
@@ -27,19 +29,19 @@ const Signin = () => {
       <div className="flex  justify-center items-center bg-netflix-home h-screen bg-no-repeat bg-cover w-full">
         <div className="py-12 px-16 bg-black bg-opacity-90 h-fit rounded-lg">
           <div className="text-white text-3xl">Sign In</div>
-          <form className="flex flex-col" onSubmit={(e) => handleSignin(e)}>
+          <form className="flex flex-col" onSubmit={(e) => handleSignIn(e)}>
             <div className="relative z-0 w-full my-6 group ">
               <input
                 type="email"
                 name="email"
                 id="floating_email"
-                className="block pt-4 pb-2 w-[300px] px-4 rounded bg-[#333333] text-white pt-2 appearance-none dark:text-white focus:outline-none focus:ring-0 peer"
+                className="block pt-4 pb-2 w-[300px] px-4 rounded bg-[#333333] text-white appearance-none dark:text-white focus:outline-none focus:ring-0 peer"
+                require
                 placeholder=" "
-                required
               />
               <label
                 htmlFor="floating_email"
-                className="peer-focus:text-small absolute text-sm px-4 z-10 text-[#717171] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-4 origin-[0] peer-focus:left-0  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+                className="peer-focus:text-small absolute text-sm px-4 z-10 text-[#717171] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-5 origin-[0] peer-focus:left-0  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
               >
                 Email or phone number
               </label>
@@ -49,9 +51,9 @@ const Signin = () => {
                 type="password"
                 name="password"
                 id="floating_password"
-                className="block pt-4 pb-2 w-[300px] px-4 rounded bg-[#333333] text-white pt-2 appearance-none dark:text-white focus:outline-none focus:ring-0 peer"
-                placeholder=" "
+                className="block pt-4 pb-2 w-[300px] px-4 rounded bg-[#333333] text-white  appearance-none dark:text-white focus:outline-none focus:ring-0 peer"
                 required
+                placeholder=" "
               />
               <label
                 htmlFor="floating_password"
@@ -98,4 +100,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default SignIn;
