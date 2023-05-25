@@ -11,10 +11,14 @@ import AccordianItem from "../components/accordian/AccordianItem";
 import { StartIcon } from "../components/icons.jsx";
 
 import { faqs, features } from "../data";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [activeItem, setActiveItem] = useState(-1);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.currentUser);
+
+  console.log(user);
 
   const accordianHandler = (id) => {
     setActiveItem(id);

@@ -4,8 +4,11 @@ import netflixLogo from "./../../assets/netflix_logo.png";
 import { AiOutlineSearch } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = ({ isLogin }) => {
+  const user = useSelector((state) => state.user.currentUser);
+
   return (
     <header className="flex items-center justify-between h-32 px-8 text-white bg-netflix-blue">
       <div className="flex gap-4">
@@ -80,7 +83,7 @@ const Header = ({ isLogin }) => {
             </div>
           </IconContext.Provider>
           <div className="flex items-center gap-2">
-            <div>Mangesh Thakare</div>
+            <div>{user.name}</div>
             <div>
               <BiDownArrow />
             </div>
