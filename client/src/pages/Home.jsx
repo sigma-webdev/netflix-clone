@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Accordian from "../components/accordian/Accordian.jsx";
 import Layout from "../components/layout/Layout";
 import FeatureCard from "../components/card/FeatureCard";
-import AccordianItem from "../components/accordian/AccordianItem";
+import AccordianItem from "../components/accordian/AccordianItem.jsx";
 
 // icons
 import { StartIcon } from "../components/icons.jsx";
