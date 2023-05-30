@@ -10,6 +10,7 @@ import { fetchContent } from "../store/contentSlice";
 import { GENRES } from "../helpers/constants";
 
 import sampleVideo from "../assets/sample1.mov";
+import VideoPreview from "../components/video/VideoPreview";
 
 const Browse = () => {
   const content = useSelector((state) => state.content.allContent);
@@ -43,6 +44,9 @@ const Browse = () => {
             })}
           </div>
         </div>
+      </div>
+      <div>
+        <VideoPreview />
       </div>
     </Layout>
   );
