@@ -7,6 +7,19 @@ const transporter = require("../config/emailonfig.js");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
+const userExist = asyncHandler(async (req, res, next) => {
+  const email = req.body.email;
+  const result = await userModel.findOne({ email: email });
+  console.log(result);
+  if (result) {
+    return res.status(200).json({ success: true, message: "user exist" });
+  } else {
+    return res
+      .status(400)
+      .json({ success: false, message: "you'r not registered" });
+  }
+});
+
 const signUp = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const userInfo = userModel({ email, password });
@@ -21,7 +34,7 @@ const signIn = asyncHandler(async (req, res, next) => {
   const user = await userModel.findOne({ email }).select("+password");
   if (!user)
     return next(
-      customError(
+      new customError(
         "sorry we can't find you account with this email address please try again or create a new account",
         400
       )
@@ -113,4 +126,4 @@ const resetPassword = async (req, res, next) => {
   });
 };
 
-module.exports = { signUp, signIn, forgotPassword, resetPassword };
+module.exports = { signUp, signIn, forgotPassword, resetPassword, userExist };

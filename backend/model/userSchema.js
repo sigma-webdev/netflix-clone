@@ -30,7 +30,7 @@ const userSchema = new Schema(
     plan: {
       type: String,
       default: "NONE",
-      enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE"]
+      enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"]
     },
     role: { type: String, default: "USER", enum: ["ADMIN", "USER"] },
     plan: { type: String, enum: ["MOBILE", "BASIC", "STANDARD", "PREMIUM"] },
