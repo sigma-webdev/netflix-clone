@@ -1,7 +1,7 @@
 import React from "react";
 
 //components
-import Step1_2 from "../components/signup/Step1_2.jsx";
+import Step1_2 from "../components/signUp/Step1_2.jsx";
 
 const Signup = () => {
   
