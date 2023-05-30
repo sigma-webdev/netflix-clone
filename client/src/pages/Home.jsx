@@ -27,9 +27,8 @@ const Home = () => {
     setActiveItem(id);
   };
 
-  const handleSignin = (e) => {
+  const handleIsUserExist = (e) => {
     e.preventDefault();
-    navigate("/signin");
   };
   return (
     <Layout isLogin={false}>
@@ -51,12 +50,12 @@ const Home = () => {
 
             <form
               className="flex flex-wrap md:space-x-4"
-              onSubmit={(e) => handleSignin(e)}
+              onSubmit={(e) => handleIsUserExist(e)}
             >
               <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-black border-2 rounded text-sm opacity-75">
                 <input
                   type="email"
-                  name="floating_email"
+                  name="email"
                   id="floating_email"
                   className="block p-4 w-full bg-transparent appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
