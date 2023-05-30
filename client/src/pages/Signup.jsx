@@ -8,7 +8,7 @@ import RegForm from "../components/signUp/RegForm.jsx";
 import SignIn from "../components/signUp/SignIn.jsx";
 import Choose from "../components/signUp/Choose.jsx";
 import PlanForm from "../components/signUp/PlanForm";
-const Signup = () => {
+const Signup = (page) => {
   return (
     <div>
       {/* nav bar */}
@@ -22,9 +22,9 @@ const Signup = () => {
       </nav>
 
       <div className="flex justify-center  items-center h-[90vh]">
-        <ChoosePlan />
+        {page === "PASSWORD" ? <SignIn /> : null}
+        {/* <ChoosePlan /> */}
         {/* <RegForm /> */}
-        {/* <SignIn /> */}
         {/* <Choose /> */}
         {/* <PlanForm /> */}
       </div>

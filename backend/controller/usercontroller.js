@@ -15,7 +15,7 @@ const userExist = asyncHandler(async (req, res, next) => {
     return res.status(200).json({ success: true, message: "user exist" });
   } else {
     return res
-      .status(400)
+      .status(200)
       .json({ success: false, message: "you'r not registered" });
   }
 });
