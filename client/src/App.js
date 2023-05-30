@@ -2,6 +2,7 @@ import Home from "./pages/Home";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Browse from "./pages/Browse";
+import Watch from "./pages/Watch";
 
 import { Routes, Route } from "react-router-dom";
 
@@ -12,6 +13,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/browse" element={<Browse />} />
+      <Route path="/watch" element={<Watch />} />
     </Routes>
   );
 }

@@ -1,4 +1,5 @@
 import samplePoster from "./assets/images/content-poster.jpg";
+import sampleVideo from "./assets/sample1.mov";
 import show1 from "./assets/images/show1.png";
 import show2 from "./assets/images/show2.png";
 import show3 from "./assets/images/show3.png";
@@ -68,102 +69,109 @@ export const features = [
   },
 ];
 
-export const GENERES = [
-  {
-    id: 1,
-    name: "Action & Adventure",
-  },
-  { id: 2, name: "Anime" },
-  { id: 3, name: "Children & Family" },
-];
-
 export const content = [
   {
     id: 1,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 2,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 3,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Anime",
   },
   {
     id: 4,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Anime",
   },
   {
     id: 5,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Children & Family",
   },
   {
     id: 6,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 7,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 8,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 9,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 10,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 11,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 12,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
   {
     id: 13,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Action & Adventure",
   },
-
   {
     id: 14,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Anime",
   },
 
   {
     id: 15,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Anime",
   },
   {
     id: 16,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Anime",
   },
 
   {
     id: 17,
     contentPoster: samplePoster,
+    contentVideo: sampleVideo,
     genre: "Anime",
   },
 ];
