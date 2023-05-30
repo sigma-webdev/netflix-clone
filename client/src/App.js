@@ -1,6 +1,6 @@
 import Home from "./pages/Home";
-import SignIn from "./pages/SignIn";
-import Signup from "./pages/Signup";
+import SignIn from "./pages/Signin.jsx";
+import Signup from "./pages/Signup.jsx";
 import Browse from "./pages/Browse";
 import Watch from "./pages/Watch";
 

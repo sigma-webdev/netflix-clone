@@ -22,11 +22,11 @@ const Signup = () => {
       </nav>
 
       <div className="flex justify-center  items-center h-[90vh]">
-        {/* <ChoosePlan /> */}
+        <ChoosePlan />
         {/* <RegForm /> */}
         {/* <SignIn /> */}
         {/* <Choose /> */}
-        <PlanForm />
+        {/* <PlanForm /> */}
       </div>
 
       <footer class="bg-[#f3f3f3] p-8">
