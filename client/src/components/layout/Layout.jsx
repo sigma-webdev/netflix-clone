@@ -1,12 +1,12 @@
 import Footer from "./Footer";
 import Header from "./Header";
 
-const Layout = ({ children, bgcolor, padding }) => {
+const Layout = ({ children, isLogin }) => {
   return (
-    <div className={`${bgcolor} ${padding}`}>
-      <Header></Header>
+    <div className="relative">
+      <Header isLogin={isLogin}></Header>
       <main>{children}</main>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 };

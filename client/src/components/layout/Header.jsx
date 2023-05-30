@@ -1,47 +1,115 @@
+import { BiBell, BiDownArrow } from "react-icons/bi";
+import { GlobeIcon } from "../icons";
 import netflixLogo from "./../../assets/netflix_logo.png";
+import { AiOutlineSearch } from "react-icons/ai";
+import { IconContext } from "react-icons/lib";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useEffect, useRef } from "react";
 
-const Header = () => {
+const Header = ({ isLogin }) => {
+  const user = useSelector((state) => state.user.currentUser);
+  const headerRef = useRef(null);
+
+  const scrollHandler = () => {
+    if (window.scrollY > 10) {
+      headerRef.current.style.backgroundColor = "black";
+      console.log(window.scrollY);
+    } else {
+      headerRef.current.style.backgroundColor = "transparent";
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHandler);
+  }, []);
+
   return (
-    <header className="flex justify-between h-16">
-      <div>
-        <img src={netflixLogo} alt="netflix logo" className="w-36" />
-      </div>
-      <div className="flex gap-x-2">
-        <div className="flex items-center h-fit bg-black text-white border-2 border-white rounded px-3 py-1">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
-              />
-            </svg>
+    <header
+      ref={headerRef}
+      className={`max-w-[1400px] flex items-center justify-between w-full h-24 px-8 text-white  z-20 transition ease-in-out duration-300 ${
+        isLogin ? "fixed top-0" : "absolute"
+      }`}
+    >
+      <div className="flex gap-4">
+        <div className={isLogin ? "w-24" : "w-32"}>
+          <img src={netflixLogo} alt="netflix logo" className="w-full" />
+        </div>
+        {/* login  */}
+        {isLogin ? (
+          <div className="flex items-center">
+            <nav>
+              <ul className="hidden lg:flex gap-4 ">
+                <li>
+                  <a href="/">Home</a>
+                </li>
+                <li>
+                  <a href="/">TV Shows</a>
+                </li>
+                <li>
+                  <a href="/">Movies</a>
+                </li>
+                <li>
+                  <a href="/">New & Popular</a>
+                </li>
+                <li>
+                  <a href="/">My List</a>
+                </li>
+                <li>
+                  <a href="/">Browse By Languages</a>
+                </li>
+              </ul>
+            </nav>
+            <div className="flex items-center gap-2 lg:hidden">
+              <div>Home</div>
+              <div>
+                <div>
+                  <Link to="/">
+                    <BiDownArrow />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <select
-            className=" bg-transparent rounded  "
-            defaultValue={"English"}
-          >
-            <option value="English">English</option>
-            <option value="Hindi">Hindi</option>
-          </select>
-        </div>
-        <div>
-          <button
-            type="submit"
-            className="align-middle text-lg px-4 py-1 bg-red-600 rounded text-white "
-          >
-            <a href="/login">Sign In</a>
-          </button>
-        </div>
+        ) : null}
       </div>
+
+      {!isLogin ? (
+        <div className="flex gap-x-2">
+          <div className="flex items-center h-fit bg-black text-white border-2 border-white rounded px-3 py-1">
+            <GlobeIcon />
+            <select className="bg-transparent rounded" defaultValue={"English"}>
+              <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+            </select>
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="px-3 py-1 bg-red-600 rounded text-white border-2 border-red-600"
+            >
+              <Link to="/signin">Sign In</Link>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex h-fit items-center gap-2">
+          <IconContext.Provider value={{ size: "25px" }}>
+            <div className="hidden md:block">
+              <AiOutlineSearch />
+            </div>
+            <div>
+              <BiBell />
+            </div>
+          </IconContext.Provider>
+          <div className="flex items-center gap-2">
+            <div>{user.name}</div>
+            <div>
+              <BiDownArrow />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

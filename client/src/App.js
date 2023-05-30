@@ -1,16 +1,21 @@
-import Layout from "./components/layout/Layout";
-import Step1_1 from "./components/signup/Step1_1";
-import Step1_2 from "./components/signup/Step1_2";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import Browse from "./pages/Browse";
+import Watch from "./pages/Watch";
+
 import { Routes, Route } from "react-router-dom";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/signin" element={<Signin />} />
+      <Route path="/browse" element={<Browse />} />
+      <Route path="/watch" element={<Watch />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   );
 }

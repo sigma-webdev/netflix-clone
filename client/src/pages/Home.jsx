@@ -1,43 +1,71 @@
-import { Link } from "react-router-dom";
-import show1 from ".././assets/images/show1.png";
-import show2 from ".././assets/images/show2.png";
-import show3 from ".././assets/images/show3.png";
-import show4 from ".././assets/images/show4.png";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+// components
 import Accordian from ".././components/accordian/Accordian";
 import Layout from "../components/layout/Layout";
+import FeatureCard from "../components/card/FeatureCard";
+import AccordianItem from "../components/accordian/AccordianItem";
+
+// icons
+import { StartIcon } from "../components/icons.jsx";
+
+import { faqs, features } from "../data";
+import { useSelector } from "react-redux";
 
 const Home = () => {
+  const [activeItem, setActiveItem] = useState(-1);
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/browse");
+    }
+  }, []);
+
+  const accordianHandler = (id) => {
+    setActiveItem(id);
+  };
+
+  const handleSignin = (e) => {
+    e.preventDefault();
+    navigate("/signin");
+  };
   return (
-    <Layout bgcolor="bg-[#00081D]" padding="p-12">
-      <div className="text-white ">
-        <section className="relative">
-          <div className="bg-netflix-home md:h-[36rem] md:w-full opacity-40 rounded-lg"></div>
-          <div className="absolute top-0 left-0 z-10 w-full mt-28 ml-12 space-y-4">
-            <h1 className="font-bold">
+    <Layout isLogin={false}>
+      <div className="text-white bg-netflix-blue relative">
+        <section>
+          <div className="bg-netflix-home bg-repeat-no bg-cover h-[50rem] w-full opacity-40 "></div>
+          <div className="absolute top-52 left-20  w-auto space-y-4">
+            <h1 className="font-bold text-2xl sm:4xl md:text-6xl">
               Unlimited movies,
               <br /> TV shows and more
             </h1>
-            <p className="font-bold text-2xl">
+            <p className="font-bold md:text-2xl text-xl">
               Watch anywhere. Cancel anytime.
             </p>
-            <p className="text-2xl text-bold">
-              Ready to watch? Enter your email to create or restart your <br />{" "}
+            <p className="md:text-2xl text-xl text-bold">
+              Ready to watch? Enter your email to create or restart your
               membership.
             </p>
 
-            <form className="flex space-x-4">
-              <div className="relative z-0 w-96 mb-6 group bg-[#1C0F17] border-2 rounded text-sm">
+            <form
+              className="flex flex-wrap md:space-x-4"
+              onSubmit={(e) => handleSignin(e)}
+            >
+              <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-black border-2 rounded text-sm opacity-75">
                 <input
                   type="email"
                   name="floating_email"
                   id="floating_email"
-                  className="block p-4 w-full text-sm bg-transparent appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  className="block p-4 w-full bg-transparent appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="floating_email"
-                  className="peer-focus:font-medium absolute text-xl px-4 pb-2 text-slate-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+                  htmlFor="floating_email"
+                  className="peer-focus:text-sm absolute text-xl px-4 pb-1 pt-1 text-slate-400 duration-300 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
                 >
                   Email address
                 </label>
@@ -47,7 +75,7 @@ const Home = () => {
                   type="submit"
                   className="align-middle text-2xl px-6 py-3 font-bold bg-red-600 rounded text-white hover:bg-red-700"
                 >
-                  <Link to="/signup">Get Started</Link>
+                  Get Started
                   <StartIcon />
                 </button>
               </div>
@@ -55,73 +83,44 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="mx-28">
-          <article className="flex justify-center items-center gap-x-5">
-            <div className="basis-1/2">
-              <img src={show1} alt="banner" className="w-full" />
-            </div>
-            <div className="space-y-8 basis-1/2">
-              <h2 className="text-5xl font-bold">Enjoy on your TV.</h2>
-              <p className="text-2xl">
-                Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV,
-                Blu-ray players and more.
-              </p>
-            </div>
-          </article>
-
-          <article className="flex justify-center items-center gap-x-5">
-            <div className="space-y-8 basis-1/2">
-              <h2 className="text-5xl font-bold">Watch everywhere.</h2>
-              <p className="text-2xl">
-                Stream unlimited movies and TV shows on your phone, tablet,
-                laptop, and TV.
-              </p>
-            </div>
-            <div>
-              <img src={show2} alt="banner" className="w-full" />
-            </div>
-          </article>
-
-          <article className="flex justify-center items-center gap-x-5">
-            <div>
-              <img src={show3} alt="banner" className="w-[500px]" />
-            </div>
-            <div className="space-y-8 basis-1/2">
-              <h2 className="text-5xl font-bold">
-                Create profiles for <br />
-                children.
-              </h2>
-              <p className="text-2xl">
-                Send children on adventures with their favourite characters in a
-                space made just for them—free with your membership.
-              </p>
-            </div>
-          </article>
-
-          <article className="flex justify-center items-center gap-x-5">
-            <div className="space-y-4 basis-1/2">
-              <h2 className="text-5xl font-bold">
-                Download your shows to watch offline.
-              </h2>
-              <p className="text-2xl">
-                Save your favourites easily and always have something to watch.
-              </p>
-            </div>
-            <div>
-              <img src={show4} alt="banner" className="w-full" />
-            </div>
-          </article>
+        <section className="mx-8 md:mx-8 lg:mx-14">
+          {features &&
+            features.map((item, index) => {
+              return (
+                <FeatureCard
+                  key={item.id}
+                  featureHeading={item.featureHeading}
+                  featureImage={item.featureImage}
+                  aboutFeature={item.aboutFeature}
+                  currentIndex={index}
+                ></FeatureCard>
+              );
+            })}
         </section>
 
-        <section className="mx-28 space-y-4">
+        <section className="w-[80%] mx-auto md:mx-8 lg:mx-14 space-y-4">
           <h2 className="font-bold">Frequently Asked Questions</h2>
-          <Accordian></Accordian>
+          <Accordian>
+            {faqs.map((item) => {
+              return (
+                <AccordianItem
+                  accordianHandler={accordianHandler}
+                  isActive={item.id === activeItem ? true : false}
+                  question={item.question}
+                  answer={item.answer}
+                  id={item.id}
+                  key={item.id}
+                ></AccordianItem>
+              );
+            })}
+          </Accordian>
+
           <p className="text-2xl">
             Ready to watch? Enter your email to create or restart your
             membership.
           </p>
           <form className="flex space-x-4">
-            <div className="relative z-0 w-96 mb-6 group bg-[#1C0F17] border-2 rounded text-sm">
+            <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-black border-2 rounded text-sm opacity-75">
               <input
                 type="email"
                 name="floating_email"
@@ -131,8 +130,8 @@ const Home = () => {
                 required
               />
               <label
-                for="floating_email"
-                className="peer-focus:font-medium absolute text-xl px-4 pb-2 text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+                htmlFor="floating_email"
+                className="peer-focus:font-medium absolute text-xl px-4 pb-2 text-slate-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
               >
                 Email address
               </label>
@@ -154,24 +153,3 @@ const Home = () => {
 };
 
 export default Home;
-
-const StartIcon = () => {
-  return (
-    <>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="inline w-6 h-6 font-extrabold"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M8.25 4.5l7.5 7.5-7.5 7.5"
-        />
-      </svg>
-    </>
-  );
-};
