@@ -4,10 +4,33 @@ import netflixLogo from "./../../assets/netflix_logo.png";
 import { AiOutlineSearch } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useEffect, useRef } from "react";
 
 const Header = ({ isLogin }) => {
+  const user = useSelector((state) => state.user.currentUser);
+  const headerRef = useRef(null);
+
+  const scrollHandler = () => {
+    if (window.scrollY > 10) {
+      headerRef.current.style.backgroundColor = "black";
+      console.log(window.scrollY);
+    } else {
+      headerRef.current.style.backgroundColor = "transparent";
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHandler);
+  }, []);
+
   return (
-    <header className="flex items-center justify-between h-32 px-8 text-white bg-netflix-blue">
+    <header
+      ref={headerRef}
+      className={`max-w-[1400px] flex items-center justify-between w-full h-24 px-8 text-white  z-20 transition ease-in-out duration-300 ${
+        isLogin ? "fixed top-0" : "absolute"
+      }`}
+    >
       <div className="flex gap-4">
         <div className={isLogin ? "w-24" : "w-32"}>
           <img src={netflixLogo} alt="netflix logo" className="w-full" />
@@ -80,7 +103,7 @@ const Header = ({ isLogin }) => {
             </div>
           </IconContext.Provider>
           <div className="flex items-center gap-2">
-            <div>Mangesh Thakare</div>
+            <div>{user.name}</div>
             <div>
               <BiDownArrow />
             </div>
