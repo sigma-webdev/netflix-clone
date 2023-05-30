@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // components
 import Accordian from ".././components/accordian/Accordian";
@@ -16,9 +16,13 @@ import { useSelector } from "react-redux";
 const Home = () => {
   const [activeItem, setActiveItem] = useState(-1);
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.currentUser);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-  console.log(user);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/browse");
+    }
+  }, []);
 
   const accordianHandler = (id) => {
     setActiveItem(id);
@@ -30,10 +34,10 @@ const Home = () => {
   };
   return (
     <Layout isLogin={false}>
-      <div className="px-4 sm:px-8 md:px-12 text-white bg-netflix-blue">
-        <section className="relative ">
-          <div className="bg-netflix-home h-[36rem] w-full opacity-40 rounded-lg"></div>
-          <div className="absolute top-0 left-0 z-10 w-auto mx-4 md:mx-8 lg:mx-12 my-8 md:my-12 lg:my-24 space-y-4">
+      <div className="text-white bg-netflix-blue relative">
+        <section>
+          <div className="bg-netflix-home bg-repeat-no bg-cover h-[50rem] w-full opacity-40 "></div>
+          <div className="absolute top-52 left-20  w-auto space-y-4">
             <h1 className="font-bold text-2xl sm:4xl md:text-6xl">
               Unlimited movies,
               <br /> TV shows and more

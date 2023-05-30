@@ -1,24 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { content } from "../data";
 
 const initialState = {
-  currentlyPlaying: null,
-  fiteredContent: [],
-  content: [],
+  allContent: [],
 };
+
+export const fetchContent = createAsyncThunk(
+  "content/fetchContent",
+  async () => {
+    const data = content;
+    return data;
+  }
+);
 
 export const contentSlice = createSlice({
   name: "content",
   initialState,
-  reducers: {
-    updateFilteredContent: (state, action) => {
-      state.fiteredContent = action.payload;
-    },
-    updateContent: (state, action) => {
-      state.content = action.payload;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchContent.fulfilled, (state, action) => {
+      state.allContent = action.payload;
+    });
   },
 });
 
-export const { updateFilteredContent, updateAllContent } = contentSlice.actions;
-
+//export const {} = contentSlice.actions;
 export default contentSlice.reducer;
