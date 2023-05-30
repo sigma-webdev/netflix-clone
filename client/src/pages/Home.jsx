@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 // components
-import Accordian from "../components/accordian/accordian.jsx";
+import Accordian from "../components/accordian/Accordian.jsx";
 import Layout from "../components/layout/Layout";
 import FeatureCard from "../components/card/FeatureCard";
 import AccordianItem from "../components/accordian/AccordianItem.jsx";
