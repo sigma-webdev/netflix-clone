@@ -5,8 +5,6 @@ import { CheckCircle } from "../icons.jsx";
 function PlanForm() {
   const [plan, setPlan] = useState("PREMIUM");
 
-  console.log(plan);
-
   return (
     <div className=" max-w-[1020px]  m-4">
       <p className="text-[#333]">

@@ -14,14 +14,15 @@ const Header = ({ isLogin }) => {
   const scrollHandler = () => {
     if (window.scrollY > 10) {
       headerRef.current.style.backgroundColor = "black";
-      console.log(window.scrollY);
     } else {
       headerRef.current.style.backgroundColor = "transparent";
     }
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", scrollHandler);
+    if (isLogin) {
+      window.addEventListener("scroll", scrollHandler);
+    }
   }, []);
 
   return (
