@@ -4,12 +4,14 @@ const {
   signUp,
   signIn,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  userExist
 } = require("../controller/userController.js");
 
 authRoute.post("/signup", signUp);
 authRoute.post("/signin", signIn);
 authRoute.post("/forgotpassword", forgotPassword);
 authRoute.post("/resetpassword/:token", resetPassword);
+authRoute.post("/userexist", userExist);
 
 module.exports = authRoute;
