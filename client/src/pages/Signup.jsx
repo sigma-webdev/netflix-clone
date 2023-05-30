@@ -8,7 +8,6 @@ import RegForm from "../components/signUp/RegForm.jsx";
 import SignIn from "../components/signUp/SignIn.jsx";
 import Choose from "../components/signUp/Choose.jsx";
 import PlanForm from "../components/signUp/PlanForm";
-
 const Signup = () => {
   return (
     <div>
