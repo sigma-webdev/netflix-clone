@@ -6,6 +6,9 @@ import Signup from "./pages/Signup.jsx";
 import Browse from "./pages/Browse";
 import Watch from "./pages/Watch";
 
+import { Routes, Route } from "react-router-dom";
+import Admin from "./pages/Admin";
+
 function App() {
   return (
     <Routes>
@@ -14,7 +17,7 @@ function App() {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/browse" element={<Browse />} />
       <Route path="/watch" element={<Watch />} />
-      <Route path="/watch" element={<Watch />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   );
 }

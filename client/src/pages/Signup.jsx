@@ -2,12 +2,12 @@ import React from "react";
 import netflixLogo from "../assets/netflix_logo.png";
 import { Link } from "react-router-dom";
 //components
-import Step1_2 from "../components/signUp/Step1_2.jsx";
-import ChoosePlan from "../components/signUp/ChoosePlan.jsx";
-import RegForm from "../components/signUp/RegForm.jsx";
-import SignIn from "../components/signUp/SignIn.jsx";
-import Choose from "../components/signUp/Choose.jsx";
-import PlanForm from "../components/signUp/PlanForm";
+import Step1_2 from "../components/signup/Step1_2";
+import ChoosePlan from "../components/signup/ChoosePlan";
+import RegForm from "../components/signup/RegForm";
+import SignIn from "../components/signup/SignIn";
+import Choose from "../components/signup/Choose";
+import PlanForm from "../components/signup/PlanForm";
 const Signup = () => {
   return (
     <div>
