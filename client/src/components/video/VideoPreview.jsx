@@ -3,8 +3,8 @@ import { AddIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 
 const VideoPreview = () => {
   return (
-    <div className="bg-netflix-black w-fit  drop-shadow-lg rounded-md overflow-hidden">
-      <div className="w-80">
+    <div className="bg-netflix-black  drop-shadow-lg rounded-md overflow-hidden">
+      <div>
         <video className="h-full w-full" src={sampleVideo}></video>
       </div>
 

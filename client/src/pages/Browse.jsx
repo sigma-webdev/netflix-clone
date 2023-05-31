@@ -10,7 +10,6 @@ import { fetchContent } from "../store/contentSlice";
 import { GENRES } from "../helpers/constants";
 
 import sampleVideo from "../assets/sample1.mov";
-import VideoPreview from "../components/video/VideoPreview";
 
 const Browse = () => {
   const content = useSelector((state) => state.content.allContent);
@@ -35,8 +34,8 @@ const Browse = () => {
               // current genre
               return (
                 categoryWiseContent.length !== 0 && (
-                  <div key={currentGenre.id}>
-                    <h4 className="relative mb-2">{currentGenre.name}</h4>
+                  <div key={currentGenre.id} className="relative">
+                    <h4 className="mb-2">{currentGenre.name}</h4>
                     <Crousal content={categoryWiseContent}></Crousal>
                   </div>
                 )
@@ -44,9 +43,6 @@ const Browse = () => {
             })}
           </div>
         </div>
-      </div>
-      <div>
-        <VideoPreview />
       </div>
     </Layout>
   );
