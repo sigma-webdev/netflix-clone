@@ -63,6 +63,7 @@ const contentSchema = new Schema(
           required: [true, "trailer video link must be provided"],
         },
         trailerId: { type: String },
+        // TODO: calculate length
         trailerDuration: { type: Number },
       },
     ],

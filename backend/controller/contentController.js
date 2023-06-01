@@ -11,14 +11,14 @@ const contentApi = asyncHandler(async (req, res) => {
   res.send("Pong");
 });
 
-/**
+/********************
  *  TODO: error handling of the input field and save to database
- * @param {*} req
- * @param {*} res
- * @param {*} next
- * @returns null
- */
-
+ * @httpPostContent
+ * @route http://localhost:8081/api/v1/content/post
+ * @description  controller to create the content
+ * @parameters {string, object, enum, array}
+ * @return { Object } content object
+ ********************/
 const httpPostContent = asyncHandler(async (req, res, next) => {
   let details = {
     name: req.body.name,
@@ -64,14 +64,30 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   if (!contentData) {
     // TODO: handle delete files if fail to update
-
-    return next(new CustomError("Content fail to save to database!"));
+    return next(
+      new CustomError("Content fail to save to database! Please try again", 400)
+    );
   }
 
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     contentData,
   });
 });
 
-module.exports = { contentApi, httpPostContent };
+const httpGetContent = asyncHandler(async (req, res, next) => {
+  // find all content --
+  const contents = await Content.find({});
+
+  // if no content available
+  if (!contents.length) {
+    return next(new CustomError("Content not found!", 200));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "All contents ...",
+    contents,
+  });
+});
+module.exports = { contentApi, httpPostContent, httpGetContent };
