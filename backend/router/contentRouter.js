@@ -3,11 +3,10 @@ const {
   contentApi,
   httpPostContent,
 } = require("../controller/contentController");
-const cloudinaryFileUpload = require("../utils/fileUplaod.cloudinary");
 
 const contentRoute = express.Router();
 
 contentRoute.route("/ping").get(contentApi);
-contentRoute.route("/post").post(cloudinaryFileUpload, httpPostContent);
+contentRoute.route("/post").post(httpPostContent);
 
 module.exports = contentRoute;
