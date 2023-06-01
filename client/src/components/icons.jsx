@@ -1,5 +1,5 @@
-import { AiOutlinePlus } from "react-icons/ai";
-import { RiPlayMiniFill } from "react-icons/ri";
+import { AiOutlineInfoCircle, AiOutlinePlus } from "react-icons/ai";
+import { RiPlayMiniFill, RiPauseMiniFill } from "react-icons/ri";
 import { BsChevronDown } from "react-icons/bs";
 import { IconContext } from "react-icons/lib";
 
@@ -177,14 +177,14 @@ export const SkipBackward = () => {
 
 export const LikeIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[40px] h-[40px] border-white border-2 box-border">
+    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className="w-6 h-6"
+        className="w-4 h-4"
       >
         <path
           strokeLinecap="round"
@@ -199,8 +199,8 @@ export const LikeIcon = () => {
 
 export const AddIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[40px] h-[40px] border-white border-2 box-border">
-      <IconContext.Provider value={{ color: "white", size: "30px" }}>
+    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+      <IconContext.Provider value={{ color: "white", size: "20px" }}>
         <AiOutlinePlus />
       </IconContext.Provider>
     </div>
@@ -209,9 +209,19 @@ export const AddIcon = () => {
 
 export const PlayIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[40px] h-[40px] border-white border-2 box-border">
-      <IconContext.Provider value={{ color: "white", size: "25px" }}>
+    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+      <IconContext.Provider value={{ color: "white", size: "20px" }}>
         <RiPlayMiniFill />
+      </IconContext.Provider>
+    </div>
+  );
+};
+
+export const PauseIcon = () => {
+  return (
+    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+      <IconContext.Provider value={{ color: "white", size: "20px" }}>
+        <RiPauseMiniFill />
       </IconContext.Provider>
     </div>
   );
@@ -219,9 +229,19 @@ export const PlayIcon = () => {
 
 export const DownArrowIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[40px] h-[40px] border-white border-2 box-border">
-      <IconContext.Provider value={{ color: "white", size: "20px" }}>
+    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+      <IconContext.Provider value={{ color: "white", size: "15px" }}>
         <BsChevronDown />
+      </IconContext.Provider>
+    </div>
+  );
+};
+
+export const InfoIcon = () => {
+  return (
+    <div className="flex items-center gap-2 etext-black font-semibold bg-white px-4 py-2 rounded">
+      <IconContext.Provider value={{ color: "white", size: "15px" }}>
+        <AiOutlineInfoCircle />
       </IconContext.Provider>
     </div>
   );

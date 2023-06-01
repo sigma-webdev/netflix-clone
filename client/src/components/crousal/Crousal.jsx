@@ -18,10 +18,10 @@ const Crousal = ({ content }) => {
   return (
     <div
       ref={ref}
-      className="flex flex-nowrap scroll-smooth space-x-2 overflow-hidden items-center"
+      className="flex flex-row items-center overflow-x-hidden gap-4"
     >
       <div
-        className="absolute hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-50 bg-slate-900"
+        className="absolute left-0 z-10 hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-50 bg-slate-900"
         onClick={handleLeftArrow}
       >
         <IconContext.Provider value={{ size: "30px", color: "#ffffff" }}>
@@ -35,7 +35,7 @@ const Crousal = ({ content }) => {
           );
         })}
       <div
-        className="absolute right-0 hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-60 bg-slate-900"
+        className="absolute right-0 z-10 hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-60 bg-slate-900"
         onClick={handleRightArrow}
       >
         <IconContext.Provider value={{ size: "30px", color: "#ffffff" }}>

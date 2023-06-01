@@ -1,18 +1,23 @@
-import sampleVideo from "../../assets/sample.mp4";
-import { AddIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
+import {
+  AddIcon,
+  DownArrowIcon,
+  LikeIcon,
+  PauseIcon,
+  PlayIcon,
+} from "../icons";
 
 const VideoPreview = () => {
   return (
     <div className="bg-netflix-black  drop-shadow-lg rounded-md overflow-hidden">
       <div>
-        <video className="h-full w-full" src={sampleVideo}></video>
+        <video ref={videoRef} src={sampleVideo} loop></video>
       </div>
 
       <div className="p-4 space-y-4">
         <div className="flex justify-between">
           <div className="flex gap-2">
-            <div>
-              <PlayIcon />
+            <div onClick={playPauseMedia} className="cursor-pointer">
+              {!isVideoPlaying ? <PlayIcon /> : <PauseIcon />}
             </div>
             <div>
               <AddIcon />
@@ -25,15 +30,15 @@ const VideoPreview = () => {
             <DownArrowIcon />
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <div className="text-green-600 font-semibold">94% Matched</div>
           <div className="text-white border-2 border-white px-2">A</div>
           <div className="text-white">2 Seasons</div>
-          <div className="text-white border-2 border-white px-1 rounded">
+          <div className="text-white border-2 border-white px-1 rounded text-xs h-fit">
             HD
           </div>
         </div>
-        <div className="text-white">Omnious.Gritty.Thriller</div>
+        <div className="text-white">Thriller</div>
       </div>
     </div>
   );

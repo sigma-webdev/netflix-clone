@@ -6,6 +6,7 @@ import { IconContext } from "react-icons/lib";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
+import Menu from "../menu/Menu";
 
 const Header = ({ isLogin }) => {
   const user = useSelector((state) => state.user.currentUser);
@@ -64,11 +65,7 @@ const Header = ({ isLogin }) => {
             <div className="flex items-center gap-2 lg:hidden">
               <div>Home</div>
               <div>
-                <div>
-                  <Link to="/">
-                    <BiDownArrow />
-                  </Link>
-                </div>
+                <Menu></Menu>
               </div>
             </div>
           </div>
@@ -106,7 +103,7 @@ const Header = ({ isLogin }) => {
           <div className="flex items-center gap-2">
             <div>{user.name}</div>
             <div>
-              <BiDownArrow />
+              <Menu></Menu>
             </div>
           </div>
         </div>
