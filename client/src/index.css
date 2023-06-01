@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  body {
+    @apply max-w-[1400px] mx-auto;
+  }
   h1 {
     @apply text-6xl;
   }
