@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 
 // components
@@ -40,13 +39,16 @@ const Browse = () => {
 
   return (
     <Layout isLogin={true}>
-      <div className="relative">
+      <div className="relative ">
+        {/* hero video */}
         <video
           ref={videoRef}
-          className="w-screen h-full mx-auto"
+          className="w-screen h-full mx-auto "
           src={sampleVideo}
           poster={samplePoster}
         ></video>
+
+        {/* hero text */}
         <div className="flex gap-2 absolute bottom-12 left-12 cursor-pointer">
           <div
             className="flex items-center gap-2 text-black font-semibold bg-white px-4 py-1 rounded"
@@ -66,6 +68,7 @@ const Browse = () => {
         </div>
       </div>
 
+      {/* browse content */}
       <div className="text-white bg-netflix-blue ">
         <div className="bg-transparent">
           <div className="px-8 space-y-5">
@@ -75,7 +78,7 @@ const Browse = () => {
                 (item) => item.genre === currentGenre.name
               );
 
-              // current genre
+              //  current genre
               return (
                 categoryWiseContent.length !== 0 && (
                   <div key={currentGenre.id} className="relative">

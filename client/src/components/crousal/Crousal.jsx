@@ -18,10 +18,10 @@ const Crousal = ({ content }) => {
   return (
     <div
       ref={ref}
-      className="flex flex-row items-center overflow-x-hidden gap-4"
+      className="flex flex-start items-center overflow-x-hidden gap-4 h-[26rem] "
     >
       <div
-        className="absolute left-0 z-10 hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-50 bg-slate-900"
+        className="absolute left-0 z-10 hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-50 "
         onClick={handleLeftArrow}
       >
         <IconContext.Provider value={{ size: "30px", color: "#ffffff" }}>

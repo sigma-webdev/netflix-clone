@@ -28,12 +28,13 @@ const PreviewCard = ({ contentPoster }) => {
 
   return (
     <div
-      className="bg-netflix-black  drop-shadow-lg rounded basis-1/6"
+      className="bg-netflix-black drop-shadow-lg rounded  tranistion duration-300 ease-in-out hover:relative hover:scale-125 hover:z-50 hover:ml-10 w-72 "
       ref={thumbnailRef}
     >
-      <div>
+      {/* preview video*/}
+      <div className="w-72 h-44">
         <video
-          className="w-full rounded"
+          className="rounded-tl rounded-tr object-contain"
           poster={contentPoster}
           ref={videoRef}
           src={sampleVideo}
@@ -41,6 +42,7 @@ const PreviewCard = ({ contentPoster }) => {
         ></video>
       </div>
 
+      {/* preview details */}
       <div className="p-4 space-y-4" ref={previewRef}>
         <div className="flex justify-between">
           <div className="flex gap-2">
