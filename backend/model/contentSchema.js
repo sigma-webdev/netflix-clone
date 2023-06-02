@@ -52,10 +52,18 @@ const contentSchema = new Schema(
     language: {
       type: String,
     },
-    thumbnail: {
-      type: String,
-      required: true,
-    },
+    thumbnail: [
+      {
+        thumbnailUrl: {
+          type: String,
+          required: [true, "Thumbnail URL should be provided"],
+        },
+        thumbnailID: {
+          type: String,
+          required: [true, "Thumbnail Id should be provided"],
+        },
+      },
+    ],
     trailer: [
       {
         trailerUrl: {

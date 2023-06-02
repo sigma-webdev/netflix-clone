@@ -3,18 +3,23 @@ const asyncHandler = require("../middleware/asyncHandler.js");
 const Content = require("../model/contentSchema.js");
 const CustomError = require("../utils/customError.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
+const cloudinaryFileDelete = require("../utils/fileDelete.cloudinary.js");
+
+// TODO: handle delete, getById, and update and upload Episode
 
 /**
  * Testing route
  */
 const contentApi = asyncHandler(async (req, res) => {
+  // TODO: DELETE FILE
+  await cloudinaryFileDelete("trailers/wgmxo43gx5rraiumgoxk");
   res.send("Pong");
 });
 
 /********************
  *  TODO: error handling of the input field and save to database
  * @httpPostContent
- * @route http://localhost:8081/api/v1/content/post
+ * @route http://localhost:8081/api/v1/content/posts
  * @description  controller to create the content
  * @parameters {string, object, enum, array}
  * @return { Object } content object
@@ -47,12 +52,22 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   }
 
   // get field data -
+
   const contentFiles = await cloudinaryFileUpload(req.files);
 
   // add the file details
   details.trailer = contentFiles.trailer;
   details.content = contentFiles.content;
   details.thumbnail = contentFiles.thumbnail;
+
+  // console.log("trailerId = ", details.trailer[0].trailerId);
+  // console.log("contentId = ", details.content[0].contentID);
+  // console.log("thumbnailId = ", details.thumbnail);
+
+  // cloudinaryFileDelete(details.trailer[0].trailerId);
+
+  // TODO: DELETE FILE
+  // cloudinaryFileDelete(details.trailer[0].trailerId);
 
   const contentDetails = Content(details);
 
@@ -75,6 +90,14 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   });
 });
 
+/********************
+ *  TODO: error handling of the input field and save to database
+ * @httpGetContent
+ * @route http://localhost:8081/api/v1/content/posts
+ * @description  controller to create the content
+ * @parameters {string, object, enum, array}
+ * @return { Object } content object
+ ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
   // find all content --
   const contents = await Content.find({});
