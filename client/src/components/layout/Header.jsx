@@ -5,8 +5,10 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Menu from "../menu/Menu";
+import netflixAvatar from "../../assets/netflix-avtar.jpg";
+import { FaSignOutAlt } from "react-icons/fa";
 
 const Header = ({ isLogin }) => {
   const user = useSelector((state) => state.user.currentUser);
@@ -101,10 +103,27 @@ const Header = ({ isLogin }) => {
             </div>
           </IconContext.Provider>
           <div className="flex items-center gap-2">
-            <div>{user.name}</div>
-            <div>
-              <Menu></Menu>
+            <div className="w-10 rounded overflow-hidden">
+              <img src={netflixAvatar} className="object-contain" />
             </div>
+
+            <Menu>
+              <ul className="bg-netflix-black p-4 rounded">
+                <li className="flex items-center gap-4">
+                  <div className="w-8 rounded overflow-hidden">
+                    <img src={netflixAvatar} className="object-contain" />
+                  </div>
+
+                  <div>{user.name}</div>
+                </li>
+                <hr className="my-4" />
+                <li className="flex items-center gap-4 ">
+                  <IconContext.Provider value={{ size: "25px" }}>
+                    <FaSignOutAlt /> Sign out of Netflix
+                  </IconContext.Provider>
+                </li>
+              </ul>
+            </Menu>
           </div>
         </div>
       )}
