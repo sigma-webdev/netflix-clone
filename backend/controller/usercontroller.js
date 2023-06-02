@@ -30,6 +30,7 @@ const signUp = asyncHandler(async (req, res) => {
 
 const signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
+  console.log(email, password);
   // check user exist or not
   const user = await userModel.findOne({ email }).select("+password");
   if (!user)

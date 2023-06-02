@@ -1,6 +1,7 @@
 import React from "react";
 import { Check } from "../icons.jsx";
 import checkMark from "../../assets/Checkmark.png";
+import { Link } from "react-router-dom";
 function Choose() {
   return (
     <div className="   max-w-[450px]m-4">
@@ -25,10 +26,11 @@ function Choose() {
           </li>
         </ul>
       </div>
-
-      <button className="mt-6 bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl">
-        Next
-      </button>
+      <Link to="/singup/planform">
+        <button className="mt-6 bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl">
+          Next
+        </button>
+      </Link>
     </div>
   );
 }

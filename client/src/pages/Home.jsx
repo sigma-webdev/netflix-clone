@@ -36,9 +36,9 @@ const Home = () => {
     e.preventDefault();
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
     if (isUserExist.payload.data.success) {
-      useNavigation(`/signup/password?email=${e.target.email.value}`);
+      navigate(`/signup/password?email=${e.target.email.value}`);
     } else {
-      useNavigation(`/signup/password?email=${e.target.email.value}`);
+      navigate(`/signup/password?email=${e.target.email.value}`);
     }
   }
 

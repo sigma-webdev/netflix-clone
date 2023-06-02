@@ -4,7 +4,7 @@ import Layout from "../components/layout/Layout";
 // packages
 import axios from "axios";
 
-const SignIn = () => {
+const Password = () => {
   const URL = process.env.REACT_APP_URL;
 
   async function handleSignIn(e) {
@@ -100,4 +100,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Password;
