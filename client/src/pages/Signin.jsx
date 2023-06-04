@@ -83,7 +83,7 @@ const Password = () => {
           </div>
           <div className="mb-2">
             <span className="text-gray-400">New to Netflix? </span>
-            <Link className="text-white" to="/signup">
+            <Link className="text-white" to="/">
               Sign up now
             </Link>
           </div>

@@ -4,11 +4,25 @@ import Signup from "./pages/Signup.jsx";
 import Browse from "./pages/Browse";
 import Watch from "./pages/Watch";
 
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Admin from "./pages/Admin";
-import Choose from "./components/signUp/Choose";
+// import Choose from "./components/signUp/Choose.jsx";
+
+// thunk
+import { GET_USER, USER } from "./store/authSlice.js";
 
 function App() {
+  const dispatch = useDispatch();
+  async function getUser() {
+    const user = await dispatch(GET_USER());
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />

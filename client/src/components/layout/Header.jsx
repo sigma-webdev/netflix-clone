@@ -3,12 +3,18 @@ import { GlobeIcon } from "../icons";
 import netflixLogo from "./../../assets/netflix_logo.png";
 import { AiOutlineSearch } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef } from "react";
 
+// THUNK
+import { SIGN_OUT } from "../../store/authSlice.js";
+
 const Header = ({ isLogin }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const headerRef = useRef(null);
 
   const scrollHandler = () => {
@@ -24,6 +30,11 @@ const Header = ({ isLogin }) => {
       window.addEventListener("scroll", scrollHandler);
     }
   }, []);
+
+  async function handleSignInSignOut() {
+    if (!isLoggedIn) return navigate("/signin");
+    await dispatch(SIGN_OUT());
+  }
 
   return (
     <header
@@ -86,10 +97,13 @@ const Header = ({ isLogin }) => {
           </div>
           <div>
             <button
-              type="submit"
+              type="button"
+              onClick={() => {
+                handleSignInSignOut();
+              }}
               className="px-3 py-1 bg-red-600 rounded text-white border-2 border-red-600"
             >
-              <Link to="/signin">Sign In</Link>
+              {isLoggedIn ? "Sign out" : "Sign In"}
             </button>
           </div>
         </div>

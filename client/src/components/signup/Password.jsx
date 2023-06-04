@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const email = "mangesh@gmail.com";
+  const email = localStorage.getItem("email");
 
   async function handleSignIn(e) {
     e.preventDefault();

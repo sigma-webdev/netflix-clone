@@ -50,7 +50,7 @@ const signIn = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: user });
 });
 
-const forgotPassword = async (req, res, next) => {
+const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
   if (!email) return next(customError("Email is required", 400));
   const user = await userModel.findOne({ email });
@@ -68,7 +68,7 @@ const forgotPassword = async (req, res, next) => {
     to: user.email,
     subject: "Netflix reset password",
     html: `<b>Hello ${user.name}</b><br>
-             <a href="${resetUrl}" target ="_blank" >Click here to reset password</a>`
+               <a href="${resetUrl}" target ="_blank" >Click here to reset password</a>`
   };
 
   // send email
@@ -84,9 +84,9 @@ const forgotPassword = async (req, res, next) => {
       message: "Further instructions sent on you email " + email
     });
   });
-};
+});
 
-const resetPassword = async (req, res, next) => {
+const resetPassword = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
   const { password, conformPassword } = req.body;
 
@@ -125,6 +125,31 @@ const resetPassword = async (req, res, next) => {
     message: "successfully updated the password",
     Token: token
   });
-};
+});
 
-module.exports = { signUp, signIn, forgotPassword, resetPassword, userExist };
+const signOut = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    maxAge: new Date().now, // 7 days
+    path: "/",
+    sameSite: "Lax"
+  });
+
+  res.status(200).json({ success: true, message: "log out successful" });
+});
+
+const getUser = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id;
+  const result = await userModel.findById(userId);
+  return res.status(200).json({ success: true, data: result });
+});
+
+module.exports = {
+  signUp,
+  signIn,
+  forgotPassword,
+  resetPassword,
+  userExist,
+  getUser,
+  signOut
+};

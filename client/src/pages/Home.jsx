@@ -1,4 +1,4 @@
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -10,7 +10,6 @@ import AccordianItem from "../components/accordian/AccordianItem.jsx";
 
 // thunk
 import { IS_USER_EXIST } from "../store/authSlice.js";
-
 // icons
 import { StartIcon } from "../components/icons.jsx";
 import { faqs, features } from "../data";
@@ -20,13 +19,6 @@ const Home = () => {
   const dispatch = useDispatch();
   const [activeItem, setActiveItem] = useState(-1);
   const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/browse");
-    }
-  }, []);
 
   const accordianHandler = (id) => {
     setActiveItem(id);
@@ -36,9 +28,10 @@ const Home = () => {
     e.preventDefault();
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
     if (isUserExist.payload.data.success) {
-      navigate(`/signup/password?email=${e.target.email.value}`);
+      localStorage.setItem("email", e.target.email.value);
+      navigate(`/signup/password`);
     } else {
-      navigate(`/signup/password?email=${e.target.email.value}`);
+      alert(isUserExist.payload.data.message);
     }
   }
 
