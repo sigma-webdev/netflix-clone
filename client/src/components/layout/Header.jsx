@@ -31,7 +31,7 @@ const Header = ({ isLogin }) => {
   return (
     <header
       ref={headerRef}
-      className={`max-w-[1400px] flex items-center justify-between w-full h-24 px-8 text-white  z-20 transition ease-in-out duration-300 ${
+      className={`flex items-center justify-between w-full h-24 px-8 text-white  z-20 transition ease-in-out duration-300 ${
         isLogin ? "fixed top-0" : "absolute"
       }`}
     >

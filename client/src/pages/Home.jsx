@@ -81,7 +81,7 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="mx-8 md:mx-8 lg:mx-14">
+        <section className="mx-auto max-w-[80vw]">
           {features &&
             features.map((item, index) => {
               return (
@@ -96,7 +96,7 @@ const Home = () => {
             })}
         </section>
 
-        <section className="w-[80%] mx-auto md:mx-8 lg:mx-14 space-y-4">
+        <section className="space-y-4 mx-auto max-w-[80vw]">
           <h2 className="font-bold">Frequently Asked Questions</h2>
           <Accordian>
             {faqs.map((item) => {

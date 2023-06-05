@@ -2,8 +2,8 @@ import { GlobeIcon } from "../icons";
 
 const Footer = () => {
   return (
-    <footer className="p-28 space-y-10 text-slate-400 bg-netflix-blue">
-      <ul className="grid grid-rows-4 grid-cols-4 grid-flow-col underline gap-y-4">
+    <footer className="p-28 space-y-10 text-slate-400 bg-netflix-blue ">
+      <ul className="grid grid-rows-4 grid-cols-4 grid-flow-col underline gap-y-4 mx-auto max-w-[80vw]">
         <li>
           <a href="/">FAQ</a>
         </li>
@@ -50,14 +50,16 @@ const Footer = () => {
           <a href="/">Contact Us</a>
         </li>
       </ul>
-      <div className="flex items-center h-fit w-fit bg-black text-white border-2 border-white rounded px-3 py-1">
-        <GlobeIcon />
-        <select className="bg-transparent rounded  " defaultValue={"English"}>
-          <option value="English">English</option>
-          <option value="Hindi">Hindi</option>
-        </select>
+      <div className="mx-auto max-w-[80vw]">
+        <div className="flex items-center h-fit w-fit bg-black text-white border-2 border-white rounded px-3 py-1 ">
+          <GlobeIcon />
+          <select className="bg-transparent rounded  " defaultValue={"English"}>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+          </select>
+        </div>
+        <p className="mt-4">Netflix India</p>
       </div>
-      <p>Netflix India</p>
     </footer>
   );
 };

@@ -41,9 +41,10 @@ const Browse = () => {
     <Layout isLogin={true}>
       <div className="relative ">
         {/* hero video */}
+        {/* <div className="absolute w-screen bg-gradient-to-b to-gray-500/100 from-gray-500/5 h-[80vh]"></div> */}
         <video
           ref={videoRef}
-          className="w-screen h-full mx-auto "
+          className="w-screen mx-auto "
           src={sampleVideo}
           poster={samplePoster}
         ></video>
