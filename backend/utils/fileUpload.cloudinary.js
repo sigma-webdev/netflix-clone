@@ -1,5 +1,5 @@
 const cloudinary = require("../config/cloudinaryConfig");
-const CustomError = require("./customError");
+// const CustomError = require("./customError");
 
 const cloudinaryFileUpload = async (files) => {
   if (!files.trailer) {

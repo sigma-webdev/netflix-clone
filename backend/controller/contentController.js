@@ -1,9 +1,14 @@
 const asyncHandler = require("../middleware/asyncHandler.js");
 
 const Content = require("../model/contentSchema.js");
-const CustomError = require("../utils/customError.js");
+
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
-const cloudinaryFileDelete = require("../utils/fileDelete.cloudinary.js");
+const {
+  cloudinaryFileDelete,
+  cloudinaryImageDelete,
+} = require("../utils/fileDelete.cloudinary.js");
+const CustomError = require("../utils/customerror.js");
+cloudinaryImageDelete;
 
 // TODO: handle delete, getById, and update and upload Episode
 
@@ -11,17 +16,14 @@ const cloudinaryFileDelete = require("../utils/fileDelete.cloudinary.js");
  * Testing route
  */
 const contentApi = asyncHandler(async (req, res) => {
-  // TODO: DELETE FILE
-  await cloudinaryFileDelete("trailers/wgmxo43gx5rraiumgoxk");
   res.send("Pong");
 });
 
 /********************
- *  TODO: error handling of the input field and save to database
  * @httpPostContent
  * @route http://localhost:8081/api/v1/content/posts
  * @description  controller to create the content
- * @parameters {string, object, enum, array}
+ * @parameters {request body object}
  * @return { Object } content object
  ********************/
 const httpPostContent = asyncHandler(async (req, res, next) => {
@@ -51,8 +53,6 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     return next(new CustomError("Please fill the required field!", 400));
   }
 
-  // get field data -
-
   const contentFiles = await cloudinaryFileUpload(req.files);
 
   // add the file details
@@ -62,23 +62,20 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   // console.log("trailerId = ", details.trailer[0].trailerId);
   // console.log("contentId = ", details.content[0].contentID);
-  // console.log("thumbnailId = ", details.thumbnail);
-
-  // cloudinaryFileDelete(details.trailer[0].trailerId);
-
-  // TODO: DELETE FILE
-  // cloudinaryFileDelete(details.trailer[0].trailerId);
+  // console.log("thumbnailId = ", details.thumbnail[0].thumbnailID);
 
   const contentDetails = Content(details);
 
-  const contentData = await contentDetails.save();
-  console.log("contentData- ", contentData);
-
-  // save to db
-  //  const contentData = await
+  const contentData = await contentDetails.save().catch((error) => {
+    console.log("ERROR catching - ", error);
+    // DELETE FILE
+    cloudinaryFileDelete(details.trailer[0].trailerId);
+    cloudinaryFileDelete(details.content[0].contentID);
+    cloudinaryImageDelete(details.thumbnail[0].thumbnailID);
+  });
+  // console.log("contentData- ", contentData);
 
   if (!contentData) {
-    // TODO: handle delete files if fail to update
     return next(
       new CustomError("Content fail to save to database! Please try again", 400)
     );
@@ -91,7 +88,6 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- *  TODO: error handling of the input field and save to database
  * @httpGetContent
  * @route http://localhost:8081/api/v1/content/posts
  * @description  controller to create the content
@@ -104,7 +100,11 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   // if no content available
   if (!contents.length) {
-    return next(new CustomError("Content not found!", 200));
+    res.status(200).json({
+      success: true,
+      message: "Content Not found",
+      contents,
+    });
   }
 
   res.status(200).json({
@@ -113,4 +113,36 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     contents,
   });
 });
-module.exports = { contentApi, httpPostContent, httpGetContent };
+
+/********************
+ *
+ * @httpGetContentById
+ * @route http://localhost:8081/api/v1/content/posts/id
+ * @description  controller to create the content
+ * @parameters {Object id}
+ * @return { Object } content object
+ ********************/
+const httpGetContentById = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const content = await Content.findById(id);
+  console.log("CONTENT -", content);
+
+  if (!content) {
+    return next(
+      new CustomError("Invalid Content Id, or Content Not found", 404)
+    );
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Content fetched Successfully",
+    content,
+  });
+});
+
+module.exports = {
+  contentApi,
+  httpPostContent,
+  httpGetContent,
+  httpGetContentById,
+};
