@@ -1,33 +1,7 @@
 const cloudinary = require("../config/cloudinaryConfig");
-const CustomError = require("./customError");
+// const CustomError = require("./customError");
 
 const cloudinaryFileUpload = async (files) => {
-  // const files = request.files;
-  // let {
-  //   name,
-  //   description,
-  //   cast,
-  //   categories,
-  //   genres,
-  //   creator,
-  //   rating,
-  //   language,
-  // } = req.body;
-
-  // // check for missing data --
-  // if (
-  //   !name ||
-  //   !description ||
-  //   !cast ||
-  //   !categories ||
-  //   !genres ||
-  //   !creator ||
-  //   !rating ||
-  //   !language
-  // ) {
-  //   return next(new CustomError("Please enter the require content field", 400));
-  // }
-
   if (!files.trailer) {
     return new CustomError("Please add trailer file", 400);
   }
@@ -60,8 +34,16 @@ const cloudinaryFileUpload = async (files) => {
     },
   ];
 
-  //   template for content data
-  const filesDetails = { trailer, content, thumbnail: "" };
+  let thumbnail = [
+    {
+      trailerUrl: "",
+      trailerID: "",
+    },
+  ];
+
+  //   template for content data, thumbnail to add urlId
+  const filesDetails = { trailer, content, thumbnail };
+  console.log("fileDetails ", filesDetails);
 
   //   file upload --
   try {
@@ -84,10 +66,6 @@ const cloudinaryFileUpload = async (files) => {
       );
       filesDetails["content"][0].contentURL = contentTemp.secure_url;
       filesDetails["content"][0].contentID = contentTemp.public_id;
-      // request.body["content"] = {
-      //   contentUrl: contentTemp.secure_url,
-      //   contentId: contentTemp.public_id,
-      // };
     }
 
     // thumbnail
@@ -97,10 +75,11 @@ const cloudinaryFileUpload = async (files) => {
         { folder: folder3 }
       );
 
-      filesDetails.thumbnail = thumbnailTemp.secure_url;
+      filesDetails["thumbnail"][0].thumbnailUrl = thumbnailTemp.secure_url;
+      filesDetails["thumbnail"][0].thumbnailID = thumbnailTemp.public_id;
     }
 
-    // console.log("filesDetails - ", filesDetails);
+    //
     return filesDetails;
   } catch (error) {
     console.log("Error - ", error);
