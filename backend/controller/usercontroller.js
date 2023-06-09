@@ -138,7 +138,6 @@ const signOut = asyncHandler(async (req, res, next) => {
     path: "/",
     sameSite: "Lax"
   });
-
   res.status(200).json({ success: true, message: "log out successful" });
 });
 

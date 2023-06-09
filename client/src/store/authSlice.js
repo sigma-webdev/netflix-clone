@@ -4,7 +4,9 @@ import axiosInstance from "../helpers/axiosInstance";
 const initialState = {
   isLoggedIn: false,
   user: {},
-  signInLoading: false
+  signInLoading: false,
+  signOutLoading: false,
+  getUserLoading: false
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
@@ -12,9 +14,9 @@ export const IS_USER_EXIST = createAsyncThunk(
   async (data) => {
     try {
       let response = await axiosInstance.post("auth/userexist", data);
-      return response;
+      return response.data;
     } catch (error) {
-      console.log(error);
+      return error.response.data;
     }
   }
 );
@@ -57,27 +59,38 @@ const authSlice = createSlice({
         state.signInLoading = true;
       })
       .addCase(SIGN_IN.fulfilled, (state, action) => {
-        if (action.payload.success) {
-          state.user = action.payload.data;
-          state.isLoggedIn = true;
-          state.signInLoading = false;
-        } else {
-          return action.payload;
-        }
+        state.user = action.payload.data;
+        state.isLoggedIn = true;
+        state.signInLoading = false;
       })
+      .addCase(SIGN_IN.rejected, (state) => {
+        state.signInLoading = false;
+      })
+
       // get user
-      .addCase(GET_USER.fulfilled, (state, action) => {
-        if (action.payload.success) {
-          state.user = action.payload.data;
-          state.isLoggedIn = true;
-        }
+      .addCase(GET_USER.pending, (state) => {
+        state.getUserLoading = true;
       })
+      .addCase(GET_USER.fulfilled, (state, action) => {
+        state.user = action.payload.data;
+        state.getUserLoading = false;
+        state.isLoggedIn = true;
+      })
+      .addCase(GET_USER.rejected, (state) => {
+        state.getUserLoading = false;
+      })
+
       // sign out
-      .addCase(SIGN_OUT.fulfilled, (state, action) => {
-        if (action.payload.success) {
-          state.isLoggedIn = false;
-          state.user = {};
-        }
+      .addCase(SIGN_OUT.pending, (state) => {
+        state.signOutLoading = true;
+      })
+      .addCase(SIGN_OUT.fulfilled, (state) => {
+        state.signOutLoading = false;
+        state.user = {};
+        state.isLoggedIn = false;
+      })
+      .addCase(SIGN_OUT.rejected, (state) => {
+        state.signOutLoading = false;
       });
   }
 });

@@ -1,14 +1,36 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+// icons
 import netflixLogo from "../assets/netflix_logo.png";
-import { Link } from "react-router-dom";
+import { Loading } from "../components/icons";
 //components
-
 import ChoosePlan from "../components/signUp/ChoosePlan.jsx";
 import RegForm from "../components/signUp/RegForm.jsx";
 import Password from "../components/signUp/Password.jsx";
 import Choose from "../components/signUp/Choose";
 import PlanForm from "../components/signUp/PlanForm";
+// thunk
+import { SIGN_OUT } from "../store/authSlice";
 const SignUp = ({ page }) => {
+  const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
+  const SIGN_IN_LOADING = useSelector((state) => state.auth.signInLoading);
+  const SIGN_OUT_LOADING = useSelector((state) => state.auth.signOutLoading);
+  const [buttonloading, setbuttonLoading] = useState(
+    GET_USER_LOADING || SIGN_IN_LOADING
+  );
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
+
+  async function handleSignOut() {
+    const response = await dispatch(SIGN_OUT());
+    if (response.payload.success) {
+      navigate("/signoutpage");
+    }
+  }
+
   return (
     <div>
       {/* nav bar */}
@@ -16,9 +38,18 @@ const SignUp = ({ page }) => {
         <Link to="/">
           <img className="h-8  md:h-12" src={netflixLogo} alt="netflix logo" />
         </Link>
-        <h2 className="font-bold  text-[#333] text-lg border-white  border-b-[3px] hover:border-black cursor-pointer ">
-          Sign In
-        </h2>
+        {/* sign-in sign-out button */}
+        <button
+          onClick={() => {
+            {
+              IS_LOGGED_IN ? handleSignOut() : navigate("/signin");
+            }
+          }}
+          className="font-bold  text-[#333] text-lg border-white  border-b-[3px] hover:border-black cursor-pointer "
+        >
+          {IS_LOGGED_IN ? "Sign out" : "Sign In"}
+        </button>
+        {/* sign-in sign-out button */}
       </nav>
 
       <div className="flex justify-center  items-center h-[90vh]">

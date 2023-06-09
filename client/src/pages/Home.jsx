@@ -28,11 +28,11 @@ const Home = () => {
   async function handleIsUserExist(e) {
     e.preventDefault();
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
-    if (isUserExist.payload.data.success) {
+    if (isUserExist.payload.success) {
       localStorage.setItem("email", e.target.email.value);
       navigate(`/signup/password`);
     } else {
-      alert(isUserExist.payload.data.message);
+      alert(isUserExist.payload.message);
     }
   }
 

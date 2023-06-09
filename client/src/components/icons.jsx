@@ -170,14 +170,14 @@ export const SkipBackward = () => {
   );
 };
 
-export const Loading = () => {
+export const Loading = (color = "white") => {
   return (
     <svg
       aria-hidden="true"
       role="status"
       className="inline w-4 h-4 mr-3 text-white animate-spin"
       viewBox="0 0 100 101"
-      fill="none"
+      fill={color}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path

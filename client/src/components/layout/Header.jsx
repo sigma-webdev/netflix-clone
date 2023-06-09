@@ -1,12 +1,12 @@
-import { BiBell, BiDownArrow } from "react-icons/bi";
-import { GlobeIcon } from "../icons";
 import netflixLogo from "./../../assets/netflix_logo.png";
-import { AiOutlineSearch } from "react-icons/ai";
 import { IconContext } from "react-icons/lib";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef } from "react";
-
+// icons
+import { GlobeIcon } from "../icons";
+import { AiOutlineSearch } from "react-icons/ai";
+import { BiBell, BiDownArrow } from "react-icons/bi";
 // THUNK
 import { SIGN_OUT } from "../../store/authSlice.js";
 
@@ -33,7 +33,10 @@ const Header = ({ isLogin }) => {
 
   async function handleSignInSignOut() {
     if (!isLoggedIn) return navigate("/signin");
-    await dispatch(SIGN_OUT());
+    const response = await dispatch(SIGN_OUT());
+    if (response.payload.success) {
+      navigate("/signoutpage");
+    }
   }
 
   return (
@@ -45,7 +48,9 @@ const Header = ({ isLogin }) => {
     >
       <div className="flex gap-4">
         <div className={isLogin ? "w-24" : "w-32"}>
-          <img src={netflixLogo} alt="netflix logo" className="w-full" />
+          <Link to="/">
+            <img src={netflixLogo} alt="netflix logo" className="w-full" />
+          </Link>
         </div>
         {/* login  */}
         {isLogin ? (
