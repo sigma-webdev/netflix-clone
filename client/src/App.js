@@ -32,7 +32,7 @@ function App() {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/browse" element={<Browse />} />
       <Route path="/watch" element={<Watch />} />
-      <Route path="/admin" element={<Admin />} />
+      <Route path="/admin/*" element={<Admin />} />
     </Routes>
   );
 }
