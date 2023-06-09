@@ -8,7 +8,7 @@ import RegForm from "../components/signUp/RegForm.jsx";
 import Password from "../components/signUp/Password.jsx";
 import Choose from "../components/signUp/Choose";
 import PlanForm from "../components/signUp/PlanForm";
-const Signup = ({ page }) => {
+const SignUp = ({ page }) => {
   return (
     <div>
       {/* nav bar */}
@@ -23,14 +23,10 @@ const Signup = ({ page }) => {
 
       <div className="flex justify-center  items-center h-[90vh]">
         {page === "PASSWORD" ? <Password /> : null}
-        {page === "CHOOSEPLAN" ? <ChoosePlan /> : null}
-        {page === "REGFORM" ? <RegForm /> : null}
-        {page === "PLANFORM" ? <PlanForm /> : null}
+        {page === "CHOOSE_PLAN" ? <ChoosePlan /> : null}
+        {page === "REG_FORM" ? <RegForm /> : null}
+        {page === "PLAN_FORM" ? <PlanForm /> : null}
         {page === "CHOOSE" ? <Choose /> : null}
-        {/* <ChoosePlan /> */}
-        {/* <RegForm /> */}
-        {/* <Choose /> */}
-        {/* <PlanForm /> */}
       </div>
 
       <footer className="bg-[#f3f3f3] p-8">
@@ -49,4 +45,4 @@ const Signup = ({ page }) => {
   );
 };
 
-export default Signup;
+export default SignUp;

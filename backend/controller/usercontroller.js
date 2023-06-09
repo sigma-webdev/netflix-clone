@@ -3,7 +3,7 @@ const userModel = require("../model/userSchema.js");
 const customError = require("../utils/customError.js");
 const bcrypt = require("bcrypt");
 const cookieOptions = require("../utils/cookieOption.js");
-const transporter = require("../config/emailonfig.js");
+const transporter = require("../config/emailConfig.js");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
@@ -30,7 +30,6 @@ const signUp = asyncHandler(async (req, res) => {
 
 const signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email, password);
   // check user exist or not
   const user = await userModel.findOne({ email }).select("+password");
   if (!user)
@@ -43,7 +42,12 @@ const signIn = asyncHandler(async (req, res, next) => {
   // check the password is correct or not
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
   if (!isPasswordCorrect)
-    return next(new customError("please try again or reset password", 400));
+    return next(
+      new customError(
+        "Incorrect password. Please try again or reset password",
+        400
+      )
+    );
 
   const jwtToken = user.generateJwtToken();
   res.cookie("token", jwtToken, cookieOptions);

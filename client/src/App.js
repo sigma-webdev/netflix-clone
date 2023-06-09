@@ -1,6 +1,6 @@
 import Home from "./pages/Home";
-import SignIn from "./pages/Signin.jsx";
-import Signup from "./pages/Signup.jsx";
+import SignIn from "./pages/SignIn.jsx";
+import SignUp from "./pages/SignUp.jsx";
 import Browse from "./pages/Browse";
 import Watch from "./pages/Watch";
 
@@ -26,9 +26,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/signup/password" element={<Signup page="PASSWORD" />} />
-      <Route path="/signup/choose" element={<Signup page="CHOOSE" />} />
-      <Route path="/singup/planform" element={<Signup page="PLANFORM" />} />
+      <Route path="/signup/password" element={<SignUp page="PASSWORD" />} />
+      <Route path="/signup/choose" element={<SignUp page="CHOOSE" />} />
+      <Route path="/singup/planform" element={<SignUp page="PLAN_FORM" />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/browse" element={<Browse />} />
       <Route path="/watch" element={<Watch />} />

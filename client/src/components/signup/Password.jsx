@@ -3,7 +3,7 @@ import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { SIGN_IN } from "../../store/authSlice";
 import { useDispatch } from "react-redux";
 
-function SignIn() {
+function Password() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const email = localStorage.getItem("email");
@@ -71,4 +71,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default Password;
