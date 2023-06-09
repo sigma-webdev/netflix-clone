@@ -67,11 +67,14 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   const contentDetails = Content(details);
 
   const contentData = await contentDetails.save().catch((error) => {
-    console.log("ERROR catching - ", error);
     // DELETE FILE
     cloudinaryFileDelete(details.trailer[0].trailerId);
     cloudinaryFileDelete(details.content[0].contentID);
     cloudinaryImageDelete(details.thumbnail[0].thumbnailID);
+
+    return next(
+      new CustomError("Content fail to save to database! Please try again", 400)
+    );
   });
   // console.log("contentData- ", contentData);
 
@@ -124,10 +127,14 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
  ********************/
 const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const content = await Content.findById(id);
-  console.log("CONTENT -", content);
+  const contentData = await Content.findById(id);
 
-  if (!content) {
+  // const { thumbnail, trailer, content } = contentData;
+  // console.log("Thumbnail", thumbnail[0].thumbnailID);
+  // console.log("trailer", trailer[0].trailerId);
+  // console.log("content", content[0].contentID);
+
+  if (!contentData) {
     return next(
       new CustomError("Invalid Content Id, or Content Not found", 404)
     );
@@ -136,7 +143,45 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content fetched Successfully",
-    content,
+    contentData,
+  });
+});
+
+// TODO: delete and update controllers
+/********************
+ * @httpDeleteById
+ * @route http://localhost:8081/api/v1/content/posts/id
+ * @description  controller to delete the content
+ * @parameters {Object id}
+ * @return { Object } content object
+ ********************/
+const httpDeleteById = asyncHandler(async (req, res, next) => {
+  // extract id
+  const { id } = req.params;
+
+  // find content with id
+  const contentData = await Content.findById(id);
+
+  if (!contentData) {
+    return next(
+      new CustomError("Content with the given Id does not exist.", 404)
+    );
+  }
+  // TODO: need to be tested
+  const { thumbnail, trailer, content } = contentData;
+  console.log("Thumbnail", thumbnail[0].thumbnailID);
+  console.log("trailer", trailer[0].trailerId);
+  console.log("content", content[0].contentID);
+
+  contentData.deleteOne().then(() => {
+    cloudinaryFileDelete(content[0].contentID);
+    cloudinaryFileDelete(trailer[0].trailerId);
+    cloudinaryImageDelete(thumbnail[0].thumbnailID);
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Content deleted successfully",
   });
 });
 
@@ -145,4 +190,5 @@ module.exports = {
   httpPostContent,
   httpGetContent,
   httpGetContentById,
+  httpDeleteById,
 };
