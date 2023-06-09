@@ -7,6 +7,7 @@ const fileUpLoad = require("express-fileupload");
 const cors = require("cors");
 const contentRoute = require("./router/contentRouter");
 const errorHandler = require("./middleware/errorHandler.js");
+const cookieParser = require("cookie-parser");
 
 // database connection
 require("./config/databaseConnection");
@@ -21,6 +22,7 @@ app.use(
 app.use(morgan("tiny"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   fileUpLoad({
     useTempFiles: true,
