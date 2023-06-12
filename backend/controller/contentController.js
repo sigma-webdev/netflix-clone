@@ -147,7 +147,6 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   });
 });
 
-// TODO: delete and update controllers
 /********************
  * @httpDeleteById
  * @route http://localhost:8081/api/v1/content/posts/id
@@ -167,7 +166,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
       new CustomError("Content with the given Id does not exist.", 404)
     );
   }
-  // TODO: need to be tested
+
   const { thumbnail, trailer, content } = contentData;
   console.log("Thumbnail", thumbnail[0].thumbnailID);
   console.log("trailer", trailer[0].trailerId);
@@ -184,6 +183,15 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
     message: "Content deleted successfully",
   });
 });
+
+/********************
+ * @httpUpdateById
+ * @route http://localhost:8081/api/v1/content/posts/id
+ * @description  controller to update the content
+ * @parameters {Object id}
+ * @return { Object } content object
+ ********************/
+const httpUpdateById = asyncHandler(async (req, res, next) => {});
 
 module.exports = {
   contentApi,
