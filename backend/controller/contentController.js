@@ -99,8 +99,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
   // find all content --
-  const contents = await Content.find({});
-
+  const contents = await Content.find();
+console.log(contents)
   // if no content available
   if (!contents.length) {
     res.status(200).json({
