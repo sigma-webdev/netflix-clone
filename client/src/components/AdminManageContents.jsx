@@ -100,7 +100,7 @@ const AdminManageContents = () => {
                                         <td className="px-4 py-3">{content.categories}</td>
                                         <td className="px-4 py-3">{content.genres}</td>
                                         <td className="px-4 py-2">
-                                            <Link to={`content/${content._id}`}>
+                                            <Link to={`${content._id}`}>
                                                 <div onClick={toggleModal} className='py-2 text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded cursor-pointer' >
                                                     View
                                                 </div>
@@ -112,9 +112,9 @@ const AdminManageContents = () => {
                     </tbody>
                 </table>
             </div>
-            <Routes>
+            {/* <Routes>
                 <Route path=":id" element={<AdminContentView />} />
-            </Routes>
+            </Routes> */}
         </>
 
     )
