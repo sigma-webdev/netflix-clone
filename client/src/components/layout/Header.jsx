@@ -14,7 +14,8 @@ const Header = ({ isLogin }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
+  const getUserLoading = useSelector((state) => state.auth.getUserLoading);
   const headerRef = useRef(null);
 
   const scrollHandler = () => {
@@ -32,7 +33,7 @@ const Header = ({ isLogin }) => {
   }, []);
 
   async function handleSignInSignOut() {
-    if (!isLoggedIn) return navigate("/signin");
+    if (!IS_LOGGED_IN) return navigate("/signin");
     const response = await dispatch(SIGN_OUT());
     if (response.payload.success) {
       navigate("/signoutpage");
@@ -108,7 +109,7 @@ const Header = ({ isLogin }) => {
               }}
               className="px-3 py-1 bg-red-600 rounded text-white border-2 border-red-600"
             >
-              {isLoggedIn ? "Sign out" : "Sign In"}
+              {IS_LOGGED_IN ? "Sign out" : "Sign In"}
             </button>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -11,17 +11,22 @@ import RegForm from "../components/signUp/RegForm.jsx";
 import Password from "../components/signUp/Password.jsx";
 import Choose from "../components/signUp/Choose";
 import PlanForm from "../components/signUp/PlanForm";
+import ForgotPassword from "../components/signUp/ForgotPassword.jsx";
 // thunk
 import { SIGN_OUT } from "../store/authSlice";
-const SignUp = ({ page }) => {
+const SignUp = ({ page, theme = "light" }) => {
   const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
   const SIGN_IN_LOADING = useSelector((state) => state.auth.signInLoading);
   const SIGN_OUT_LOADING = useSelector((state) => state.auth.signOutLoading);
-  const [buttonloading, setbuttonLoading] = useState(
-    GET_USER_LOADING || SIGN_IN_LOADING
-  );
+  const [buttonloading, setButtonLoading] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setButtonLoading(GET_USER_LOADING || SIGN_IN_LOADING);
+  }, [GET_USER_LOADING, SIGN_IN_LOADING]);
+
   const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
 
   async function handleSignOut() {
@@ -58,6 +63,7 @@ const SignUp = ({ page }) => {
         {page === "REG_FORM" ? <RegForm /> : null}
         {page === "PLAN_FORM" ? <PlanForm /> : null}
         {page === "CHOOSE" ? <Choose /> : null}
+        {(page = "FORGOT_PASSWORD" ? <ForgotPassword /> : null)}
       </div>
 
       <footer className="bg-[#f3f3f3] p-8">

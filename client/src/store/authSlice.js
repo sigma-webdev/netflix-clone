@@ -3,7 +3,7 @@ import axiosInstance from "../helpers/axiosInstance";
 
 const initialState = {
   isLoggedIn: false,
-  user: {},
+  userData: { name: "name" },
   signInLoading: false,
   signOutLoading: false,
   getUserLoading: false
@@ -50,7 +50,7 @@ export const GET_USER = createAsyncThunk("auth/user", async () => {
 
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -72,11 +72,14 @@ const authSlice = createSlice({
         state.getUserLoading = true;
       })
       .addCase(GET_USER.fulfilled, (state, action) => {
-        state.user = action.payload.data;
+        if (action.payload.success) {
+          state.userData = action.payload.data;
+          state.isLoggedIn = true;
+        }
         state.getUserLoading = false;
-        state.isLoggedIn = true;
       })
-      .addCase(GET_USER.rejected, (state) => {
+      .addCase(GET_USER.rejected, (state, action) => {
+        console.log("rejected", action.payload);
         state.getUserLoading = false;
       })
 
@@ -86,7 +89,7 @@ const authSlice = createSlice({
       })
       .addCase(SIGN_OUT.fulfilled, (state) => {
         state.signOutLoading = false;
-        state.user = {};
+        state.userData = {};
         state.isLoggedIn = false;
       })
       .addCase(SIGN_OUT.rejected, (state) => {

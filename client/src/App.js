@@ -33,6 +33,10 @@ function App() {
       <Route path="/browse" element={<Browse />} />
       <Route path="/watch" element={<Watch />} />
       <Route path="/admin/*" element={<Admin />} />
+      <Route
+        path="/forgotpassword"
+        element={<SignUp page="FORGOT_PASSWORD" />}
+      ></Route>
     </Routes>
   );
 }
