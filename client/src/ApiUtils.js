@@ -9,3 +9,13 @@ export const getContentDetailsById = async (id) => {
       return err.response
     }
   }
+
+  export const deleteContentById = async (id) => {
+    try{
+      const response = await axiosInstance.delete(`/content/posts/${id}`);
+      console.log(response)
+      return response
+    } catch (err) {
+      return err.response
+    }
+  }
