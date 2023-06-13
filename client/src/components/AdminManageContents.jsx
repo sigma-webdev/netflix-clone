@@ -67,11 +67,23 @@ const AdminManageContents = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const {name, description, categories, genres,  creator,rating, language,   trailer, content,   cast, thumbnail,episodes } = newContentData
+        const sentFormData = new FormData();
 
-        const formData = new FormData(e.target)
-        formData.append("name", newContentData.name)
+        sentFormData.append("name",name);
+        sentFormData.append("description",description)
+        sentFormData.append("categories",categories)
+        sentFormData.append("genres",genres)
+        sentFormData.append("creator",creator)
+        sentFormData.append("rating",rating)
+        sentFormData.append("language",language)
+        sentFormData.append("trailer",trailer)
+        sentFormData.append("content",content)
+        sentFormData.append("cast",cast)
+        sentFormData.append("thumbnail",thumbnail)
+        sentFormData.append("episodes",episodes)
         
-           addContent(formData).then(
+           addContent(sentFormData).then(
              toggleModal(false)
            )  
     }
