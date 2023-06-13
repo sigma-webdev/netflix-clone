@@ -100,7 +100,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 const httpGetContent = asyncHandler(async (req, res, next) => {
   // find all content --
   const contents = await Content.find();
-console.log(contents)
+  console.log(contents);
   // if no content available
   if (!contents.length) {
     res.status(200).json({
@@ -127,12 +127,8 @@ console.log(contents)
  ********************/
 const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const contentData = await Content.findById(id);
 
-  // const { thumbnail, trailer, content } = contentData;
-  // console.log("Thumbnail", thumbnail[0].thumbnailID);
-  // console.log("trailer", trailer[0].trailerId);
-  // console.log("content", content[0].contentID);
+  const contentData = await Content.findById(id);
 
   if (!contentData) {
     return next(
