@@ -6,10 +6,26 @@ import { fetchContent } from '../store/contentSlice';
 import { Routes, Route } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import AdminContentView from './AdminContentView';
+import { addContent } from '../ApiUtils';
 
 const AdminManageContents = () => {
 
     const [contentData, setContentData] = useState([])
+    const [newContentData, setNewContentData] = useState({
+        name: "",
+        description: "",
+        categories: "",
+        genres: "",
+        creator: "",
+        rating: "",
+        language: "",
+        trailer: null,
+        content: null,
+        cast: "",
+        thumbnail: null,
+        episodes: []
+
+    })
 
 
     const dispatch = useDispatch();
@@ -32,6 +48,33 @@ const AdminManageContents = () => {
     const toggleModal = (val) => {
         setIsOpen(val)
     }
+    const handleInputChange = (event) => {
+
+        const { name, value } = event.target;
+        setNewContentData(prevDetails => ({
+            ...prevDetails,
+            [name]: value
+        }));
+    };
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        // console.log(file)
+        setNewContentData(prevDetails => ({
+            ...prevDetails,
+            [event.target.name]: file
+        }));
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.target)
+        formData.append("name", newContentData.name)
+        
+           addContent(formData).then(
+             toggleModal(false)
+           )  
+    }
 
 
     return (
@@ -39,42 +82,53 @@ const AdminManageContents = () => {
             {
                 isOpen &&
                 <div className='absolute w-full h-full bg-cyan-600 bg-opacity-60 flex items-center justify-center border'>
-                    <div className='relative w-96  bg-gray-50  rounded-lg py-12 px-4 max-h-[80%] overflow-y-scroll no-scrollbar'>
+                    <div className='relative w-[500px]  bg-gray-50  rounded-lg py-12 px-4 max-h-[80%] overflow-y-scroll no-scrollbar'>
                         <div onClick={() => toggleModal(false)} className='absolute top-2 right-3 text-3xl cursor-pointer'>X</div>
-                        <form onSubmit={(e) => e.preventDefault()} className='flex flex-col gap-2'>
+                        <form onSubmit={(e) => handleSubmit(e)} className='flex flex-col gap-2'>
                             <label htmlFor="name">Movie Name:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="name" id="name" value="Nasikh CL" />
-                            <label htmlFor="name">Description:</label>
-                            <input className='bg-transparent border p-2 rounded' type="email" name="email" id="email" value="nasikh@ineuron.ai" />
-                            <label htmlFor="name">Cast:</label>
-                            <input className='bg-transparent border p-2 rounded' type="tel" name="phone" id="phone" value="9988998781" />
-                            <label htmlFor="name">  Categories:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
-                            <label htmlFor="name">  Likes:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
-                            <label htmlFor="name">  Creator:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
-                            <label htmlFor="name">  Raiting:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
-                            <label htmlFor="name">  Language:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
-                            <label htmlFor="name">  Thumbnail:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
-                            <label htmlFor="name">  Trailer:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
-                            <label htmlFor="name">  Content:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
-                            <label htmlFor="name">  Episodes:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value="NONE" />
+                            <input className='bg-transparent border p-2 rounded' type="text" name="name" value={newContentData.name} onChange={handleInputChange} />
+                            <label htmlFor="genres">Genres:</label>
+                            <input className='bg-transparent border p-2 rounded' type="text" name="genres" value={newContentData.genres} onChange={handleInputChange} />
+                            <label htmlFor="text">Description:</label>
+                            <input className='bg-transparent border p-2 rounded' type="text" name="description" value={newContentData.description} onChange={handleInputChange} />
+                            <label htmlFor="cast">Cast:</label>
+                            <input className='bg-transparent border p-2 rounded' type="text" name="cast" value={newContentData.cast} onChange={handleInputChange} />
+                            <label htmlFor="categories">  Categories:</label>
+                            <label className=''>
+                                Movies
+                                <input className='' type="radio" name="categories" onChange={handleInputChange} value="Movies" checked={newContentData.categories === 'Movies'} />
 
-                            <button className='bg-red-600 hover:bg-red-700 text-white rounded py-2'>Delete Content</button>
+                            </label>
+                            <label>
+                                Series
+                                <input className='' type="radio" name="categories" onChange={handleInputChange} value="Series" checked={newContentData.categories === 'Series'} />
+
+                            </label>
+
+                            <label htmlFor="creator">  Creator:</label>
+                            <input className='bg-transparent border p-2 rounded' type="text" name="creator" value={newContentData.creator} onChange={handleInputChange} />
+                            <label htmlFor="rating">  Rating:</label>
+                            <input className='bg-transparent border p-2 rounded' type="text" name="rating" value={newContentData.rating} onChange={handleInputChange} />
+                            <label htmlFor="language">  Language:</label>
+                            <input className='bg-transparent border p-2 rounded' type="text" name="language" value={newContentData.language} onChange={handleInputChange} />
+                            <label htmlFor="thumbnail">  Thumbnail:</label>
+                            <input className='bg-transparent border p-2 rounded' type="file" name="thumbnail" accept="image/*" onChange={handleFileChange} />
+                            <label htmlFor="trailer">  Trailer:</label>
+                            <input className='bg-transparent border p-2 rounded' type="file" name="trailer" accept="video/*" onChange={handleFileChange} />
+                            <label htmlFor="content">  Content:</label>
+                            <input className='bg-transparent border p-2 rounded' type="file" name="content" accept="video/*" onChange={handleFileChange} />
+                            {/* <label htmlFor="name">  Episodes:</label>
+                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={newContentData.epis} /> */}
+
+                            <button type='submit' className='bg-green-600 hover:bg-greean-700 text-white rounded py-2'>Add Content</button>
 
                         </form>
                     </div>
                 </div>
             }
-            <div className='w-10/12 flex flex-col gap-5 items-center py-4 bg-slate-800 overflow-y-scroll max-h-[100vh]'>
+            <div className='w-10/12 flex flex-col gap-5 items-center py-4 bg-slate-800 overflow-y-scroll max-h-[100vh] px-4'>
                 <h2 className='text-white'>Manage Contents</h2>
+                <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded self-end text-white'>Add Content</button>
                 <table className="table-auto w-5/6 overflow-scroll text-gray-200 border border-gray-300">
                     <thead className="text-left">
                         <tr>
