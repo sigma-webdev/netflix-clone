@@ -36,8 +36,8 @@ const cloudinaryFileUpload = async (files) => {
 
   let thumbnail = [
     {
-      trailerUrl: "",
-      trailerID: "",
+      thumbnailUrl: "",
+      thumbnailID: "",
     },
   ];
 
