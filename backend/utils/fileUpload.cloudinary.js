@@ -2,6 +2,7 @@ const cloudinary = require("../config/cloudinaryConfig");
 // const CustomError = require("./customError");
 
 const cloudinaryFileUpload = async (files) => {
+  console.log(files)
   if (!files.trailer) {
     return new CustomError("Please add trailer file", 400);
   }
