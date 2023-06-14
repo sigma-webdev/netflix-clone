@@ -12,11 +12,9 @@ const userExist = asyncHandler(async (req, res, next) => {
   const result = await userModel.findOne({ email: email });
   console.log(result);
   if (result) {
-    return res.status(200).json({ success: true, message: "user exist" });
+    return res.status(200).json({ success: true, isUserExist: true });
   } else {
-    return res
-      .status(200)
-      .json({ success: false, message: "you'r not registered" });
+    return res.status(200).json({ success: false, isUserExist: false });
   }
 });
 
@@ -25,6 +23,8 @@ const signUp = asyncHandler(async (req, res) => {
   const userInfo = userModel({ email, password });
   const result = await userInfo.save();
   result.password = undefined;
+  const jwtToken = result.generateJwtToken();
+  res.cookie("token", jwtToken, cookieOptions);
   return res.status(200).json({ success: true, data: result });
 });
 
@@ -56,10 +56,12 @@ const signIn = asyncHandler(async (req, res, next) => {
 
 const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
-  if (!email) return next(customError("Email is required", 400));
+  if (!email) return next(new customError("Email is required", 400));
   const user = await userModel.findOne({ email });
   if (!user) {
-    return next(new customError("User not found", 404));
+    return next(
+      new customError("No account found for this email address.", 404)
+    );
   }
   const resetToken = user.getForgotPasswordToken();
   await user.save();

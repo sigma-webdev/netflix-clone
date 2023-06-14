@@ -5,6 +5,12 @@ const errorHandler = (error, req, res, next) => {
   // console.log("errorMessage --", errorMessage);
   // console.log("errorStatusCode--", errorStatusCode);
   console.log("Error --", error);
+  if (error.name === "castError") {
+    return res.status(errorStatusCode).json({
+      success: false,
+      message: `Resource not found , Invalid ${error.path}`
+    });
+  }
   res.status(errorStatusCode).json({ success: false, message: errorMessage });
 };
 

@@ -6,11 +6,13 @@ import { useState } from "react";
 import netflixLogo from "../assets/netflix_logo.png";
 import { Loading } from "../components/icons";
 //components
-import ChoosePlan from "../components/signUp/ChoosePlan.jsx";
+import Registration from "../components/signUp/Registration.jsx";
 import RegForm from "../components/signUp/RegForm.jsx";
 import Password from "../components/signUp/Password.jsx";
 import Choose from "../components/signUp/Choose";
 import PlanForm from "../components/signUp/PlanForm";
+import ResetPassword from "../components/signUp/ResetPassword.jsx";
+import LoginHelp from "../components/signUp/LoginHelp.jsx";
 import ForgotPassword from "../components/signUp/ForgotPassword.jsx";
 // thunk
 import { SIGN_OUT } from "../store/authSlice";
@@ -18,7 +20,7 @@ const SignUp = ({ page, theme = "light" }) => {
   const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
   const SIGN_IN_LOADING = useSelector((state) => state.auth.signInLoading);
   const SIGN_OUT_LOADING = useSelector((state) => state.auth.signOutLoading);
-  const [buttonloading, setButtonLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -59,11 +61,13 @@ const SignUp = ({ page, theme = "light" }) => {
 
       <div className="flex justify-center  items-center h-[90vh]">
         {page === "PASSWORD" ? <Password /> : null}
-        {page === "CHOOSE_PLAN" ? <ChoosePlan /> : null}
+        {page === "REGISTRATION" ? <Registration /> : null}
         {page === "REG_FORM" ? <RegForm /> : null}
         {page === "PLAN_FORM" ? <PlanForm /> : null}
         {page === "CHOOSE" ? <Choose /> : null}
-        {(page = "FORGOT_PASSWORD" ? <ForgotPassword /> : null)}
+        {page === "FORGOT_PASSWORD" ? <ForgotPassword /> : null}
+        {page === "RESET_PASSWORD" ? <ResetPassword /> : null}
+        {page === "LOGIN_HELP" ? <LoginHelp /> : null}
       </div>
 
       <footer className="bg-[#f3f3f3] p-8">

@@ -57,7 +57,7 @@ function Password() {
           Enter a password
         </label>
       </div>
-      <Link to="forgotPassword">
+      <Link to="/forgotpassword">
         <p className="  text-blue-600  border-b-2  border-white  hover:border-blue-600 w-fit">
           Forgot your password?
         </p>

@@ -20,22 +20,21 @@ const Home = () => {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
-  const USER_DATA = useSelector((state) => state.auth.user);
+  const USER_DATA = useSelector((state) => state.auth.userData);
 
   const accordianHandler = (id) => {
     setActiveItem(id);
   };
 
-  console.log(GET_USER_LOADING);
-  // console.log(USER_DATA);
   async function handleIsUserExist(e) {
     e.preventDefault();
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
-    if (isUserExist.payload.success) {
+    if (isUserExist.payload.isUserExist) {
       localStorage.setItem("email", e.target.email.value);
-      navigate(`/signup/password`);
+      navigate("/signup/password");
     } else {
-      alert(isUserExist.payload.message);
+      localStorage.setItem("email", e.target.email.value);
+      navigate("signup/registration");
     }
   }
 
