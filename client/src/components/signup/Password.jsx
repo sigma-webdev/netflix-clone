@@ -1,20 +1,22 @@
 import React from "react";
-import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SIGN_IN } from "../../store/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+// icons
+import { Loading } from "../icons.jsx";
 
-function SignIn() {
+function Password() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const email = localStorage.getItem("email");
+  const SIGN_IN_LOADING = useSelector((state) => state.auth.signInLoading);
 
   async function handleSignIn(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     formData.append("email", email);
-    const response = await dispatch(
-      SIGN_IN({ email, password: e.target.password.value })
-    );
+
+    const response = await dispatch(SIGN_IN(formData));
     const userData = response.payload;
     if (userData.success && userData.data.plan !== "NONE") {
       navigate("/browse");
@@ -55,7 +57,7 @@ function SignIn() {
           Enter a password
         </label>
       </div>
-      <Link to="forgotPassword">
+      <Link to="/forgotpassword">
         <p className="  text-blue-600  border-b-2  border-white  hover:border-blue-600 w-fit">
           Forgot your password?
         </p>
@@ -65,10 +67,10 @@ function SignIn() {
         type="submit"
         className="mt-3 bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl"
       >
-        Next
+        {SIGN_IN_LOADING ? <Loading /> : "Next"}
       </button>
     </form>
   );
 }
 
-export default SignIn;
+export default Password;

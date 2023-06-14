@@ -5,7 +5,7 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === "CastError") {
     return res.status(errorStatusCode).json({
       success: false,
-      message: `Resource not found, invalid ${error.path}`,
+      message: `Resource not found, invalid ${error.path}`
     });
   }
   res.status(errorStatusCode).json({ success: false, message: errorMessage });

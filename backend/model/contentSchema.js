@@ -50,20 +50,18 @@ const contentSchema = new Schema(
     language: {
       type: String
     },
-
     thumbnail: [
       {
         thumbnailUrl: {
           type: String,
-          required: [true, "Thumbnail URL should be provided"],
+          required: [true, "Thumbnail URL should be provided"]
         },
         thumbnailID: {
           type: String,
-          required: [true, "Thumbnail Id should be provided"],
-        },
-      },
+          required: [true, "Thumbnail Id should be provided"]
+        }
+      }
     ],
-
     trailer: [
       {
         trailerUrl: {
@@ -72,10 +70,10 @@ const contentSchema = new Schema(
         },
         trailerId: { type: String },
         // TODO: calculate length
-        trailerDuration: { type: Number },
-      },
-
+        trailerDuration: { type: Number }
+      }
     ],
+
     content: [
       {
         contentURL: {

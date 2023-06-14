@@ -1,6 +1,6 @@
 import Home from "./pages/Home";
-import SignIn from "./pages/Signin.jsx";
-import Signup from "./pages/Signup.jsx";
+import SignIn from "./pages/SignIn.jsx";
+import SignUp from "./pages/SignUp.jsx";
 import Browse from "./pages/Browse";
 import Watch from "./pages/Watch";
 
@@ -16,7 +16,7 @@ import { GET_USER, USER } from "./store/authSlice.js";
 function App() {
   const dispatch = useDispatch();
   async function getUser() {
-    const user = await dispatch(GET_USER());
+    await dispatch(GET_USER());
   }
 
   useEffect(() => {
@@ -26,13 +26,24 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/signup/password" element={<Signup page="PASSWORD" />} />
-      <Route path="/signup/choose" element={<Signup page="CHOOSE" />} />
-      <Route path="/singup/planform" element={<Signup page="PLANFORM" />} />
+      <Route path="/signup/password" element={<SignUp page="PASSWORD" />} />
+      <Route path="/signup/choose" element={<SignUp page="CHOOSE" />} />
+      <Route path="/singup/planform" element={<SignUp page="PLAN_FORM" />} />
+      <Route
+        path="/signup/registration"
+        element={<SignUp page="REGISTRATION" />}
+      />{" "}
+      <Route path="/signup/regform" element={<SignUp page="REG_FORM" />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/browse" element={<Browse />} />
       <Route path="/watch" element={<Watch />} />
       <Route path="/admin/*" element={<Admin />} />
+      <Route
+        path="/forgotpassword"
+        element={<SignUp page="FORGOT_PASSWORD" />}
+      />
+      <Route path="/resetpassword" element={<SignUp page="RESET_PASSWORD" />} />
+      <Route path="/loginhelp" element={<SignUp page="LOGIN_HELP" />} />
     </Routes>
   );
 }
