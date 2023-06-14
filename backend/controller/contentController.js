@@ -65,7 +65,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     return next(new CustomError("Please fill the required field!", 400));
   }
 
-  console.log("req.files - ", req.files)
+  console.log("req.files -------///// ", req.files);
+
   const contentFiles = await cloudinaryFileUpload(req.files);
 
   // add the file details
@@ -223,12 +224,26 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   //   language: req.body.language || contentData.language,
   // };
 
+  // handling creator and cast data
+  const cast = req.body.cast.split(",");
+  const creator = req.body.creator.split(",");
+  const castTemp = [];
+  const creatorTemp = [];
+  for (let i of cast) {
+    castTemp.push(i.trim());
+  }
+
+  for (let i of creator) {
+    creatorTemp.push(i.trim());
+  }
+
   contentData.name = req.body.name || contentData.name;
   contentData.description = req.body.description || contentData.description;
-  contentData.cast = req.body.cast || contentData.cast;
+  contentData.cast = castTemp.length === 0 ? contentData.cast : castTemp;
   contentData.categories = req.body.categories || contentData.categories;
   contentData.genres = req.body.genres || contentData.genres;
-  contentData.creator = req.body.creator || contentData.creator;
+  contentData.creator =
+    creatorTemp.length === 0 ? contentData.creator : creatorTemp;
   contentData.rating = req.body.rating || contentData.rating;
   contentData.language = req.body.language || contentData.language;
 
@@ -245,7 +260,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   console.log("content------- -", contentData);
 
   // save the updated content
-  await contentData.save();
+  // await contentData.save();
 
   res.status(200).json({
     success: true,
