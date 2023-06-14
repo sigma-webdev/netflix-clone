@@ -5,6 +5,7 @@ const {
   httpGetContent,
   httpGetContentById,
   httpDeleteById,
+  httpUpdateById,
 } = require("../controller/contentController");
 
 const contentRoute = express.Router();
@@ -16,5 +17,6 @@ contentRoute.route("/posts/:id").get(httpGetContentById);
 contentRoute.route("/posts/:id").delete(httpDeleteById);
 
 // TODO: delete, update and search query --
+contentRoute.route("/posts/:id").put(httpUpdateById);
 
 module.exports = contentRoute;
