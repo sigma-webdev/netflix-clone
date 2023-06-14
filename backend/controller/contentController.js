@@ -252,17 +252,6 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     const contentFiles = await cloudinaryFileUpload(req.files);
     console.log("ContentFiles ------------------ ", contentFiles);
 
-    // handling files update
-    // trailer
-    // contentData.trailer =
-    //   contentFiles.trailer[0].trailerUrl.length == 0
-    //     ? contentData.trailer[0].trailerUrl
-    //     : contentFiles.trailer[0].trailerUrl;
-    // contentData.trailer =
-    //   contentFiles.trailer[0].trailerId.length == 0
-    //     ? contentData.trailer[0].trailerId
-    //     : contentFiles.trailer[0].trailerId;
-
     if (req.files.trailer) {
       contentData.trailer = contentFiles.trailer;
     }
@@ -286,6 +275,15 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     contentData,
   });
 });
+
+/********************
+ * @httpUpdateById
+ * @route http://localhost:8081/api/v1/content/posts/query
+ * @description  controller to update the content
+ * @parameters {Object id}
+ * @return { Object } content object
+ ********************/
+const searchByMovieName = () => {};
 
 module.exports = {
   contentApi,
