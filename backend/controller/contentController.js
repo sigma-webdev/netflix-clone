@@ -1,4 +1,5 @@
 const asyncHandler = require("../middleware/asyncHandler.js");
+const CustomError = require("../utils/customerror.js");
 
 const Content = require("../model/contentSchema.js");
 
@@ -7,10 +8,6 @@ const {
   cloudinaryFileDelete,
   cloudinaryImageDelete,
 } = require("../utils/fileDelete.cloudinary.js");
-const CustomError = require("../utils/customerror.js");
-cloudinaryImageDelete;
-
-// TODO: handle delete, getById, and update and upload Episode
 
 /**
  * Testing route
@@ -30,17 +27,26 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   let details = {
     name: req.body.name,
     description: req.body.description,
-    cast: req.body.cast.split(","),
+    cast: req.body.cast ? req.body.cast.split(",") : undefined,
     categories: req.body.categories,
     genres: req.body.genres,
-    creator: req.body.creator.split(","),
+    creator: req.body.creator ? req.body.creator.split(",") : undefined,
     rating: req.body.rating,
     language: req.body.language,
   };
 
   // handling creator and cast data
+
   const castTemp = [];
   const creatorTemp = [];
+
+  if (!details.creator) {
+    return next(new CustomError("Creator field required", 400));
+  }
+  if (!details.cast) {
+    return next(new CustomError("Cast field required", 400));
+  }
+
   for (let i of details.cast) {
     castTemp.push(i.trim());
   }
@@ -65,7 +71,19 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     return next(new CustomError("Please fill the required field!", 400));
   }
 
-  console.log("req.files -------///// ", req.files);
+  // files check --
+  console.log("req files -----------------", req.files?.trailer);
+  if (!req.files.trailer) {
+    return next(new CustomError("Please add trailer file", 400));
+  }
+
+  if (!req.files.content) {
+    return next(new CustomError("Please add content file", 400));
+  }
+
+  if (!req.files.thumbnail) {
+    return next(new CustomError("Please add thumbnail file", 400));
+  }
 
   const contentFiles = await cloudinaryFileUpload(req.files);
 
@@ -87,7 +105,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     cloudinaryImageDelete(details.thumbnail[0].thumbnailID);
 
     return next(
-      new CustomError("Content fail to save to database! Please try again", 400)
+      new CustomError(`Content fail to save to database! ${error}`, 400)
     );
   });
   // console.log("contentData- ", contentData);
@@ -211,22 +229,9 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     return next(new CustomError("content not found", 404));
   }
 
-  // contentData = {
-  //   name: req.body.name || contentData.name,
-  //   description: req.body.description || contentData.description,
-  //   cast: req.body.cast ? req.body.cast.split(",") : contentData.cast,
-  //   categories: req.body.categories || contentData.categories,
-  //   genres: req.body.genres || contentData.genres,
-  //   creator: req.body.creator
-  //     ? req.body.creator.split(",")
-  //     : contentData.creator,
-  //   rating: req.body.rating || contentData.rating,
-  //   language: req.body.language || contentData.language,
-  // };
-
   // handling creator and cast data
-  const cast = req.body.cast.split(",");
-  const creator = req.body.creator.split(",");
+  const cast = req.body.cast ? req.body.cast.split(",") : "";
+  const creator = req.body.creator ? req.body.creator.split(",") : "";
   const castTemp = [];
   const creatorTemp = [];
   for (let i of cast) {
@@ -250,17 +255,35 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   if (files) {
     console.log("files", files);
     const contentFiles = await cloudinaryFileUpload(req.files);
+    console.log("ContentFiles ------------------ ", contentFiles);
 
-    // add the file details
-    contentData.trailer = contentFiles.trailer || contentData.trailer;
-    contentData.content = contentFiles.content || contentData.content;
-    contentData.thumbnail = contentFiles.thumbnail || contentData.thumbnail;
+    // handling files update
+    // trailer
+    // contentData.trailer =
+    //   contentFiles.trailer[0].trailerUrl.length == 0
+    //     ? contentData.trailer[0].trailerUrl
+    //     : contentFiles.trailer[0].trailerUrl;
+    // contentData.trailer =
+    //   contentFiles.trailer[0].trailerId.length == 0
+    //     ? contentData.trailer[0].trailerId
+    //     : contentFiles.trailer[0].trailerId;
+
+    if (req.files.trailer) {
+      contentData.trailer = contentFiles.trailer;
+    }
+    if (req.files.content) {
+      contentData.content = contentFiles.content;
+    }
+
+    if (req.files.thumbnail) {
+      contentData.thumbnail = contentFiles.thumbnail;
+    }
   }
 
   console.log("content------- -", contentData);
 
   // save the updated content
-  // await contentData.save();
+  await contentData.save();
 
   res.status(200).json({
     success: true,
