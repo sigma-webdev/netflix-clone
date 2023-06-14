@@ -23,7 +23,7 @@ export const getContentDetailsById = async (id) => {
     try{
       const response = await axiosInstance.post(`/content/posts`, data);
       console.log(response)
-      // return response
+      return response
     } catch (err) {
       console.log(err)
       return err.response
