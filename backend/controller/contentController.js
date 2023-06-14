@@ -71,8 +71,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     return next(new CustomError("Please fill the required field!", 400));
   }
 
-  // files check --
-  console.log("req files -----------------", req.files?.trailer);
+  // file check
   if (!req.files.trailer) {
     return next(new CustomError("Please add trailer file", 400));
   }
@@ -91,10 +90,6 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   details.trailer = contentFiles.trailer;
   details.content = contentFiles.content;
   details.thumbnail = contentFiles.thumbnail;
-
-  // console.log("trailerId = ", details.trailer[0].trailerId);
-  // console.log("contentId = ", details.content[0].contentID);
-  // console.log("thumbnailId = ", details.thumbnail[0].thumbnailID);
 
   const contentDetails = Content(details);
 

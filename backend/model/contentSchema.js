@@ -7,7 +7,7 @@ const contentSchema = new Schema(
     name: {
       type: String,
       required: [true, "Content name is required"],
-      minLength: [5, "Content movie name must be at least 5 characters"],
+      minLength: [1, "Content movie name must be at least 5 characters"],
       maxLength: [40, "Content movie name must be less than 40 characters"],
     },
     description: {
