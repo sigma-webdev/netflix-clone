@@ -10,7 +10,7 @@ import { addContent } from '../ApiUtils';
 
 const AdminManageContents = () => {
 
-    const [contentData, setContentData] = useState([])
+    // const [contentData, setContentData] = useState([])
     const [newContentData, setNewContentData] = useState({
         name: "",
         description: "",
@@ -26,21 +26,26 @@ const AdminManageContents = () => {
         episodes: []
 
     })
+    const [isLoading, setIsLoading] = useState(false);
+
 
 
     const dispatch = useDispatch();
 
     const content = useSelector((state) => state.content.allContent)
+
+    const isContentLoading = useSelector((state) => state.content.loading)
     // console.log(content)
 
     useEffect(() => {
-        dispatch(fetchContent())
-    }, [])
+        dispatch(fetchContent());
+        // setContentData(content)
+    }, [dispatch])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        setContentData(content)
-    }, [content])
+    //     setContentData(content)
+    // }, [content])
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -51,6 +56,7 @@ const AdminManageContents = () => {
     const handleInputChange = (event) => {
 
         const { name, value } = event.target;
+        // const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
         setNewContentData(prevDetails => ({
             ...prevDetails,
             [name]: value
@@ -67,6 +73,12 @@ const AdminManageContents = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if(isLoading){
+            console.log("please wait till the first submisson got fullfiled or rejected")
+            return;
+        }
+        setIsLoading(true)
+
         const {name, description, categories, genres,  creator,rating, language,   trailer, content,   cast, thumbnail,episodes } = newContentData
         const sentFormData = new FormData();
 
@@ -83,61 +95,97 @@ const AdminManageContents = () => {
         sentFormData.append("thumbnail",thumbnail)
         sentFormData.append("episodes",episodes)
         
-           addContent(sentFormData).then(
-             toggleModal(false)
-           )  
+        const res = await addContent(sentFormData)
+        setNewContentData({ name: "",
+        description: "",
+        categories: "",
+        genres: "",
+        creator: "",
+        rating: "",
+        language: "",
+        trailer: null,
+        content: null,
+        cast: "",
+        thumbnail: null,
+        episodes: []})
+        const resA = await dispatch(fetchContent());
+        setIsLoading(false)
+        setIsOpen(false)
+        console.log(res.status)
     }
 
 
     return (
         <>
-            {
-                isOpen &&
+      
+            
+               { isOpen &&
                 <div className='absolute w-full h-full bg-cyan-600 bg-opacity-60 flex items-center justify-center border'>
                     <div className='relative w-[500px]  bg-gray-50  rounded-lg py-12 px-4 max-h-[80%] overflow-y-scroll no-scrollbar'>
                         <div onClick={() => toggleModal(false)} className='absolute top-2 right-3 text-3xl cursor-pointer'>X</div>
                         <form onSubmit={(e) => handleSubmit(e)} className='flex flex-col gap-2'>
                             <label htmlFor="name">Movie Name:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="name" value={newContentData.name} onChange={handleInputChange} />
+                            <input className='bg-transparent border p-2 rounded' type="text" required name="name" value={newContentData.name} onChange={handleInputChange} />
                             <label htmlFor="genres">Genres:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="genres" value={newContentData.genres} onChange={handleInputChange} />
+                            <input className='bg-transparent border p-2 rounded' type="text" required name="genres" value={newContentData.genres} onChange={handleInputChange} />
                             <label htmlFor="text">Description:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="description" value={newContentData.description} onChange={handleInputChange} />
+                            <input className='bg-transparent border p-2 rounded' type="text" required name="description" value={newContentData.description} onChange={handleInputChange} />
                             <label htmlFor="cast">Cast:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="cast" value={newContentData.cast} onChange={handleInputChange} />
+                            <input className='bg-transparent border p-2 rounded' type="text" required name="cast" value={newContentData.cast} onChange={handleInputChange} />
                             <label htmlFor="categories">  Categories:</label>
                             <label className=''>
                                 Movies
-                                <input className='' type="radio" name="categories" onChange={handleInputChange} value="Movies" checked={newContentData.categories === 'Movies'} />
+                                <input className='' type="radio" name="categories" required onChange={handleInputChange} value="Movies" checked={newContentData.categories === 'Movies'} />
 
                             </label>
                             <label>
-                                Series
-                                <input className='' type="radio" name="categories" onChange={handleInputChange} value="Series" checked={newContentData.categories === 'Series'} />
+                                TV shows
+                                <input className='' type="radio" name="categories" required onChange={handleInputChange} value="TV shows" checked={newContentData.categories === 'TV shows'} />
 
                             </label>
 
                             <label htmlFor="creator">  Creator:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="creator" value={newContentData.creator} onChange={handleInputChange} />
+                            <input className='bg-transparent border p-2 rounded' type="text" required name="creator" value={newContentData.creator} onChange={handleInputChange} />
                             <label htmlFor="rating">  Rating:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="rating" value={newContentData.rating} onChange={handleInputChange} />
+                            <input className='bg-transparent border p-2 rounded' type="text" required name="rating" value={newContentData.rating} onChange={handleInputChange} />
                             <label htmlFor="language">  Language:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="language" value={newContentData.language} onChange={handleInputChange} />
+                            <input className='bg-transparent border p-2 rounded' type="text" required name="language" value={newContentData.language} onChange={handleInputChange} />
                             <label htmlFor="thumbnail">  Thumbnail:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" name="thumbnail" accept="image/*" onChange={handleFileChange} />
+                            <input className='bg-transparent border p-2 rounded' type="file" required name="thumbnail" accept="image/*" onChange={handleFileChange} />
                             <label htmlFor="trailer">  Trailer:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" name="trailer" accept="video/*" onChange={handleFileChange} />
+                            <input className='bg-transparent border p-2 rounded' type="file" required name="trailer" accept="video/*" onChange={handleFileChange} />
                             <label htmlFor="content">  Content:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" name="content" accept="video/*" onChange={handleFileChange} />
-                            {/* <label htmlFor="name">  Episodes:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={newContentData.epis} /> */}
+                            <input className='bg-transparent border p-2 rounded' type="file" required name="content" accept="video/*" onChange={handleFileChange} />
+                            
 
-                            <button type='submit' className='bg-green-600 hover:bg-greean-700 text-white rounded py-2'>Add Content</button>
+                            <button type='submit' disabled={isLoading}  className='bg-green-600 hover:bg-greean-700 text-white rounded py-2 flex items-center gap-4 justify-center'>Add Content {isLoading && 
+                            <div role="status">
+                            <svg aria-hidden="true" className="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                            </svg>
+                            <span className="sr-only">Loading...</span>
+                        </div>} </button>
 
                         </form>
                     </div>
                 </div>
-            }
+                            }
+                              {
+            isContentLoading ?
+           <div className='absolute w-full h-full bg-cyan-600 bg-opacity-60 flex items-center justify-center border'>
+            <div class="text-center">
+    <div role="status">
+        <svg aria-hidden="true" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+        </svg>
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+            </div>
+                : 
+        (
             <div className='w-10/12 flex flex-col gap-5 items-center py-4 bg-slate-800 overflow-y-scroll max-h-[100vh] px-4'>
                 <h2 className='text-white'>Manage Contents</h2>
                 <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded self-end text-white'>Add Content</button>
@@ -152,8 +200,8 @@ const AdminManageContents = () => {
                         </tr>
                     </thead>
                     <tbody className=" border-opacity-0">
-                        {contentData.length > 0 &&
-                            contentData.map((content, index) => {
+                        {content.length > 0 &&
+                            content.map((content, index) => {
                                 return (
                                     <tr
                                         key={index}
@@ -178,9 +226,8 @@ const AdminManageContents = () => {
                     </tbody>
                 </table>
             </div>
-            {/* <Routes>
-                <Route path=":id" element={<AdminContentView />} />
-            </Routes> */}
+       
+       ) }
         </>
 
     )
