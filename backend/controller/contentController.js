@@ -53,6 +53,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     return next(new CustomError("Please fill the required field!", 400));
   }
 
+  console.log("req.files - ", req.files)
   const contentFiles = await cloudinaryFileUpload(req.files);
 
   // add the file details

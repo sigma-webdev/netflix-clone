@@ -10,6 +10,7 @@ module.exports = {
         "netflix-blue": "#00081D",
         "netflix-black": "#141414",
       },
+      
     },
   },
   plugins: [],
