@@ -30,7 +30,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   let details = {
     name: req.body.name,
     description: req.body.description,
-    cast: req.body.cast.trim().split(","),
+    cast: req.body.cast.split(","),
     categories: req.body.categories,
     genres: req.body.genres,
     creator: req.body.creator.split(","),
@@ -38,8 +38,20 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     language: req.body.language,
   };
 
-  console.log("details - ", details);
+  // handling creator and cast data
+  const castTemp = [];
+  const creatorTemp = [];
+  for (let i of details.cast) {
+    castTemp.push(i.trim());
+  }
+  details.cast = castTemp;
 
+  for (let i of details.creator) {
+    creatorTemp.push(i.trim());
+  }
+  details.creator = creatorTemp;
+
+  // checking for missing fields
   if (
     !details.name ||
     !details.description ||
