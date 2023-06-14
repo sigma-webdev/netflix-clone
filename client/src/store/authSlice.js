@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  rejectWithValue
+} from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
 
 const initialState = {
@@ -8,7 +12,8 @@ const initialState = {
   signOutLoading: false,
   signUpLoading: false,
   getUserLoading: false,
-  forgotPasswordLoading: false
+  forgotPasswordLoading: false,
+  resetPasswordLoading: false
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
@@ -73,12 +78,27 @@ export const GET_USER = createAsyncThunk(
 
 export const FORGOT_PASSWORD = createAsyncThunk(
   "/auth/forgotpassword",
-  async (data, { rejectedWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/auth/forgotpassword", data);
       return response.data;
     } catch (error) {
-      return rejectedWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const RESET_PASSWORD = createAsyncThunk(
+  `/auth/resetpassword`,
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        `/auth/resetpassword/${data.resetPasswordToken}`,
+        data.formData
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -101,6 +121,7 @@ const authSlice = createSlice({
       .addCase(SIGN_IN.rejected, (state) => {
         state.signInLoading = false;
       })
+
       // signUp
       .addCase(SIGN_UP.pending, (state) => {
         state.signUpLoading = true;
@@ -113,6 +134,7 @@ const authSlice = createSlice({
       .addCase(SIGN_UP.rejected, (state) => {
         state.signUpLoading = false;
       })
+
       // get user
       .addCase(GET_USER.pending, (state) => {
         state.getUserLoading = true;
@@ -125,6 +147,7 @@ const authSlice = createSlice({
       .addCase(GET_USER.rejected, (state, action) => {
         state.getUserLoading = false;
       })
+
       // sign out
       .addCase(SIGN_OUT.pending, (state) => {
         state.signOutLoading = true;
@@ -137,6 +160,7 @@ const authSlice = createSlice({
       .addCase(SIGN_OUT.rejected, (state) => {
         state.signOutLoading = false;
       })
+
       // forgotPassword
       .addCase(FORGOT_PASSWORD.pending, (state) => {
         state.forgotPasswordLoading = true;
@@ -146,6 +170,17 @@ const authSlice = createSlice({
       })
       .addCase(FORGOT_PASSWORD.rejected, (state, action) => {
         state.forgotPasswordLoading = false;
+      })
+
+      // reset Password
+      .addCase(RESET_PASSWORD.pending, (state) => {
+        state.resetPasswordLoading = true;
+      })
+      .addCase(RESET_PASSWORD.fulfilled, (state, action) => {
+        state.resetPasswordLoading = false;
+      })
+      .addCase(RESET_PASSWORD.rejected, (state, action) => {
+        state.resetPasswordLoading = false;
       });
   }
 });
