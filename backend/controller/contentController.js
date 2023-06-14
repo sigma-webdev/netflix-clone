@@ -30,7 +30,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   let details = {
     name: req.body.name,
     description: req.body.description,
-    cast: req.body.cast.split(","),
+    cast: req.body.cast.trim().split(","),
     categories: req.body.categories,
     genres: req.body.genres,
     creator: req.body.creator.split(","),
@@ -101,7 +101,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 const httpGetContent = asyncHandler(async (req, res, next) => {
   // find all content --
   const contents = await Content.find();
-console.log(contents)
+  console.log(contents);
   // if no content available
   if (!contents.length) {
     res.status(200).json({
@@ -128,12 +128,8 @@ console.log(contents)
  ********************/
 const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const contentData = await Content.findById(id);
 
-  // const { thumbnail, trailer, content } = contentData;
-  // console.log("Thumbnail", thumbnail[0].thumbnailID);
-  // console.log("trailer", trailer[0].trailerId);
-  // console.log("content", content[0].contentID);
+  const contentData = await Content.findById(id);
 
   if (!contentData) {
     return next(
@@ -148,7 +144,6 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   });
 });
 
-// TODO: delete and update controllers
 /********************
  * @httpDeleteById
  * @route http://localhost:8081/api/v1/content/posts/id
@@ -168,7 +163,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
       new CustomError("Content with the given Id does not exist.", 404)
     );
   }
-  // TODO: need to be tested
+
   const { thumbnail, trailer, content } = contentData;
   console.log("Thumbnail", thumbnail[0].thumbnailID);
   console.log("trailer", trailer[0].trailerId);
@@ -186,10 +181,72 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   });
 });
 
+/********************
+ * @httpUpdateById
+ * @route http://localhost:8081/api/v1/content/posts/id
+ * @description  controller to update the content
+ * @parameters {Object id}
+ * @return { Object } content object
+ ********************/
+const httpUpdateById = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const files = req.files;
+
+  const contentData = await Content.findById(id);
+
+  if (!contentData) {
+    return next(new CustomError("content not found", 404));
+  }
+
+  // contentData = {
+  //   name: req.body.name || contentData.name,
+  //   description: req.body.description || contentData.description,
+  //   cast: req.body.cast ? req.body.cast.split(",") : contentData.cast,
+  //   categories: req.body.categories || contentData.categories,
+  //   genres: req.body.genres || contentData.genres,
+  //   creator: req.body.creator
+  //     ? req.body.creator.split(",")
+  //     : contentData.creator,
+  //   rating: req.body.rating || contentData.rating,
+  //   language: req.body.language || contentData.language,
+  // };
+
+  contentData.name = req.body.name || contentData.name;
+  contentData.description = req.body.description || contentData.description;
+  contentData.cast = req.body.cast || contentData.cast;
+  contentData.categories = req.body.categories || contentData.categories;
+  contentData.genres = req.body.genres || contentData.genres;
+  contentData.creator = req.body.creator || contentData.creator;
+  contentData.rating = req.body.rating || contentData.rating;
+  contentData.language = req.body.language || contentData.language;
+
+  if (files) {
+    console.log("files", files);
+    const contentFiles = await cloudinaryFileUpload(req.files);
+
+    // add the file details
+    contentData.trailer = contentFiles.trailer || contentData.trailer;
+    contentData.content = contentFiles.content || contentData.content;
+    contentData.thumbnail = contentFiles.thumbnail || contentData.thumbnail;
+  }
+
+  console.log("content------- -", contentData);
+
+  // save the updated content
+  await contentData.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Content Updated successfully",
+    contentData,
+  });
+});
+
 module.exports = {
   contentApi,
   httpPostContent,
   httpGetContent,
   httpGetContentById,
   httpDeleteById,
+  httpUpdateById,
 };
