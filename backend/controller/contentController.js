@@ -1,5 +1,5 @@
 const asyncHandler = require("../middleware/asyncHandler.js");
-const CustomError = require("../utils/customerror.js");
+const CustomError = require("../utils/customError.js");
 
 const Content = require("../model/contentSchema.js");
 
@@ -36,6 +36,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   };
 
   // handling creator and cast data
+  console.log("decodeee-------", decodeURI(req.body.cast));
 
   const castTemp = [];
   const creatorTemp = [];
@@ -72,17 +73,17 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   }
 
   // file check
-  if (!req.files.trailer) {
-    return next(new CustomError("Please add trailer file", 400));
-  }
+  // if (!req.files.trailer) {
+  //   return next(new CustomError("Please add trailer file", 400));
+  // }
 
-  if (!req.files.content) {
-    return next(new CustomError("Please add content file", 400));
-  }
+  // if (!req.files.content) {
+  //   return next(new CustomError("Please add content file", 400));
+  // }
 
-  if (!req.files.thumbnail) {
-    return next(new CustomError("Please add thumbnail file", 400));
-  }
+  // if (!req.files.thumbnail) {
+  //   return next(new CustomError("Please add thumbnail file", 400));
+  // }
 
   const contentFiles = await cloudinaryFileUpload(req.files);
 
@@ -127,17 +128,17 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 const httpGetContent = asyncHandler(async (req, res, next) => {
   // find all content --
   const contents = await Content.find();
-  console.log(contents);
+  // console.log(contents);
   // if no content available
   if (!contents.length) {
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Content Not found",
       contents,
     });
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "All contents ...",
     contents,
@@ -248,9 +249,9 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   contentData.language = req.body.language || contentData.language;
 
   if (files) {
-    console.log("files", files);
+    // console.log("files", files);
     const contentFiles = await cloudinaryFileUpload(req.files);
-    console.log("ContentFiles ------------------ ", contentFiles);
+    // console.log("ContentFiles ------------------ ", contentFiles);
 
     if (req.files.trailer) {
       contentData.trailer = contentFiles.trailer;

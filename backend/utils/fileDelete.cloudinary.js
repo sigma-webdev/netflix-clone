@@ -1,5 +1,5 @@
 const cloudinary = require("../config/cloudinaryConfig");
-const CustomError = require("./customerror");
+const CustomError = require("./customError");
 
 const cloudinaryImageDelete = (publicId) => {
   try {

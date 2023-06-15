@@ -54,11 +54,11 @@ const contentSchema = new Schema(
       {
         thumbnailUrl: {
           type: String,
-          required: [true, "Thumbnail URL should be provided"],
+          // required: [true, "Thumbnail URL should be provided"],
         },
         thumbnailID: {
           type: String,
-          required: [true, "Thumbnail Id should be provided"],
+          // required: [true, "Thumbnail Id should be provided"],
         },
       },
     ],
@@ -66,7 +66,7 @@ const contentSchema = new Schema(
       {
         trailerUrl: {
           type: String,
-          required: [true, "trailer video link must be provided"],
+          // required: [true, "trailer video link must be provided"],
         },
         trailerId: { type: String },
         // TODO: calculate length
@@ -78,11 +78,11 @@ const contentSchema = new Schema(
       {
         contentURL: {
           type: String,
-          required: [true, "Content video link must be provided"],
+          // required: [true, "Content video link must be provided"],
         },
         contentID: {
           type: String,
-          required: [true, "content ID must be provided"],
+          // required: [true, "content ID must be provided"],
         },
         contentDuration: { type: Number },
       },
