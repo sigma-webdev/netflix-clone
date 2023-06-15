@@ -189,6 +189,8 @@ const AdminManageContents = () => {
             <div className='w-10/12 flex flex-col gap-5 items-center py-4 bg-slate-800 overflow-y-scroll max-h-[100vh] px-4'>
                 <h2 className='text-white'>Manage Contents</h2>
                 <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded self-end text-white'>Add Content</button>
+                {
+                content.length > 0 ?
                 <table className="table-auto w-5/6 overflow-scroll text-gray-200 border border-gray-300">
                     <thead className="text-left">
                         <tr>
@@ -200,7 +202,7 @@ const AdminManageContents = () => {
                         </tr>
                     </thead>
                     <tbody className=" border-opacity-0">
-                        {content.length > 0 &&
+                       {
                             content.map((content, index) => {
                                 return (
                                     <tr
@@ -222,9 +224,12 @@ const AdminManageContents = () => {
                                         </td>
                                     </tr>
                                 );
-                            })}
+                                    
+                        })
+                    }
                     </tbody>
                 </table>
+                : <h2 className='text-center text-white'>No Data Found</h2>}
             </div>
        
        ) }
