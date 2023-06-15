@@ -110,7 +110,7 @@ const AdminManageUsers = () => {
                     <td className="px-4 py-3">{user.email}</td>
                     <td className="px-4 py-3">{user.phoneNumber}</td>
                     <td className="px-4 py-2">
-                      <div onClick={toggleModal} className='py-2 text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded cursor-pointer' >
+                      <div onClick={toggleModal} className='py-2 text-center bg-[#E50914] hover:bg-[#d4252e] text-white font-bold rounded cursor-pointer' >
                         View
                       </div>
                     </td>
