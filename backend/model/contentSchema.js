@@ -98,7 +98,12 @@ const contentSchema = new Schema(
         },
       },
     ],
+    display: {
+      type: Boolean,
+      default: false,
+    },
   },
+
   { timestamps: true }
 );
 

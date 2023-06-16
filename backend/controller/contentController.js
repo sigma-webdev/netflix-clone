@@ -24,86 +24,53 @@ const contentApi = asyncHandler(async (req, res) => {
  * @return { Object } content object
  ********************/
 const httpPostContent = asyncHandler(async (req, res, next) => {
+  // get required field from body
   let details = {
     name: req.body.name,
     description: req.body.description,
-    cast: req.body.cast ? req.body.cast.split(",") : undefined,
+    cast: req.body.cast,
     categories: req.body.categories,
     genres: req.body.genres,
-    creator: req.body.creator ? req.body.creator.split(",") : undefined,
+    creator: req.body.creator,
     rating: req.body.rating,
     language: req.body.language,
   };
 
-  // handling creator and cast data
-  console.log("decodeee-------", decodeURI(req.body.cast));
-
-  const castTemp = [];
-  const creatorTemp = [];
-
-  if (!details.creator) {
-    return next(new CustomError("Creator field required", 400));
-  }
-  if (!details.cast) {
-    return next(new CustomError("Cast field required", 400));
-  }
-
-  for (let i of details.cast) {
-    castTemp.push(i.trim());
-  }
-  details.cast = castTemp;
-
-  for (let i of details.creator) {
-    creatorTemp.push(i.trim());
-  }
-  details.creator = creatorTemp;
-
   // checking for missing fields
-  if (
-    !details.name ||
-    !details.description ||
-    !details.cast ||
-    !details.categories ||
-    !details.genres ||
-    !details.creator ||
-    !details.rating ||
-    !details.language
-  ) {
-    return next(new CustomError("Please fill the required field!", 400));
+  const requiredFields = [
+    "name",
+    "description",
+    "categories",
+    "genres",
+    "rating",
+    "language",
+    "cast",
+    "creator",
+  ];
+  const missingRequiredFields = requiredFields.filter(
+    (field) => !details[field]
+  );
+  if (missingRequiredFields.length > 0) {
+    // retrieve first missing fields and send the message
+    const missingField = missingRequiredFields[0];
+    return next(new CustomError(`Missing Field - ${missingField}`));
   }
 
-  // file check
-  // if (!req.files.trailer) {
-  //   return next(new CustomError("Please add trailer file", 400));
-  // }
-
-  // if (!req.files.content) {
-  //   return next(new CustomError("Please add content file", 400));
-  // }
-
-  // if (!req.files.thumbnail) {
-  //   return next(new CustomError("Please add thumbnail file", 400));
-  // }
-
-  const contentFiles = await cloudinaryFileUpload(req.files);
+  // check for file and upload
+  // let contentFiles = req.files ? await cloudinaryFileUpload(req.files) : "";
 
   // add the file details
-  details.trailer = contentFiles.trailer;
-  details.content = contentFiles.content;
-  details.thumbnail = contentFiles.thumbnail;
+  // details.trailer = contentFiles.trailer;
+  // details.content = contentFiles.content;
+  // details.thumbnail = contentFiles.thumbnail;
 
   const contentDetails = Content(details);
 
-  const contentData = await contentDetails.save().catch((error) => {
-    // DELETE FILE
-    cloudinaryFileDelete(details.trailer[0].trailerId);
-    cloudinaryFileDelete(details.content[0].contentID);
-    cloudinaryImageDelete(details.thumbnail[0].thumbnailID);
-
-    return next(
-      new CustomError(`Content fail to save to database! ${error}`, 400)
-    );
-  });
+  const contentData = await contentDetails.save();
+  // DELETE FILE
+  // cloudinaryFileDelete(details.trailer[0].trailerId);
+  // cloudinaryFileDelete(details.content[0].contentID);
+  // cloudinaryImageDelete(details.thumbnail[0].thumbnailID);
   // console.log("contentData- ", contentData);
 
   if (!contentData) {
