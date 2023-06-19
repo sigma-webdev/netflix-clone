@@ -4,6 +4,7 @@ import axiosInstance from "../helpers/axiosInstance";
 
 const initialState = {
   allContent: [],
+  loading: false
 };
 
 export const fetchContent = createAsyncThunk(
@@ -27,9 +28,18 @@ export const contentSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchContent.fulfilled, (state, action) => {
+    builder
+    .addCase(fetchContent.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(fetchContent.fulfilled, (state, action) => {
       state.allContent = [...action.payload];
+      state.loading = false;
       console.log(action.payload)
+    })
+    .addCase(fetchContent.rejected, (state) => {
+      state.loading = false;
+      state.movies = [];
     });
   },
 });
