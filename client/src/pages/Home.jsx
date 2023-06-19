@@ -18,9 +18,11 @@ const Home = () => {
   const dispatch = useDispatch();
   const [activeItem, setActiveItem] = useState(-1);
   const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
   const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
   const USER_DATA = useSelector((state) => state.auth.userData);
+
+  console.log(IS_LOGGED_IN && USER_DATA.plan === "NONE");
 
   const accordianHandler = (id) => {
     setActiveItem(id);
@@ -60,7 +62,7 @@ const Home = () => {
               "loading"
             ) : (
               <>
-                {isLoggedIn && USER_DATA.plan === "NONE" ? (
+                {IS_LOGGED_IN && USER_DATA.plan === "NONE" ? (
                   <Link to="/signup/choose">
                     <button
                       type="submit"

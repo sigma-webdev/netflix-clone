@@ -7,6 +7,7 @@ const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler.js");
 const cookieParser = require("cookie-parser");
 
+// routes
 const authRouter = require("./router/authRouter.js");
 const paymentRouter = require("./router/paymentRouter.js");
 const contentRoute = require("./router/contentRouter");
@@ -34,6 +35,7 @@ app.use(
 // routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/content", contentRoute);
+app.use("/api/v1/payment", paymentRouter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // routes
