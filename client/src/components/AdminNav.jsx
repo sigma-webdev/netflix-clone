@@ -1,11 +1,15 @@
 import React from "react";
 import { HiHome, HiUserGroup, HiServer } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
+import  netflixLogo from "../assets/netflix_logo.png"
 
 const AdminNav = () => {
   return (
     <div className="p-2 w-2/12 h-screen bg-black text-white border-r ">
-      <h3 className="mb-12">Netflix Admin</h3>
+      <div className="w-full flex flex-wrap items-end mb-12">
+        <img className="w-[60%]" src={netflixLogo} alt="" />
+        <h4 className=""> Admin</h4>
+      </div>
       <ul>
         <NavLink to="/admin/dashboard">
           {({ isActive }) => (

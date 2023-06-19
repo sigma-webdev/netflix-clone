@@ -65,7 +65,7 @@ const AdminManageUsers = () => {
     <>
       {
         isOpen &&
-        <div className='absolute w-full h-full bg-red-600 bg-opacity-60 flex items-center justify-center'>
+        <div className='absolute w-full h-full bg-gray-600 bg-opacity-50 flex items-center justify-center'>
           <div className='relative w-96 bg-cyan-600 rounded-lg py-12 px-4'>
             <div onClick={() => toggleModal(false)} className='absolute top-2 right-3 text-white text-3xl cursor-pointer'>X</div>
           <form onSubmit={(e)=> e.preventDefault()} className='flex flex-col gap-2 text-white'>
