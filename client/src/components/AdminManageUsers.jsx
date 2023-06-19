@@ -65,7 +65,7 @@ const AdminManageUsers = () => {
     <>
       {
         isOpen &&
-        <div className='absolute w-full h-full bg-red-600 bg-opacity-60 flex items-center justify-center'>
+        <div className='absolute w-full h-full bg-gray-600 bg-opacity-50 flex items-center justify-center'>
           <div className='relative w-96 bg-cyan-600 rounded-lg py-12 px-4'>
             <div onClick={() => toggleModal(false)} className='absolute top-2 right-3 text-white text-3xl cursor-pointer'>X</div>
           <form onSubmit={(e)=> e.preventDefault()} className='flex flex-col gap-2 text-white'>
@@ -110,7 +110,7 @@ const AdminManageUsers = () => {
                     <td className="px-4 py-3">{user.email}</td>
                     <td className="px-4 py-3">{user.phoneNumber}</td>
                     <td className="px-4 py-2">
-                      <div onClick={toggleModal} className='py-2 text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded cursor-pointer' >
+                      <div onClick={toggleModal} className='py-2 text-center bg-[#E50914] hover:bg-[#d4252e] text-white font-bold rounded cursor-pointer' >
                         View
                       </div>
                     </td>
