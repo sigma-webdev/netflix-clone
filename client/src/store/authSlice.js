@@ -14,48 +14,48 @@ const initialState = {
 
 export const IS_USER_EXIST = createAsyncThunk(
   "auth/userexist",
-  async (data, { rejectedWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       let response = await axiosInstance.post("auth/userexist", data);
       return response.data;
     } catch (error) {
-      return rejectedWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
 
 export const SIGN_IN = createAsyncThunk(
   "auth/signin",
-  async (data, { rejectedWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/auth/signin", data);
       return response.data;
     } catch (error) {
-      return rejectedWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
 
 export const SIGN_UP = createAsyncThunk(
   "auth/signup",
-  async (data, { rejectedWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/auth/signup", data);
       return response.data;
     } catch (error) {
-      return rejectedWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
 
 export const SIGN_OUT = createAsyncThunk(
   "/auth/signout",
-  async (data, { rejectedWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("auth/signout");
       return response.data;
     } catch (error) {
-      return rejectedWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );

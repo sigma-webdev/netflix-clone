@@ -3,12 +3,11 @@ const userModel = require("../model/userSchema.js");
 const razorpay = require("../config/razorpayConfig.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 
-const buySubscription = asyncHandler(async (req, res, next) => {
+const createSubscription = asyncHandler(async (req, res, next) => {
   // Extracting ID from request obj
   const { id } = req.user;
   const { planName } = req.body;
 
-  console.log(planName);
   const {
     RAZORPAY_STANDARD_PLAN,
     RAZORPAY_BASIC_PLAN,
@@ -59,7 +58,7 @@ const buySubscription = asyncHandler(async (req, res, next) => {
   });
 });
 
-const getRazorpayApiKey = asyncHandler(async (_req, res, _next) => {
+const getRazorpayApiKey = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     key: process.env.RAZORPAY_KEY_ID
@@ -110,4 +109,4 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { buySubscription, getRazorpayApiKey, verifySubscription };
+module.exports = { createSubscription, getRazorpayApiKey, verifySubscription };

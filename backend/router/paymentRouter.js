@@ -1,14 +1,14 @@
 const express = require("express");
 const {
-  buySubscription,
+  createSubscription,
   getRazorpayApiKey,
   verifySubscription
 } = require("../controller/paymentController");
 const jwtAuth = require("../middleware/jwtAuth.js");
 const paymentRouter = express.Router();
 
-paymentRouter.route("/subscribe").post(jwtAuth, buySubscription);
-paymentRouter.route("/rasorpaykey").get(jwtAuth, getRazorpayApiKey);
+paymentRouter.route("/subscribe").post(jwtAuth, createSubscription);
+paymentRouter.route("/razorpaykey").get(jwtAuth, getRazorpayApiKey);
 paymentRouter.route("/verifysubscription").post(jwtAuth, verifySubscription);
 
 module.exports = paymentRouter;
