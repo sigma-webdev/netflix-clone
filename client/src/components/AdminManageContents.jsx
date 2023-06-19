@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-
+import { BiSearchAlt2 } from "react-icons/bi";
 import { fetchContent } from '../store/contentSlice';
 import { Routes, Route } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -36,7 +36,7 @@ const AdminManageContents = () => {
     const dispatch = useDispatch();
 
     const content = useSelector((state) => state.content.allContent)
-
+    const [searchTerm, setSearchTerm] = useState('');
     const isContentLoading = useSelector((state) => state.content.loading)
     // console.log(content)
 
@@ -95,6 +95,13 @@ const AdminManageContents = () => {
             [event.target.name]: file
         }));
     };
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+      };
+    
+      const filteredData = content.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) || item.genres.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     const handleSubmit = async (e) => {
         e.preventDefault()
         console.log(e)
@@ -268,9 +275,15 @@ const AdminManageContents = () => {
                     (
                         <div className='w-10/12 flex flex-col gap-5 items-center py-4 bg-[#181818fd] overflow-y-scroll max-h-[100vh] px-4'>
                             <h2 className='text-white'>Manage Contents</h2>
-                            <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-[#E50914] hover:bg-[#d4252e] cursor-pointer rounded self-end text-white'>Add Content</button>
+                            <div className='flex w-full justify-between'>
+                                <div className='text-white relative w-[30%]'>
+                                <input className='bg-transparent border rounded-lg pl-4 py-1 w-full' placeholder='Search content...'type="text" value={searchTerm} onChange={handleSearch}/>
+                                <BiSearchAlt2  className='absolute right-1 top-2'/>
+                                </div>
+                                <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-[#E50914] hover:bg-[#d4252e] cursor-pointer rounded text-white'>Add Content</button>
+                            </div>
                             {
-                                content.length > 0 ?
+                                filteredData.length > 0 ?
                                     <table className="table-auto w-5/6 overflow-scroll text-gray-200 border border-gray-300">
                                         <thead className="text-left">
                                             <tr>
@@ -284,7 +297,7 @@ const AdminManageContents = () => {
                                         </thead>
                                         <tbody className=" border-opacity-0">
                                             {
-                                                content.map((content, index) => {
+                                                filteredData.map((content, index) => {
                                                     return (
                                                         <tr
                                                             key={index}
