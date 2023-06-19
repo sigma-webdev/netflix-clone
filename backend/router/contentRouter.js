@@ -5,7 +5,7 @@ const {
   httpGetContent,
   httpGetContentById,
   httpDeleteById,
-  httpUpdateById,
+  httpUpdateById
 } = require("../controller/contentController");
 
 const contentRoute = express.Router();
