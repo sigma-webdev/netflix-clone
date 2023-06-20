@@ -34,6 +34,28 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     creator: req.body.creator,
     rating: req.body.rating,
     language: req.body.language,
+    //default thumbnail value
+    thumbnail: [
+      {
+        thumbnailUrl:
+          "https://res.cloudinary.com/dp3qsxfn5/image/upload/v1687258494/default_thumbnail_mi4zwc.webp",
+      },
+    ],
+
+    // default trailer value
+    trailer: [
+      {
+        trailerUrl:
+          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+      },
+    ],
+    // default content value
+    content: [
+      {
+        contentURL:
+          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+      },
+    ],
   };
 
   // checking for missing fields
@@ -147,15 +169,30 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   }
 
   const { thumbnail, trailer, content } = contentData;
-  console.log("Thumbnail", thumbnail[0].thumbnailID);
-  console.log("trailer", trailer[0].trailerId);
-  console.log("content", content[0].contentID);
 
-  contentData.deleteOne().then(() => {
-    cloudinaryFileDelete(content[0].contentID);
-    cloudinaryFileDelete(trailer[0].trailerId);
-    cloudinaryImageDelete(thumbnail[0].thumbnailID);
-  });
+  contentData
+    .deleteOne()
+    .then(() => {
+      if (content[0].contentID) {
+        cloudinaryFileDelete(content[0].contentID);
+      }
+
+      if (trailer[0].trailerId) {
+        cloudinaryFileDelete(trailer[0].trailerId);
+      }
+
+      if (thumbnail[0].thumbnailID) {
+        cloudinaryImageDelete(thumbnail[0].thumbnailID);
+      }
+    })
+    .catch((error) => {
+      return next(
+        new CustomError(
+          `Delete Fail, make sure valid id is provided - {error}`,
+          500
+        )
+      );
+    });
 
   res.status(200).json({
     success: true,
@@ -186,15 +223,27 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
   if (files) {
     // delete pre-existing file
-    if (files.content && contentData.content.length > 0) {
+    if (
+      files.content &&
+      contentData.content.length > 0 &&
+      contentData.content[0]?.contentID
+    ) {
       cloudinaryFileDelete(contentData.content[0].contentID, next);
     }
 
-    if (files.trailer && contentData.trailer.length > 0) {
+    if (
+      files.trailer &&
+      contentData.trailer.length > 0 &&
+      contentData.trailer[0]?.trailerId
+    ) {
       cloudinaryFileDelete(contentData.trailer[0].trailerId, next);
     }
 
-    if (files.thumbnail && contentData.thumbnail.length > 0) {
+    if (
+      files.thumbnail &&
+      contentData.thumbnail.length > 0 &&
+      contentData.thumbnail[0]?.thumbnailID
+    ) {
       cloudinaryImageDelete(contentData.thumbnail[0]?.thumbnailID, next);
     }
 

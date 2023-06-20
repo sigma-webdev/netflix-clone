@@ -54,13 +54,9 @@ const contentSchema = new Schema(
       {
         thumbnailUrl: {
           type: String,
-
-          default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp",
         },
         thumbnailID: {
           type: String,
-          // required: [true, "Thumbnail Id should be provided"],
         },
       },
     ],
@@ -68,10 +64,6 @@ const contentSchema = new Schema(
       {
         trailerUrl: {
           type: String,
-
-          default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
-          // required: [true, "trailer video link must be provided"],
         },
         trailerId: { type: String },
       },
@@ -81,11 +73,6 @@ const contentSchema = new Schema(
       {
         contentURL: {
           type: String,
-
-          default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
-
-          // required: [true, "Content video link must be provided"],
         },
         contentID: {
           type: String,
