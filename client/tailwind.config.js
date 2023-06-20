@@ -17,6 +17,9 @@ module.exports = {
         "4/6": "57.1428571%",
         "5/6": "71.4285714%",
       },
+      colors: {
+        "netflix-blue": "#00081D",
+      },
     },
   },
   plugins: [],

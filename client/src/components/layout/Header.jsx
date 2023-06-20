@@ -31,12 +31,12 @@ const Header = ({ isLogin }) => {
   return (
     <header
       ref={headerRef}
-      className={`flex items-center justify-between w-full h-24 px-8 text-white  z-20 transition ease-in-out duration-300 ${
+      className={`flex items-center justify-between w-full h-16 md:h-20 px-4 md:px-8 text-white  z-20 transition ease-in-out duration-300 ${
         isLogin ? "fixed top-0" : "absolute"
       }`}
     >
-      <div className="flex gap-4">
-        <div className={isLogin ? "w-24" : "w-32"}>
+      <div className="flex gap-4 text-sm md:text-md">
+        <div className={isLogin ? "w-16 md:w-24" : "w-16 md:w-32"}>
           <img src={netflixLogo} alt="netflix logo" className="w-full" />
         </div>
         {/* login  */}
@@ -93,7 +93,7 @@ const Header = ({ isLogin }) => {
           </div>
         </div>
       ) : (
-        <div className="flex h-fit items-center gap-2">
+        <div className="flex h-fit items-center gap-3">
           <IconContext.Provider value={{ size: "25px" }}>
             <div className="hidden md:block">
               <AiOutlineSearch />

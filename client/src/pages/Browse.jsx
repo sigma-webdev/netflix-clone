@@ -11,8 +11,7 @@ import { fetchContent } from "../store/contentSlice";
 import { GENRES } from "../helpers/constants";
 
 import sampleVideo from "../assets/sample1.mov";
-import samplePoster from "../assets/images/content-poster.jpg";
-import { IconContext } from "react-icons/lib";
+import samplePoster from "../assets/images/sample-poster.jpg";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
 
 const Browse = () => {
@@ -41,29 +40,29 @@ const Browse = () => {
     <Layout isLogin={true}>
       <div className="relative ">
         {/* hero video */}
-        {/* <div className="absolute w-screen bg-gradient-to-b to-gray-500/100 from-gray-500/5 h-[80vh]"></div> */}
+        <div className="absolute w-screen bg-gradient-to-b to-netflix-blue/100 from-netflix-blue/0 h-[200px] -bottom-1"></div>
         <video
           ref={videoRef}
-          className="w-screen mx-auto "
+          className="w-screen mx-auto"
           src={sampleVideo}
           poster={samplePoster}
         ></video>
-
         {/* hero text */}
-        <div className="flex gap-2 absolute bottom-12 left-12 cursor-pointer">
+        <div className="flex gap-2 absolute bottom-6 left-6 md:bottom-12 md:left-12 cursor-pointer">
           <div
-            className="flex items-center gap-2 text-black font-semibold bg-white px-4 py-1 rounded"
+            className="flex items-center gap-2 text-black font-semibold bg-white px-2 md:px-4 py-1 rounded cursor-pointer text-sm md:text-lg "
             onClick={playPauseMedia}
           >
-            <IconContext.Provider value={{ color: "black", size: "30px" }}>
-              {!isVideoPlaying ? <RiPlayMiniFill /> : <RiPauseMiniFill />}
-            </IconContext.Provider>
+            {!isVideoPlaying ? (
+              <RiPlayMiniFill className="text-xl lg:text-4xl" />
+            ) : (
+              <RiPauseMiniFill className="text-xl lg:text-4xl" />
+            )}
+
             {!isVideoPlaying ? "Play" : "Pause"}
           </div>
-          <div className="flex items-center gap-2 etext-black font-semibold  text-white px-4 py-2 rounded opacity-50 bg-black cursor-pointer">
-            <IconContext.Provider value={{ color: "white", size: "30px" }}>
-              <AiOutlineInfoCircle />
-            </IconContext.Provider>
+          <div className="flex items-center gap-2 font-semibold  text-white px-2 md:px-4 py-1 rounded opacity-50 bg-black cursor-pointer text-sm md:text-lg">
+            <AiOutlineInfoCircle className="text-md lg:text-2xl" />
             More Info
           </div>
         </div>
@@ -71,8 +70,8 @@ const Browse = () => {
 
       {/* browse content */}
       <div className="text-white bg-netflix-blue ">
-        <div className="bg-transparent">
-          <div className="px-8 space-y-5">
+        <div>
+          <div className="px-4 md:px-8 space-y-5">
             {/* loop through all GENRES */}
             {GENRES.map((currentGenre) => {
               const categoryWiseContent = content.filter(

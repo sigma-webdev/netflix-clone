@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { BiDownArrow } from "react-icons/bi";
 
 const Menu = ({ children }) => {
@@ -9,7 +9,7 @@ const Menu = ({ children }) => {
   };
 
   return (
-    <div className="relative" onClick={handleMenu}>
+    <div className="relative text-sm md:text-md" onClick={handleMenu}>
       <div className="cursor-pointer">
         <BiDownArrow />
       </div>

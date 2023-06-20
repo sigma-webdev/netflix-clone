@@ -28,11 +28,11 @@ const PreviewCard = ({ contentPoster }) => {
 
   return (
     <div
-      className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out hover:relative hover:scale-125 hover:z-50 hover:ml-10 w-72 "
+      className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out hover:relative hover:scale-110 hover:z-50 hover:ml-2 w-48 md:w-72 "
       ref={thumbnailRef}
     >
       {/* preview video*/}
-      <div className="w-72 h-44">
+      <div className="w-48 md:w-72">
         <video
           className="rounded-tl rounded-tr object-contain"
           poster={contentPoster}
