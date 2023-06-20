@@ -8,7 +8,7 @@ const Crousal = ({ content }) => {
 
   const handleLeftArrow = () => {
     ref.current.scrollLeft -= ref.current.offsetWidth;
-    console.log(ref.current);
+    console.log(ref.current.scrollLeft);
   };
 
   const handleRightArrow = () => {
@@ -18,7 +18,7 @@ const Crousal = ({ content }) => {
   return (
     <div
       ref={ref}
-      className="flex flex-start items-center overflow-x-hidden gap-4 h-[26rem] "
+      className="flex flex-start items-center gap-4 overflow-hidden scroll-smooth"
     >
       <div
         className="absolute left-0 z-10 hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-50 "
@@ -35,7 +35,7 @@ const Crousal = ({ content }) => {
           );
         })}
       <div
-        className="absolute right-0 z-10 hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-60 bg-slate-900"
+        className="absolute right-0 z-10 hidden md:block cursor-pointer px-2 p-8 transition opacity-10 hover:opacity-50"
         onClick={handleRightArrow}
       >
         <IconContext.Provider value={{ size: "30px", color: "#ffffff" }}>

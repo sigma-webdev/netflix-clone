@@ -28,7 +28,7 @@ const PreviewCard = ({ contentPoster }) => {
 
   return (
     <div
-      className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out hover:relative hover:scale-110 hover:z-50 hover:ml-2 w-48 md:w-72 "
+      className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out relative my-8 hover:scale-110 hover:z-50 hover:ml-2 w-48 md:w-72"
       ref={thumbnailRef}
     >
       {/* preview video*/}
