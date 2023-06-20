@@ -187,16 +187,22 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   if (files) {
     // delete pre-existing file
     if (files.content) {
-      cloudinaryFileDelete(contentData.content[0].contentID, next);
+      if (contentData.content.length > 0) {
+        cloudinaryFileDelete(contentData.content[0].contentID, next);
+      }
     }
     if (files.trailer) {
-      cloudinaryFileDelete(contentData.trailer[0].trailerId, next);
+      if (contentData.trailer.length > 0) {
+        cloudinaryFileDelete(contentData.trailer[0].trailerId, next);
+      }
     }
-    if (files.thumbnail && contentData) {
-      cloudinaryImageDelete(contentData.thumbnail[0].thumbnailID, next);
+    if (files.thumbnail) {
+      if (contentData.trailer.length > 0) {
+        cloudinaryImageDelete(contentData.thumbnail[0]?.thumbnailID, next);
+      }
     }
 
-    // TODO - fix thumbnail updefine
+    // TODO - fix thumbnail updefined
     contentFiles = await cloudinaryFileUpload(files, next);
   }
 
