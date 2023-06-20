@@ -16,6 +16,10 @@ const contentSchema = new Schema(
       minLength: [15, "Content description must be at least 15 characters"],
       maxLength: [250, "Content description must be less than 100 characters "],
     },
+    releaseDate: {
+      type: Date,
+      required: [true, "Content release date required!"],
+    },
     cast: [String],
     categories: {
       type: String,

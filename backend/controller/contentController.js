@@ -28,6 +28,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   let details = {
     name: req.body.name,
     description: req.body.description,
+    releaseDate: req.body.releaseDate,
     cast: req.body.cast,
     categories: req.body.categories,
     genres: req.body.genres,
@@ -62,6 +63,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   const requiredFields = [
     "name",
     "description",
+    "releaseDate",
     "categories",
     "genres",
     "rating",
@@ -80,7 +82,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   // file upload will be done in the update section
 
   const contentDetails = Content(details);
-  console.log("Content details ----", contentDetails);
+
   const contentData = await contentDetails.save();
 
   if (!contentData) {
@@ -105,7 +107,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 const httpGetContent = asyncHandler(async (req, res, next) => {
   // find all content --
   const contents = await Content.find();
-  // console.log(contents);
+
   // if no content available
   if (!contents.length) {
     return res.status(200).json({
@@ -247,7 +249,6 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       cloudinaryImageDelete(contentData.thumbnail[0]?.thumbnailID, next);
     }
 
-    // TODO - fix thumbnail updefined
     contentFiles = await cloudinaryFileUpload(files, next);
   }
 
@@ -268,7 +269,6 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     }
     if (contentFiles.thumbnail) {
       cloudinaryImageDelete(contentFiles.thumbnail[0].thumbnailID);
-      console.log("deleting....................");
     }
     return next(new CustomError(`File not able to save!- ${error}`, 404));
   });
