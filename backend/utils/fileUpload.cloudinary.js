@@ -1,68 +1,36 @@
 const cloudinary = require("../config/cloudinaryConfig");
-const CustomError = require("../utils/customerror");
+const CustomError = require("./customError");
 
-const cloudinaryFileUpload = async (files) => {
-  // console.log(files);
-  // if (!files.trailer) {
-  //   return new CustomError("Please add trailer file", 400);
-  // }
-
-  // if (!files.content) {
-  //   return new CustomError("Please add content file", 400);
-  // }
-
-  // if (!files.thumbnail) {
-  //   return new CustomError("Please add thumbnail file", 400);
-  // }
-
+const cloudinaryFileUpload = async (files, next) => {
   //  cloudinary folder name
   const folder1 = "trailers";
   const folder2 = "contents";
   const folder3 = "thumbnails";
 
-  let trailer = [
-    {
-      trailerUrl: "",
-      trailerId: "",
-    },
-  ];
-
-  //    template for content data
-  let content = [
-    {
-      contentURL: "",
-      contentID: "",
-    },
-  ];
-
-  let thumbnail = [
-    {
-      thumbnailUrl: "",
-      thumbnailID: "",
-    },
-  ];
-
-  //   template for content data, thumbnail to add urlId
-  const filesDetails = { trailer, content, thumbnail };
-  console.log("fileDetails ", filesDetails);
-
-  console.log("files.trailer ----------- ", files.trailer);
-  console.log("files.trailer ----------- ", files.content);
-  console.log("files.trailer ----------- ", files.content);
+  // //   template for content data, thumbnail to add urlId
+  const filesDetails = {};
 
   //   file upload --
   try {
     // trailer ---
-
     if (files.trailer) {
       if (Object.keys(files).includes("trailer")) {
         const trailerTemp = await cloudinary.uploader.upload(
           files.trailer.tempFilePath,
-          { resource_type: "video", folder: folder1 }
+          { resource_type: "video", folder: folder1 },
+          (error) => {
+            if (error) {
+              return next(new CustomError(`File upload Error - ${error}`));
+            }
+          }
         );
         // console.log("trailerTemp---", trailerTemp);
-        filesDetails["trailer"][0].trailerUrl = trailerTemp.secure_url;
-        filesDetails["trailer"][0].trailerId = trailerTemp.public_id;
+        filesDetails["trailer"] = [
+          {
+            trailerUrl: trailerTemp.secure_url,
+            trailerId: trailerTemp.public_id,
+          },
+        ];
       }
     }
 
@@ -71,10 +39,20 @@ const cloudinaryFileUpload = async (files) => {
       if (Object.keys(files).includes("content")) {
         const contentTemp = await cloudinary.uploader.upload(
           files.content.tempFilePath,
-          { resource_type: "video", folder: folder2 }
+          { resource_type: "video", folder: folder2 },
+          (error) => {
+            if (error) {
+              return next(new CustomError(`File upload Error - ${error}`));
+            }
+          }
         );
-        filesDetails["content"][0].contentURL = contentTemp.secure_url;
-        filesDetails["content"][0].contentID = contentTemp.public_id;
+
+        filesDetails["content"] = [
+          {
+            contentURL: contentTemp.secure_url,
+            contentID: contentTemp.public_id,
+          },
+        ];
       }
     }
 
@@ -83,18 +61,28 @@ const cloudinaryFileUpload = async (files) => {
       if (Object.keys(files).includes("thumbnail")) {
         const thumbnailTemp = await cloudinary.uploader.upload(
           files.thumbnail.tempFilePath,
-          { folder: folder3 }
+          { folder: folder3 },
+          (error) => {
+            if (error) {
+              return next(CustomError(`Thumbnail fail to upload--- ${error}`));
+            }
+          }
         );
 
-        filesDetails["thumbnail"][0].thumbnailUrl = thumbnailTemp.secure_url;
-        filesDetails["thumbnail"][0].thumbnailID = thumbnailTemp.public_id;
+        filesDetails["thumbnail"] = [
+          {
+            thumbnailUrl: thumbnailTemp.secure_url,
+            thumbnailID: thumbnailTemp.public_id,
+          },
+        ];
       }
     }
 
-    //
     return filesDetails;
   } catch (error) {
-    console.log("Error - ", error);
+    if (error) {
+      return next(new CustomError(`File upload Error - ${error}`));
+    }
   }
 };
 

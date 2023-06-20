@@ -11,12 +11,11 @@ const {
 const contentRoute = express.Router();
 
 contentRoute.route("/ping").get(contentApi);
-contentRoute.route("/posts").post(httpPostContent);
-contentRoute.route("/posts").get(httpGetContent);
-contentRoute.route("/posts/:id").get(httpGetContentById);
-contentRoute.route("/posts/:id").delete(httpDeleteById);
-
-// TODO: delete, update and search query --
-contentRoute.route("/posts/:id").put(httpUpdateById);
+contentRoute.route("/posts").post(httpPostContent).get(httpGetContent);
+contentRoute
+  .route("/posts/:postId")
+  .get(httpGetContentById)
+  .delete(httpDeleteById)
+  .put(httpUpdateById);
 
 module.exports = contentRoute;

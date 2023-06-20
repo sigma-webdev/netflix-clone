@@ -74,7 +74,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     to: user.email,
     subject: "Netflix reset password",
     html: `<b>Hello ${user.name}</b><br>
-               <a href="${resetUrl}" target ="_blank" >Click here to reset password</a>`
+               <a href="${resetUrl}" target ="_blank" >Click here to reset password</a>`,
   };
 
   // send email
@@ -87,7 +87,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     }
     return res.status(200).json({
       success: true,
-      message: "Further instructions sent on you email " + email
+      message: "Further instructions sent on you email " + email,
     });
   });
 });
@@ -110,7 +110,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   // check user is exist
   const user = await userModel.findOne({
     forgotPasswordToken: resetPasswordToken,
-    forgotPasswordExpiryDate: { $gt: new Date(Date.now()) }
+    forgotPasswordExpiryDate: { $gt: new Date(Date.now()) },
   });
 
   if (!user) {
@@ -129,7 +129,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   res.status(200).cookie("Token", JwtToken, cookieOptions).json({
     success: true,
     message: "successfully updated the password",
-    Token: token
+    Token: token,
   });
 });
 
@@ -138,7 +138,7 @@ const signOut = asyncHandler(async (req, res, next) => {
     httpOnly: true,
     maxAge: new Date().now, // 7 days
     path: "/",
-    sameSite: "Lax"
+    sameSite: "Lax",
   });
   res.status(200).json({ success: true, message: "log out successful" });
 });
@@ -156,5 +156,5 @@ module.exports = {
   resetPassword,
   userExist,
   getUser,
-  signOut
+  signOut,
 };
