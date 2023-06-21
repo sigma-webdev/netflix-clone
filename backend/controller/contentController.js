@@ -25,17 +25,9 @@ const contentApi = asyncHandler(async (req, res) => {
  ********************/
 const httpPostContent = asyncHandler(async (req, res, next) => {
   // get required field from body
+
   let details = {
-    name: req.body.name,
-    description: req.body.description,
-    releaseDate: req.body.releaseDate,
-    cast: req.body.cast,
-    categories: req.body.categories,
-    genres: req.body.genres,
-    creator: req.body.creator,
-    rating: req.body.rating,
-    language: req.body.language,
-    display: req.body.display,
+    ...req.body,
     //default thumbnail value
     thumbnail: [
       {
