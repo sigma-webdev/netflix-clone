@@ -6,7 +6,6 @@ const {
   httpGetContentById,
   httpDeleteById,
   httpUpdateById,
-  searchByMovieName,
 } = require("../controller/contentController");
 
 const contentRoute = express.Router();

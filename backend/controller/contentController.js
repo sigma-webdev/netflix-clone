@@ -118,9 +118,9 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
   const { search, category, genre, display, page, limit } = req.query;
-
+  const query = {};
   const PAGE = Number(page) || 1;
-  const LIMIT = Number(limit) || 10;
+  const LIMIT = Number(limit) || 20;
 
   const startIndex = (PAGE - 1) * LIMIT;
   const endIndex = PAGE * LIMIT;
@@ -140,8 +140,9 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
       limit: LIMIT,
     };
   }
+  console.log("Query----------", query);
+  console.log("result ----------", result);
 
-  const query = {};
   // search content name
   if (search) {
     query["name"] = { $regex: search, $options: "i" };
@@ -159,13 +160,15 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   }
 
   // display condition
-  if (display) {
-    query["display"] = display.toLowerCase();
+  // TODO: Integrate middleware
+  if (req.role === "ADMIN" && display) {
+    query["display"] = display;
+  } else if (req.role === "USER") {
+    query["display"] = true;
   }
 
-  console.log("queries -----------", query);
   // find all content and search all content
-  const contents = await Content.find(query);
+  const contents = await Content.find(query).skip(startIndex).limit(LIMIT);
 
   // if no content available
   if (!contents.length) {
@@ -271,7 +274,6 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
 const httpUpdateById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
   const { body, files } = req;
-  console.log("body ________", body);
 
   // check for the availability of content
   const contentData = await Content.findById(contentId);
