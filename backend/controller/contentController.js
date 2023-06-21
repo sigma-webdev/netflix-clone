@@ -1,5 +1,5 @@
 const asyncHandler = require("../middleware/asyncHandler.js");
-const CustomError = require("../utils/customerror.js");
+const CustomError = require("../utils/customError.js");
 
 const Content = require("../model/contentSchema.js");
 
@@ -24,86 +24,42 @@ const contentApi = asyncHandler(async (req, res) => {
  * @return { Object } content object
  ********************/
 const httpPostContent = asyncHandler(async (req, res, next) => {
+  // get required field from body
   let details = {
     name: req.body.name,
     description: req.body.description,
-    cast: req.body.cast ? req.body.cast.split(",") : undefined,
+    cast: req.body.cast,
     categories: req.body.categories,
     genres: req.body.genres,
-    creator: req.body.creator ? req.body.creator.split(",") : undefined,
+    creator: req.body.creator,
     rating: req.body.rating,
     language: req.body.language,
   };
 
-  // handling creator and cast data
-
-  const castTemp = [];
-  const creatorTemp = [];
-
-  if (!details.creator) {
-    return next(new CustomError("Creator field required", 400));
-  }
-  if (!details.cast) {
-    return next(new CustomError("Cast field required", 400));
-  }
-
-  for (let i of details.cast) {
-    castTemp.push(i.trim());
-  }
-  details.cast = castTemp;
-
-  for (let i of details.creator) {
-    creatorTemp.push(i.trim());
-  }
-  details.creator = creatorTemp;
-
   // checking for missing fields
-  if (
-    !details.name ||
-    !details.description ||
-    !details.cast ||
-    !details.categories ||
-    !details.genres ||
-    !details.creator ||
-    !details.rating ||
-    !details.language
-  ) {
-    return next(new CustomError("Please fill the required field!", 400));
+  const requiredFields = [
+    "name",
+    "description",
+    "categories",
+    "genres",
+    "rating",
+    "language",
+    "cast",
+    "creator",
+  ];
+  const missingRequiredFields = requiredFields.filter(
+    (field) => !details[field]
+  );
+  if (missingRequiredFields.length > 0) {
+    // retrieve first missing fields and send the message
+    const missingField = missingRequiredFields[0];
+    return next(new CustomError(`Missing Field - ${missingField}`));
   }
-
-  // file check
-  if (!req.files.trailer) {
-    return next(new CustomError("Please add trailer file", 400));
-  }
-
-  if (!req.files.content) {
-    return next(new CustomError("Please add content file", 400));
-  }
-
-  if (!req.files.thumbnail) {
-    return next(new CustomError("Please add thumbnail file", 400));
-  }
-
-  const contentFiles = await cloudinaryFileUpload(req.files);
-
-  // add the file details
-  details.trailer = contentFiles.trailer;
-  details.content = contentFiles.content;
-  details.thumbnail = contentFiles.thumbnail;
+  // file upload will be done in the update section
 
   const contentDetails = Content(details);
-
-  const contentData = await contentDetails.save().catch((error) => {
-    // DELETE FILE
-    cloudinaryFileDelete(details.trailer[0].trailerId);
-    cloudinaryFileDelete(details.content[0].contentID);
-    cloudinaryImageDelete(details.thumbnail[0].thumbnailID);
-
-    return next(
-      new CustomError(`Content fail to save to database! ${error}`, 400)
-    );
-  });
-  // console.log("contentData- ", contentData);
+  console.log("Content details ----", contentDetails);
+  const contentData = await contentDetails.save();
 
   if (!contentData) {
     return next(
@@ -127,17 +83,17 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 const httpGetContent = asyncHandler(async (req, res, next) => {
   // find all content --
   const contents = await Content.find();
-  console.log(contents);
+  // console.log(contents);
   // if no content available
   if (!contents.length) {
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Content Not found",
       contents,
     });
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "All contents ...",
     contents,
@@ -153,9 +109,9 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpGetContentById = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
+  const { postId } = req.params;
 
-  const contentData = await Content.findById(id);
+  const contentData = await Content.findById(postId);
 
   if (!contentData) {
     return next(
@@ -179,10 +135,10 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
  ********************/
 const httpDeleteById = asyncHandler(async (req, res, next) => {
   // extract id
-  const { id } = req.params;
+  const { postId } = req.params;
 
   // find content with id
-  const contentData = await Content.findById(id);
+  const contentData = await Content.findById(postId);
 
   if (!contentData) {
     return next(
@@ -215,77 +171,79 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpUpdateById = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const files = req.files;
+  const { postId } = req.params;
+  const { body, files } = req;
 
-  const contentData = await Content.findById(id);
+  // check for the availability of content
+  const contentData = await Content.findById(postId);
 
   if (!contentData) {
-    return next(new CustomError("content not found", 404));
+    return next(new CustomError("Content not available for the provided Id! "));
   }
 
-  // handling creator and cast data
-  const cast = req.body.cast ? req.body.cast.split(",") : "";
-  const creator = req.body.creator ? req.body.creator.split(",") : "";
-  const castTemp = [];
-  const creatorTemp = [];
-  for (let i of cast) {
-    castTemp.push(i.trim());
-  }
-
-  for (let i of creator) {
-    creatorTemp.push(i.trim());
-  }
-
-  contentData.name = req.body.name || contentData.name;
-  contentData.description = req.body.description || contentData.description;
-  contentData.cast = castTemp.length === 0 ? contentData.cast : castTemp;
-  contentData.categories = req.body.categories || contentData.categories;
-  contentData.genres = req.body.genres || contentData.genres;
-  contentData.creator =
-    creatorTemp.length === 0 ? contentData.creator : creatorTemp;
-  contentData.rating = req.body.rating || contentData.rating;
-  contentData.language = req.body.language || contentData.language;
+  // files temporary storage
+  let contentFiles;
 
   if (files) {
-    console.log("files", files);
-    const contentFiles = await cloudinaryFileUpload(req.files);
-    console.log("ContentFiles ------------------ ", contentFiles);
-
-    // handling files update
-    // trailer
-    // contentData.trailer =
-    //   contentFiles.trailer[0].trailerUrl.length == 0
-    //     ? contentData.trailer[0].trailerUrl
-    //     : contentFiles.trailer[0].trailerUrl;
-    // contentData.trailer =
-    //   contentFiles.trailer[0].trailerId.length == 0
-    //     ? contentData.trailer[0].trailerId
-    //     : contentFiles.trailer[0].trailerId;
-
-    if (req.files.trailer) {
-      contentData.trailer = contentFiles.trailer;
-    }
-    if (req.files.content) {
-      contentData.content = contentFiles.content;
+    // delete pre-existing file
+    if (files.content && contentData.content.length > 0) {
+      cloudinaryFileDelete(contentData.content[0].contentID, next);
     }
 
-    if (req.files.thumbnail) {
-      contentData.thumbnail = contentFiles.thumbnail;
+    if (files.trailer && contentData.trailer.length > 0) {
+      cloudinaryFileDelete(contentData.trailer[0].trailerId, next);
     }
+
+    if (files.thumbnail && contentData.thumbnail.length > 0) {
+      cloudinaryImageDelete(contentData.thumbnail[0]?.thumbnailID, next);
+    }
+
+    // TODO - fix thumbnail updefined
+    contentFiles = await cloudinaryFileUpload(files, next);
   }
 
-  console.log("content------- -", contentData);
+  const updatedData = await Content.findByIdAndUpdate(
+    postId,
+    { ...body, ...contentFiles },
+    {
+      new: true,
+      runValidators: true,
+    }
+  ).catch((error) => {
+    // DELETE File passing particularId
+    if (contentFiles.trailer) {
+      cloudinaryFileDelete(contentFiles.trailer[0].trailerId);
+    }
+    if (contentFiles.content) {
+      cloudinaryFileDelete(contentFiles.content[0].contentID);
+    }
+    if (contentFiles.thumbnail) {
+      cloudinaryImageDelete(contentFiles.thumbnail[0].thumbnailID);
+      console.log("deleting....................");
+    }
+    return next(new CustomError(`File not able to save!- ${error}`, 404));
+  });
 
-  // save the updated content
-  await contentData.save();
-
+  if (!updatedData) {
+    return next(
+      new CustomError("Content fail to save to database! Please try again", 400)
+    );
+  }
   res.status(200).json({
     success: true,
     message: "Content Updated successfully",
-    contentData,
+    updatedData,
   });
 });
+
+/********************
+ * @httpUpdateById
+ * @route http://localhost:8081/api/v1/content/posts/query
+ * @description  controller to update the content
+ * @parameters {Object id}
+ * @return { Object } content object
+ ********************/
+const searchByMovieName = () => {};
 
 module.exports = {
   contentApi,

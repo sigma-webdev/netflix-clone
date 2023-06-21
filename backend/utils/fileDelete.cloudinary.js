@@ -1,12 +1,13 @@
 const cloudinary = require("../config/cloudinaryConfig");
 const CustomError = require("./customError");
 
-const cloudinaryImageDelete = (publicId) => {
+const cloudinaryImageDelete = async (publicId, next) => {
   try {
-    cloudinary.uploader.destroy(publicId, (error, result) => {
+    await cloudinary.uploader.destroy(publicId, (error, result) => {
       if (error) {
-        // TODO: throw the error
-        console.log("ERROR in DELETING Image - ", error);
+        return next(
+          new CustomError(`File not able to update/delete ${error} `, 500)
+        );
         // throw new CustomError("  ")
       } else {
         // TODO: send the success result
@@ -14,22 +15,25 @@ const cloudinaryImageDelete = (publicId) => {
       }
     });
   } catch (error) {
-    // TODO: throw the error
-    console.log("ERROR IN DELETING IMAGE - ", error);
+    return next(new CustomError(`Error in  the image - ${error}`, 400));
   }
 };
 
 // video file delete ---
-const cloudinaryFileDelete = (publicId) => {
+const cloudinaryFileDelete = async (publicId, next) => {
   try {
-    cloudinary.uploader.destroy(
+    await cloudinary.uploader.destroy(
       publicId,
       { resource_type: "video" },
 
       (error, result) => {
         if (error) {
-          // TODO: throw the error
-          console.log("ERROR in DELETING FILE - ", error);
+          return next(
+            new CustomError(
+              `Error in updating/deleting  the File ${error}`,
+              400
+            )
+          );
         } else {
           // TODO: send the success result
           console.log("RESULT OF DELETING FILE - ", result);
@@ -37,8 +41,7 @@ const cloudinaryFileDelete = (publicId) => {
       }
     );
   } catch (error) {
-    // TODO: throw the error
-    console.log("DELETING FILE ERROR - ", error);
+    return next(new CustomError("Error in Deleting the Content File"));
   }
 };
 

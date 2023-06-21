@@ -54,11 +54,13 @@ const contentSchema = new Schema(
       {
         thumbnailUrl: {
           type: String,
-          required: [true, "Thumbnail URL should be provided"],
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp",
         },
         thumbnailID: {
           type: String,
-          required: [true, "Thumbnail Id should be provided"],
+          // required: [true, "Thumbnail Id should be provided"],
         },
       },
     ],
@@ -66,11 +68,12 @@ const contentSchema = new Schema(
       {
         trailerUrl: {
           type: String,
-          required: [true, "trailer video link must be provided"],
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
+          // required: [true, "trailer video link must be provided"],
         },
         trailerId: { type: String },
-        // TODO: calculate length
-        trailerDuration: { type: Number },
       },
     ],
 
@@ -78,11 +81,15 @@ const contentSchema = new Schema(
       {
         contentURL: {
           type: String,
-          required: [true, "Content video link must be provided"],
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
+
+          // required: [true, "Content video link must be provided"],
         },
         contentID: {
           type: String,
-          required: [true, "content ID must be provided"],
+          // required: [true, "content ID must be provided"],
         },
         contentDuration: { type: Number },
       },
@@ -98,7 +105,12 @@ const contentSchema = new Schema(
         },
       },
     ],
+    display: {
+      type: Boolean,
+      default: false,
+    },
   },
+
   { timestamps: true }
 );
 
