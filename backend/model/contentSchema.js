@@ -23,7 +23,7 @@ const contentSchema = new Schema(
     cast: [String],
     categories: {
       type: String,
-      enum: ["Movies", "TV shows"],
+      enum: ["Movies", "Series"],
       required: true,
     },
     // TODO: pending
