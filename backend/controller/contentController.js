@@ -35,6 +35,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     creator: req.body.creator,
     rating: req.body.rating,
     language: req.body.language,
+    display: req.body.display,
     //default thumbnail value
     thumbnail: [
       {
@@ -105,8 +106,33 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
-  // find all content --
-  const contents = await Content.find();
+  const { search, category, genre, display } = req.query;
+
+  const query = {};
+  // search content name
+  if (search) {
+    query["name"] = { $regex: search, $options: "i" };
+  }
+
+  // content Movies or Series
+
+  if (category) {
+    query["categories"] = new RegExp(category, "i");
+  }
+
+  // contents with specific genre
+  if (genre) {
+    query["genres"] = new RegExp(genre, "i");
+  }
+
+  // display condition
+  if (display) {
+    query["display"] = display.toLowerCase();
+  }
+
+  console.log("queries -----------", query);
+  // find all content and search all content
+  const contents = await Content.find(query);
 
   // if no content available
   if (!contents.length) {
@@ -133,9 +159,9 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpGetContentById = asyncHandler(async (req, res, next) => {
-  const { postId } = req.params;
+  const { contentId } = req.params;
 
-  const contentData = await Content.findById(postId);
+  const contentData = await Content.findById(contentId);
 
   if (!contentData) {
     return next(
@@ -159,10 +185,10 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
  ********************/
 const httpDeleteById = asyncHandler(async (req, res, next) => {
   // extract id
-  const { postId } = req.params;
+  const { contentId } = req.params;
 
   // find content with id
-  const contentData = await Content.findById(postId);
+  const contentData = await Content.findById(contentId);
 
   if (!contentData) {
     return next(
@@ -210,11 +236,12 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpUpdateById = asyncHandler(async (req, res, next) => {
-  const { postId } = req.params;
+  const { contentId } = req.params;
   const { body, files } = req;
+  console.log("body ________", body);
 
   // check for the availability of content
-  const contentData = await Content.findById(postId);
+  const contentData = await Content.findById(contentId);
 
   if (!contentData) {
     return next(new CustomError("Content not available for the provided Id! "));
@@ -253,7 +280,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   }
 
   const updatedData = await Content.findByIdAndUpdate(
-    postId,
+    contentId,
     { ...body, ...contentFiles },
     {
       new: true,
@@ -278,7 +305,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       new CustomError("Content fail to save to database! Please try again", 400)
     );
   }
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Content Updated successfully",
     updatedData,
@@ -292,7 +319,6 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
  * @parameters {Object id}
  * @return { Object } content object
  ********************/
-const searchByMovieName = () => {};
 
 module.exports = {
   contentApi,
