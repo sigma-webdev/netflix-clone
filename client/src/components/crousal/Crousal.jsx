@@ -15,6 +15,7 @@ const Crousal = ({ content }) => {
     ref.current.scrollLeft += ref.current.offsetWidth;
   };
 
+  console.log(content);
   return (
     <div
       ref={ref}
@@ -31,7 +32,13 @@ const Crousal = ({ content }) => {
       {content &&
         content.map((item) => {
           return (
-            <PreviewCard key={item.id} contentPoster={item.contentPoster} />
+            <PreviewCard
+              key={item._id}
+              thumbnailURL={item.thumbnail[0].thumbnailUrl}
+              trailerUrl={item.trailer[0].trailerUrl}
+              geners={item.genres}
+              contentId={item._id}
+            />
           );
         })}
       <div

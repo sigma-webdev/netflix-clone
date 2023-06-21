@@ -6,10 +6,10 @@ import { useEffect, useState, useRef } from "react";
 // icons
 import { GlobeIcon } from "../icons";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BiBell, BiDownArrow } from "react-icons/bi";
+import { BiBell } from "react-icons/bi";
 import { Loading } from "../icons.jsx";
 // THUNK
-import { SIGN_OUT, useState } from "../../store/authSlice.js";
+import { SIGN_OUT } from "../../store/authSlice.js";
 import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -41,13 +41,15 @@ const Header = ({ isLogin }) => {
     if (isLogin) {
       window.addEventListener("scroll", scrollHandler);
     }
+
+    return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
   async function handleSignInSignOut() {
     if (!IS_LOGGED_IN) return navigate("/signin");
     const response = await dispatch(SIGN_OUT());
     if (response.payload.success) {
-      navigate("/signoutpage");
+      navigate("/signout");
     }
   }
 
@@ -149,7 +151,10 @@ const Header = ({ isLogin }) => {
                   <div>{user.name}</div>
                 </li>
                 <hr className="my-4" />
-                <li className="flex items-center gap-4 ">
+                <li
+                  className="flex items-center gap-4 cursor-pointer"
+                  onClick={() => handleSignInSignOut()}
+                >
                   <IconContext.Provider value={{ size: "25px" }}>
                     <FaSignOutAlt /> Sign out of Netflix
                   </IconContext.Provider>

@@ -76,7 +76,7 @@ const Browse = () => {
               {/* loop through all GENRES */}
               {GENRES.map((currentGenre) => {
                 const categoryWiseContent = content.filter(
-                  (item) => item.genre === currentGenre.name
+                  (item) => item.genres === currentGenre.name
                 );
 
                 //  current genre
