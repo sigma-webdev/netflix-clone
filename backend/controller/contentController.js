@@ -25,9 +25,28 @@ const contentApi = asyncHandler(async (req, res) => {
  ********************/
 const httpPostContent = asyncHandler(async (req, res, next) => {
   // get required field from body
+  const {
+    name,
+    description,
+    releaseDate,
+    categories,
+    genres,
+    rating,
+    language,
+    cast,
+    creator,
+  } = req.body;
 
   let details = {
-    ...req.body,
+    name,
+    description,
+    releaseDate,
+    categories,
+    genres,
+    rating,
+    language,
+    cast,
+    creator,
     //default thumbnail value
     thumbnail: [
       {
@@ -98,7 +117,29 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
-  const { search, category, genre, display } = req.query;
+  const { search, category, genre, display, page, limit } = req.query;
+
+  const PAGE = Number(page) || 1;
+  const LIMIT = Number(limit) || 10;
+
+  const startIndex = (PAGE - 1) * LIMIT;
+  const endIndex = PAGE * LIMIT;
+
+  // pagination
+  const totalContents = await Content.find(query).countDocuments();
+  const result = {};
+  if (endIndex < totalContents) {
+    result.next = {
+      pageNumber: PAGE + 1,
+      limit: LIMIT,
+    };
+  }
+  if (startIndex > 0) {
+    result.previous = {
+      pageNumber: PAGE - 1,
+      limit: LIMIT,
+    };
+  }
 
   const query = {};
   // search content name
