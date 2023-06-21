@@ -9,6 +9,6 @@ export const store = configureStore({
     content: contentReducer,
     user: userReducer,
     auth: authReducer,
-    razorepay: razorpayReducer
+    razorpay: razorpayReducer
   }
 });

@@ -1,37 +1,89 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 // icon
 import { Check, CheckCircle, Loading } from "../icons.jsx";
-
 //thunk
 import {
   CREATE_SUBSCRIPTION,
-  GET_RAZORPAY_KEY
+  GET_RAZORPAY_KEY,
+  VERIFY_SUBSCRIPTION
 } from "../../store/razorpaySlice.js";
 
 function PlanForm() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const RASORPAY_KEY = useSelector((state) => state.razorepay.razorpaykey);
+  const [plan, setPlan] = useState("PREMIUM");
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  const RAZORPAY_KEY = useSelector((state) => state.razorpay.razorpaykey);
+  const SUBSCRIPTION_ID = useSelector((state) => state.razorpay.subscriptionId);
   const RASORPAY_KEY_LOADING = useSelector(
-    (state) => state.razorepay.razorpayKeyLoading
+    (state) => state.razorpay.razorpayKeyLoading
   );
   const CREATE_SUBSCRIPTION_LOADING = useSelector(
-    (state) => state.razorepay.createSbuscriptionLoading
+    (state) => state.razorpay.createSbuscriptionLoading
   );
-  const [plan, setPlan] = useState("PREMIUM");
-  const [buttonLoading, setButtonLoading] = useState(
-    RASORPAY_KEY_LOADING || CREATE_SUBSCRIPTION_LOADING
-  );
+
+  useEffect(() => {
+    setButtonLoading(RASORPAY_KEY_LOADING || CREATE_SUBSCRIPTION_LOADING);
+  }, [RASORPAY_KEY_LOADING, CREATE_SUBSCRIPTION_LOADING]);
+
+  // for storing the payment details after successfull transaction
+  const paymentDetails = {
+    razorpay_payment_id: "",
+    razorpay_subscription_id: "",
+    razorpay_signature: ""
+  };
 
   async function handlesubmit(e) {
     await dispatch(GET_RAZORPAY_KEY());
     await dispatch(CREATE_SUBSCRIPTION({ planName: plan }));
   }
 
+  function razorpayPaymentModel() {
+    const options = {
+      key: RAZORPAY_KEY,
+      subscription_id: SUBSCRIPTION_ID,
+      name: `Netflix clone ${plan}`,
+      description: "Monthly Subscription",
+      handler: async function (response) {
+        paymentDetails.razorpayPaymentId = response.razorpay_payment_id;
+        paymentDetails.razorpaySubscriptionId =
+          response.razorpay_subscription_id;
+        paymentDetails.razorpaySignature = response.razorpay_signature;
+
+        // verifying the payment
+        const verifySubscription = await dispatch(
+          VERIFY_SUBSCRIPTION({ ...paymentDetails, plan })
+        );
+        const isPaymentVerified = verifySubscription.payload.success;
+
+        // redirecting the user according to the verification status
+        if (isPaymentVerified) {
+          toast.success(verifySubscription.payload.message);
+          navigate("/signup/paymentSuccess");
+        } else {
+          toast.error(verifySubscription.payload.message);
+          navigate("/signin/paymentfail");
+        }
+      },
+      theme: {
+        color: "#e50914"
+      }
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  }
+
   useEffect(() => {
-    setButtonLoading(RASORPAY_KEY_LOADING || CREATE_SUBSCRIPTION_LOADING);
-  }, [RASORPAY_KEY_LOADING, CREATE_SUBSCRIPTION_LOADING]);
+    if (!buttonLoading && RAZORPAY_KEY && SUBSCRIPTION_ID) {
+      razorpayPaymentModel();
+    }
+  }, [RAZORPAY_KEY, SUBSCRIPTION_ID, buttonLoading]);
 
   return (
     <div className=" max-w-[1020px]  m-4">
@@ -62,14 +114,21 @@ function PlanForm() {
           <div
             className={
               plan === "PREMIUM"
-                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
+                ? "h-[76] px-3  py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
                 : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
             }
           >
             {plan === "PREMIUM" ? <CheckCircle /> : null}
             <div>
-              <p className="font-bold text-xl">Premium</p>
-              <p className="font-bold text-xl">649/mo.</p>
+              <p
+                className={
+                  plan === "PREMIUM"
+                    ? "font-bold text-xl text-white "
+                    : "font-bold text-xl"
+                }
+              >
+                Premium <br /> 649/mo.
+              </p>
             </div>
           </div>
           <ul className="p-4">
@@ -92,13 +151,20 @@ function PlanForm() {
             className={
               plan === "STANDARD"
                 ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
-                : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
+                : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500"
             }
           >
             {plan === "STANDARD" ? <CheckCircle /> : null}
             <div>
-              <p className="font-bold text-xl">Standard</p>
-              <p className="font-bold text-xl">499/mo.</p>
+              <p
+                className={
+                  plan === "STANDARD"
+                    ? "font-bold text-xl text-white "
+                    : "font-bold text-xl"
+                }
+              >
+                Standard <br /> 499/mo.
+              </p>
             </div>
           </div>
           <ul className="p-3">
@@ -126,8 +192,15 @@ function PlanForm() {
           >
             {plan === "BASIC" ? <CheckCircle /> : null}
             <div>
-              <p className="font-bold text-xl">Basic</p>
-              <p className="font-bold text-xl">199/mo.</p>
+              <p
+                className={
+                  plan === "BASIC"
+                    ? "font-bold text-xl text-white "
+                    : "font-bold text-xl"
+                }
+              >
+                Basic <br /> 199/mo.
+              </p>
             </div>
           </div>
           <ul className="p-3">
@@ -150,13 +223,20 @@ function PlanForm() {
             className={
               plan === "MOBILE"
                 ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
-                : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
+                : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500"
             }
           >
             {plan === "MOBILE" ? <CheckCircle /> : null}
             <div>
-              <p className="font-bold text-xl">Mobile</p>
-              <p className="font-bold text-xl">149/mo.</p>
+              <p
+                className={
+                  plan === "MOBILE"
+                    ? "font-bold text-xl text-white "
+                    : "font-bold text-xl"
+                }
+              >
+                Mobile <br /> 149/mo.
+              </p>
             </div>
           </div>
           <ul className="p-3">

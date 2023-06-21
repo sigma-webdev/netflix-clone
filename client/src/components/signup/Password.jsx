@@ -20,7 +20,9 @@ function Password() {
     const userData = response.payload;
     if (userData.success && userData.data.plan !== "NONE") {
       navigate("/browse");
-    } else navigate("/signup/choose");
+    } else if (userData.success && userData.data.plan == "NONE") {
+      navigate("/signup/choose");
+    } else if (!userData.success) return;
   }
 
   return (

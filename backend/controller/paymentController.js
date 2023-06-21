@@ -1,6 +1,8 @@
 const customError = require("../utils/customError.js");
 const userModel = require("../model/userSchema.js");
 const razorpay = require("../config/razorpayConfig.js");
+const crypto = require("crypto");
+const paymentModel = require("../model/paymentSchema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 
 const createSubscription = asyncHandler(async (req, res, next) => {
@@ -16,13 +18,13 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   } = process.env;
 
   const planID =
-    "standard" === planName.toLowerCase()
+    "STANDARD" === planName.toUpperCase()
       ? RAZORPAY_STANDARD_PLAN
-      : null || "basic" === planName.toLowerCase()
+      : null || "BASIC" === planName.toUpperCase()
       ? RAZORPAY_BASIC_PLAN
-      : null || "premium" === planName.toLowerCase()
+      : null || "PREMIUM" === planName.toUpperCase()
       ? RAZORPAY_PREMIUM_PLAN
-      : null || "mobile" === planName.toLowerCase()
+      : null || "MOBILE" === planName.toUpperCase()
       ? RAZORPAY_MOBILE_PLAN
       : null;
 
@@ -67,14 +69,14 @@ const getRazorpayApiKey = asyncHandler(async (req, res, next) => {
 
 const verifySubscription = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
-  const { razorpay_payment_id, razorpay_subscription_id, razorpay_signature } =
+  const { razorpayPaymentId, razorpaySubscriptionId, razorpaySignature, plan } =
     req.body;
 
   // Finding the user
-  const user = await User.findById(id);
+  const user = await userModel.findById(id);
 
   // Getting the subscription ID from the user object
-  const subscriptionId = user.subscription.id;
+  const userSubscriptionId = user.subscription.id;
 
   // Generating a signature with SHA256 for verification purposes
   // Here the subscriptionId should be the one which we saved in the DB
@@ -82,23 +84,25 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
   // At the end convert it to Hex value
   const generatedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_SECRET)
-    .update(`${razorpay_payment_id}|${subscriptionId}`)
+    .update(`${razorpayPaymentId}|${userSubscriptionId}`)
     .digest("hex");
 
   // Check if generated signature and signature received from the frontend is the same or not
-  if (generatedSignature !== razorpay_signature) {
+  if (generatedSignature !== razorpaySignature) {
     return next(new AppError("Payment not verified, please try again.", 400));
   }
 
   // If they match create payment and store it in the DB
-  await Payment.create({
-    razorpay_payment_id,
-    razorpay_subscription_id,
-    razorpay_signature
+
+  await paymentModel.create({
+    razorpayPaymentId,
+    razorpaySubscriptionId,
+    razorpaySignature
   });
 
   // Update the user subscription status to active (This will be created before this)
   user.subscription.status = "active";
+  user.plan = plan.toUpperCase();
 
   // Save the user in the DB with any changes
   await user.save();

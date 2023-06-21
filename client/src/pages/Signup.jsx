@@ -14,8 +14,10 @@ import PlanForm from "../components/signUp/PlanForm";
 import ResetPassword from "../components/signUp/ResetPassword.jsx";
 import LoginHelp from "../components/signUp/LoginHelp.jsx";
 import ForgotPassword from "../components/signUp/ForgotPassword.jsx";
+import SignOut from "../components/signUp/SignOut";
 // thunk
 import { SIGN_OUT } from "../store/authSlice";
+import PaymentSuccess from "../components/signUp/PaymentSuccess";
 const SignUp = ({ page, theme = "light" }) => {
   const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
   const SIGN_IN_LOADING = useSelector((state) => state.auth.signInLoading);
@@ -26,36 +28,52 @@ const SignUp = ({ page, theme = "light" }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setButtonLoading(GET_USER_LOADING || SIGN_IN_LOADING);
-  }, [GET_USER_LOADING, SIGN_IN_LOADING]);
+    setButtonLoading(GET_USER_LOADING || SIGN_IN_LOADING || SIGN_OUT_LOADING);
+  }, [GET_USER_LOADING, SIGN_IN_LOADING, SIGN_OUT_LOADING]);
 
   const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
 
   async function handleSignOut() {
     const response = await dispatch(SIGN_OUT());
     if (response.payload.success) {
-      navigate("/signoutpage");
+      navigate("/signup/signout");
     }
   }
 
   return (
-    <div>
+    <div
+      className={page === "SIGN_OUT" ? "bg-netflix-signUp object-cover" : null}
+    >
       {/* nav bar */}
-      <nav className="flex justify-between items-center px-3 md:px-10 h-16 md:h-24 border-b-[1px] border-gray">
+      <nav
+        className={
+          page === "SIGN_OUT"
+            ? "flex  justify-between items-center px-3 md:px-10 h-16 md:h-24 "
+            : "flex  justify-between items-center px-3 md:px-10 h-16 md:h-24 border-b-[1px] border-gray"
+        }
+      >
         <Link to="/">
           <img className="h-8  md:h-12" src={netflixLogo} alt="netflix logo" />
         </Link>
         {/* sign-in sign-out button */}
-        <button
-          onClick={() => {
-            {
-              IS_LOGGED_IN ? handleSignOut() : navigate("/signin");
+        {buttonLoading ? (
+          <Loading color="black" />
+        ) : (
+          <button
+            onClick={() => {
+              {
+                IS_LOGGED_IN ? handleSignOut() : navigate("/signin");
+              }
+            }}
+            className={
+              page === "SIGN_OUT"
+                ? "font-bold  text-white text-lg border-black  border-b-[3px] hover:border-white cursor-pointer "
+                : "font-bold  text-[#333] text-lg border-white  border-b-[3px] hover:border-black cursor-pointer "
             }
-          }}
-          className="font-bold  text-[#333] text-lg border-white  border-b-[3px] hover:border-black cursor-pointer "
-        >
-          {IS_LOGGED_IN ? "Sign out" : "Sign In"}
-        </button>
+          >
+            {IS_LOGGED_IN ? "Sign out" : "Sign In"}
+          </button>
+        )}
         {/* sign-in sign-out button */}
       </nav>
 
@@ -68,9 +86,14 @@ const SignUp = ({ page, theme = "light" }) => {
         {page === "FORGOT_PASSWORD" ? <ForgotPassword /> : null}
         {page === "RESET_PASSWORD" ? <ResetPassword /> : null}
         {page === "LOGIN_HELP" ? <LoginHelp /> : null}
+        {page === "SIGN_OUT" ? <SignOut /> : null}
+        {page === "PAYMENT_SUCCESS" ? <PaymentSuccess /> : null}
+        {page === "PAYMENT_FAIL" ? <PaymentSuccess /> : null}
       </div>
 
-      <footer className="bg-[#f3f3f3] p-8">
+      <footer
+        className={page === "SIGN_OUT" ? "bg-black p-8" : "bg-[#f3f3f3] p-8"}
+      >
         <p className="text-[#848484] text-lg">Questions?</p>
         <ul className="text-[#848484] flex justify-evenly">
           <li>FAQ</li>

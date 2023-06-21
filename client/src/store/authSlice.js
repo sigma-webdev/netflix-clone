@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
-
+import toast from "react-hot-toast";
 const initialState = {
   isLoggedIn: false,
   userData: {},
@@ -114,8 +114,9 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
         state.signInLoading = false;
       })
-      .addCase(SIGN_IN.rejected, (state) => {
+      .addCase(SIGN_IN.rejected, (state, action) => {
         state.signInLoading = false;
+        toast.error(action.payload.message);
       })
 
       // signUp
@@ -126,9 +127,11 @@ const authSlice = createSlice({
         state.user = action.payload.data;
         state.isLoggedIn = true;
         state.signUpLoading = false;
+        toast.success("successfully signup");
       })
-      .addCase(SIGN_UP.rejected, (state) => {
+      .addCase(SIGN_UP.rejected, (state, action) => {
         state.signUpLoading = false;
+        toast.error(action.payload.message);
       })
 
       // get user
@@ -166,6 +169,7 @@ const authSlice = createSlice({
       })
       .addCase(FORGOT_PASSWORD.rejected, (state, action) => {
         state.forgotPasswordLoading = false;
+        toast.error(action.payload.message);
       })
 
       // reset Password
@@ -174,6 +178,7 @@ const authSlice = createSlice({
       })
       .addCase(RESET_PASSWORD.fulfilled, (state, action) => {
         state.resetPasswordLoading = false;
+        toast.success("successfully updated the password");
       })
       .addCase(RESET_PASSWORD.rejected, (state, action) => {
         state.resetPasswordLoading = false;

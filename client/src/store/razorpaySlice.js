@@ -5,7 +5,9 @@ const initialState = {
   razorpaykey: null,
   razorpayKeyLoading: false,
   subscriptionId: null,
-  createSbuscriptionLoading: false
+  createSbuscriptionLoading: false,
+  verifySubscriptionLoading: false,
+  isPaymentVerified: false
 };
 
 export const GET_RAZORPAY_KEY = createAsyncThunk(
@@ -26,6 +28,22 @@ export const CREATE_SUBSCRIPTION = createAsyncThunk(
     // data = {planeName : planeName}
     try {
       const response = await axiosInstance.post("payment/subscribe", data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const VERIFY_SUBSCRIPTION = createAsyncThunk(
+  "payment/verifysubscription",
+  async (data, { rejectWithValue }) => {
+    // data = {planeName : planeName}
+
+    try {
+      const response = await axiosInstance.post(
+        "payment/verifysubscription",
+        data
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -56,11 +74,23 @@ const razoreSlice = createSlice({
         state.createSbuscriptionLoading = true;
       })
       .addCase(CREATE_SUBSCRIPTION.fulfilled, (state, action) => {
-        state.subscriptionId = action.payload.key;
+        state.subscriptionId = action.payload.subscription_id;
         state.createSbuscriptionLoading = false;
       })
       .addCase(CREATE_SUBSCRIPTION.rejected, (state, action) => {
         state.createSbuscriptionLoading = false;
+      })
+
+      // verify subscription
+      .addCase(VERIFY_SUBSCRIPTION.pending, (state, action) => {
+        state.verifySubscriptionLoading = true;
+      })
+      .addCase(VERIFY_SUBSCRIPTION.fulfilled, (state, action) => {
+        state.isPaymentVerified = action.payload.success;
+        state.verifySubscriptionLoading = false;
+      })
+      .addCase(VERIFY_SUBSCRIPTION.rejected, (state, action) => {
+        state.verifySubscriptionLoading = false;
       });
   }
 });

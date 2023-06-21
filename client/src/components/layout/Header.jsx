@@ -44,7 +44,7 @@ const Header = ({ isLogin }) => {
     if (!IS_LOGGED_IN) return navigate("/signin");
     const response = await dispatch(SIGN_OUT());
     if (response.payload.success) {
-      navigate("/signoutpage");
+      navigate("signup/signout");
     }
   }
 

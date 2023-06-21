@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import validator from "email-validator";
+import toast from "react-hot-toast";
 // think
 import { SIGN_UP } from "../../store/authSlice.js";
 
@@ -14,12 +16,12 @@ function RegForm() {
   const SIGN_UP_LOADING = useSelector((state) => state.auth.signUpLoading);
   async function handleSubmit(e) {
     e.preventDefault();
+    const isEmailValid = validator.validate(e.target.email.value);
+    if (!isEmailValid) return toast.error("please enter valid email 📩");
     const formData = new FormData(e.target);
     const response = await dispatch(SIGN_UP(formData));
     if (response.payload.success) {
       navigate("/signup/choose");
-    } else {
-      console.log(alert(response.payload.message));
     }
   }
   return (
@@ -43,7 +45,7 @@ function RegForm() {
       {/* email */}
       <div className="relative z-0 w-full mb-4 group border-[1px] border-gray ">
         <input
-          type="email"
+          // type="email"
           name="email"
           id="floating_email"
           className="m-3 block  py-2.5 px-0 w-full text-sm  font-semibold text-gray-900 bg-transparent   border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-gray-500 peer"

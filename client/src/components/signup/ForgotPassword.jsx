@@ -1,7 +1,9 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import validator from "email-validator";
+import toast from "react-hot-toast";
+
 //thunk
 import { FORGOT_PASSWORD } from "../../store/authSlice";
 //icons
@@ -17,6 +19,10 @@ function ForgotPassword() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    // validating the email
+    const isEmailValid = validator.validate(e.target.email.value);
+    if (!isEmailValid) return toast.error("please enter valid email 📩");
+
     const formData = new FormData(e.target);
     const response = await dispatch(FORGOT_PASSWORD(formData));
     console.log(response);
@@ -46,9 +52,10 @@ function ForgotPassword() {
       </p>
       <input
         className=" h-12 my-4 border-2 p-2 focus:outline-none"
-        type="text"
+        type="email"
         name="email"
         placeholder="name@example.com"
+        required
       />
 
       <button

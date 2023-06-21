@@ -5,12 +5,12 @@ const bcrypt = require("bcrypt");
 const cookieOptions = require("../utils/cookieOption.js");
 const transporter = require("../config/emailConfig.js");
 const nodemailer = require("nodemailer");
+const validator = require("email-validator");
 const crypto = require("crypto");
 
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
   const result = await userModel.findOne({ email: email });
-  console.log(result);
   if (result) {
     return res.status(200).json({ success: true, isUserExist: true });
   } else {
@@ -18,8 +18,13 @@ const userExist = asyncHandler(async (req, res, next) => {
   }
 });
 
-const signUp = asyncHandler(async (req, res) => {
+const signUp = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
+
+  const isEmailValid = validator.validate(email);
+  if (!isEmailValid)
+    return next(new customError("please enter valid email 📩"));
+
   const userInfo = userModel({ email, password });
   const result = await userInfo.save();
   result.password = undefined;
@@ -66,7 +71,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   const resetToken = user.getForgotPasswordToken();
   await user.save();
 
-  const resetUrl = `${req.headers.referer}reset_password/${resetToken}`;
+  const resetUrl = `${req.headers.referer}resetpassword/${resetToken}`;
 
   // create mail content
   const mailOptions = {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // icon
 import { CrossFillIcon, Loading } from "../icons.jsx";
@@ -8,6 +8,7 @@ import { RESET_PASSWORD } from "../../store/authSlice.js";
 
 function ResetPassword() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [error, setError] = useState({ error: false, message: "" });
   const { resetPasswordToken } = useParams();
   const resetPasswordLoading = useSelector(
@@ -21,6 +22,7 @@ function ResetPassword() {
       RESET_PASSWORD({ resetPasswordToken, formData })
     );
     if (response.payload.success) {
+      navigate("/signin");
     } else {
       setError({ error: true, message: response.payload.message });
     }
@@ -31,6 +33,11 @@ function ResetPassword() {
       onSubmit={(e) => handleSubmit(e)}
       className=" md:w-[1020px] mx-4 p-10 shadow-xl flex flex-col  gap-3"
     >
+      <div>
+        <div></div>
+        <div></div>
+      </div>
+
       <h2 className="font-bold">Change your password</h2>
       {error.error ? (
         <div className="bg-[#ffa00a] h-12  w-fit  mt-4 flex items-center px-3 ">
@@ -47,7 +54,7 @@ function ResetPassword() {
         Protect your account with a unique password at least 6 characters long.
       </p>
       {/* current email */}
-      <div className="relative z-0 md:max-w-xl mb-4 group border-[1px] border-gray ">
+      {/* <div className="relative z-0 md:max-w-xl mb-4 group border-[1px] border-gray ">
         <input
           type="email"
           name="currentEmail"
@@ -61,7 +68,7 @@ function ResetPassword() {
         >
           Current email
         </label>
-      </div>
+      </div> */}
       {/* current email end */}
 
       {/* new password */}
@@ -108,10 +115,18 @@ function ResetPassword() {
       <div>
         <button
           type="submit"
-          className="hover:bg-[#2490fd] bg-[#007efa]  min-w-[110px] h-12 my-4  px-4 font-bold  text-lg text-white"
+          className="mx-2 hover:bg-[#2490fd] bg-[#007efa]  min-w-[110px] h-12 my-4  px-4 font-bold  text-lg text-white"
         >
-          {resetPasswordLoading ? <Loading /> : "Email Me"}
+          {resetPasswordLoading ? <Loading /> : "Update"}
         </button>
+        <Link to="/">
+          <button
+            type="submit"
+            className="hover:bg-gray-300 bg-gray-200  min-w-[110px] h-12 my-4  px-4 font-semibold  text-lg text-gray-500"
+          >
+            Cancel
+          </button>
+        </Link>
       </div>
     </form>
   );
