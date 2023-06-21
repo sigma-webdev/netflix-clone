@@ -6,14 +6,15 @@ const {
   httpGetContentById,
   httpDeleteById,
   httpUpdateById,
+  searchByMovieName,
 } = require("../controller/contentController");
 
 const contentRoute = express.Router();
 
 contentRoute.route("/ping").get(contentApi);
-contentRoute.route("/posts").post(httpPostContent).get(httpGetContent);
+contentRoute.route("/").post(httpPostContent).get(httpGetContent);
 contentRoute
-  .route("/posts/:postId")
+  .route("/:contentId")
   .get(httpGetContentById)
   .delete(httpDeleteById)
   .put(httpUpdateById);
