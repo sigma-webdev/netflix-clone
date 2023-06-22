@@ -10,7 +10,6 @@ const cloudinaryImageDelete = async (publicId, next) => {
         );
         // throw new CustomError("  ")
       } else {
-        // TODO: send the success result
         console.log("RESULT in DELETING Image - ", result);
       }
     });

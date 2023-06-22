@@ -7,6 +7,7 @@ const transporter = require("../config/emailConfig.js");
 const nodemailer = require("nodemailer");
 const validator = require("email-validator");
 const crypto = require("crypto");
+const contentModel = require("../model/contentSchema.js");
 
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
