@@ -16,14 +16,22 @@ const contentSchema = new Schema(
       minLength: [15, "Content description must be at least 15 characters"],
       maxLength: [250, "Content description must be less than 100 characters "],
     },
+    releaseDate: {
+      type: Date,
+      required: [true, "Content release date required!"],
+    },
     cast: [String],
     categories: {
       type: String,
-      enum: ["Movies", "TV shows"],
+      enum: ["Movies", "Series"],
       required: true,
     },
-    // TODO: pending
-    likes: [String],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "userModel",
+      },
+    ],
 
     genres: {
       type: String,
@@ -54,11 +62,9 @@ const contentSchema = new Schema(
       {
         thumbnailUrl: {
           type: String,
-          required: [true, "Thumbnail URL should be provided"],
         },
         thumbnailID: {
           type: String,
-          required: [true, "Thumbnail Id should be provided"],
         },
       },
     ],
@@ -66,11 +72,8 @@ const contentSchema = new Schema(
       {
         trailerUrl: {
           type: String,
-          required: [true, "trailer video link must be provided"],
         },
         trailerId: { type: String },
-        // TODO: calculate length
-        trailerDuration: { type: Number },
       },
     ],
 
@@ -78,11 +81,10 @@ const contentSchema = new Schema(
       {
         contentURL: {
           type: String,
-          required: [true, "Content video link must be provided"],
         },
         contentID: {
           type: String,
-          required: [true, "content ID must be provided"],
+          // required: [true, "content ID must be provided"],
         },
         contentDuration: { type: Number },
       },
@@ -98,7 +100,12 @@ const contentSchema = new Schema(
         },
       },
     ],
+    display: {
+      type: Boolean,
+      default: false,
+    },
   },
+
   { timestamps: true }
 );
 

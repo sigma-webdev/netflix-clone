@@ -5,12 +5,18 @@ const bcrypt = require("bcrypt");
 const cookieOptions = require("../utils/cookieOption.js");
 const transporter = require("../config/emailConfig.js");
 const nodemailer = require("nodemailer");
+const validator = require("email-validator");
 const crypto = require("crypto");
+const contentModel = require("../model/contentSchema.js");
 
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
+
+  const isEmailExist = validator.validate(email);
+  if (!isEmailExist)
+    return next(new customError("please enter valid email 📩"));
+
   const result = await userModel.findOne({ email: email });
-  console.log(result);
   if (result) {
     return res.status(200).json({ success: true, isUserExist: true });
   } else {
@@ -18,8 +24,13 @@ const userExist = asyncHandler(async (req, res, next) => {
   }
 });
 
-const signUp = asyncHandler(async (req, res) => {
+const signUp = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
+
+  const isEmailValid = validator.validate(email);
+  if (!isEmailValid)
+    return next(new customError("please enter valid email 📩"));
+
   const userInfo = userModel({ email, password });
   const result = await userInfo.save();
   result.password = undefined;
@@ -30,6 +41,11 @@ const signUp = asyncHandler(async (req, res) => {
 
 const signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
+
+  const isEmailExist = validator.validate(email);
+  if (!isEmailExist)
+    return next(new customError("please enter valid email 📩"));
+
   // check user exist or not
   const user = await userModel.findOne({ email }).select("+password");
   if (!user)
@@ -66,13 +82,13 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   const resetToken = user.getForgotPasswordToken();
   await user.save();
 
-  const resetUrl = `${req.headers.referer}reset_password/${resetToken}`;
+  const resetUrl = `${req.headers.referer}resetpassword/${resetToken}`;
 
   // create mail content
   const mailOptions = {
     from: process.env.EMAIL_ID,
     to: user.email,
-    subject: "Netflix reset password",
+    subject: "Complete your password reset request",
     html: `<b>Hello ${user.name}</b><br>
                <a href="${resetUrl}" target ="_blank" >Click here to reset password</a>`
   };
@@ -107,6 +123,12 @@ const resetPassword = asyncHandler(async (req, res, next) => {
     );
   }
 
+  if (password !== conformPassword) {
+    return next(
+      new customError("password and conform password does not match", 400)
+    );
+  }
+
   // check user is exist
   const user = await userModel.findOne({
     forgotPasswordToken: resetPasswordToken,
@@ -125,11 +147,10 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
   // create jwt token and send  to client,
-  const JwtToken = user.generateJwtToken();
-  res.status(200).cookie("Token", JwtToken, cookieOptions).json({
+
+  res.status(200).json({
     success: true,
-    message: "successfully updated the password",
-    Token: token
+    message: "successfully updated the password"
   });
 });
 

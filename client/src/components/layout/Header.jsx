@@ -6,10 +6,13 @@ import { useEffect, useState, useRef } from "react";
 // icons
 import { GlobeIcon } from "../icons";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BiBell, BiDownArrow } from "react-icons/bi";
+import { BiBell } from "react-icons/bi";
 import { Loading } from "../icons.jsx";
 // THUNK
 import { SIGN_OUT } from "../../store/authSlice.js";
+import Menu from "../menu/Menu";
+import netflixAvatar from "../../assets/netflix-avtar.jpg";
+import { FaSignOutAlt } from "react-icons/fa";
 
 const Header = ({ isLogin }) => {
   const navigate = useNavigate();
@@ -38,25 +41,27 @@ const Header = ({ isLogin }) => {
     if (isLogin) {
       window.addEventListener("scroll", scrollHandler);
     }
+
+    return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
   async function handleSignInSignOut() {
     if (!IS_LOGGED_IN) return navigate("/signin");
     const response = await dispatch(SIGN_OUT());
     if (response.payload.success) {
-      navigate("/signoutpage");
+      navigate("signup/signout");
     }
   }
 
   return (
     <header
       ref={headerRef}
-      className={`max-w-[1400px] flex items-center justify-between w-full h-24 px-8 text-white  z-20 transition ease-in-out duration-300 ${
+      className={`flex items-center justify-between w-full h-16 md:h-20 px-4 md:px-8 text-white  z-20 transition ease-in-out duration-300 ${
         isLogin ? "fixed top-0" : "absolute"
       }`}
     >
-      <div className="flex gap-4">
-        <div className={isLogin ? "w-24" : "w-32"}>
+      <div className="flex gap-4 text-sm md:text-md">
+        <div className={isLogin ? "w-16 md:w-24" : "w-16 md:w-32"}>
           <Link to="/">
             <img src={netflixLogo} alt="netflix logo" className="w-full" />
           </Link>
@@ -89,11 +94,7 @@ const Header = ({ isLogin }) => {
             <div className="flex items-center gap-2 lg:hidden">
               <div>Home</div>
               <div>
-                <div>
-                  <Link to="/">
-                    <BiDownArrow />
-                  </Link>
-                </div>
+                <Menu></Menu>
               </div>
             </div>
           </div>
@@ -126,7 +127,7 @@ const Header = ({ isLogin }) => {
           </div>
         </div>
       ) : (
-        <div className="flex h-fit items-center gap-2">
+        <div className="flex h-fit items-center gap-3">
           <IconContext.Provider value={{ size: "25px" }}>
             <div className="hidden md:block">
               <AiOutlineSearch />
@@ -136,10 +137,30 @@ const Header = ({ isLogin }) => {
             </div>
           </IconContext.Provider>
           <div className="flex items-center gap-2">
-            <div>{user.name}</div>
-            <div>
-              <BiDownArrow />
+            <div className="w-10 rounded overflow-hidden">
+              <img src={netflixAvatar} className="object-contain" />
             </div>
+
+            <Menu>
+              <ul className="bg-netflix-black p-4 rounded">
+                <li className="flex items-center gap-4">
+                  <div className="w-8 rounded overflow-hidden">
+                    <img src={netflixAvatar} className="object-contain" />
+                  </div>
+
+                  <div>{user.name}</div>
+                </li>
+                <hr className="my-4" />
+                <li
+                  className="flex items-center gap-4 cursor-pointer"
+                  onClick={() => handleSignInSignOut()}
+                >
+                  <IconContext.Provider value={{ size: "25px" }}>
+                    <FaSignOutAlt /> Sign out of Netflix
+                  </IconContext.Provider>
+                </li>
+              </ul>
+            </Menu>
           </div>
         </div>
       )}

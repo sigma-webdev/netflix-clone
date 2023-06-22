@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import validator from "email-validator";
+import toast, { Toaster } from "react-hot-toast";
 
 // components
-import Accordian from "../components/accordian/Accordian.jsx";
+import Accordian from "../components/accordian/Accordian";
 import Layout from "../components/layout/Layout";
 import FeatureCard from "../components/card/FeatureCard";
 import AccordianItem from "../components/accordian/AccordianItem.jsx";
@@ -13,14 +15,15 @@ import { IS_USER_EXIST } from "../store/authSlice.js";
 // icons
 import { StartIcon } from "../components/icons.jsx";
 import { faqs, features } from "../data";
-
 const Home = () => {
   const dispatch = useDispatch();
   const [activeItem, setActiveItem] = useState(-1);
   const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
   const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
   const USER_DATA = useSelector((state) => state.auth.userData);
+
+  console.log(IS_LOGGED_IN && USER_DATA.plan === "NONE");
 
   const accordianHandler = (id) => {
     setActiveItem(id);
@@ -28,6 +31,9 @@ const Home = () => {
 
   async function handleIsUserExist(e) {
     e.preventDefault();
+
+    const isEmailValid = validator.validate(e.target.email.value);
+    if (!isEmailValid) return toast.error("please enter valid email 📩");
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
     if (isUserExist.payload.isUserExist) {
       localStorage.setItem("email", e.target.email.value);
@@ -40,9 +46,17 @@ const Home = () => {
 
   return (
     <Layout isLogin={false}>
-      <div className="text-white bg-netflix-blue relative">
+      <div className="text-white bg-[#000000] relative">
         <section>
-          <div className="bg-netflix-home bg-repeat-no bg-cover h-[50rem] w-full opacity-40 "></div>
+          <div className="bg-netflix-home bg-repeat-no bg-cover h-[43.75rem]">
+            <div
+              className="h-[43.75rem] w-full   bg-[rgb(0 0 0 / 40%)]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%)"
+              }}
+            ></div>
+          </div>
           <div className="absolute top-52 left-20  w-auto space-y-4">
             <h1 className="font-bold text-2xl sm:4xl md:text-6xl">
               Unlimited movies,
@@ -60,13 +74,13 @@ const Home = () => {
               "loading"
             ) : (
               <>
-                {isLoggedIn && USER_DATA.plan === "NONE" ? (
+                {IS_LOGGED_IN && USER_DATA.plan === "NONE" ? (
                   <Link to="/signup/choose">
                     <button
                       type="submit"
                       className="align-middle text-2xl px-6 py-3 font-bold bg-red-600 rounded text-white hover:bg-red-700"
                     >
-                      Finish singUp
+                      Finish signUp
                       <StartIcon />
                     </button>
                   </Link>
@@ -107,7 +121,7 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="mx-8 md:mx-8 lg:mx-14">
+        <section className="mx-auto max-w-[80vw]">
           {features &&
             features.map((item, index) => {
               return (
@@ -122,7 +136,7 @@ const Home = () => {
             })}
         </section>
 
-        <section className="w-[80%] mx-auto md:mx-8 lg:mx-14 space-y-4">
+        <section className="space-y-4 mx-auto max-w-[80vw]">
           <h2 className="font-bold">Frequently Asked Questions</h2>
           <Accordian>
             {faqs.map((item) => {
@@ -139,37 +153,53 @@ const Home = () => {
             })}
           </Accordian>
 
-          <p className="text-2xl">
-            Ready to watch? Enter your email to create or restart your
-            membership.
-          </p>
-          <form className="flex space-x-4">
-            <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-black border-2 rounded text-sm opacity-75">
-              <input
-                type="email"
-                name="floating_email"
-                id="floating_email"
-                className="block p-4 w-full text-sm bg-transparent appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
-                required
-              />
-              <label
-                htmlFor="floating_email"
-                className="peer-focus:font-medium absolute text-xl px-4 pb-2 text-slate-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
-              >
-                Email address
-              </label>
-            </div>
-            <div>
+          {!IS_LOGGED_IN && USER_DATA.plan === "NONE" ? (
+            <>
+              <p className="text-2xl">
+                Ready to watch? Enter your email to create or restart your
+                membership.
+              </p>
+              <form className="flex space-x-4">
+                <div className="relative z-0 max-w-80 md:w-96 mb-6 group bg-black border-2 rounded text-sm opacity-75">
+                  <input
+                    type="email"
+                    name="floating_email"
+                    id="floating_email"
+                    className="block p-4 w-full text-sm bg-transparent appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                    required
+                  />
+                  <label
+                    htmlFor="floating_email"
+                    className="peer-focus:font-medium absolute text-xl px-4 pb-2 text-slate-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+                  >
+                    Email address
+                  </label>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    className="align-middle text-2xl px-6 py-3 font-bold bg-red-600 rounded text-white hover:bg-red-700"
+                  >
+                    <Link to="/signup">Get Started</Link>
+                    <StartIcon />
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : null}
+
+          {IS_LOGGED_IN && USER_DATA.plan === "NONE" ? (
+            <Link to="/signup/choose">
               <button
-                type="submit"
-                className="align-middle text-2xl px-6 py-3 font-bold bg-red-600 rounded text-white hover:bg-red-700"
+                type="button"
+                className=" mt-4 align-middle text-2xl px-6 py-3 font-bold bg-red-600 rounded text-white hover:bg-red-700"
               >
-                <Link to="/signup">Get Started</Link>
+                Finish signup
                 <StartIcon />
               </button>
-            </div>
-          </form>
+            </Link>
+          ) : null}
         </section>
       </div>
     </Layout>

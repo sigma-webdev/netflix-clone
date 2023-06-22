@@ -1,7 +1,9 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import validator from "email-validator";
+import toast from "react-hot-toast";
+
 //thunk
 import { FORGOT_PASSWORD } from "../../store/authSlice";
 //icons
@@ -17,13 +19,15 @@ function ForgotPassword() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    // validating the email
+    const isEmailValid = validator.validate(e.target.email.value);
+    if (!isEmailValid) return toast.error("please enter valid email 📩");
+
     const formData = new FormData(e.target);
     const response = await dispatch(FORGOT_PASSWORD(formData));
     console.log(response);
     if (response.payload.success) {
-      navigate("/loginhelp");
-    } else {
-      setError({ error: true, message: response.payload.message });
+      navigate(`/loginhelp/${e.target.email.value}`);
     }
   }
 
@@ -35,20 +39,16 @@ function ForgotPassword() {
       className=" w-[460px] p-10 shadow-xl flex flex-col bg-[#f3f3f3]"
     >
       <h2 className="font-semibold mb-10">Forgot Email/Password</h2>
-      {error.error ? (
-        <div className="bg-[#ffa00a] h-12 w-full">
-          <CrossFillIcon /> <p>{error.message}</p>
-        </div>
-      ) : null}
 
       <p className="my-5   text-lg">
         we will send you an email with instruction on how to reset you password.
       </p>
       <input
         className=" h-12 my-4 border-2 p-2 focus:outline-none"
-        type="text"
+        type="email"
         name="email"
         placeholder="name@example.com"
+        required
       />
 
       <button

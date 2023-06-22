@@ -1,10 +1,90 @@
-import { Check } from "../icons.jsx";
-import { useState } from "react";
-import { CheckCircle } from "../icons.jsx";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+// icon
+import { Check, CheckCircle, Loading } from "../icons.jsx";
+//thunk
+import {
+  CREATE_SUBSCRIPTION,
+  GET_RAZORPAY_KEY,
+  VERIFY_SUBSCRIPTION
+} from "../../store/razorpaySlice.js";
 
 function PlanForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [plan, setPlan] = useState("PREMIUM");
-  console.log(localStorage.getItem("email"));
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  const RAZORPAY_KEY = useSelector((state) => state.razorpay.razorpaykey);
+  const SUBSCRIPTION_ID = useSelector((state) => state.razorpay.subscriptionId);
+  const RASORPAY_KEY_LOADING = useSelector(
+    (state) => state.razorpay.razorpayKeyLoading
+  );
+  const CREATE_SUBSCRIPTION_LOADING = useSelector(
+    (state) => state.razorpay.createSbuscriptionLoading
+  );
+
+  useEffect(() => {
+    setButtonLoading(RASORPAY_KEY_LOADING || CREATE_SUBSCRIPTION_LOADING);
+  }, [RASORPAY_KEY_LOADING, CREATE_SUBSCRIPTION_LOADING]);
+
+  // for storing the payment details after successfull transaction
+  const paymentDetails = {
+    razorpay_payment_id: "",
+    razorpay_subscription_id: "",
+    razorpay_signature: ""
+  };
+
+  async function handlesubmit(e) {
+    await dispatch(GET_RAZORPAY_KEY());
+    await dispatch(CREATE_SUBSCRIPTION({ planName: plan }));
+  }
+
+  function razorpayPaymentModel() {
+    const options = {
+      key: RAZORPAY_KEY,
+      subscription_id: SUBSCRIPTION_ID,
+      name: `Netflix clone ${plan}`,
+      description: "Monthly Subscription",
+      handler: async function (response) {
+        paymentDetails.razorpayPaymentId = response.razorpay_payment_id;
+        paymentDetails.razorpaySubscriptionId =
+          response.razorpay_subscription_id;
+        paymentDetails.razorpaySignature = response.razorpay_signature;
+
+        // verifying the payment
+        const verifySubscription = await dispatch(
+          VERIFY_SUBSCRIPTION({ ...paymentDetails, plan })
+        );
+        const isPaymentVerified = verifySubscription.payload.success;
+
+        // redirecting the user according to the verification status
+        if (isPaymentVerified) {
+          toast.success(verifySubscription.payload.message);
+          navigate("/signup/paymentSuccess");
+        } else {
+          toast.error(verifySubscription.payload.message);
+          navigate("/signin/paymentfail");
+        }
+      },
+      theme: {
+        color: "#e50914"
+      }
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  }
+
+  useEffect(() => {
+    if (!buttonLoading && RAZORPAY_KEY && SUBSCRIPTION_ID) {
+      razorpayPaymentModel();
+    }
+  }, [RAZORPAY_KEY, SUBSCRIPTION_ID, buttonLoading]);
+
   return (
     <div className=" max-w-[1020px]  m-4">
       <p className="text-[#333]">
@@ -25,7 +105,7 @@ function PlanForm() {
           <Check /> No ads and no extra fees. Ever.
         </li>
       </ul>
-      <div className="flex gap-4  justify-between  my-5     items-center">
+      <div className="flex gap-4 justify-between my-5 items-center">
         {/* PREMIUM */}
         <div
           className="cursor-pointer  shadow-lg h-[262px] rounded-md border-[1px] border-gray-200 "
@@ -34,26 +114,31 @@ function PlanForm() {
           <div
             className={
               plan === "PREMIUM"
-                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
-                : "h-[76] px-3 py-4 flex gap-3"
+                ? "h-[76] px-3  py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
+                : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
             }
           >
             {plan === "PREMIUM" ? <CheckCircle /> : null}
             <div>
-              <p className="font-bold text-xl">Premium</p>
-              <p className="font-bold text-xl">649/mo.</p>
+              <p
+                className={
+                  plan === "PREMIUM"
+                    ? "font-bold text-xl text-white "
+                    : "font-bold text-xl"
+                }
+              >
+                Premium <br /> 649/mo.
+              </p>
             </div>
           </div>
-          <ul className="p-3">
-            <li className="list-disc text-sm font-semibold">
+          <ul className="p-4">
+            <li className=" text-sm font-semibold">
               Our best video quality in 4K and HDR
             </li>
-            <li className="list-disc text-sm font-semibold">
+            <li className=" text-sm font-semibold">
               Watch on your TV, computer, mobile phone and tablet
             </li>
-            <li className="list-disc text-sm font-semibold">
-              Downloads available
-            </li>
+            <li className=" text-sm font-semibold">Downloads available</li>
           </ul>
         </div>
         {/* PREMIUM END */}
@@ -65,14 +150,21 @@ function PlanForm() {
           <div
             className={
               plan === "STANDARD"
-                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
-                : "h-[76] px-3 py-4 flex gap-3"
+                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
+                : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500"
             }
           >
             {plan === "STANDARD" ? <CheckCircle /> : null}
             <div>
-              <p className="font-bold text-xl">Premium</p>
-              <p className="font-bold text-xl">649/mo.</p>
+              <p
+                className={
+                  plan === "STANDARD"
+                    ? "font-bold text-xl text-white "
+                    : "font-bold text-xl"
+                }
+              >
+                Standard <br /> 499/mo.
+              </p>
             </div>
           </div>
           <ul className="p-3">
@@ -94,14 +186,21 @@ function PlanForm() {
           <div
             className={
               plan === "BASIC"
-                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
-                : "h-[76] px-3 py-4 flex gap-3"
+                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
+                : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
             }
           >
             {plan === "BASIC" ? <CheckCircle /> : null}
             <div>
-              <p className="font-bold text-xl">Premium</p>
-              <p className="font-bold text-xl">649/mo.</p>
+              <p
+                className={
+                  plan === "BASIC"
+                    ? "font-bold text-xl text-white "
+                    : "font-bold text-xl"
+                }
+              >
+                Basic <br /> 199/mo.
+              </p>
             </div>
           </div>
           <ul className="p-3">
@@ -123,14 +222,21 @@ function PlanForm() {
           <div
             className={
               plan === "MOBILE"
-                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
-                : "h-[76] px-3 py-4 flex gap-3"
+                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
+                : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500"
             }
           >
             {plan === "MOBILE" ? <CheckCircle /> : null}
             <div>
-              <p className="font-bold text-xl">Premium</p>
-              <p className="font-bold text-xl">649/mo.</p>
+              <p
+                className={
+                  plan === "MOBILE"
+                    ? "font-bold text-xl text-white "
+                    : "font-bold text-xl"
+                }
+              >
+                Mobile <br /> 149/mo.
+              </p>
             </div>
           </div>
           <ul className="p-3">
@@ -158,8 +264,11 @@ function PlanForm() {
       </p>
 
       <div className="flex justify-center">
-        <button className="mt-3  max-w-[440px] bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl">
-          Next
+        <button
+          onClick={() => handlesubmit()}
+          className="mt-3  max-w-[440px] bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl"
+        >
+          {buttonLoading ? <Loading /> : "Next"}
         </button>
       </div>
     </div>
