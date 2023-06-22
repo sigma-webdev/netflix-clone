@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    /* @apply max-w-[1400px] mx-auto; */
-  }
   h1 {
     @apply text-6xl;
   }
@@ -20,7 +17,6 @@
   }
 }
 
-
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -28,6 +24,6 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

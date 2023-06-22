@@ -1,11 +1,12 @@
+import { Routes, Route } from "react-router-dom";
+
 import Home from "./pages/Home";
-import SignIn from "./pages/SignIn.jsx";
-import SignUp from "./pages/SignUp.jsx";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import Browse from "./pages/Browse";
 import Watch from "./pages/Watch";
 
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Admin from "./pages/Admin";
 
@@ -34,8 +35,12 @@ function App() {
       <Route
         path="/signup/registration"
         element={<SignUp page="REGISTRATION" />}
-      />{" "}
+      />
       <Route path="/signup/regform" element={<SignUp page="REG_FORM" />} />
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/browse" element={<Browse />} />
+      <Route path="/watch/:contentId" element={<Watch />} />
+      <Route path="/admin/*" element={<Admin />} />
       <Route
         path="/forgotpassword"
         element={<SignUp page="FORGOT_PASSWORD" />}
@@ -44,7 +49,7 @@ function App() {
         path="/resetpassword/:resetPasswordToken"
         element={<SignUp page="RESET_PASSWORD" />}
       />
-      <Route path="/loginhelp" element={<SignUp page="LOGIN_HELP" />} />
+      <Route path="/loginhelp/:email" element={<SignUp page="LOGIN_HELP" />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="signup/signout" element={<SignUp page="SIGN_OUT" />} />
       <Route

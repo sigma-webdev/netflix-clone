@@ -182,6 +182,7 @@ const authSlice = createSlice({
       })
       .addCase(RESET_PASSWORD.rejected, (state, action) => {
         state.resetPasswordLoading = false;
+        toast.error(action.payload.message);
       });
   }
 });

@@ -71,12 +71,14 @@ function RegForm() {
           className="m-3 block  py-2.5 px-0 w-full text-sm  font-semibold text-gray-900 bg-transparent   border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-gray-500 peer"
           required
           placeholder=" "
+          minLength={6}
+          maxLength={60}
         />
         <label
           htmlFor="floating_password"
           className="m-3  absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-500  peer-focus:font-semibold  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
         >
-          Add a password
+          Add a password (6-60 characters)
         </label>
       </div>
       {/* password */}

@@ -53,24 +53,6 @@ function ResetPassword() {
       <p className="my-2  text-lg text-[#333333]">
         Protect your account with a unique password at least 6 characters long.
       </p>
-      {/* current email */}
-      {/* <div className="relative z-0 md:max-w-xl mb-4 group border-[1px] border-gray ">
-        <input
-          type="email"
-          name="currentEmail"
-          id="currentEmail"
-          className="m-3 block py-2.5 px-0 w-full text-sm  font-semibold text-gray-900 bg-transparent border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-500 peer"
-          placeholder=" "
-        />
-        <label
-          htmlFor="currentEmail"
-          className="m-3  absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-500  peer-focus:font-semibold  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-        >
-          Current email
-        </label>
-      </div> */}
-      {/* current email end */}
-
       {/* new password */}
       <div className="relative z-0 md:max-w-xl mb-4 group border-[1px] border-gray ">
         <input
