@@ -6,8 +6,9 @@ import { SkipBackward, SkipForward } from "../icons";
 import { TbPlayerSkipForward } from "react-icons/tb";
 import { RiFullscreenFill } from "react-icons/ri";
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
-const VideoController = ({ content }) => {
+const VideoController = ({ contentURL, thumbnailURL }) => {
   const videoRef = useRef(null);
   const progressRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -104,7 +105,9 @@ const VideoController = ({ content }) => {
       <div className="box-border absolute m-auto w-[98%] h-screen z-10 opacity-0 hover:opacity-100 transition duration-300 delay-150 ease-out">
         <div className="absolute left-4 top-4">
           <IconContext.Provider value={{ size: "40px", color: "white" }}>
-            <MdKeyboardBackspace />
+            <Link to="/browse">
+              <MdKeyboardBackspace />
+            </Link>
           </IconContext.Provider>
         </div>
         <div
@@ -171,7 +174,8 @@ const VideoController = ({ content }) => {
       <video
         ref={videoRef}
         className="h-full mx-auto"
-        src={content}
+        src={contentURL}
+        poster={thumbnailURL}
         onEnded={stopMedia}
         onTimeUpdate={setTime}
       ></video>
