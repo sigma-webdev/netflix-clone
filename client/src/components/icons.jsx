@@ -6,18 +6,17 @@ import { IconContext } from "react-icons/lib";
 export const StartIcon = () => {
   return (
     <svg
+      aria-hidden="true"
+      fill="currentColor"
+      viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="inline w-6 h-6 font-extrabold"
+      className=" inline w-7 h-7"
     >
       <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M8.25 4.5l7.5 7.5-7.5 7.5"
-      />
+        clip-rule="evenodd"
+        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+        fill-rule="evenodd"
+      ></path>
     </svg>
   );
 };
@@ -193,12 +192,12 @@ export const SkipBackward = () => {
   );
 };
 
-export const Loading = (color = "white") => {
+export const Loading = ({ color = "white" }) => {
   return (
     <svg
       aria-hidden="true"
       role="status"
-      className="inline w-4 h-4 mr-3 text-white animate-spin"
+      className="inline w-4 h-4 mr-3 animate-spin"
       viewBox="0 0 100 101"
       fill={color}
       xmlns="http://www.w3.org/2000/svg"
