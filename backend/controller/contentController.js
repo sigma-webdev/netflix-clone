@@ -117,13 +117,28 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
-  const { search, category, genre, display, page, limit } = req.query;
+  const { search, category, genre, display, page, limit, latest } = req.query;
   const query = {};
   const PAGE = Number(page) || 1;
   const LIMIT = Number(limit) || 20;
 
   const startIndex = (PAGE - 1) * LIMIT;
   const endIndex = PAGE * LIMIT;
+
+  // search content name
+  if (search) query["name"] = { $regex: search, $options: "i" };
+
+  // content Movies or Series
+  if (category) {
+    query["categories"] = new RegExp(category, "i");
+  }
+
+  // contents with specific genre
+  if (genre) query["genres"] = new RegExp(genre, "i");
+
+  // get latest move - release date -
+  const sorting = {};
+  if (latest) sorting["latestContent"] = { releaseDate: -1 };
 
   // pagination
   const totalContents = await Content.find(query).countDocuments();
@@ -140,24 +155,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
       limit: LIMIT,
     };
   }
-  console.log("Query----------", query);
-  console.log("result ----------", result);
-
-  // search content name
-  if (search) {
-    query["name"] = { $regex: search, $options: "i" };
-  }
-
-  // content Movies or Series
-
-  if (category) {
-    query["categories"] = new RegExp(category, "i");
-  }
-
-  // contents with specific genre
-  if (genre) {
-    query["genres"] = new RegExp(genre, "i");
-  }
 
   // display condition
   // TODO: Integrate middleware
@@ -168,7 +165,10 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   }
 
   // find all content and search all content
-  const contents = await Content.find(query).skip(startIndex).limit(LIMIT);
+  const contents = await Content.find(query)
+    .skip(startIndex)
+    .limit(LIMIT)
+    .sort(sorting.latestContent);
 
   // if no content available
   if (!contents.length) {
