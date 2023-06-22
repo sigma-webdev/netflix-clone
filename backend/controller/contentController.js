@@ -2,7 +2,7 @@ const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
 const Content = require("../model/contentSchema.js");
-const User = require("../model/userSchema.js");
+const { getVideoDurationInSeconds } = require("get-video-duration");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const {
@@ -14,6 +14,16 @@ const {
  * Testing route
  */
 const contentApi = asyncHandler(async (req, res) => {
+  const videoPath =
+    "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4";
+
+  await getVideoDurationInSeconds(videoPath)
+    .then((duration) => {
+      console.log("Video duration:", duration);
+    })
+    .catch((error) => {
+      console.error("Error retrieving video duration:", error);
+    });
   res.send("Pong");
 });
 
@@ -166,24 +176,17 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   }
 
   // find all content and search all content
-  const contents = await Content.find(query)
+  result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
     .sort(sorting.latestContent);
 
   // if no content available
-  if (!contents.length) {
-    return res.status(200).json({
-      success: true,
-      message: "Content Not found",
-      contents,
-    });
-  }
 
   return res.status(200).json({
     success: true,
-    message: "All contents ...",
-    contents,
+
+    data: result,
   });
 });
 
