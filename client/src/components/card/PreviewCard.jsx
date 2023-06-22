@@ -2,7 +2,13 @@ import { Link } from "react-router-dom";
 import { AddIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import { useRef } from "react";
 
-const PreviewCard = ({ thumbnailURL, trailerUrl, geners, contentId }) => {
+const PreviewCard = ({
+  thumbnailURL,
+  trailerUrl,
+  geners,
+  contentId,
+  rating,
+}) => {
   const thumbnailRef = useRef(null);
   const previewRef = useRef(null);
   const videoRef = useRef(null);
@@ -45,8 +51,10 @@ const PreviewCard = ({ thumbnailURL, trailerUrl, geners, contentId }) => {
         </div>
         <div className="flex items-center gap-2">
           <div className="text-green-600 font-semibold">94% Matched</div>
-          <div className="text-white border-2 border-white px-2">A</div>
-          <div className="text-white border-2 border-white px-1 rounded text-xs h-fit">
+          <div className="text-white border-[1px] border-white px-2 text-sm">
+            {rating}
+          </div>
+          <div className="text-white border-[1px] border-white px-1 rounded text-xs h-fit">
             HD
           </div>
         </div>

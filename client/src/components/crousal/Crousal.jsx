@@ -38,6 +38,7 @@ const Crousal = ({ content }) => {
               trailerUrl={item.trailer[0].trailerUrl}
               geners={item.genres}
               contentId={item._id}
+              rating={item.rating}
             />
           );
         })}
