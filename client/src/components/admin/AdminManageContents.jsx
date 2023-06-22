@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { BiSearchAlt2 } from "react-icons/bi";
-import { fetchContent } from '../store/contentSlice';
+import { fetchContent } from '../../store/contentSlice';
 import { Routes, Route } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import AdminContentView from './AdminContentView';
-import { addContent } from '../ApiUtils';
-import { formLoader } from './icons';
+import { addContent } from '../../ApiUtils';
+import { useNavigate } from 'react-router-dom';
+// import { formLoader } from './icons';
 
 
 const AdminManageContents = () => {
+    const navigate = useNavigate()
 
     // const [contentData, setContentData] = useState([])
     const [newContentData, setNewContentData] = useState({
@@ -21,14 +23,11 @@ const AdminManageContents = () => {
         creator: "",
         rating: "",
         language: "",
-        trailer: null,
-        content: null,
-        cast: "",
-        thumbnail: null,
-        episodes: []
+        cast: ""
 
     })
     const [castArr, setCastArr] = useState([])
+    const [creatorArr, setCreatorArr] = useState([])
     const [isLoading, setIsLoading] = useState(false);
 
 
@@ -87,14 +86,15 @@ const AdminManageContents = () => {
         setCastArr(newCast)
     }
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        // console.log(file)
-        setNewContentData(prevDetails => ({
-            ...prevDetails,
-            [event.target.name]: file
-        }));
-    };
+    // const handleFileChange = (event) => {
+    //     const file = event.target.files[0];
+    //     // console.log(file)
+    //     setNewContentData(prevDetails => ({
+    //         ...prevDetails,
+    //         [event.target.name]: file
+    //     }));
+    // };
+    
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
       };
@@ -110,22 +110,9 @@ const AdminManageContents = () => {
             return;
         }
         setIsLoading(true)
-
-        const { name, description, categories, genres, creator, rating, language, trailer, content, thumbnail, episodes } = newContentData
-        const sentFormData = new FormData();
-
-        sentFormData.append("name", name);
-        sentFormData.append("description", description)
-        sentFormData.append("categories", categories)
-        sentFormData.append("genres", genres)
-        sentFormData.append("creator", creator)
-        sentFormData.append("rating", rating)
-        sentFormData.append("language", language)
-        sentFormData.append("trailer", trailer)
-        sentFormData.append("content", content)
-        sentFormData.append("cast", castArr)
-        sentFormData.append("thumbnail", thumbnail)
-        sentFormData.append("episodes", episodes)
+        const sentFormData = new FormData(e.target);
+        // sentFormData.append("creator", creatorArr);
+        sentFormData.append("cast", castArr);
 
         const res = await addContent(sentFormData)
         setNewContentData({
@@ -136,17 +123,14 @@ const AdminManageContents = () => {
             creator: "",
             rating: "",
             language: "",
-            trailer: null,
-            content: null,
             cast: "",
-            thumbnail: null,
-            episodes: []
         })
         setCastArr([])
         dispatch(fetchContent());
         setIsLoading(false)
         setIsOpen(false)
-        console.log(res.status)
+        navigate(res.contents._id)
+        // console.log(res)
     }
 
     const handleToggleClose = () => {
@@ -159,11 +143,7 @@ const AdminManageContents = () => {
             creator: "",
             rating: "",
             language: "",
-            trailer: null,
-            content: null,
             cast: "",
-            thumbnail: null,
-            episodes: []
         })
         toggleModal(false)
     }
@@ -237,12 +217,12 @@ const AdminManageContents = () => {
                             <input className='bg-transparent border p-2 rounded' type="text" required name="rating" value={newContentData.rating} onChange={handleInputChange} />
                             <label htmlFor="language">  Language:</label>
                             <input className='bg-transparent border p-2 rounded' type="text" required name="language" value={newContentData.language} onChange={handleInputChange} />
-                            <label htmlFor="thumbnail">  Thumbnail:</label>
+                            {/* <label htmlFor="thumbnail">  Thumbnail:</label>
                             <input className='bg-transparent border p-2 rounded' type="file" required name="thumbnail" accept="image/*" onChange={handleFileChange} />
                             <label htmlFor="trailer">  Trailer:</label>
                             <input className='bg-transparent border p-2 rounded' type="file" required name="trailer" accept="video/*" onChange={handleFileChange} />
                             <label htmlFor="content">  Content:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" required name="content" accept="video/*" onChange={handleFileChange} />
+                            <input className='bg-transparent border p-2 rounded' type="file" required name="content" accept="video/*" onChange={handleFileChange} /> */}
 
 
                             <button type='submit' disabled={isLoading} className='bg-[#E50914] hover:bg-[#d4252e] text-white rounded py-2 flex items-center gap-4 justify-center'>Add Content {isLoading &&

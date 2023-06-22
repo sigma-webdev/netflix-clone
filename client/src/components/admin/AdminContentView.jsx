@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { redirect, useParams, useNavigate } from 'react-router-dom';
-import { getContentDetailsById, deleteContentById, updateContentById } from '../ApiUtils';
+import { getContentDetailsById, deleteContentById, updateContentById } from '../../ApiUtils';
 
 
 
@@ -131,29 +131,6 @@ const AdminContentView = () => {
         <div className='absolute w-full h-full bg-cyan-600 bg-opacity-60 flex items-center justify-center border'>
           <div className='relative w-96  bg-gray-50  rounded-lg py-12 px-4 max-h-[80%] overflow-y-scroll no-scrollbar'>
             <div onClick={() => toggleModal(false)} className='absolute top-2 right-3 text-3xl cursor-pointer'>X</div>
-            {/* <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
-                            <label htmlFor="name">Movie Name:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="name" id="name" value={editedContentData.name} onChange={(e)=>{handleChange(e)}} />
-                            <label htmlFor="description">Description:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="description" id="email" value={editedContentData.description} />
-                            <label htmlFor="name">Cast:</label>
-                            <input className='bg-transparent border p-2 rounded' type="tel" name="phone" id="phone" value={editedContentData.cast} />
-                            <label htmlFor="categories">  Categories:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="categories" id="plan" value={editedContentData.categories} onChange={(e)=>{handleChange(e)}} />
-                            <label htmlFor="name">  Raiting:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.rating} />
-                            <label htmlFor="name">  Language:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.language} />
-                            <label htmlFor="name">  Thumbnail:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.thumbnail[0].thumbnailUrl} />
-                            <label htmlFor="name">  Trailer:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.trailer[0].trailerUrl} />
-                            <label htmlFor="name">  Content:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.content[0].contentURL} />
-
-                            <button className='bg-green-600 hover:bg-green-700 text-white rounded py-2'>Update Content</button>
-
-                        </form> */}
             <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
               <label htmlFor="name">Movie Name:</label>
               <input className='bg-transparent border p-2 rounded' type="text" required name="name" value={editedContentData.name} onChange={handleInputChange} />
