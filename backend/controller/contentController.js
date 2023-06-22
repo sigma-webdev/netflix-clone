@@ -19,7 +19,7 @@ const contentApi = asyncHandler(async (req, res) => {
 
 /********************
  * @httpPostContent
- * @route http://localhost:8081/api/v1/content/posts
+ * @route http://localhost:8081/api/v1/content/
  * @description  controller to create the content
  * @parameters {request body object}
  * @return { Object } content object
@@ -112,7 +112,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
 /********************
  * @httpGetContent
- * @route http://localhost:8081/api/v1/content/posts
+ * @route http://localhost:8081/api/v1/content/
  * @description  controller to create the content
  * @parameters {string, object, enum, array}
  * @return { Object } content object
@@ -267,7 +267,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
 
 /********************
  * @httpUpdateById
- * @route http://localhost:8081/api/v1/content/posts/id
+ * @route http://localhost:8081/api/v1/content/id
  * @description  controller to update the content
  * @parameters {Object id}
  * @return { Object } content object
