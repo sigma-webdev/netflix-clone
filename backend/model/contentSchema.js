@@ -26,7 +26,6 @@ const contentSchema = new Schema(
       enum: ["Movies", "Series"],
       required: true,
     },
-    // TODO: pending
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
