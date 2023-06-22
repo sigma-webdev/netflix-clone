@@ -27,7 +27,12 @@ const contentSchema = new Schema(
       required: true,
     },
     // TODO: pending
-    likes: [String],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "userModel",
+      },
+    ],
 
     genres: {
       type: String,

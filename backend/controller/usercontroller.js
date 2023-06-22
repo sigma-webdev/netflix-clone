@@ -6,6 +6,7 @@ const cookieOptions = require("../utils/cookieOption.js");
 const transporter = require("../config/emailConfig.js");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const contentModel = require("../model/contentSchema.js");
 
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;

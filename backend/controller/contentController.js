@@ -2,6 +2,7 @@ const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
 const Content = require("../model/contentSchema.js");
+const User = require("../model/userSchema.js");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const {
@@ -348,12 +349,40 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpUpdateById
- * @route http://localhost:8081/api/v1/content/posts/query
- * @description  controller to update the content
- * @parameters {Object id}
- * @return { Object } content object
+ * @contentLikes
+ * @route http://localhost:8081/api/v1/content/:contentId/likes
+ * @description  controller to like and dislike content
+ * @parameters {user id , content id}
+ * @return { Object } updated content object
  ********************/
+/******* User likes ****** */
+const contentLikes = asyncHandler(async (req, res, next) => {
+  const { contentId } = req.params;
+  const { id: userId } = req.user;
+
+  const content = await Content.findById(contentId);
+
+  if (!content) {
+    return next(new CustomError("content is not available", 404));
+  }
+
+  if (content.likes.includes(userId)) {
+    content.likes.pop(userId);
+    await content.save();
+
+    return res.status(200).json({
+      message: "content disliked",
+      content,
+    });
+  } else {
+    content.likes.push(userId);
+    await content.save();
+    return res.status(200).json({
+      message: "content liked",
+      content,
+    });
+  }
+});
 
 module.exports = {
   contentApi,
@@ -362,4 +391,5 @@ module.exports = {
   httpGetContentById,
   httpDeleteById,
   httpUpdateById,
+  contentLikes,
 };

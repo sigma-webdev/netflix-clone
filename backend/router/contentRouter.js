@@ -6,7 +6,9 @@ const {
   httpGetContentById,
   httpDeleteById,
   httpUpdateById,
+  contentLikes,
 } = require("../controller/contentController");
+const jwtAuth = require("../middleware/jwtAuth");
 
 const contentRoute = express.Router();
 
@@ -17,5 +19,6 @@ contentRoute
   .get(httpGetContentById)
   .delete(httpDeleteById)
   .put(httpUpdateById);
+contentRoute.route("/:contentId/likes").patch(jwtAuth, contentLikes);
 
 module.exports = contentRoute;
