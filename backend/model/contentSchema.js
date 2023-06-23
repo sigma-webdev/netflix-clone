@@ -86,7 +86,7 @@ const contentSchema = new Schema(
           type: String,
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: Number },
+        contentDuration: { type: String },
       },
     ],
 

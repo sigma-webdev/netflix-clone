@@ -2,7 +2,7 @@ const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
 const Content = require("../model/contentSchema.js");
-const { getVideoDurationInSeconds } = require("get-video-duration");
+const getContentLength = require("../utils/getVideoLength.js");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const {
@@ -14,16 +14,6 @@ const {
  * Testing route
  */
 const contentApi = asyncHandler(async (req, res) => {
-  const videoPath =
-    "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4";
-
-  await getVideoDurationInSeconds(videoPath)
-    .then((duration) => {
-      console.log("Video duration:", duration);
-    })
-    .catch((error) => {
-      console.error("Error retrieving video duration:", error);
-    });
   res.send("Pong");
 });
 
@@ -81,6 +71,13 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
       },
     ],
   };
+
+  // TODO: fix content length -----
+  if (details.content[0].contentURL) {
+    const contentLength = await getContentLength(details.content[0].contentURL);
+    console.log("Content Length ---", contentLength);
+    details.content[0].contentDuration = contentLength;
+  }
 
   // checking for missing fields
   const requiredFields = [
@@ -193,7 +190,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 /********************
  *
  * @httpGetContentById
- * @route http://localhost:8081/api/v1/content/posts/id
+ * @route http://localhost:8081/api/v1/content/id
  * @description  controller to create the content
  * @parameters {Object id}
  * @return { Object } content object
@@ -218,7 +215,7 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
 
 /********************
  * @httpDeleteById
- * @route http://localhost:8081/api/v1/content/posts/id
+ * @route http://localhost:8081/api/v1/content/id
  * @description  controller to delete the content
  * @parameters {Object id}
  * @return { Object } content object
