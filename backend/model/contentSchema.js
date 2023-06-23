@@ -50,7 +50,9 @@ const contentSchema = new Schema(
         "Thrillers",
       ],
     },
-    creator: [String],
+    director: {
+      type: String,
+    },
     rating: {
       type: String,
       required: true,
@@ -89,7 +91,7 @@ const contentSchema = new Schema(
         contentDuration: { type: String },
       },
     ],
-
+    // TODO: add series
     episodes: [
       {
         episodeURL: {

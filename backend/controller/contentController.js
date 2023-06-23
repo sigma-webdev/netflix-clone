@@ -13,7 +13,20 @@ const {
 /**
  * Testing route
  */
-const contentApi = asyncHandler(async (req, res) => {
+const contentApi = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  console.log("req.params", req.params);
+  console.log("id", id);
+  const content = await Content.findById(id);
+
+  if (!content) {
+    return next(new CustomError("content not found", 200));
+  }
+  content.creator = null;
+  delete content.creator;
+
+  await content.save();
+
   res.send("Pong");
 });
 
@@ -35,7 +48,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     rating,
     language,
     cast,
-    creator,
+    director,
   } = req.body;
 
   let details = {
@@ -47,7 +60,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     rating,
     language,
     cast,
-    creator,
+    director,
     //default thumbnail value
     thumbnail: [
       {
@@ -72,10 +85,12 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     ],
   };
 
-  // TODO: fix content length -----
+  // get content video length
   if (details.content[0].contentURL) {
-    const contentLength = await getContentLength(details.content[0].contentURL);
-    console.log("Content Length ---", contentLength);
+    const contentLength = await getContentLength(
+      details.content[0].contentURL,
+      next
+    );
     details.content[0].contentDuration = contentLength;
   }
 
@@ -89,7 +104,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     "rating",
     "language",
     "cast",
-    "creator",
+    "director",
   ];
   const missingRequiredFields = requiredFields.filter(
     (field) => !details[field]
@@ -253,7 +268,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
     .catch((error) => {
       return next(
         new CustomError(
-          `Delete Fail, make sure valid id is provided - {error}`,
+          `Delete Fail, make sure valid id is provided - ${error}`,
           500
         )
       );
@@ -262,6 +277,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content deleted successfully",
+    contentData,
   });
 });
 
@@ -313,6 +329,13 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     }
 
     contentFiles = await cloudinaryFileUpload(files, next);
+
+    if (contentFiles.content[0].contentID) {
+      contentFiles.content[0].contentDuration = await getContentLength(
+        contentFiles.content[0].contentURL,
+        next
+      );
+    }
   }
 
   const updatedData = await Content.findByIdAndUpdate(
