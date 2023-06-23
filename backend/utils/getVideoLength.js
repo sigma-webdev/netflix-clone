@@ -1,15 +1,19 @@
 const { getVideoDurationInSeconds } = require("get-video-duration");
-const getContentLength = async (url) => {
+const CustomError = require("./customError");
+const getContentLength = async (url, next) => {
   let durationInSec;
 
   await getVideoDurationInSeconds(url)
     .then((duration) => {
-      console.log("Video duration:", duration);
       durationInSec = duration;
     })
     .catch((error) => {
-      // TODO: - throw error
-      console.error("Error retrieving video duration:", error);
+      return next(
+        new CustomError(
+          `Not able to get length of the provided content URL  - ${error}`,
+          400
+        )
+      );
     });
 
   function FormatDuration(durationInSec) {
@@ -20,7 +24,7 @@ const getContentLength = async (url) => {
     const formattedTime = `${hours} hr ${minutes} min ${seconds % 60} sec`;
     return formattedTime;
   }
-  // TODO: test me
+
   const formattedTime = FormatDuration(durationInSec);
   console.log(formattedTime);
   return formattedTime;
