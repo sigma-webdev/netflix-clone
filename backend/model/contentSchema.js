@@ -34,7 +34,7 @@ const contentSchema = new Schema(
     ],
 
     genres: {
-      type: String,
+      type: [String],
       enum: [
         "Action",
         "Anime",
@@ -48,6 +48,7 @@ const contentSchema = new Schema(
         "Sci-fi & Fantasy",
         "Sports",
         "Thrillers",
+        "Adventure",
       ],
     },
     director: {
@@ -59,6 +60,15 @@ const contentSchema = new Schema(
     },
     language: {
       type: String,
+      enum: [
+        "English",
+        "Hindi",
+        "Korean",
+        "Japan",
+        "Tamil",
+        "Spanish",
+        "German",
+      ],
     },
     thumbnail: [
       {
@@ -91,7 +101,7 @@ const contentSchema = new Schema(
         contentDuration: { type: String },
       },
     ],
-    // TODO: add series
+    // TODO: add series pending work
     episodes: [
       {
         episodeURL: {
