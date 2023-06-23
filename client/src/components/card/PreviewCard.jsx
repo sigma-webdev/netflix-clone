@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { AddIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
-import { useRef } from "react";
 
 const PreviewCard = ({
   thumbnailURL,
@@ -9,28 +8,20 @@ const PreviewCard = ({
   contentId,
   rating,
 }) => {
-  const thumbnailRef = useRef(null);
-  const previewRef = useRef(null);
-  const videoRef = useRef(null);
-
   return (
-    <div
-      className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out relative my-8 hover:scale-110 hover:z-50 hover:ml-2 w-48 md:w-72"
-      ref={thumbnailRef}
-    >
+    <div className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out relative my-8 hover:scale-110 hover:z-50 hover:ml-2 w-48 md:w-72">
       {/* preview video*/}
       <div className="w-48 md:w-72">
         <video
           className="rounded-tl rounded-tr object-contain"
           poster={thumbnailURL}
-          ref={videoRef}
           src={trailerUrl}
           loop
         ></video>
       </div>
 
       {/* preview details */}
-      <div className="p-4 space-y-4" ref={previewRef}>
+      <div className="p-4 space-y-4">
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
