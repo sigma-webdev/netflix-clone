@@ -4,9 +4,49 @@ import axiosInstance from "../helpers/axiosInstance";
 
 const initialState = {
   allContent: [],
+  filteredContent: [],
   watchContent: null,
   loading: true,
 };
+
+export const fetchContentBySearch = createAsyncThunk(
+  "content/fetchContentByCategory",
+  async (searchText, { rejectWithValue }) => {
+    try {
+      console.log("dsad");
+      const response = await axiosInstance.get(
+        `/content/posts?search=${searchText}`
+      );
+
+      console.log("dsad", response.data.contentData);
+      const data = response.data.contentData;
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByCategory = createAsyncThunk(
+  "content/fetchContentByCategory",
+
+  async (category, { rejectWithValue }) => {
+    try {
+      console.log("dsad");
+      const response = await axiosInstance.get(
+        `/content/posts?category=${category}`
+      );
+
+      console.log("dsad", response.data.contentData);
+      const data = response.data.contentData;
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
@@ -42,6 +82,7 @@ export const contentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      //fetch all content
       .addCase(fetchContent.pending, (state) => {
         state.loading = true;
       })
@@ -53,6 +94,8 @@ export const contentSlice = createSlice({
         state.allContent = [];
         state.loading = false;
       })
+
+      //fetch content by id
       .addCase(fetchContentById.pending, (state) => {
         state.loading = true;
       })
@@ -62,6 +105,19 @@ export const contentSlice = createSlice({
       })
       .addCase(fetchContentById.rejected, (state) => {
         state.watchContent = null;
+        state.loading = false;
+      })
+
+      //fetch content by category
+      .addCase(fetchContentByCategory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchContentByCategory.fulfilled, (state, action) => {
+        state.filteredContent = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchContentByCategory.rejected, (state) => {
+        state.filteredContent = [];
         state.loading = false;
       });
   },

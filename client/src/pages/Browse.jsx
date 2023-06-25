@@ -7,7 +7,7 @@ import Crousal from "../components/crousal/Crousal";
 import Layout from "../components/layout/Layout";
 
 // actions
-import { fetchContent } from "../store/contentSlice";
+import { fetchContent, fetchContentByCategory } from "../store/contentSlice";
 import { GENRES } from "../helpers/constants";
 
 import sampleVideo from "../assets/sample1.mov";
@@ -15,7 +15,11 @@ import samplePoster from "../assets/images/sample-poster.jpg";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
 
 const Browse = () => {
-  const content = useSelector((state) => state.content.allContent);
+  const [currentCategory, setCategory] = useState(null);
+  const content = useSelector((state) =>
+    currentCategory ? state.content.filteredContent : state.content.allContent
+  );
+
   const LOADING = useSelector((state) => state.content.loading);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
@@ -34,11 +38,15 @@ const Browse = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchContent());
-  }, [dispatch]);
+    if (!currentCategory) {
+      dispatch(fetchContent());
+    } else {
+      dispatch(fetchContentByCategory(currentCategory));
+    }
+  }, [dispatch, currentCategory]);
 
   return (
-    <Layout isLogin={true}>
+    <Layout isLogin={true} setCategory={setCategory}>
       <div id="content-details" className="relative w-full h-full"></div>
       {LOADING ? (
         "loading..."
@@ -54,6 +62,7 @@ const Browse = () => {
               className="w-screen mx-auto"
               src={sampleVideo}
               poster={samplePoster}
+              autoPlay={true}
             ></video>
             {/* hero text */}
             <div className="flex gap-2 absolute bottom-6 left-6 md:bottom-12 md:left-12 cursor-pointer">

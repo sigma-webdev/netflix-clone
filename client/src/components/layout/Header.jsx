@@ -14,7 +14,7 @@ import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
 import { FaSignOutAlt } from "react-icons/fa";
 
-const Header = ({ isLogin }) => {
+const Header = ({ isLogin, setCategory }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
@@ -70,28 +70,34 @@ const Header = ({ isLogin }) => {
         {isLogin ? (
           <div className="flex items-center">
             <nav>
-              <ul className="hidden lg:flex gap-4 ">
-                <li>
-                  <a href="/">Home</a>
+              <ul className="hidden md:flex gap-4 ">
+                <li
+                  className="cursor-pointer"
+                  onClick={() => setCategory(null)}
+                >
+                  Home
                 </li>
-                <li>
-                  <a href="/">TV Shows</a>
+                <li
+                  className="cursor-pointer"
+                  onClick={() => setCategory("TV Shows")}
+                >
+                  TV Shows
                 </li>
-                <li>
-                  <a href="/">Movies</a>
+                <li
+                  className="cursor-pointer"
+                  onClick={() => setCategory("Movies")}
+                >
+                  Movies
                 </li>
-                <li>
-                  <a href="/">New & Popular</a>
-                </li>
-                <li>
-                  <a href="/">My List</a>
-                </li>
-                <li>
-                  <a href="/">Browse By Languages</a>
+                <li
+                  className="cursor-pointer"
+                  onClick={() => setCategory("Series")}
+                >
+                  Series
                 </li>
               </ul>
             </nav>
-            <div className="flex items-center gap-2 lg:hidden">
+            <div className="flex items-center gap-2 md:hidden">
               <div>Home</div>
               <div>
                 <Menu></Menu>

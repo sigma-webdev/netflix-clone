@@ -15,7 +15,6 @@ const Crousal = ({ content }) => {
     ref.current.scrollLeft += ref.current.offsetWidth;
   };
 
-  console.log(content);
   return (
     <div
       ref={ref}
