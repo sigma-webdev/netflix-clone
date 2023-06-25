@@ -1,18 +1,18 @@
 import { useRef, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
-import { LikeIcon, LikeIcon2 } from "../icons";
+import { CloseIcon, LikeIcon, LikeIcon2 } from "../icons";
 
 const DetailsCard = ({
   name,
   thumbnailURL,
   trailerUrl,
   geners,
-  contentId,
   rating,
   description,
   cast,
   director,
+  handleClose,
 }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
@@ -28,10 +28,12 @@ const DetailsCard = ({
       setIsVideoPlaying(false);
     }
   }
+
   return (
     <div className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out relative w-[90%] md:w-[800px] mx-auto">
       <div className="relative">
         {/* preview video*/}
+        <div className="absolute w-full bg-gradient-to-b to-netflix-black/100 from-netflix-black/0 h-[25px] md:h-[50px] lg:h-[100px] -bottom-1"></div>
         <div className="w-full">
           <video
             ref={videoRef}
@@ -40,6 +42,13 @@ const DetailsCard = ({
             src={trailerUrl}
             loop
           ></video>
+        </div>
+
+        <div
+          className="absolute right-2 top-2 cursor-pointer"
+          onClick={handleClose}
+        >
+          <CloseIcon />
         </div>
 
         {/* hero text */}
@@ -56,8 +65,19 @@ const DetailsCard = ({
           </div>
         </div>
       </div>
+
       {/* preview details */}
-      <div className="text-white px-10 md:px-20 py-5 md:py-10 space-y-4">
+      <div className="text-white px-6 md:px-12 pb-3 md:pb-8 space-y-2">
+        <div className="flex items-center gap-2 mt-1">
+          <div>2023</div>
+          <div>1hr 55m</div>
+          <div className="text-white border-[1px] border-gray-500 px-1 rounded text-xs h-fit">
+            HD
+          </div>
+        </div>
+        <div className="text-white border-[1px] border-gray-500 px-2 text-sm w-fit">
+          {rating}
+        </div>
         <div className="basis-2/3">{description}</div>
         <div className="space-y-4">
           <div className="text-4xl">About {name}</div>
@@ -72,8 +92,8 @@ const DetailsCard = ({
               <span className="text-gray-400">Genres:</span> {geners}
             </div>
             <div>
-              <span className="text-gray-400">Maturity Rating:</span>{" "}
-              <span className="text-white border-[1px] border-white px-2 text-sm">
+              <span className="text-gray-400">Maturity Rating:</span>
+              <span className="text-gray-500 border-[1px] border-white px-1 text-sm">
                 {rating}
               </span>
             </div>

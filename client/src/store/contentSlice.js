@@ -5,7 +5,7 @@ import axiosInstance from "../helpers/axiosInstance";
 const initialState = {
   allContent: [],
   watchContent: null,
-  contentLoading: true,
+  loading: true,
 };
 
 export const fetchContentById = createAsyncThunk(
@@ -43,26 +43,26 @@ export const contentSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchContent.pending, (state) => {
-        state.contentLoading = true;
+        state.loading = true;
       })
       .addCase(fetchContent.fulfilled, (state, action) => {
         state.allContent = [...action.payload];
-        state.contentLoading = false;
+        state.loading = false;
       })
       .addCase(fetchContent.rejected, (state) => {
         state.allContent = [];
-        state.contentLoading = false;
+        state.loading = false;
       })
       .addCase(fetchContentById.pending, (state) => {
-        state.contentLoading = true;
+        state.loading = true;
       })
       .addCase(fetchContentById.fulfilled, (state, action) => {
         state.watchContent = action.payload;
-        state.contentLoading = false;
+        state.loading = false;
       })
       .addCase(fetchContentById.rejected, (state) => {
         state.watchContent = null;
-        state.contentLoading = false;
+        state.loading = false;
       });
   },
 });

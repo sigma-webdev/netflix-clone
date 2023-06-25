@@ -13,11 +13,10 @@ import { GENRES } from "../helpers/constants";
 import sampleVideo from "../assets/sample1.mov";
 import samplePoster from "../assets/images/sample-poster.jpg";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
-import DetailsCard from "../components/card/DetailsCard";
 
 const Browse = () => {
   const content = useSelector((state) => state.content.allContent);
-  const LOADING = useSelector((state) => state.content.contentLoading);
+  const LOADING = useSelector((state) => state.content.loading);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
   const dispatch = useDispatch();
@@ -40,11 +39,14 @@ const Browse = () => {
 
   return (
     <Layout isLogin={true}>
+      <div id="content-details" className="relative w-full h-full"></div>
       {LOADING ? (
         "loading..."
+      ) : content.length === 0 ? (
+        "No Data Found"
       ) : (
         <div className="">
-          <div className="relative ">
+          <div className="relative">
             {/* hero video */}
             <div className="absolute w-full bg-gradient-to-b to-netflix-blue/100 from-netflix-blue/0 h-[50px] md:h-[100px] lg:h-[200px] -bottom-1"></div>
             <video
@@ -95,21 +97,6 @@ const Browse = () => {
                 })}
               </div>
             </div>
-          </div>
-
-          <div className="bg-netflix-blue">
-            <div className="absolute w-full bg-gradient-to-b to-netflix-blue/100 from-netflix-blue/0 h-[50px] md:h-[100px] lg:h-[200px] -bottom-1"></div>
-            <DetailsCard
-              name={content[0].name}
-              thumbnailURL={content[0].thumbnail[0].thumbnailUrl}
-              trailerUrl={content[0].trailer[0].trailerUrl}
-              geners={content[0].genres}
-              contentId={content[0]._id}
-              rating={content[0].rating}
-              description={content[0].description}
-              cast={content[0].cast}
-              director={content[0].creator[0]}
-            />
           </div>
         </div>
       )}

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 
 const Watch = () => {
   const { contentId } = useParams();
-  const CONTENT_LOADING = useSelector((state) => state.content.contentLoading);
+  const CONTENT_LOADING = useSelector((state) => state.content.loading);
   const watchContent = useSelector((state) => state.content.watchContent);
   const dispatch = useDispatch();
 
@@ -16,14 +16,14 @@ const Watch = () => {
 
   return (
     <div>
-      {CONTENT_LOADING ? (
-        "...loading"
-      ) : (
-        <VideoController
-          contentURL={watchContent.content[0].contentURL}
-          thumbnailURL={watchContent.thumbnail[0].thumbnailUrl}
-        />
-      )}
+      {CONTENT_LOADING
+        ? "...loading"
+        : watchContent && (
+            <VideoController
+              contentURL={watchContent.content[0].contentURL}
+              thumbnailURL={watchContent.thumbnail[0].thumbnailUrl}
+            />
+          )}
     </div>
   );
 };

@@ -1,20 +1,35 @@
 import { Link } from "react-router-dom";
 import { AddIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
+import DetailsCard from "./DetailsCard";
+import { createPortal } from "react-dom";
+import { useState } from "react";
 
 const PreviewCard = ({
-  thumbnailURL,
+  name,
+  description,
+  cast,
+  director,
+  thumbnailUrl,
   trailerUrl,
   geners,
   contentId,
   rating,
 }) => {
+  const [isOpenDetails, setIsOpenDetatils] = useState(false);
+
+  const openCloseDetails = () => {
+    setIsOpenDetatils(!isOpenDetails);
+  };
+
+  document.getElementById("content-details");
+
   return (
-    <div className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out relative my-8 hover:scale-110 hover:z-50 hover:ml-2 w-48 md:w-72">
+    <div className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out my-8 w-48 md:w-64 scale-100 hover:scale-125 hover:opacity-100 hover:z-10 hover:ml-10">
       {/* preview video*/}
-      <div className="w-48 md:w-72">
+      <div className="w-48 md:w-64">
         <video
-          className="rounded-tl rounded-tr object-contain"
-          poster={thumbnailURL}
+          className="rounded-tl rounded-tr object-cover w-48 md:w-64 h-28 md:h-32"
+          poster={thumbnailUrl}
           src={trailerUrl}
           loop
         ></video>
@@ -30,13 +45,10 @@ const PreviewCard = ({
               </Link>
             </div>
             <div>
-              <AddIcon />
-            </div>
-            <div>
               <LikeIcon />
             </div>
           </div>
-          <div>
+          <div onClick={openCloseDetails} className="cursor-pointer">
             <DownArrowIcon />
           </div>
         </div>
@@ -51,6 +63,24 @@ const PreviewCard = ({
         </div>
         <div className="text-white">{geners}</div>
       </div>
+
+      {isOpenDetails &&
+        createPortal(
+          <div className="fixed top-0 z-50 pt-5 w-full h-full bg-black/60">
+            <DetailsCard
+              name={name}
+              description={description}
+              cast={cast}
+              director={director}
+              thumbnailURL={thumbnailUrl}
+              trailerUrl={trailerUrl}
+              geners={geners}
+              rating={rating}
+              handleClose={openCloseDetails}
+            />
+          </div>,
+          document.getElementById("content-details")
+        )}
     </div>
   );
 };

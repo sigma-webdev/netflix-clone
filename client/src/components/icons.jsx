@@ -1,4 +1,8 @@
-import { AiOutlineInfoCircle, AiOutlinePlus } from "react-icons/ai";
+import {
+  AiOutlineCloseCircle,
+  AiOutlineInfoCircle,
+  AiOutlinePlus,
+} from "react-icons/ai";
 import { RiPlayMiniFill, RiPauseMiniFill } from "react-icons/ri";
 import { BsChevronDown } from "react-icons/bs";
 import { IconContext } from "react-icons/lib";
@@ -325,10 +329,31 @@ export const DownArrowIcon = () => {
 
 export const InfoIcon = () => {
   return (
-    <div className="flex items-center gap-2 etext-black font-semibold bg-white px-4 py-2 rounded">
+    <div className="flex items-center gap-2 text-black font-semibold bg-white px-4 py-2 rounded">
       <IconContext.Provider value={{ color: "white", size: "15px" }}>
         <AiOutlineInfoCircle />
       </IconContext.Provider>
+    </div>
+  );
+};
+
+export const CloseIcon = () => {
+  return (
+    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-black bg-black border-2 box-border">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="white"
+        className="w-6 h-6"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
     </div>
   );
 };
