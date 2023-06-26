@@ -100,7 +100,7 @@ export const fetchContent = createAsyncThunk(
     try {
       const response = await axiosInstance.get("/content/");
 
-      const data = response.data.contents;
+      const data = response.data.data;
       return data;
     } catch (error) {
       console.error(error);
@@ -119,7 +119,8 @@ export const contentSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchContent.fulfilled, (state, action) => {
-        state.allContent = [...action.payload];
+        console.log(action.payload)
+        state.allContent = [...action.payload.contents];
         state.loading = false;
       })
       .addCase(fetchContent.rejected, (state) => {
