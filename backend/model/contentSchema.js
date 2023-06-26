@@ -34,7 +34,7 @@ const contentSchema = new Schema(
     ],
 
     genres: {
-      type: String,
+      type: [String],
       enum: [
         "Action",
         "Anime",
@@ -48,15 +48,27 @@ const contentSchema = new Schema(
         "Sci-fi & Fantasy",
         "Sports",
         "Thrillers",
+        "Adventure",
       ],
     },
-    creator: [String],
+    director: {
+      type: String,
+    },
     rating: {
       type: String,
       required: true,
     },
     language: {
       type: String,
+      enum: [
+        "English",
+        "Hindi",
+        "Korean",
+        "Japan",
+        "Tamil",
+        "Spanish",
+        "German",
+      ],
     },
     thumbnail: [
       {
@@ -86,10 +98,10 @@ const contentSchema = new Schema(
           type: String,
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: Number },
+        contentDuration: { type: String },
       },
     ],
-
+    // TODO: add series pending work
     episodes: [
       {
         episodeURL: {
@@ -103,6 +115,10 @@ const contentSchema = new Schema(
     display: {
       type: Boolean,
       default: false,
+    },
+    originCountry: {
+      types: String,
+      enum: ["India", "USA", "Korean", "Japan", "German", "Spain"],
     },
   },
 
