@@ -305,7 +305,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       contentData.content.length > 0 &&
       contentData.content[0]?.contentID
     ) {
-      cloudinaryFileDelete(contentData.content[0].contentID, next);
+      cloudinaryFileDelete(contentData.content[0]?.contentID, next);
     }
 
     if (
@@ -313,7 +313,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       contentData.trailer.length > 0 &&
       contentData.trailer[0]?.trailerId
     ) {
-      cloudinaryFileDelete(contentData.trailer[0].trailerId, next);
+      cloudinaryFileDelete(contentData.trailer[0]?.trailerId, next);
     }
 
     if (
@@ -326,11 +326,13 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
     contentFiles = await cloudinaryFileUpload(files, next);
 
-    if (contentFiles.content[0].contentID) {
-      contentFiles.content[0].contentDuration = await getContentLength(
-        contentFiles.content[0].contentURL,
-        next
-      );
+    if (contentFiles.content) {
+      if (contentFiles.content[0]?.contentID) {
+        contentFiles.content[0].contentDuration = await getContentLength(
+          contentFiles.content[0]?.contentURL,
+          next
+        );
+      }
     }
   }
 
