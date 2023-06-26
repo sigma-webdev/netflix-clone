@@ -79,12 +79,6 @@ const Header = ({ isLogin, setCategory }) => {
                 </li>
                 <li
                   className="cursor-pointer"
-                  onClick={() => setCategory("TV Shows")}
-                >
-                  TV Shows
-                </li>
-                <li
-                  className="cursor-pointer"
                   onClick={() => setCategory("Movies")}
                 >
                   Movies

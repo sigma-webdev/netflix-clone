@@ -10,15 +10,12 @@ const initialState = {
 };
 
 export const fetchContentBySearch = createAsyncThunk(
-  "content/fetchContentByCategory",
+  "content/fetchContentBySearch",
   async (searchText, { rejectWithValue }) => {
     try {
       console.log("dsad");
-      const response = await axiosInstance.get(
-        `/content/posts?search=${searchText}`
-      );
+      const response = await axiosInstance.get(`/content?search=${searchText}`);
 
-      console.log("dsad", response.data.contentData);
       const data = response.data.contentData;
 
       return data;
@@ -33,13 +30,8 @@ export const fetchContentByCategory = createAsyncThunk(
 
   async (category, { rejectWithValue }) => {
     try {
-      console.log("dsad");
-      const response = await axiosInstance.get(
-        `/content/posts?category=${category}`
-      );
-
-      console.log("dsad", response.data.contentData);
-      const data = response.data.contentData;
+      const response = await axiosInstance.get(`/content?category=${category}`);
+      const data = response.data.contents;
 
       return data;
     } catch (error) {
@@ -52,7 +44,7 @@ export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
   async (contentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/content/posts/${contentId}`);
+      const response = await axiosInstance.get(`/content/${contentId}`);
       const data = response.data.contentData;
 
       return data;
@@ -66,7 +58,7 @@ export const fetchContent = createAsyncThunk(
   "content/fetchContent",
   async (rejectWithValue) => {
     try {
-      const response = await axiosInstance.get("/content/posts");
+      const response = await axiosInstance.get("/content/");
 
       const data = response.data.contents;
       return data;
@@ -83,18 +75,6 @@ export const contentSlice = createSlice({
   extraReducers: (builder) => {
     builder
       //fetch all content
-      .addCase(fetchContent.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchContent.fulfilled, (state, action) => {
-        state.allContent = [...action.payload];
-        state.loading = false;
-        console.log(action.payload);
-      })
-      .addCase(fetchContent.rejected, (state) => {
-        state.loading = false;
-        state.movies = [];
-      })
       .addCase(fetchContent.pending, (state) => {
         state.loading = true;
       })
@@ -129,6 +109,19 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchContentByCategory.rejected, (state) => {
+        state.filteredContent = [];
+        state.loading = false;
+      })
+
+      //fetch content by search
+      .addCase(fetchContentBySearch.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchContentBySearch.fulfilled, (state, action) => {
+        state.filteredContent = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchContentBySearch.rejected, (state) => {
         state.filteredContent = [];
         state.loading = false;
       });
