@@ -39,6 +39,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     originCountry,
   } = req.body;
 
+  // console.log("req.body originCountry ---", originCountry);
+
   let details = {
     name,
     description,
@@ -83,8 +85,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     details.content[0].contentDuration = contentLength;
   }
 
-  console.log("origin Country", originCountry);
-  console.log("origin Country", details);
+  // console.log("origin Country", originCountry);
+  // console.log("origin Country", details);
 
   // checking for missing fields
   const requiredFields = [
@@ -111,7 +113,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   const contentDetails = Content(details);
 
-  console.log("contentDetails --------------w", contentDetails);
+  // console.log("contentDetails --------------w", contentDetails);
 
   const contentData = await contentDetails.save();
 
@@ -123,7 +125,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    contentData,
+    data: contentData,
   });
 });
 
@@ -192,7 +194,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-
     data: result,
   });
 });
@@ -219,7 +220,7 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content fetched Successfully",
-    contentData,
+    data: contentData,
   });
 });
 
@@ -272,7 +273,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content deleted successfully",
-    contentData,
+    data: contentData,
   });
 });
 
@@ -304,7 +305,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       contentData.content.length > 0 &&
       contentData.content[0]?.contentID
     ) {
-      cloudinaryFileDelete(contentData.content[0].contentID, next);
+      cloudinaryFileDelete(contentData.content[0]?.contentID, next);
     }
 
     if (
@@ -312,7 +313,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       contentData.trailer.length > 0 &&
       contentData.trailer[0]?.trailerId
     ) {
-      cloudinaryFileDelete(contentData.trailer[0].trailerId, next);
+      cloudinaryFileDelete(contentData.trailer[0]?.trailerId, next);
     }
 
     if (
@@ -325,11 +326,13 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
     contentFiles = await cloudinaryFileUpload(files, next);
 
-    if (contentFiles.content[0].contentID) {
-      contentFiles.content[0].contentDuration = await getContentLength(
-        contentFiles.content[0].contentURL,
-        next
-      );
+    if (contentFiles.content) {
+      if (contentFiles.content[0]?.contentID) {
+        contentFiles.content[0].contentDuration = await getContentLength(
+          contentFiles.content[0]?.contentURL,
+          next
+        );
+      }
     }
   }
 
@@ -362,7 +365,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "Content Updated successfully",
-    updatedData,
+    data: updatedData,
   });
 });
 
@@ -390,14 +393,14 @@ const contentLikes = asyncHandler(async (req, res, next) => {
 
     return res.status(200).json({
       message: "content disliked",
-      content,
+      data: content,
     });
   } else {
     content.likes.push(userId);
     await content.save();
     return res.status(200).json({
       message: "content liked",
-      content,
+      data: content,
     });
   }
 });
