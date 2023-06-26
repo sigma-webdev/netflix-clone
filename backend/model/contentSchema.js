@@ -29,9 +29,13 @@ const contentSchema = new Schema(
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "userModel",
+        ref: "User",
       },
     ],
+    likesCount: {
+      type: Number,
+      default: 0,
+    },
 
     genres: {
       type: [String],
@@ -120,12 +124,22 @@ const contentSchema = new Schema(
       type: String,
       enum: ["India", "USA", "Korean", "Japan", "German", "Spain"],
     },
+    trending: {
+      type: Number,
+      default: 0,
+    },
   },
 
   { timestamps: true }
 );
 
 contentSchema.index("name");
+
+contentSchema.pre("save", function (next) {
+  this.likesCount = this.likes.length;
+  console.log("likeeeeee", this.likesCount);
+  return next();
+});
 
 const contentModel = mongoose.model("Content", contentSchema);
 module.exports = contentModel;

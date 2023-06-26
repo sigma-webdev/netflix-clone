@@ -137,7 +137,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
-  const { search, category, genre, display, page, limit, latest } = req.query;
+  const { search, category, genre, display, page, limit, latest, mostLikes } =
+    req.query;
   const query = {};
   const PAGE = Number(page) || 1;
   const LIMIT = Number(limit) || 20;
@@ -159,6 +160,12 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   // get latest move - release date -
   const sorting = {};
   if (latest) sorting["latestContent"] = { releaseDate: -1 };
+
+  //TODO: work with most likes --------
+  // get most-likes
+  if (mostLikes) {
+    sorting["likesCount"] = { likesCount: -1 };
+  }
 
   // pagination
   const totalContents = await Content.find(query).countDocuments();
@@ -188,7 +195,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
-    .sort(sorting.latestContent);
+    .sort(sorting.latestContent || sorting.likesCount);
 
   // if no content available
 
@@ -210,6 +217,12 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   const contentData = await Content.findById(contentId);
+
+  if (contentData) {
+    contentData.trending += 1;
+    await contentData.save();
+  }
+  console.log("content Trending ===", contentData.trending);
 
   if (!contentData) {
     return next(
@@ -399,7 +412,7 @@ const contentLikes = asyncHandler(async (req, res, next) => {
     content.likes.push(userId);
     await content.save();
     return res.status(200).json({
-      message: "content liked",
+      message: "like or dislike",
       data: content,
     });
   }
