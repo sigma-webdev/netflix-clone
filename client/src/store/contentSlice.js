@@ -58,7 +58,7 @@ export const addNewContent = createAsyncThunk(
     console.log("reached", newContent);
     try {
       const response = await axiosInstance.post(`/content`, newContent);
-      const data = response.data.contentData;
+      const data = response.data.data;
       // fetchContentById()
       return data;
     } catch (error) {
@@ -71,7 +71,7 @@ export const updateContentById = createAsyncThunk(
   "content/updateContentById",
   async ({ id, sentFormData }, { rejectWithValue }) => {
     let progress = 0;
-    console.log("called updar");
+    console.log("called updar", sentFormData, "//////", id);
     try {
       const response = await axiosInstance.put(`/content/${id}`, sentFormData, {
         onUploadProgress: (progressEvent) => {
@@ -80,7 +80,7 @@ export const updateContentById = createAsyncThunk(
           );
         },
       });
-      const data = response.data.contentData;
+      const data = response.data.data;
 
       return { ...data, progress };
     } catch (error) {
@@ -195,7 +195,7 @@ export const contentSlice = createSlice({
 
       // delete content by id
       .addCase(deleteContentById.pending, (state) => {
-        state.contentLoading = true;
+        state.loading = true;
       })
       .addCase(deleteContentById.fulfilled, (state, action) => {
         const deletedContentId = action.payload.contentId;
@@ -203,16 +203,16 @@ export const contentSlice = createSlice({
           (item) => item._id !== deletedContentId
         );
         state.allContent = filteredContent;
-        state.contentLoading = false;
+        state.loading = false;
       })
       .addCase(deleteContentById.rejected, (state) => {
         state.allContent = [];
-        state.contentLoading = false;
+        state.loading = false;
       })
 
       // update content by id
       .addCase(updateContentById.pending, (state) => {
-        state.contentLoading = true;
+        state.loading = true;
       })
       .addCase(updateContentById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
@@ -220,7 +220,7 @@ export const contentSlice = createSlice({
           content._id === updatedContent._id ? updatedContent : content
         );
         state.allContent = newAllContent;
-        state.contentLoading = false;
+        state.loading = false;
       })
       .addCase(updateContentById.rejected, (state) => {
         state.allContent = [];
