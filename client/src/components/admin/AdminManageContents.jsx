@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { BiSearchAlt2 } from "react-icons/bi";
-import { addNewContent, fetchContent } from '../../store/contentSlice';
+import { addNewContent, fetchContent, fetchContentById } from '../../store/contentSlice';
 import { Routes, Route } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import AdminContentView from './AdminContentView';
@@ -54,7 +54,11 @@ const AdminManageContents = () => {
 
 
     const toggleModal = (val) => {
+        
         setIsOpen(val)
+    }
+    const updateCurrentContent = (id)=>{
+        dispatch(fetchContentById(id))
     }
     const handleInputChange = (event) => {
         console.log(event.target.name)
@@ -98,12 +102,11 @@ const AdminManageContents = () => {
     // };
     
     const handleSearch = (e) => {
+        console.log(e.target.value)
         setSearchTerm(e.target.value);
       };
     
-      const filteredData = content.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) || item.genres.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+    const filteredData = content.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log(e)
@@ -112,11 +115,12 @@ const AdminManageContents = () => {
             return;
         }
         setIsLoading(true)
-        const sentFormData = new FormData(e.target);
+        // const sentFormData = new FormData(e.target);
         // sentFormData.append("creator", creatorArr);
-        sentFormData.append("cast", castArr);
-
-        dispatch(addNewContent(sentFormData))
+        // sentFormData.append("cast", castArr);
+        // console.log(sentFormData)
+        const data = {...newContentData, cast: castArr}
+        dispatch(addNewContent(data))
         setNewContentData({
             name: "",
             description: "",
@@ -130,7 +134,7 @@ const AdminManageContents = () => {
         })
         setCastArr([])
         setIsOpen(false)
-        // navigate(res.contents._id) 
+        // navigate(contents._id) 
         // console.log(res)
     }
 
@@ -298,7 +302,7 @@ const AdminManageContents = () => {
                                                             <td className="px-4 py-3">{content.genres}</td>
                                                             <td className="px-4 py-2">
                                                                 <Link to={`${content._id}`}>
-                                                                    <div onClick={toggleModal} className='py-2 text-center bg-[#E50914] hover:bg-[#d4252e] text-white font-bold rounded cursor-pointer' >
+                                                                    <div className='py-2 text-center bg-[#E50914] hover:bg-[#d4252e] text-white font-bold rounded cursor-pointer' >
                                                                         View
                                                                     </div>
                                                                 </Link>

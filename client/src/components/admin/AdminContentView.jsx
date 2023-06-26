@@ -27,10 +27,10 @@ const AdminContentView = () => {
 
 
   useEffect(() => {
-      dispatch(fetchContentById(params.id))
+      // dispatch(fetchContentById(params.id))
       setEditedContentData(contentData)
 
-  }, [])
+  }, [contentData])
 
   const handleDelete = () => {
     console.log('delete this')

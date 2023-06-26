@@ -14,10 +14,11 @@ const initialState = {
 export const addNewContent = createAsyncThunk(
   "content/addNewContent",
   async (newContent ,  { rejectWithValue }) => {
+    console.log('reached',newContent)
     try {
       const response = await axiosInstance.post(`/content`, newContent);
       const data = response.data.contentData;
-
+      // fetchContentById()
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -35,7 +36,7 @@ export const updateContentById = createAsyncThunk(
     try {
       const response = await axiosInstance.put(`/content/${id}`, sentFormData, {
         onUploadProgress: (progressEvent) => {
-                  progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
                   
                 }
               });
