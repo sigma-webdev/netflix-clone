@@ -123,7 +123,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    contentData,
+    data: contentData,
   });
 });
 
@@ -192,7 +192,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-
     data: result,
   });
 });
@@ -219,7 +218,7 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content fetched Successfully",
-    contentData,
+    data: contentData,
   });
 });
 
@@ -272,7 +271,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content deleted successfully",
-    contentData,
+    data: contentData,
   });
 });
 
@@ -362,7 +361,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "Content Updated successfully",
-    updatedData,
+    data: updatedData,
   });
 });
 
@@ -390,14 +389,14 @@ const contentLikes = asyncHandler(async (req, res, next) => {
 
     return res.status(200).json({
       message: "content disliked",
-      content,
+      data: content,
     });
   } else {
     content.likes.push(userId);
     await content.save();
     return res.status(200).json({
       message: "content liked",
-      content,
+      data: content,
     });
   }
 });
