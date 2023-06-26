@@ -137,8 +137,17 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
-  const { search, category, genre, display, page, limit, latest, mostLikes } =
-    req.query;
+  const {
+    search,
+    category,
+    genre,
+    display,
+    page,
+    limit,
+    latest,
+    mostLikes,
+    trending,
+  } = req.query;
   const query = {};
   const PAGE = Number(page) || 1;
   const LIMIT = Number(limit) || 20;
@@ -165,6 +174,10 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   // get most-likes
   if (mostLikes) {
     sorting["likesCount"] = { likesCount: -1 };
+  }
+  // get most trending movies
+  if (trending) {
+    sorting["trending"] = { trending: -1 };
   }
 
   // pagination
@@ -195,7 +208,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
-    .sort(sorting.latestContent || sorting.likesCount);
+    .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
 
   // if no content available
 

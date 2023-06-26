@@ -137,7 +137,7 @@ contentSchema.index("name");
 
 contentSchema.pre("save", function (next) {
   this.likesCount = this.likes.length;
-  console.log("likeeeeee", this.likesCount);
+
   return next();
 });
 
