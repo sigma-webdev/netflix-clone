@@ -116,6 +116,10 @@ const contentSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    originCountry: {
+      types: String,
+      enum: ["India", "USA", "Korean", "Japan", "German", "Spain"],
+    },
   },
 
   { timestamps: true }

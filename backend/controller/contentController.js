@@ -49,6 +49,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     language,
     cast,
     director,
+    originCountry,
   } = req.body;
 
   let details = {
@@ -61,6 +62,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     language,
     cast,
     director,
+    originCountry,
     //default thumbnail value
     thumbnail: [
       {
@@ -94,6 +96,9 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     details.content[0].contentDuration = contentLength;
   }
 
+  console.log("origin Country", originCountry);
+  console.log("origin Country", details);
+
   // checking for missing fields
   const requiredFields = [
     "name",
@@ -105,6 +110,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     "language",
     "cast",
     "director",
+    "originCountry",
   ];
   const missingRequiredFields = requiredFields.filter(
     (field) => !details[field]
@@ -117,6 +123,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   // file upload will be done in the update section
 
   const contentDetails = Content(details);
+
+  console.log("contentDetails --------------w", contentDetails);
 
   const contentData = await contentDetails.save();
 
