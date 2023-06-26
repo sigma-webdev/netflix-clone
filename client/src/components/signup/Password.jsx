@@ -13,14 +13,28 @@ function Password() {
 
   async function handleSignIn(e) {
     e.preventDefault();
+
+    // adding all the input in form
     const formData = new FormData(e.target);
     formData.append("email", email);
 
+    // call the redux thunk SIGN_IN by passing form Data
     const response = await dispatch(SIGN_IN(formData));
     const userData = response.payload;
-    if (userData.success && userData.data.plan !== "NONE") {
+
+    //if user is logged-in  check the subscription status is active or not,
+    //if active redirect to browser page
+    // if not active redirect to subscription plane choose page
+    // finally if there is any error or user send wrong credentials for sign-in show error message
+    //  from extra reducers rejected state
+    if (userData.success && userData.data.subscription.status === "active") {
       navigate("/browse");
-    } else navigate("/signup/choose");
+    } else if (
+      userData.success &&
+      userData.data.subscription.status !== "active"
+    ) {
+      navigate("/signup/choose");
+    } else if (!userData.success) return;
   }
 
   return (

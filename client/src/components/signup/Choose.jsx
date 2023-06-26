@@ -26,7 +26,7 @@ function Choose() {
           </li>
         </ul>
       </div>
-      <Link to="/singup/planform">
+      <Link to="/signup/planform">
         <button className="mt-6 bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl">
           Next
         </button>

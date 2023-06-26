@@ -89,6 +89,18 @@ export const contentSlice = createSlice({
       .addCase(fetchContent.fulfilled, (state, action) => {
         state.allContent = [...action.payload];
         state.loading = false;
+        console.log(action.payload);
+      })
+      .addCase(fetchContent.rejected, (state) => {
+        state.loading = false;
+        state.movies = [];
+      })
+      .addCase(fetchContent.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchContent.fulfilled, (state, action) => {
+        state.allContent = [...action.payload];
+        state.loading = false;
       })
       .addCase(fetchContent.rejected, (state) => {
         state.allContent = [];
