@@ -1,35 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import { redirect, useParams, useNavigate } from 'react-router-dom';
-import { getContentDetailsById, deleteContentById, updateContentById } from '../ApiUtils';
+import React, { useEffect, useState, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom';
+// import { getContentDetailsById, deleteContentById, updateContentById } from '../../ApiUtils';
+import {BsCloudUpload} from "react-icons/bs"
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContentById , deleteContentById, updateContentById } from '../../store/contentSlice';
+
+
+
 
 
 
 const AdminContentView = () => {
-  const [contentData, setContentData] = useState({})
+
+  const dispatch = useDispatch();
+  const contentData = useSelector((state) => state.content.currentContent)
+  const isLoading = useSelector((state)=> state.content.loading);
+
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef(null);
   const [editedContentData, setEditedContentData] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
   const params = useParams()
   console.log(params.id)
   const navigate = useNavigate()
 
 
   useEffect(() => {
-    (async function () {
-      let result = await getContentDetailsById(params.id)
-      console.log(result.data)
-      setContentData(result.data.contentData)
-      setEditedContentData(result.data.contentData)
+      // dispatch(fetchContentById(params.id))
+      setEditedContentData(contentData)
 
-    })();
-  }, [])
+  }, [contentData])
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     console.log('delete this')
-    navigate('/admin/managecontents')
     // redirect('/admin/managecontents/')
-    deleteContentById(contentData._id).then(
+    dispatch(deleteContentById(contentData._id))
       navigate('/admin/managecontents')
-    )
     //   redirect('/admin/managecontents')
 
   }
@@ -39,7 +46,7 @@ const AdminContentView = () => {
       console.log("please wait till the first submisson got fullfiled or rejected")
       return;
     }
-    setIsLoading(true)
+    // setIsLoading(true)
     const { name, description, categories, genres, creator, rating, language, trailer, content, cast, thumbnail, episodes } = editedContentData
     const sentFormData = new FormData();
     if (name && name !== contentData.name) {
@@ -81,15 +88,7 @@ const AdminContentView = () => {
 
 
 
-    updateContentById(params.id, sentFormData)
-      .then(() => setContentData(editedContentData))
-      .then((res) => setIsLoading(false))
-      .then(() => setIsOpen(false))
-
-
-
-    // setContentData(editedContentData)
-    // toggleModal(false)
+    dispatch(updateContentById(params.id, sentFormData))
 
   }
   const [isOpen, setIsOpen] = useState(false);
@@ -123,37 +122,34 @@ const AdminContentView = () => {
     }));
   };
 
+
+  const uploadContent =  () =>{
+    fileInputRef.current.click();
+  }
+
+  const handleSelectedFile = (event) => {
+    console.log('handle select callled')
+    const file = event.target.files[0];
+    console.log(file)
+    // const sentFormData = new FormData();
+    const sentFormData = new FormData();
+    sentFormData.append('thumbnail', file);
+    console.log(sentFormData, '////')
+    // updateContentById(params.id, formData, (progress) => {
+    //   setUploadProgress(progress)
+    // });
+    dispatch(updateContentById( {id: params.id, sentFormData}))
+
+  };
+
   return (
     <>
       {
         isOpen &&
 
-        <div className='absolute w-full h-full bg-cyan-600 bg-opacity-60 flex items-center justify-center border'>
+        <div className='absolute w-full z-50 h-full bg-cyan-600 bg-opacity-60 flex items-center justify-center border'>
           <div className='relative w-96  bg-gray-50  rounded-lg py-12 px-4 max-h-[80%] overflow-y-scroll no-scrollbar'>
             <div onClick={() => toggleModal(false)} className='absolute top-2 right-3 text-3xl cursor-pointer'>X</div>
-            {/* <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
-                            <label htmlFor="name">Movie Name:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="name" id="name" value={editedContentData.name} onChange={(e)=>{handleChange(e)}} />
-                            <label htmlFor="description">Description:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="description" id="email" value={editedContentData.description} />
-                            <label htmlFor="name">Cast:</label>
-                            <input className='bg-transparent border p-2 rounded' type="tel" name="phone" id="phone" value={editedContentData.cast} />
-                            <label htmlFor="categories">  Categories:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="categories" id="plan" value={editedContentData.categories} onChange={(e)=>{handleChange(e)}} />
-                            <label htmlFor="name">  Raiting:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.rating} />
-                            <label htmlFor="name">  Language:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.language} />
-                            <label htmlFor="name">  Thumbnail:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.thumbnail[0].thumbnailUrl} />
-                            <label htmlFor="name">  Trailer:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.trailer[0].trailerUrl} />
-                            <label htmlFor="name">  Content:</label>
-                            <input className='bg-transparent border p-2 rounded' type="text" name="plan" id="plan" value={editedContentData.content[0].contentURL} />
-
-                            <button className='bg-green-600 hover:bg-green-700 text-white rounded py-2'>Update Content</button>
-
-                        </form> */}
             <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
               <label htmlFor="name">Movie Name:</label>
               <input className='bg-transparent border p-2 rounded' type="text" required name="name" value={editedContentData.name} onChange={handleInputChange} />
@@ -171,7 +167,7 @@ const AdminContentView = () => {
               </label>
               <label>
                 TV shows
-                <input className='' type="radio" name="categories" required onChange={handleInputChange} value="TV shows" checked={editedContentData.categories === 'TV shows'} />
+                <input className='' type="radio" name="categories" required onChange={handleInputChange} value="Series" checked={editedContentData.categories === 'Series'} />
 
               </label>
 
@@ -226,9 +222,25 @@ const AdminContentView = () => {
       </tbody>
     </table> */}
         {
+          isLoading ? <h2 className='text-white'>Loading..</h2> :
+          (
           Object.keys(contentData).length !== 0 ?
-            <div className='text-white w-full px-4'>
-              <img className='w-full h-[450px]' src={contentData.thumbnail[0]?.thumbnailUrl} alt="" />
+            <div className='text-white w-full px-4 '>
+              {/* <CircularProgressbar value={uploadProgress} text={`${uploadProgress}%`} />; */}
+              <div onClick={uploadContent}  title='upload thumbnial' className='relative cursor-pointer group'>
+              <form>
+              <input
+          ref={fileInputRef}
+          type="file"
+          name="thumbnail"
+          accept="image/*"
+          className="hidden"
+          onChange={handleSelectedFile}
+      />
+              </form>
+                <BsCloudUpload className='absolute top-[50%] left-[50%] text-8xl z-10 -translate-y-[50%] transition -translate-x-[50%] opacity-0 group-hover:opacity-100'/>
+                <img className='w-full h-[450px] hover:bg-black transition group-hover:opacity-40' src={contentData.thumbnail[0].thumbnailUrl} alt="" />
+              </div>
 
 
 
@@ -273,11 +285,11 @@ const AdminContentView = () => {
                 </div>
                 <div className='flex gap-4 my-4'>
                   <h4 className='text-gray-400 w-32'>Trailer:</h4>
-                  <video width="520" height="440" src={contentData.trailer[0]?.trailerUrl} controls></video>
+                  <video width="520" height="440" src={contentData.trailer[0].trailerUrl} controls></video>
                 </div>
                 <div className='flex gap-4 my-4'>
                   <h4 className='text-gray-400 w-32'>Content:</h4>
-                  <video width="520" height="440" src={contentData.content[0]?.contentURL} controls></video>
+                  <video width="520" height="440" src={contentData.content[0].contentURL} controls></video>
                 </div>
               </div>
               {/* <div className='flex gap-4 my-4'>
@@ -290,7 +302,7 @@ const AdminContentView = () => {
             </div> */}
 
             </div>
-            : <h2 className='text-white'>Loading..</h2>
+            : <h2 className='text-white'>Loading..</h2>)
         }
 
       </div>
