@@ -32,6 +32,10 @@ const userSchema = new Schema(
       default: "NONE",
       enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"]
     },
+    subscription: {
+      id: String,
+      status: String
+    },
     role: { type: String, default: "USER", enum: ["ADMIN", "USER"] },
     forgotPasswordExpiryDate: { type: Date, select: false }
   },

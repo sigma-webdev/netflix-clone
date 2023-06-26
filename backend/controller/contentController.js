@@ -14,19 +14,6 @@ const {
  * Testing route
  */
 const contentApi = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  console.log("req.params", req.params);
-  console.log("id", id);
-  const content = await Content.findById(id);
-
-  if (!content) {
-    return next(new CustomError("content not found", 200));
-  }
-  content.creator = null;
-  delete content.creator;
-
-  await content.save();
-
   res.send("Pong");
 });
 
