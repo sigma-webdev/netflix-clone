@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 const Watch = () => {
   const { contentId } = useParams();
   const CONTENT_LOADING = useSelector((state) => state.content.loading);
-  const watchContent = useSelector((state) => state.content.watchContent);
+  const currentContent = useSelector((state) => state.content.currentContent);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,10 +18,10 @@ const Watch = () => {
     <div>
       {CONTENT_LOADING
         ? "...loading"
-        : watchContent && (
+        : currentContent && (
             <VideoController
-              contentURL={watchContent.content[0].contentURL}
-              thumbnailURL={watchContent.thumbnail[0].thumbnailUrl}
+              contentURL={currentContent.content[0].contentURL}
+              thumbnailURL={currentContent.thumbnail[0].thumbnailUrl}
             />
           )}
     </div>

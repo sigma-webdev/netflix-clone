@@ -2,7 +2,7 @@ import axiosInstance from "./helpers/axiosInstance";
 
 export const getContentDetailsById = async (id) => {
     try{
-      const response = await axiosInstance.get(`/content/posts/${id}`);
+      const response = await axiosInstance.get(`/content/${id}`);
       console.log(response)
       return response
     } catch (err) {
@@ -12,7 +12,7 @@ export const getContentDetailsById = async (id) => {
 
   export const deleteContentById = async (id) => {
     try{
-      const response = await axiosInstance.delete(`/content/posts/${id}`);
+      const response = await axiosInstance.delete(`/content/${id}`);
       console.log(response)
       return response
     } catch (err) {
@@ -22,7 +22,7 @@ export const getContentDetailsById = async (id) => {
   export const addContent = async (data) => {
     try{
       console.log(data)
-      const response = await axiosInstance.post(`/content/posts`, data);
+      const response = await axiosInstance.post(`/content`, data);
       console.log(response)
       return response
     } catch (err) {
@@ -33,7 +33,12 @@ export const getContentDetailsById = async (id) => {
   export const updateContentById = async (id, data) => {
     console.log(data)
     try{
-      const response = await axiosInstance.put(`/content/posts/${id}`, data);
+      const response = await axiosInstance.put(`/content/${id}`, data, {
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+          // onProgress(progress);
+        },
+      });
       console.log(response)
       return response
     } catch (err) {

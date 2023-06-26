@@ -1,7 +1,7 @@
 import React from "react";
 import { HiHome, HiUserGroup, HiServer } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
-import  netflixLogo from "../assets/netflix_logo.png"
+import  netflixLogo from "../../assets/netflix_logo.png"
 
 const AdminNav = () => {
   return (
