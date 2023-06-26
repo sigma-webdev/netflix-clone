@@ -2,7 +2,7 @@ const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
 const Content = require("../model/contentSchema.js");
-const User = require("../model/userSchema.js");
+const getContentLength = require("../utils/getVideoLength.js");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const {
@@ -13,7 +13,7 @@ const {
 /**
  * Testing route
  */
-const contentApi = asyncHandler(async (req, res) => {
+const contentApi = asyncHandler(async (req, res, next) => {
   res.send("Pong");
 });
 
@@ -35,8 +35,11 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     rating,
     language,
     cast,
-    creator,
+    director,
+    originCountry,
   } = req.body;
+
+  // console.log("req.body originCountry ---", originCountry);
 
   let details = {
     name,
@@ -47,7 +50,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     rating,
     language,
     cast,
-    creator,
+    director,
+    originCountry,
     //default thumbnail value
     thumbnail: [
       {
@@ -72,6 +76,18 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     ],
   };
 
+  // get content video length
+  if (details.content[0].contentURL) {
+    const contentLength = await getContentLength(
+      details.content[0].contentURL,
+      next
+    );
+    details.content[0].contentDuration = contentLength;
+  }
+
+  // console.log("origin Country", originCountry);
+  // console.log("origin Country", details);
+
   // checking for missing fields
   const requiredFields = [
     "name",
@@ -82,7 +98,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     "rating",
     "language",
     "cast",
-    "creator",
+    "director",
+    "originCountry",
   ];
   const missingRequiredFields = requiredFields.filter(
     (field) => !details[field]
@@ -96,6 +113,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   const contentDetails = Content(details);
 
+  // console.log("contentDetails --------------w", contentDetails);
+
   const contentData = await contentDetails.save();
 
   if (!contentData) {
@@ -106,7 +125,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    contentData,
+    data: contentData,
   });
 });
 
@@ -166,31 +185,23 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   }
 
   // find all content and search all content
-  const contents = await Content.find(query)
+  result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
     .sort(sorting.latestContent);
 
   // if no content available
-  if (!contents.length) {
-    return res.status(200).json({
-      success: true,
-      message: "Content Not found",
-      contents,
-    });
-  }
 
   return res.status(200).json({
     success: true,
-    message: "All contents ...",
-    contents,
+    data: result,
   });
 });
 
 /********************
  *
  * @httpGetContentById
- * @route http://localhost:8081/api/v1/content/posts/id
+ * @route http://localhost:8081/api/v1/content/id
  * @description  controller to create the content
  * @parameters {Object id}
  * @return { Object } content object
@@ -209,13 +220,13 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content fetched Successfully",
-    contentData,
+    data: contentData,
   });
 });
 
 /********************
  * @httpDeleteById
- * @route http://localhost:8081/api/v1/content/posts/id
+ * @route http://localhost:8081/api/v1/content/id
  * @description  controller to delete the content
  * @parameters {Object id}
  * @return { Object } content object
@@ -253,7 +264,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
     .catch((error) => {
       return next(
         new CustomError(
-          `Delete Fail, make sure valid id is provided - {error}`,
+          `Delete Fail, make sure valid id is provided - ${error}`,
           500
         )
       );
@@ -262,6 +273,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content deleted successfully",
+    data: contentData,
   });
 });
 
@@ -293,7 +305,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       contentData.content.length > 0 &&
       contentData.content[0]?.contentID
     ) {
-      cloudinaryFileDelete(contentData.content[0].contentID, next);
+      cloudinaryFileDelete(contentData.content[0]?.contentID, next);
     }
 
     if (
@@ -301,7 +313,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       contentData.trailer.length > 0 &&
       contentData.trailer[0]?.trailerId
     ) {
-      cloudinaryFileDelete(contentData.trailer[0].trailerId, next);
+      cloudinaryFileDelete(contentData.trailer[0]?.trailerId, next);
     }
 
     if (
@@ -313,6 +325,15 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     }
 
     contentFiles = await cloudinaryFileUpload(files, next);
+
+    if (contentFiles.content) {
+      if (contentFiles.content[0]?.contentID) {
+        contentFiles.content[0].contentDuration = await getContentLength(
+          contentFiles.content[0]?.contentURL,
+          next
+        );
+      }
+    }
   }
 
   const updatedData = await Content.findByIdAndUpdate(
@@ -344,7 +365,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "Content Updated successfully",
-    updatedData,
+    data: updatedData,
   });
 });
 
@@ -372,14 +393,14 @@ const contentLikes = asyncHandler(async (req, res, next) => {
 
     return res.status(200).json({
       message: "content disliked",
-      content,
+      data: content,
     });
   } else {
     content.likes.push(userId);
     await content.save();
     return res.status(200).json({
       message: "content liked",
-      content,
+      data: content,
     });
   }
 });
