@@ -404,7 +404,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
  ********************/
 /******* User likes ****** */
 const contentLikes = asyncHandler(async (req, res, next) => {
-  const { contentId } = req.params;
+  const { contentId, action } = req.params;
   const { id: userId } = req.user;
 
   const content = await Content.findById(contentId);
@@ -413,22 +413,44 @@ const contentLikes = asyncHandler(async (req, res, next) => {
     return next(new CustomError("content is not available", 404));
   }
 
-  if (content.likes.includes(userId)) {
-    content.likes.pop(userId);
-    await content.save();
-
-    return res.status(200).json({
-      message: "content disliked",
-      data: content,
-    });
-  } else {
-    content.likes.push(userId);
-    await content.save();
-    return res.status(200).json({
-      message: "like or dislike",
-      data: content,
-    });
+  const dislikeArr = content.dislikes;
+  const likeArr = content.likes;
+  let message = "";
+  if (action === "like") {
+    if (likeArr.includes(userId)) {
+      likeArr.pop(userId);
+      message = "removed like";
+    } else if (dislikeArr.includes(userId)) {
+      dislikeArr.pop(userId);
+      likeArr.push(userId);
+      message = " liked";
+    } else {
+      likeArr.push(userId);
+      message = " liked";
+    }
   }
+
+  if (action === "dislike") {
+    if (dislikeArr.includes(userId)) {
+      message = "remove dislike";
+      dislikeArr.pop(userId);
+    } else if (likeArr.includes(userId)) {
+      likeArr.pop(userId);
+      dislikeArr.push(userId);
+      message = "disliked";
+    } else {
+      dislikeArr.push(userId);
+      message = "disliked";
+    }
+  }
+
+  content.likes = likeArr;
+  content.dislikes = dislikeArr;
+  await content.save();
+  return res.status(200).json({
+    message: message,
+    data: content,
+  });
 });
 
 module.exports = {

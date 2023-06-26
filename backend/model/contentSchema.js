@@ -37,6 +37,17 @@ const contentSchema = new Schema(
       default: 0,
     },
 
+    dislikes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    disLikesCount: {
+      type: Number,
+      default: 0,
+    },
+
     genres: {
       type: [String],
       enum: [
@@ -137,6 +148,7 @@ contentSchema.index("name");
 
 contentSchema.pre("save", function (next) {
   this.likesCount = this.likes.length;
+  this.disLikesCount = this.dislikes.length;
 
   return next();
 });
