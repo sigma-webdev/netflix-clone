@@ -9,6 +9,20 @@ const initialState = {
   loading: true,
 };
 
+export const likeContent = createAsyncThunk(
+  "content/likeContent",
+  async (contentId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/content/${contentId}/likes`);
+
+      const data = response.data.data.contents;
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
   async (searchText, { rejectWithValue }) => {

@@ -7,8 +7,7 @@ import Crousal from "../components/crousal/Crousal";
 import Layout from "../components/layout/Layout";
 
 // actions
-import { fetchContent, fetchContentByCategory } from "../store/contentSlice";
-import { GENRES } from "../helpers/constants";
+import { fetchContent } from "../store/contentSlice";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
 
 const Browse = () => {

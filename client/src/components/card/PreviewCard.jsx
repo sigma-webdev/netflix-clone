@@ -66,7 +66,7 @@ const PreviewCard = ({
 
       {isOpenDetails &&
         createPortal(
-          <div className="fixed top-0 z-50 pt-5 w-full h-full bg-black/60">
+          <div className="fixed top-0 z-50 pt-[4%] w-full h-full bg-black/60">
             <DetailsCard
               name={name}
               description={description}
