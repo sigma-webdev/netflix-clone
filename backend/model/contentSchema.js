@@ -117,7 +117,7 @@ const contentSchema = new Schema(
       default: false,
     },
     originCountry: {
-      types: String,
+      type: String,
       enum: ["India", "USA", "Korean", "Japan", "German", "Spain"],
     },
   },

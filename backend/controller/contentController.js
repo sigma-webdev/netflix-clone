@@ -39,6 +39,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     originCountry,
   } = req.body;
 
+  // console.log("req.body originCountry ---", originCountry);
+
   let details = {
     name,
     description,
@@ -83,8 +85,8 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     details.content[0].contentDuration = contentLength;
   }
 
-  console.log("origin Country", originCountry);
-  console.log("origin Country", details);
+  // console.log("origin Country", originCountry);
+  // console.log("origin Country", details);
 
   // checking for missing fields
   const requiredFields = [
@@ -111,7 +113,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   const contentDetails = Content(details);
 
-  console.log("contentDetails --------------w", contentDetails);
+  // console.log("contentDetails --------------w", contentDetails);
 
   const contentData = await contentDetails.save();
 
