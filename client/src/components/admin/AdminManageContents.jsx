@@ -37,6 +37,7 @@ const AdminManageContents = () => {
     const dispatch = useDispatch();
 
     const content = useSelector((state) => state.content.allContent)
+    console.log(content,'/dasd')
     const [searchTerm, setSearchTerm] = useState('');
     const isContentLoading = useSelector((state) => state.content.loading)
     // console.log(content)
@@ -44,7 +45,7 @@ const AdminManageContents = () => {
     useEffect(() => {
         dispatch(fetchContent());
         // setContentData(content)
-    }, [dispatch])
+    }, [])
 
     // useEffect(() => {
 
@@ -129,6 +130,7 @@ const AdminManageContents = () => {
         // sentFormData.append("cast", castArr);
         // console.log(sentFormData)
         const data = {...newContentData, cast: castArr}
+        console.log(data)
         dispatch(addNewContent(data))
         setNewContentData({
             name: "",

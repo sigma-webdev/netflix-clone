@@ -17,7 +17,7 @@ export const addNewContent = createAsyncThunk(
     console.log('reached',newContent)
     try {
       const response = await axiosInstance.post(`/content`, newContent);
-      const data = response.data.contentData;
+      const data = response.data.data;
       // fetchContentById()
       return data;
     } catch (error) {
@@ -85,7 +85,7 @@ export const fetchContentById = createAsyncThunk(
   async (contentId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/content/${contentId}`);
-      const data = response.data.contentData;
+      const data = response.data.data;
 
       return data;
     } catch (error) {
@@ -99,8 +99,8 @@ export const fetchContent = createAsyncThunk(
   async () => {
     try {
       const response = await axiosInstance.get("/content/");
-
       const data = response.data.data;
+      console.log(data)
       return data;
     } catch (error) {
       console.error(error);
@@ -130,15 +130,15 @@ export const contentSlice = createSlice({
 
       // fetch content by id
       .addCase(fetchContentById.pending, (state) => {
-        state.contentLoading = true;
+        state.loading = true;
       })
       .addCase(fetchContentById.fulfilled, (state, action) => {
         state.currentContent = action.payload;
-        state.contentLoading = false;
+        state.loading = false;
       })
       .addCase(fetchContentById.rejected, (state) => {
         state.currentContent = null;
-        state.contentLoading = false;
+        state.loading = false;
       })
 
        // add new content
@@ -156,32 +156,32 @@ export const contentSlice = createSlice({
 
       // delete content by id
       .addCase(deleteContentById.pending, (state) => {
-        state.contentLoading = true;
+        state.loading = true;
       })
       .addCase(deleteContentById.fulfilled, (state, action) => {
         const deletedContentId = action.payload.contentId;
         const filteredContent = state.allContent.filter(item => item._id !== deletedContentId)
         state.allContent = filteredContent;
-        state.contentLoading = false;
+        state.loading = false;
       })
       .addCase(deleteContentById.rejected, (state) => {
         state.allContent = [];
-        state.contentLoading = false;
+        state.loading = false;
       })
 
       // update content by id
       .addCase(updateContentById.pending, (state) => {
-        state.contentLoading = true;
+        state.loading = true;
       })
       .addCase(updateContentById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
         const newAllContent = state.allContent.map(content => (content._id === updatedContent._id) ? updatedContent : content)
         state.allContent = newAllContent;
-        state.contentLoading = false;
+        state.loading = false;
       })
       .addCase(updateContentById.rejected, (state) => {
         state.allContent = [];
-        state.contentLoading = false;
+        state.loading = false;
       })
   },
 });
