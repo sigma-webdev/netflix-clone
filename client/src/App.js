@@ -1,3 +1,5 @@
+// import { RouterProvider } from "react-router-dom";
+// import router from "./router/routes";
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -65,6 +67,8 @@ function App() {
       <Route path="/watch" element={<Watch />} />
       <Route path="/admin/*" element={<Admin />} />
     </Routes>
+
+    // <RouterProvider router={router} />
   );
 }
 

@@ -12,7 +12,7 @@ import { Loading } from "../icons.jsx";
 function RegForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState(localStorage.getItem("email"));
+  const [email, setEmail] = useState(localStorage.getItem("netflixCloneEmail"));
   const SIGN_UP_LOADING = useSelector((state) => state.auth.signUpLoading);
   async function handleSubmit(e) {
     e.preventDefault();
