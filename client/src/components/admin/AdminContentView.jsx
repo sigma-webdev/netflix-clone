@@ -27,10 +27,10 @@ const AdminContentView = () => {
 
 
   useEffect(() => {
-      // dispatch(fetchContentById(params.id))
+      dispatch(fetchContentById(params.id))
       setEditedContentData(contentData)
 
-  }, [contentData])
+  }, [])
 
   const handleDelete = () => {
     console.log('delete this')
@@ -202,10 +202,7 @@ const AdminContentView = () => {
       }
       <div className='w-10/12 flex flex-col gap-5 items-center py-4 bg-slate-800 overflow-y-scroll max-h-[100vh]'>
         <h2 className='text-white'>Content</h2>
-        <div className='flex gap-4 w-full px-4'>
-          <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded text-white'>Edit</button>
-          <button onClick={handleDelete} className='px-3 py-1 bg-red-500 cursor-pointer rounded text-white'>Delete</button>
-        </div>
+        
         {/* <table className='text-white'>
       <tbody>
         {Object.entries(contentData).map(([key, value]) => {
@@ -225,6 +222,11 @@ const AdminContentView = () => {
           isLoading ? <h2 className='text-white'>Loading..</h2> :
           (
           Object.keys(contentData).length !== 0 ?
+          <>
+          <div className='flex gap-4 w-full px-4'>
+          {/* <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded text-white'>Edit</button> */}
+          <button onClick={handleDelete} className='px-3 py-1 bg-red-500 cursor-pointer rounded text-white'>Delete</button>
+        </div>
             <div className='text-white w-full px-4 '>
               {/* <CircularProgressbar value={uploadProgress} text={`${uploadProgress}%`} />; */}
               <div onClick={uploadContent}  title='upload thumbnial' className='relative cursor-pointer group'>
@@ -278,10 +280,8 @@ const AdminContentView = () => {
               <div>
 
                 <div className='flex gap-4 my-4'>
-                  <h4 className='text-gray-400 w-32'>Creators:</h4>
-                  <div>
-                    {contentData.creator.map(item => <h3 className='text-white'>{item}</h3>)}
-                  </div>
+                  <h4 className='text-gray-400 w-32'>Director:</h4>
+                    <h3 className='text-white'>{contentData.director}</h3>
                 </div>
                 <div className='flex gap-4 my-4'>
                   <h4 className='text-gray-400 w-32'>Trailer:</h4>
@@ -302,6 +302,7 @@ const AdminContentView = () => {
             </div> */}
 
             </div>
+            </>
             : <h2 className='text-white'>Loading..</h2>)
         }
 

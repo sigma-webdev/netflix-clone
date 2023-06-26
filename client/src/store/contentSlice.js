@@ -32,7 +32,7 @@ export const updateContentById = createAsyncThunk(
   "content/updateContentById",
   async ({id, sentFormData} ,  { rejectWithValue }) => {
     let progress=0;
-    console.log('called updar')
+    console.log('called updar', sentFormData, '//////',id)
     try {
       const response = await axiosInstance.put(`/content/${id}`, sentFormData, {
         onUploadProgress: (progressEvent) => {
@@ -40,7 +40,7 @@ export const updateContentById = createAsyncThunk(
                   
                 }
               });
-      const data = response.data.contentData
+      const data = response.data.data
 
       return {...data, progress};
     } catch (error) {
