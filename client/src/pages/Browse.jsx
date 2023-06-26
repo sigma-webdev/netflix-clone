@@ -9,9 +9,6 @@ import Layout from "../components/layout/Layout";
 // actions
 import { fetchContent, fetchContentByCategory } from "../store/contentSlice";
 import { GENRES } from "../helpers/constants";
-
-import sampleVideo from "../assets/sample1.mov";
-import samplePoster from "../assets/images/sample-poster.jpg";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
 
 const Browse = () => {
@@ -57,13 +54,16 @@ const Browse = () => {
           <div className="relative">
             {/* hero video */}
             <div className="absolute w-full bg-gradient-to-b to-netflix-blue/100 from-netflix-blue/0 h-[50px] md:h-[100px] lg:h-[200px] -bottom-1"></div>
-            <video
-              ref={videoRef}
-              className="w-screen mx-auto"
-              src={sampleVideo}
-              poster={samplePoster}
-              autoPlay={true}
-            ></video>
+            <div className="w-full h-[400px] md:h-[800px]">
+              <video
+                ref={videoRef}
+                className="mx-auto object-cover w-full h-[400px] md:h-[800px]"
+                src={content[0].trailer[0].trailerUrl}
+                poster={content[0].thumbnail[0].thumbnailUrl}
+                autoPlay={true}
+              ></video>
+            </div>
+
             {/* hero text */}
             <div className="flex gap-2 absolute bottom-6 left-6 md:bottom-12 md:left-12 cursor-pointer">
               <div
