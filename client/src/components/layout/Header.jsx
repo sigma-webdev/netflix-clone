@@ -4,17 +4,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 // icons
-import { GlobeIcon } from "../icons";
-import { AiOutlineSearch } from "react-icons/ai";
-import { BiBell } from "react-icons/bi";
+import { GlobeIcon, SearchIcon } from "../icons";
 import { Loading } from "../icons.jsx";
 // THUNK
 import { SIGN_OUT } from "../../store/authSlice.js";
 import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
 import { FaSignOutAlt } from "react-icons/fa";
+import {
+  fetchContentByCategory,
+  fetchContentBySearch,
+} from "../../store/contentSlice";
 
-const Header = ({ isLogin, setCategory }) => {
+const Header = ({ isLogin }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
@@ -22,6 +24,8 @@ const Header = ({ isLogin, setCategory }) => {
   const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
   const SIGN_OUT_LOADING = useSelector((state) => state.auth.signOutLoading);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [currentCategory, setCategory] = useState(null);
 
   useEffect(() => {
     setButtonLoading(GET_USER_LOADING || SIGN_OUT_LOADING);
@@ -45,18 +49,37 @@ const Header = ({ isLogin, setCategory }) => {
     return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
+  useEffect(() => {
+    setCategory(null);
+    dispatch(fetchContentBySearch(searchText));
+  }, [searchText]);
+
+  useEffect(() => {
+    setSearchText("");
+    dispatch(fetchContentByCategory(currentCategory));
+  }, [currentCategory]);
+
   async function handleSignInSignOut() {
     if (!IS_LOGGED_IN) return navigate("/signin");
+
     const response = await dispatch(SIGN_OUT());
+
     if (response.payload.success) {
       navigate("signup/signout");
     }
   }
 
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  console.log(searchText);
+  console.log(currentCategory);
+
   return (
     <header
       ref={headerRef}
-      className={`flex items-center justify-between w-full h-16 md:h-20 px-4 md:px-8 text-white  z-20 transition ease-in-out duration-300 ${
+      className={`flex items-center justify-between w-full h-16 md:h-20 px-4 md:px-8 text-white z-20 transition ease-in-out duration-300 ${
         isLogin ? "fixed top-0" : "absolute"
       }`}
     >
@@ -129,11 +152,17 @@ const Header = ({ isLogin, setCategory }) => {
       ) : (
         <div className="flex h-fit items-center gap-3">
           <IconContext.Provider value={{ size: "25px" }}>
-            <div className="hidden md:block">
-              <AiOutlineSearch />
-            </div>
-            <div>
-              <BiBell />
+            <div className="flex border-2 border-white  text-white">
+              <div className="cursor-pointer">
+                <SearchIcon />
+              </div>
+              <div>
+                <input
+                  className="focus:outline-none w-full transition ease-in-out bg-black/50 h-full text-white"
+                  onChange={handleSearch}
+                  value={searchText}
+                ></input>
+              </div>
             </div>
           </IconContext.Provider>
           <div className="flex items-center gap-2">

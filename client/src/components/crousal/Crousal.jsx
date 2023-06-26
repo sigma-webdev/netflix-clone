@@ -41,7 +41,7 @@ const Crousal = ({ content }) => {
               rating={item.rating}
               description={item.description}
               cast={item.cast}
-              director={item.creator[0]}
+              director={item.director}
             />
           );
         })}

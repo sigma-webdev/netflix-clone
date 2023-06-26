@@ -2,6 +2,7 @@ import {
   AiOutlineCloseCircle,
   AiOutlineInfoCircle,
   AiOutlinePlus,
+  AiOutlineSearch,
 } from "react-icons/ai";
 import { RiPlayMiniFill, RiPauseMiniFill } from "react-icons/ri";
 import { BsChevronDown } from "react-icons/bs";
@@ -353,6 +354,14 @@ export const CloseIcon = () => {
           d="M6 18L18 6M6 6l12 12"
         />
       </svg>
+    </div>
+  );
+};
+
+export const SearchIcon = () => {
+  return (
+    <div className="flex items-center gap-2 text-white  bg-black/50 px-1 py-1  ">
+      <AiOutlineSearch />
     </div>
   );
 };

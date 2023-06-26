@@ -13,11 +13,9 @@ export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
   async (searchText, { rejectWithValue }) => {
     try {
-      console.log("dsad");
       const response = await axiosInstance.get(`/content?search=${searchText}`);
 
-      const data = response.data.contentData;
-
+      const data = response.data.data.contents;
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -27,11 +25,10 @@ export const fetchContentBySearch = createAsyncThunk(
 
 export const fetchContentByCategory = createAsyncThunk(
   "content/fetchContentByCategory",
-
   async (category, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/content?category=${category}`);
-      const data = response.data.contents;
+      const data = response.data.data.contents;
 
       return data;
     } catch (error) {
@@ -45,7 +42,7 @@ export const fetchContentById = createAsyncThunk(
   async (contentId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/content/${contentId}`);
-      const data = response.data.contentData;
+      const data = response.data.data;
 
       return data;
     } catch (error) {
@@ -60,7 +57,8 @@ export const fetchContent = createAsyncThunk(
     try {
       const response = await axiosInstance.get("/content/");
 
-      const data = response.data.contents;
+      const data = response.data.data.contents;
+      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);

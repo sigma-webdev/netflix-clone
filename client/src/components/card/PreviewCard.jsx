@@ -61,7 +61,7 @@ const PreviewCard = ({
             HD
           </div>
         </div>
-        <div className="text-white">{geners}</div>
+        <div className="text-white">{geners.join(" . ")}</div>
       </div>
 
       {isOpenDetails &&

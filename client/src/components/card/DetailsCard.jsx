@@ -89,7 +89,8 @@ const DetailsCard = ({
               <span className="text-gray-400">Cast:</span> {cast}
             </div>
             <div>
-              <span className="text-gray-400">Genres:</span> {geners}
+              <span className="text-gray-400">Genres:</span>{" "}
+              {geners.join(" . ")}
             </div>
             <div>
               <span className="text-gray-400">Maturity Rating:</span>

@@ -12,9 +12,8 @@ import { GENRES } from "../helpers/constants";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
 
 const Browse = () => {
-  const [currentCategory, setCategory] = useState(null);
-  const content = useSelector((state) =>
-    currentCategory ? state.content.filteredContent : state.content.allContent
+  const content = useSelector(
+    (state) => state.content.filteredContent || state.content.allContent
   );
 
   const LOADING = useSelector((state) => state.content.loading);
@@ -35,15 +34,13 @@ const Browse = () => {
   }
 
   useEffect(() => {
-    if (!currentCategory) {
-      dispatch(fetchContent());
-    } else {
-      dispatch(fetchContentByCategory(currentCategory));
-    }
-  }, [dispatch, currentCategory]);
+    dispatch(fetchContent());
+  }, [dispatch]);
+
+  console.log(content);
 
   return (
-    <Layout isLogin={true} setCategory={setCategory}>
+    <Layout isLogin={true}>
       <div id="content-details" className="relative w-full h-full"></div>
       {LOADING ? (
         "loading..."
@@ -88,20 +85,11 @@ const Browse = () => {
           <div className="text-white bg-netflix-blue">
             <div>
               <div className="px-4 md:px-8 space-y-5">
-                {/* loop through all GENRES */}
-                {GENRES.map((currentGenre) => {
-                  const categoryWiseContent = content.filter(
-                    (item) => item.genres === currentGenre.name
-                  );
-
-                  //  current genre
+                {Array(content).map((item) => {
                   return (
-                    categoryWiseContent.length !== 0 && (
-                      <div key={currentGenre.id}>
-                        <h4 className="mb-2">{currentGenre.name}</h4>
-                        <Crousal content={categoryWiseContent}></Crousal>
-                      </div>
-                    )
+                    <div key={item._id}>
+                      <Crousal content={item}></Crousal>
+                    </div>
                   );
                 })}
               </div>
