@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -7,8 +8,8 @@ const transporter = nodemailer.createTransport({
   secureConnection: false,
   auth: {
     user: process.env.EMAIL_ID, // generated ethereal user
-    pass: process.env.EMAIL_PASS // generated ethereal password
-  }
+    pass: process.env.EMAIL_PASS, // generated ethereal password
+  },
 });
 
 module.exports = transporter;
