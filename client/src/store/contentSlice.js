@@ -15,7 +15,7 @@ export const likeContent = createAsyncThunk(
   "content/likeContent",
   async (contentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/content/${contentId}/like`);
+      const response = await axiosInstance.get(`/contents/${contentId}/like`);
 
       const data = response.data.data;
       const contenId = data._id;
@@ -31,7 +31,9 @@ export const dislikeContent = createAsyncThunk(
   "content/dislikeContent",
   async (contentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/content/${contentId}/dislike`);
+      const response = await axiosInstance.get(
+        `/contents/${contentId}/dislike`
+      );
 
       const data = response.data.data.contents;
       const contentObject = convertResponseToContentObject(data);
@@ -48,7 +50,9 @@ export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
   async (searchText, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/content?search=${searchText}`);
+      const response = await axiosInstance.get(
+        `/contents?search=${searchText}`
+      );
 
       const data = response.data.data.contents;
       return data;
@@ -62,7 +66,9 @@ export const fetchContentByCategory = createAsyncThunk(
   "content/fetchContentByCategory",
   async (category, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/content?category=${category}`);
+      const response = await axiosInstance.get(
+        `/contents?category=${category}`
+      );
       const data = response.data.data.contents;
 
       return data;
@@ -77,7 +83,7 @@ export const addNewContent = createAsyncThunk(
   async (newContent, { rejectWithValue }) => {
     console.log("reached", newContent);
     try {
-      const response = await axiosInstance.post(`/content`, newContent);
+      const response = await axiosInstance.post(`/contents`, newContent);
       const data = response.data.data;
 
       return data;
@@ -93,13 +99,17 @@ export const updateContentById = createAsyncThunk(
     let progress = 0;
     console.log("called updar", sentFormData, "//////", id);
     try {
-      const response = await axiosInstance.put(`/content/${id}`, sentFormData, {
-        onUploadProgress: (progressEvent) => {
-          progress = Math.round(
-            (progressEvent.loaded / progressEvent.total) * 100
-          );
-        },
-      });
+      const response = await axiosInstance.put(
+        `/contents/${id}`,
+        sentFormData,
+        {
+          onUploadProgress: (progressEvent) => {
+            progress = Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            );
+          },
+        }
+      );
       const data = response.data.data;
 
       return { ...data, progress };
@@ -113,7 +123,7 @@ export const deleteContentById = createAsyncThunk(
   "content/deleteContentById",
   async (contentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`/content/${contentId}`);
+      const response = await axiosInstance.delete(`/contents/${contentId}`);
       const data = response.data.contentData;
 
       return { data, contentId };
@@ -127,7 +137,7 @@ export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
   async (contentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/content/${contentId}`);
+      const response = await axiosInstance.get(`/contents/${contentId}`);
       const data = response.data.data;
       const contentObject = convertResponseToContentObject(data);
 
@@ -143,7 +153,7 @@ export const fetchContent = createAsyncThunk(
   "content/fetchContent",
   async (rejectWithValue) => {
     try {
-      const response = await axiosInstance.get("/content/");
+      const response = await axiosInstance.get("/contents/");
 
       const data = response.data.data.contents;
 
