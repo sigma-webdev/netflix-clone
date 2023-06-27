@@ -1,30 +1,12 @@
 const cloudinary = require("../config/cloudinaryConfig");
 const CustomError = require("./customError");
 
-const cloudinaryImageDelete = async (publicId, next) => {
-  try {
-    await cloudinary.uploader.destroy(publicId, (error, result) => {
-      if (error) {
-        return next(
-          new CustomError(`File not able to update/delete ${error} `, 500)
-        );
-        // throw new CustomError("  ")
-      } else {
-        console.log("RESULT in DELETING Image - ", result);
-      }
-    });
-  } catch (error) {
-    return next(new CustomError(`Error in  the image - ${error}`, 400));
-  }
-};
-
-// video file delete ---
-const cloudinaryFileDelete = async (publicId, next) => {
+// Cloudinary delete
+const cloudinaryFileDelete = async (publicId, next, fileType = "video") => {
   try {
     await cloudinary.uploader.destroy(
       publicId,
-      { resource_type: "video" },
-
+      { resource_type: fileType === "image" ? "image" : "video" },
       (error, result) => {
         if (error) {
           return next(
@@ -44,4 +26,4 @@ const cloudinaryFileDelete = async (publicId, next) => {
   }
 };
 
-module.exports = { cloudinaryFileDelete, cloudinaryImageDelete };
+module.exports = { cloudinaryFileDelete };
