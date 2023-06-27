@@ -24,7 +24,7 @@ app.use(
 );
 
 if (process.env.NODE_ENV !== "production") {
-  app.use(morgan("tiny"));
+  app.use(morgan("dev"));
 }
 
 app.use(express.json());
@@ -39,7 +39,10 @@ app.use(
 
 // routes
 app.get("/health-check", (req, res) => {
-  return res.status(200).json({ data: "Server is running" });
+  return res.status(200).json({
+    success: true,
+    data: "Server is running",
+  });
 });
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/contents", contentRoute);
