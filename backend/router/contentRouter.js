@@ -19,6 +19,6 @@ contentRoute
   .get(httpGetContentById)
   .delete(httpDeleteById)
   .put(httpUpdateById);
-contentRoute.route("/:contentId/likes").patch(jwtAuth, contentLikes);
+contentRoute.route("/:contentId/:action").patch(jwtAuth, contentLikes);
 
 module.exports = contentRoute;
