@@ -9,10 +9,10 @@ const {
   getWatchContent
 } = require("../controller/userController.js");
 
-userRouter.route("/watchhistory").get(jwtAuth, getWatchContent);
 userRouter
   .route("/watchhistory/:contentId")
   .patch(jwtAuth, contentWatchHistory);
+userRouter.route("/watchhistory").get(jwtAuth, getWatchContent);
 userRouter.route("/").get(jwtAuth, getUsers);
 userRouter.route("/:userId").get(jwtAuth, getUser);
 

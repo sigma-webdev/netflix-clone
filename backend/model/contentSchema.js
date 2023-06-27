@@ -29,7 +29,7 @@ const contentSchema = new Schema(
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "userModel"
       }
     ],
     disLikesCount: {
