@@ -10,7 +10,8 @@ const jwtAuth = (req, res, next) => {
   JWT.verify(token, process.env.SECRETE, function (error, payload) {
     if (error)
       return res.status(400).json({ success: false, message: err.message });
-    else req.user = { id: payload.id, email: payload.email };
+    else
+      req.user = { id: payload.id, email: payload.email, role: payload.role };
   });
 
   next();

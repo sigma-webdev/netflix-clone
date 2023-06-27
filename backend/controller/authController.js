@@ -8,6 +8,14 @@ const nodemailer = require("nodemailer");
 const validator = require("email-validator");
 const crypto = require("crypto");
 
+/******************************************************
+ * @
+ * @route /api/auth/signUp
+ * @description   singin functin for creating new user
+ * @body firstname , lastname,  email, password ,comfirmPassword
+ * @returns User Object
+ ******************************************************/
+
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
 

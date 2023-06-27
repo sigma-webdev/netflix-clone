@@ -1,6 +1,7 @@
 const userModel = require("../model/userSchema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 
+
 const getUser = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const result = await userModel.findById(userId);
