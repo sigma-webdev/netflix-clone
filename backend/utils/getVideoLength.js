@@ -1,5 +1,17 @@
 const { getVideoDurationInSeconds } = require("get-video-duration");
+
 const CustomError = require("./customError");
+
+function formatDuration(durationInSec) {
+  const seconds = Math.round(durationInSec);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  const formattedTime = `${hours} hr ${minutes} min ${seconds % 60} sec`;
+
+  return formattedTime;
+}
+
 const getContentLength = async (url, next) => {
   let durationInSec;
 
@@ -16,17 +28,8 @@ const getContentLength = async (url, next) => {
       );
     });
 
-  function FormatDuration(durationInSec) {
-    const seconds = Math.round(durationInSec);
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
+  const formattedTime = formatDuration(durationInSec);
 
-    const formattedTime = `${hours} hr ${minutes} min ${seconds % 60} sec`;
-    return formattedTime;
-  }
-
-  const formattedTime = FormatDuration(durationInSec);
-  console.log(formattedTime);
   return formattedTime;
 };
 
