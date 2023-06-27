@@ -11,9 +11,10 @@ import { fetchContent } from "../store/contentSlice";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
 
 const Browse = () => {
-  const content = useSelector(
-    (state) => state.content.filteredContent || state.content.allContent
-  );
+  const allContent = useSelector((state) => state.content.allContent);
+  const filteredContent = useSelector((state) => state.content.filteredContent);
+
+  const content = allContent;
 
   const LOADING = useSelector((state) => state.content.loading);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -33,7 +34,7 @@ const Browse = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchContent());
+    dispatch(fetchContent("64789b082f388ccff2e33eaa"));
   }, [dispatch]);
 
   return (
@@ -52,8 +53,8 @@ const Browse = () => {
               <video
                 ref={videoRef}
                 className="mx-auto object-cover w-full h-[400px] md:h-[800px]"
-                src={content[0].trailer[0].trailerUrl}
-                poster={content[0].thumbnail[0].thumbnailUrl}
+                src={content[0].trailerUrl}
+                poster={content[0].thumbnailUrl}
                 autoPlay={true}
               ></video>
             </div>

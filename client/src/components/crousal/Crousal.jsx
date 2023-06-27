@@ -32,16 +32,18 @@ const Crousal = ({ content }) => {
         Array.from(content).map((item) => {
           return (
             <PreviewCard
-              key={item._id}
+              key={item.contentId}
               name={item.name}
-              thumbnailUrl={item.thumbnail[0].thumbnailUrl}
-              trailerUrl={item.trailer[0].trailerUrl}
+              thumbnailUrl={item.thumbnailUrl}
+              trailerUrl={item.trailerUrl}
               geners={item.genres}
-              contentId={item._id}
+              contentId={item.contentId}
               rating={item.rating}
               description={item.description}
               cast={item.cast}
               director={item.director}
+              isLiked={item.isLiked}
+              isDisliked={item.isDisliked}
             />
           );
         })}

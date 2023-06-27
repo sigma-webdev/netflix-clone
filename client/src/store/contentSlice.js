@@ -8,19 +8,19 @@ const initialState = {
   currentContent: null,
   filteredContent: [],
   loading: false,
-  contentLoading: true,
 };
 
 export const likeContent = createAsyncThunk(
   "content/likeContent",
-  async (contentId, { rejectWithValue }) => {
+  async ({ contentId, userId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/contents/${contentId}/like`);
+      const response = await axiosInstance.patch(`/contents/${contentId}/like`);
 
       const data = response.data.data;
+      const contentObject = convertResponseToContentObject(data, userId);
       const contenId = data._id;
 
-      return { contenId, data };
+      return { contenId, contentObject };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -29,14 +29,14 @@ export const likeContent = createAsyncThunk(
 
 export const dislikeContent = createAsyncThunk(
   "content/dislikeContent",
-  async (contentId, { rejectWithValue }) => {
+  async ({ contentId, userId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(
+      const response = await axiosInstance.patch(
         `/contents/${contentId}/dislike`
       );
 
-      const data = response.data.data.contents;
-      const contentObject = convertResponseToContentObject(data);
+      const data = response.data.data;
+      const contentObject = convertResponseToContentObject(data, userId);
       const contenId = data._id;
 
       return { contenId, contentObject };
@@ -48,14 +48,18 @@ export const dislikeContent = createAsyncThunk(
 
 export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
-  async (searchText, { rejectWithValue }) => {
+  async ({ searchText, userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
         `/contents?search=${searchText}`
       );
 
       const data = response.data.data.contents;
-      return data;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -64,14 +68,19 @@ export const fetchContentBySearch = createAsyncThunk(
 
 export const fetchContentByCategory = createAsyncThunk(
   "content/fetchContentByCategory",
-  async (category, { rejectWithValue }) => {
+  async ({ category, userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
         `/contents?category=${category}`
       );
+
       const data = response.data.data.contents;
 
-      return data;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -135,13 +144,12 @@ export const deleteContentById = createAsyncThunk(
 
 export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
-  async (contentId, { rejectWithValue }) => {
+  async ({ contentId, userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/contents/${contentId}`);
       const data = response.data.data;
-      const contentObject = convertResponseToContentObject(data);
+      const contentObject = convertResponseToContentObject(data, userId);
 
-      console.log(contentObject);
       return contentObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -151,13 +159,16 @@ export const fetchContentById = createAsyncThunk(
 
 export const fetchContent = createAsyncThunk(
   "content/fetchContent",
-  async (rejectWithValue) => {
+  async (userId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/contents/");
 
       const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
 
-      return data;
+      return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -275,19 +286,16 @@ export const contentSlice = createSlice({
       })
       .addCase(likeContent.fulfilled, (state, action) => {
         const likedContentId = action.payload.contenId;
-        const likedContent = action.payload.data;
+        const likedContent = action.payload.contentObject;
 
-        state.allContent.forEach((item) => {
-          if (item._id === likedContentId) {
-            item.likesCount = likedContent.likesCount;
-            item.disLikesCount = likeContent.disLikesCount;
-          }
-        });
+        const newAllContent = state.allContent.map((content) =>
+          content.contentId === likedContentId ? likedContent : content
+        );
 
+        state.allContent = newAllContent;
         state.loading = false;
       })
       .addCase(likeContent.rejected, (state) => {
-        state.filteredContent = [];
         state.loading = false;
       })
 
@@ -297,19 +305,18 @@ export const contentSlice = createSlice({
       })
       .addCase(dislikeContent.fulfilled, (state, action) => {
         const dislikedContentId = action.payload.contenId;
-        const dislikedContent = action.payload.data;
+        const dislikedContent = action.payload.contentObject;
 
-        state.allContent.forEach((item) => {
-          if (item._id === dislikedContent) {
-            item.likesCount = dislikedContentId.likesCount;
-            item.disLikesCount = dislikedContent.disLikesCount;
-          }
-        });
+        const newAllContent = state.allContent.map((content) =>
+          content.contentId === dislikedContentId ? dislikedContent : content
+        );
+
+        console.log(newAllContent);
+        state.allContent = newAllContent;
 
         state.loading = false;
       })
       .addCase(dislikeContent.rejected, (state) => {
-        state.filteredContent = [];
         state.loading = false;
       });
   },

@@ -13,6 +13,8 @@ const DetailsCard = ({
   cast,
   director,
   handleClose,
+  isLiked,
+  isDisliked,
 }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);

@@ -11,8 +11,10 @@ const Watch = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchContentById(contentId));
-  }, []);
+    dispatch(
+      fetchContentById({ contentId, userId: "64789b082f388ccff2e33eaa" })
+    );
+  }, [dispatch, contentId]);
 
   return (
     <div>
@@ -20,8 +22,8 @@ const Watch = () => {
         ? "...loading"
         : currentContent && (
             <VideoController
-              contentURL={currentContent.content[0].contentURL}
-              thumbnailURL={currentContent.thumbnail[0].thumbnailUrl}
+              contentURL={currentContent.contentURL}
+              thumbnailURL={currentContent.thumbnailUrl}
             />
           )}
     </div>

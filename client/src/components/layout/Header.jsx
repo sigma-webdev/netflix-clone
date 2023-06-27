@@ -27,7 +27,7 @@ const Header = ({ isLogin }) => {
   const SIGN_OUT_LOADING = useSelector((state) => state.auth.signOutLoading);
   const [buttonLoading, setButtonLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [currentCategory, setCategory] = useState(null);
+  const [category, setCategory] = useState(null);
 
   useEffect(() => {
     setButtonLoading(GET_USER_LOADING || SIGN_OUT_LOADING);
@@ -53,13 +53,20 @@ const Header = ({ isLogin }) => {
 
   useEffect(() => {
     setCategory(null);
-    dispatch(fetchContentBySearch(searchText));
+    dispatch(
+      fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
+    );
   }, [searchText]);
 
   useEffect(() => {
     setSearchText("");
-    dispatch(fetchContentByCategory(currentCategory));
-  }, [currentCategory]);
+    dispatch(
+      fetchContentByCategory({
+        category,
+        userId: "64789b082f388ccff2e33eaa",
+      })
+    );
+  }, [category]);
 
   async function handleSignInSignOut() {
     if (!IS_LOGGED_IN) return navigate("/signin");

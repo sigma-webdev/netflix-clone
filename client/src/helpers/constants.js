@@ -1,59 +1,21 @@
-export const Content = class {
-  constructor(
-    name,
-    description,
-    cast,
-    director,
-    thumbnailUrl,
-    trailerUrl,
-    geners,
-    contentId,
-    rating,
-    isLiked,
-    isDisked
-  ) {
-    this.contentId = contentId;
-    this.name = name;
-    this.description = description;
-    this.cast = cast;
-    this.director = director;
-    this.thumbnailUrl = thumbnailUrl;
-    this.trailerUrl = trailerUrl;
-    this.geners = geners;
-    this.rating = rating;
-    this.isLiked = isLiked;
-    this.isDisked = isDisked;
-  }
-};
+export const convertResponseToContentObject = (data, userId) => {
+  const isLiked = data.likes.find((item) => item === userId) ? true : false;
+  const isDisliked = data.dislikes.find((item) => item === userId)
+    ? true
+    : false;
 
-export const convertResponseToContentObject = (
-  name,
-  description,
-  cast,
-  director,
-  thumbnailUrl,
-  trailerUrl,
-  geners,
-  contentId,
-  rating,
-  likes,
-  dislikes,
-  userId
-) => {
-  const isLiked = likes.find((item) => item === userId) ? true : false;
-  const isDisliked = dislikes.find((item) => item === userId) ? true : false;
-
-  return Content(
-    contentId,
-    name,
-    description,
-    cast,
-    director,
-    thumbnailUrl,
-    trailerUrl,
-    geners,
-    rating,
-    isLiked,
-    isDisliked
-  );
+  return {
+    contentId: data._id.toString(),
+    name: data.name,
+    description: data.description,
+    cast: data.cast,
+    director: data.director,
+    thumbnailUrl: data.thumbnail[0].thumbnailUrl,
+    trailerUrl: data.trailer[0].trailerUrl,
+    contentUrl: data.content[0].contentURL,
+    genres: data.genres,
+    rating: data.rating,
+    isLiked: isLiked,
+    isDisliked: isDisliked,
+  };
 };

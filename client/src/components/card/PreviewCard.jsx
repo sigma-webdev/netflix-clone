@@ -1,15 +1,10 @@
 import { Link } from "react-router-dom";
-import {
-  AddIcon,
-  DisLikeIcon,
-  DownArrowIcon,
-  LikeIcon,
-  PlayIcon,
-} from "../icons";
+import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
 import { createPortal } from "react-dom";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { dislikeContent, likeContent } from "../../store/contentSlice";
 
 const PreviewCard = ({
   name,
@@ -21,26 +16,22 @@ const PreviewCard = ({
   geners,
   contentId,
   rating,
+  isLiked,
+  isDisliked,
 }) => {
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.user.userData);
-
-  const [isLiked, setIsLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
   };
 
-  const likeContent = () => {
-    dispatch(likeContent());
-    setIsLiked(!isLiked);
+  const likeContentHanlder = () => {
+    dispatch(likeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
   };
 
-  const dislikeContent = () => {
-    dispatch(dislikeContent());
-    setIsDisliked(!isDisliked);
+  const dislikeContentHanlder = () => {
+    dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
   };
 
   return (
@@ -64,10 +55,10 @@ const PreviewCard = ({
                 <PlayIcon />
               </Link>
             </div>
-            <div onClick={likeContent} className="cursor-pointer">
+            <div onClick={likeContentHanlder} className="cursor-pointer">
               <LikeIcon isLiked={isLiked} />
             </div>
-            <div onClick={dislikeContent} className="cursor-pointer">
+            <div onClick={dislikeContentHanlder} className="cursor-pointer">
               <DisLikeIcon isDisliked={isDisliked} />
             </div>
           </div>
