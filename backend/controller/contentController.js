@@ -5,10 +5,7 @@ const Content = require("../model/contentSchema.js");
 const getContentLength = require("../utils/getVideoLength.js");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
-const {
-  cloudinaryFileDelete,
-  cloudinaryImageDelete,
-} = require("../utils/fileDelete.cloudinary.js");
+const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
 
 /**
  * Testing route
@@ -30,7 +27,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    categories,
+    contentType,
     genres,
     rating,
     language,
@@ -39,13 +36,12 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     originCountry,
   } = req.body;
 
-  // console.log("req.body originCountry ---", originCountry);
-
+  // setting default value to file values
   let details = {
     name,
     description,
     releaseDate,
-    categories,
+    contentType,
     genres,
     rating,
     language,
@@ -59,7 +55,6 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
           "https://res.cloudinary.com/dp3qsxfn5/image/upload/v1687258494/default_thumbnail_mi4zwc.webp",
       },
     ],
-
     // default trailer value
     trailer: [
       {
@@ -85,15 +80,12 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     details.content[0].contentDuration = contentLength;
   }
 
-  // console.log("origin Country", originCountry);
-  // console.log("origin Country", details);
-
   // checking for missing fields
   const requiredFields = [
     "name",
     "description",
     "releaseDate",
-    "categories",
+    "contentType",
     "genres",
     "rating",
     "language",
@@ -109,14 +101,13 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     const missingField = missingRequiredFields[0];
     return next(new CustomError(`Missing Field - ${missingField}`));
   }
-  // file upload will be done in the update section
 
+  // create mongoose
   const contentDetails = Content(details);
-
-  // console.log("contentDetails --------------w", contentDetails);
 
   const contentData = await contentDetails.save();
 
+  // check for contentData
   if (!contentData) {
     return next(
       new CustomError("Content fail to save to database! Please try again", 400)
@@ -160,7 +151,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   // content Movies or Series
   if (category) {
-    query["categories"] = new RegExp(category, "i");
+    query["contentType"] = new RegExp(category, "i");
   }
 
   // contents with specific genre
@@ -170,7 +161,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   const sorting = {};
   if (latest) sorting["latestContent"] = { releaseDate: -1 };
 
-  //TODO: work with most likes --------
   // get most-likes
   if (mostLikes) {
     sorting["likesCount"] = { likesCount: -1 };
@@ -276,15 +266,15 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
     .deleteOne()
     .then(() => {
       if (content[0].contentID) {
-        cloudinaryFileDelete(content[0].contentID);
+        cloudinaryFileDelete(content[0].contentID, next);
       }
 
       if (trailer[0].trailerId) {
-        cloudinaryFileDelete(trailer[0].trailerId);
+        cloudinaryFileDelete(trailer[0].trailerId, next);
       }
 
       if (thumbnail[0].thumbnailID) {
-        cloudinaryImageDelete(thumbnail[0].thumbnailID);
+        cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
       }
     })
     .catch((error) => {
@@ -347,7 +337,11 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       contentData.thumbnail.length > 0 &&
       contentData.thumbnail[0]?.thumbnailID
     ) {
-      cloudinaryImageDelete(contentData.thumbnail[0]?.thumbnailID, next);
+      cloudinaryFileDelete(
+        contentData.thumbnail[0]?.thumbnailID,
+        next,
+        "image"
+      );
     }
 
     contentFiles = await cloudinaryFileUpload(files, next);
@@ -372,13 +366,17 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   ).catch((error) => {
     // DELETE File passing particularId
     if (contentFiles.trailer) {
-      cloudinaryFileDelete(contentFiles.trailer[0].trailerId);
+      cloudinaryFileDelete(contentFiles.trailer[0].trailerId, next);
     }
     if (contentFiles.content) {
-      cloudinaryFileDelete(contentFiles.content[0].contentID);
+      cloudinaryFileDelete(contentFiles.content[0].contentID, next);
     }
     if (contentFiles.thumbnail) {
-      cloudinaryImageDelete(contentFiles.thumbnail[0].thumbnailID);
+      cloudinaryFileDelete(
+        contentFiles.thumbnail[0].thumbnailID,
+        next,
+        "image"
+      );
     }
     return next(new CustomError(`File not able to save!- ${error}`, 404));
   });

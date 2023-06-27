@@ -19,17 +19,10 @@ import SignOut from "../components/signUp/SignOut";
 import { SIGN_OUT } from "../store/authSlice";
 import PaymentSuccess from "../components/signUp/PaymentSuccess";
 const SignUp = ({ page, theme = "light" }) => {
-  const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
-  const SIGN_IN_LOADING = useSelector((state) => state.auth.signInLoading);
-  const SIGN_OUT_LOADING = useSelector((state) => state.auth.signOutLoading);
-  const [buttonLoading, setButtonLoading] = useState(false);
+  const { loading } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    setButtonLoading(GET_USER_LOADING || SIGN_IN_LOADING || SIGN_OUT_LOADING);
-  }, [GET_USER_LOADING, SIGN_IN_LOADING, SIGN_OUT_LOADING]);
 
   const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
 
@@ -56,14 +49,12 @@ const SignUp = ({ page, theme = "light" }) => {
           <img className="h-8  md:h-12" src={netflixLogo} alt="netflix logo" />
         </Link>
         {/* sign-in sign-out button */}
-        {buttonLoading ? (
+        {loading ? (
           <Loading color="black" />
         ) : (
           <button
             onClick={() => {
-              {
-                IS_LOGGED_IN ? handleSignOut() : navigate("/signin");
-              }
+              IS_LOGGED_IN ? handleSignOut() : navigate("/signin");
             }}
             className={
               page === "SIGN_OUT"
