@@ -17,7 +17,7 @@ require("./config/databaseConnection");
 app.use(
   cors({
     origin: [process.env.CLIENT],
-    credentials: true
+    credentials: true,
   })
 );
 
@@ -28,13 +28,13 @@ app.use(cookieParser());
 app.use(
   fileUpLoad({
     useTempFiles: true,
-    tempFileDir: "/tmp/"
+    tempFileDir: "/tmp/",
   })
 );
 
 // routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/content", contentRoute);
+app.use("/api/v1/contents", contentRoute);
 app.use("/api/v1/payment", paymentRouter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
