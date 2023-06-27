@@ -137,7 +137,17 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
  * @return { Object } content object
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
-  const { search, category, genre, display, page, limit, latest } = req.query;
+  const {
+    search,
+    category,
+    genre,
+    display,
+    page,
+    limit,
+    latest,
+    mostLikes,
+    trending,
+  } = req.query;
   const query = {};
   const PAGE = Number(page) || 1;
   const LIMIT = Number(limit) || 20;
@@ -159,6 +169,16 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   // get latest move - release date -
   const sorting = {};
   if (latest) sorting["latestContent"] = { releaseDate: -1 };
+
+  //TODO: work with most likes --------
+  // get most-likes
+  if (mostLikes) {
+    sorting["likesCount"] = { likesCount: -1 };
+  }
+  // get most trending movies
+  if (trending) {
+    sorting["trending"] = { trending: -1 };
+  }
 
   // pagination
   const totalContents = await Content.find(query).countDocuments();
@@ -188,7 +208,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
-    .sort(sorting.latestContent);
+    .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
 
   // if no content available
 
@@ -210,6 +230,12 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   const contentData = await Content.findById(contentId);
+
+  if (contentData) {
+    contentData.trending += 1;
+    await contentData.save();
+  }
+  console.log("content Trending ===", contentData.trending);
 
   if (!contentData) {
     return next(
@@ -378,7 +404,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
  ********************/
 /******* User likes ****** */
 const contentLikes = asyncHandler(async (req, res, next) => {
-  const { contentId } = req.params;
+  const { contentId, action } = req.params;
   const { id: userId } = req.user;
 
   const content = await Content.findById(contentId);
@@ -387,22 +413,44 @@ const contentLikes = asyncHandler(async (req, res, next) => {
     return next(new CustomError("content is not available", 404));
   }
 
-  if (content.likes.includes(userId)) {
-    content.likes.pop(userId);
-    await content.save();
-
-    return res.status(200).json({
-      message: "content disliked",
-      data: content,
-    });
-  } else {
-    content.likes.push(userId);
-    await content.save();
-    return res.status(200).json({
-      message: "content liked",
-      data: content,
-    });
+  const dislikeArr = content.dislikes;
+  const likeArr = content.likes;
+  let message = "";
+  if (action === "like") {
+    if (likeArr.includes(userId)) {
+      likeArr.pop(userId);
+      message = "removed like";
+    } else if (dislikeArr.includes(userId)) {
+      dislikeArr.pop(userId);
+      likeArr.push(userId);
+      message = " liked";
+    } else {
+      likeArr.push(userId);
+      message = " liked";
+    }
   }
+
+  if (action === "dislike") {
+    if (dislikeArr.includes(userId)) {
+      message = "remove dislike";
+      dislikeArr.pop(userId);
+    } else if (likeArr.includes(userId)) {
+      likeArr.pop(userId);
+      dislikeArr.push(userId);
+      message = "disliked";
+    } else {
+      dislikeArr.push(userId);
+      message = "disliked";
+    }
+  }
+
+  content.likes = likeArr;
+  content.dislikes = dislikeArr;
+  await content.save();
+  return res.status(200).json({
+    message: message,
+    data: content,
+  });
 });
 
 module.exports = {
