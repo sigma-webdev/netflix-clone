@@ -7,7 +7,7 @@ const {
   httpGetContentById,
   httpDeleteById,
   httpUpdateById,
-  contentLikes,
+  contentLikes
 } = require("../controller/contentController");
 const jwtAuth = require("../middleware/jwtAuth");
 

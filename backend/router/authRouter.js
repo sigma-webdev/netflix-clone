@@ -10,9 +10,8 @@ const {
   forgotPassword,
   resetPassword,
   userExist,
-  getUser,
-  signOut,
-} = require("../controller/userController.js");
+  signOut
+} = require("../controller/authController.js");
 
 authRoute.post("/signup", signUp);
 authRoute.post("/signin", signIn);
@@ -20,6 +19,7 @@ authRoute.post("/forgot-password", forgotPassword);
 authRoute.post("/reset-password/:token", resetPassword);
 authRoute.post("/user-exist", userExist);
 authRoute.get("/user", jwtAuth, getUser);
+
 authRoute.get("/signout", jwtAuth, signOut);
 
 module.exports = authRoute;

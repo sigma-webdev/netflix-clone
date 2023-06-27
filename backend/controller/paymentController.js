@@ -60,8 +60,6 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   });
 });
 
-
-
 const getRazorpayApiKey = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
@@ -115,4 +113,8 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { createSubscription, getRazorpayApiKey, verifySubscription };
+module.exports = {
+  createSubscription,
+  getRazorpayApiKey,
+  verifySubscription
+};

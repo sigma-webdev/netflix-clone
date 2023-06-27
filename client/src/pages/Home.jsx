@@ -35,11 +35,9 @@ const Home = () => {
     const isEmailValid = validator.validate(e.target.email.value);
     if (!isEmailValid) return toast.error("please enter valid email 📩");
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
-    if (isUserExist.payload.isUserExist) {
-      localStorage.setItem("email", e.target.email.value);
+    if (isUserExist.payload.data.isUserExist) {
       navigate("/signup/password");
     } else {
-      localStorage.setItem("email", e.target.email.value);
       navigate("signup/registration");
     }
   }

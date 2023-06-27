@@ -8,7 +8,7 @@ import { Loading } from "../icons.jsx";
 function Password() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const email = localStorage.getItem("email");
+  const email = localStorage.getItem("netflixCloneEmail");
   const SIGN_IN_LOADING = useSelector((state) => state.auth.signInLoading);
 
   async function handleSignIn(e) {

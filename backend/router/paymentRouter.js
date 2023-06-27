@@ -9,6 +9,7 @@ const paymentRouter = express.Router();
 
 paymentRouter.route("/subscribe").post(jwtAuth, createSubscription);
 paymentRouter.route("/razorpaykey").get(jwtAuth, getRazorpayApiKey);
+
 paymentRouter.route("/verify-subscription").post(jwtAuth, verifySubscription);
 
 module.exports = paymentRouter;

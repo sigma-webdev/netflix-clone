@@ -31,7 +31,7 @@ function PlanForm() {
     setButtonLoading(RASORPAY_KEY_LOADING || CREATE_SUBSCRIPTION_LOADING);
   }, [RASORPAY_KEY_LOADING, CREATE_SUBSCRIPTION_LOADING]);
 
-  // for storing the payment details after successfull transaction
+  // for storing the payment details after successful transaction
   const paymentDetails = {
     razorpay_payment_id: "",
     razorpay_subscription_id: "",
@@ -150,7 +150,7 @@ function PlanForm() {
           <div
             className={
               plan === "STANDARD"
-                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
+                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#333e9a]  to-[#a838d7]"
                 : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500"
             }
           >
@@ -186,7 +186,7 @@ function PlanForm() {
           <div
             className={
               plan === "BASIC"
-                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
+                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#343e99]  to-[#6a3bdf]"
                 : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
             }
           >
@@ -222,7 +222,7 @@ function PlanForm() {
           <div
             className={
               plan === "MOBILE"
-                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
+                ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#31409a]  to-[#256ad6]"
                 : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500"
             }
           >

@@ -43,7 +43,7 @@ const contentSchema = new mongoose.Schema(
     ],
     disLikesCount: {
       type: Number,
-      default: 0,
+      default: 0
     },
     genres: {
       type: [String],
@@ -60,8 +60,8 @@ const contentSchema = new mongoose.Schema(
         "Sci-fi & Fantasy",
         "Sports",
         "Thrillers",
-        "Adventure",
-      ],
+        "Adventure"
+      ]
     },
     director: {
       type: String,
@@ -69,7 +69,7 @@ const contentSchema = new mongoose.Schema(
     },
     rating: {
       type: String,
-      required: true,
+      required: true
     },
     language: {
       type: String,
@@ -80,54 +80,67 @@ const contentSchema = new mongoose.Schema(
         "Japan",
         "Tamil",
         "Spanish",
-        "German",
-      ],
+        "German"
+      ]
     },
     thumbnail: [
       {
         thumbnailUrl: {
           type: String,
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp"
         },
         thumbnailID: {
-          type: String,
-        },
-      },
+          type: String
+          // required: [true, "Thumbnail Id should be provided"],
+        }
+      }
     ],
     trailer: [
       {
         trailerUrl: {
           type: String,
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png"
+          // required: [true, "trailer video link must be provided"],
         },
-        trailerId: { type: String },
-      },
+        trailerId: { type: String }
+      }
     ],
 
     content: [
       {
         contentURL: {
           type: String,
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png"
+
+          // required: [true, "Content video link must be provided"],
         },
         contentID: {
-          type: String,
+          type: String
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: String },
-      },
+        contentDuration: { type: String }
+      }
     ],
     // TODO: add series pending work
     episodes: [
       {
         episodeURL: {
-          type: String,
+          type: String
         },
         episodeId: {
-          type: String,
-        },
-      },
+          type: String
+        }
+      }
     ],
     display: {
       type: Boolean,
-      default: false,
+      default: false
     },
     originCountry: {
       type: String,
@@ -135,8 +148,8 @@ const contentSchema = new mongoose.Schema(
     },
     trending: {
       type: Number,
-      default: 0,
-    },
+      default: 0
+    }
   },
   {
     timestamps: true,
