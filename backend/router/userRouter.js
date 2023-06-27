@@ -6,12 +6,14 @@ const {
   getUser,
   getUsers,
   contentWatchHistory,
-  getWatchContent
+  getWatchContent,
+  removeContentFromWatchHistory,
 } = require("../controller/userController.js");
 
 userRouter
   .route("/watchhistory/:contentId")
-  .patch(jwtAuth, contentWatchHistory);
+  .patch(jwtAuth, contentWatchHistory)
+  .delete(jwtAuth, removeContentFromWatchHistory);
 userRouter
   .route("/watchhistory")
   .get(jwtAuth, checkUserSubscription, getWatchContent);
