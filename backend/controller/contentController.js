@@ -20,7 +20,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    categories,
+    contentType,
     genres,
     rating,
     language,
@@ -34,7 +34,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    categories,
+    contentType,
     genres,
     rating,
     language,
@@ -57,15 +57,15 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
       },
     ],
     // default content value
-    content: [
-      {
-        contentURL:
-          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
-      },
-    ],
+    // content: [
+    //   {
+    //     contentURL:
+    //       "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+    //   },
+    // ],
   };
 
-  // (details.categories === "Movie") ?
+  // (details.contentType === "Movie") ?
   //   details.content[0].contentURL = "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4"
 
   // get content video length
@@ -82,7 +82,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     "name",
     "description",
     "releaseDate",
-    "categories",
+    "contentType",
     "genres",
     "rating",
     "language",
@@ -148,7 +148,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   // content Movies or Series
   if (category) {
-    query["categories"] = new RegExp(category, "i");
+    query["contentType"] = new RegExp(category, "i");
   }
 
   // contents with specific genre
