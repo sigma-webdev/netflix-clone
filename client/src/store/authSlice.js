@@ -4,12 +4,9 @@ import toast from "react-hot-toast";
 const initialState = {
   isLoggedIn: false,
   userData: {},
-  signInLoading: false,
-  signOutLoading: false,
-  signUpLoading: false,
-  getUserLoading: false,
+  loading: false,
   forgotPasswordLoading: false,
-  resetPasswordLoading: false
+  resetPasswordLoading: false,
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
@@ -107,85 +104,85 @@ const authSlice = createSlice({
     builder
       //   signIn
       .addCase(SIGN_IN.pending, (state) => {
-        state.signInLoading = true;
+        state.loading = true;
       })
       .addCase(SIGN_IN.fulfilled, (state, action) => {
         state.user = action.payload.data;
         state.isLoggedIn = true;
-        state.signInLoading = false;
+        state.loading = false;
+        toast.success(action?.payload?.message);
       })
       .addCase(SIGN_IN.rejected, (state, action) => {
-        state.signInLoading = false;
+        state.loading = false;
         toast.error(action.payload.message);
       })
 
       // signUp
       .addCase(SIGN_UP.pending, (state) => {
-        state.signUpLoading = true;
+        state.loading = true;
       })
       .addCase(SIGN_UP.fulfilled, (state, action) => {
         state.user = action.payload.data;
         state.isLoggedIn = true;
-        state.signUpLoading = false;
-        toast.success("successfully signup");
+        state.loading = false;
+        toast.success(action?.payload?.message);
       })
       .addCase(SIGN_UP.rejected, (state, action) => {
-        state.signUpLoading = false;
-        toast.error(action.payload.message);
+        state.loading = false;
+        toast.error(action?.payload?.message);
       })
 
       // get user
       .addCase(GET_USER.pending, (state) => {
-        state.getUserLoading = true;
+        state.loading = true;
       })
       .addCase(GET_USER.fulfilled, (state, action) => {
         state.userData = action.payload.data;
         state.isLoggedIn = true;
-        state.getUserLoading = false;
+        state.loading = false;
       })
       .addCase(GET_USER.rejected, (state, action) => {
-        state.getUserLoading = false;
+        state.loading = false;
       })
 
       // sign out
       .addCase(SIGN_OUT.pending, (state) => {
-        state.signOutLoading = true;
+        state.loading = true;
       })
       .addCase(SIGN_OUT.fulfilled, (state) => {
         state.isLoggedIn = false;
         state.userData = {};
-        state.signOutLoading = false;
+        state.loading = false;
       })
       .addCase(SIGN_OUT.rejected, (state) => {
-        state.signOutLoading = false;
+        state.loading = false;
       })
 
       // forgotPassword
       .addCase(FORGOT_PASSWORD.pending, (state) => {
-        state.forgotPasswordLoading = true;
+        state.loading = true;
       })
       .addCase(FORGOT_PASSWORD.fulfilled, (state, action) => {
-        state.forgotPasswordLoading = false;
+        state.loading = false;
       })
       .addCase(FORGOT_PASSWORD.rejected, (state, action) => {
-        state.forgotPasswordLoading = false;
+        state.loading = false;
         toast.error(action.payload.message);
       })
 
       // reset Password
       .addCase(RESET_PASSWORD.pending, (state) => {
-        state.resetPasswordLoading = true;
+        state.loading = true;
       })
       .addCase(RESET_PASSWORD.fulfilled, (state, action) => {
-        state.resetPasswordLoading = false;
+        state.loading = false;
         toast.success("successfully updated the password");
       })
       .addCase(RESET_PASSWORD.rejected, (state, action) => {
-        state.resetPasswordLoading = false;
+        state.loading = false;
         toast.error(action.payload.message);
       });
-  }
+  },
 });
 
-export const {} = authSlice.actions;
 export default authSlice.reducer;

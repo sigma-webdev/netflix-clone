@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 // icons
-import { GlobeIcon } from "../icons";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiBell } from "react-icons/bi";
 import { Loading } from "../icons.jsx";
@@ -102,30 +101,19 @@ const Header = ({ isLogin }) => {
       </div>
 
       {!isLogin ? (
-        <div className="flex gap-x-2">
-          <div className="flex items-center h-fit bg-black text-white border-2 border-white rounded px-3 py-1">
-            <GlobeIcon />
-            <select className="bg-transparent rounded" defaultValue={"English"}>
-              <option value="English">English</option>
-              <option value="Hindi">Hindi</option>
-            </select>
-          </div>
-          <div>
-            <button
-              type="button"
-              onClick={() => {
-                handleSignInSignOut();
-              }}
-              className="px-3 py-1 bg-red-600 rounded text-white border-2 border-red-600"
-            >
-              {buttonLoading ? (
-                <Loading />
-              ) : (
-                <>{IS_LOGGED_IN ? "Sign out" : "Sign In"}</>
-              )}
-            </button>
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={() => {
+            handleSignInSignOut();
+          }}
+          className="px-3 py-1 bg-red-600 rounded text-white border-2 border-red-600"
+        >
+          {buttonLoading ? (
+            <Loading />
+          ) : (
+            <>{IS_LOGGED_IN ? "Sign out" : "Sign In"}</>
+          )}
+        </button>
       ) : (
         <div className="flex h-fit items-center gap-3">
           <IconContext.Provider value={{ size: "25px" }}>
@@ -138,14 +126,22 @@ const Header = ({ isLogin }) => {
           </IconContext.Provider>
           <div className="flex items-center gap-2">
             <div className="w-10 rounded overflow-hidden">
-              <img src={netflixAvatar} className="object-contain" />
+              <img
+                src={netflixAvatar}
+                className="object-contain"
+                alt="avatar"
+              />
             </div>
 
             <Menu>
               <ul className="bg-netflix-black p-4 rounded">
                 <li className="flex items-center gap-4">
                   <div className="w-8 rounded overflow-hidden">
-                    <img src={netflixAvatar} className="object-contain" />
+                    <img
+                      src={netflixAvatar}
+                      className="object-contain"
+                      alt="menu"
+                    />
                   </div>
 
                   <div>{user.name}</div>
