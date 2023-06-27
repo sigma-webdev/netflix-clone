@@ -5,10 +5,7 @@ const Content = require("../model/contentSchema.js");
 const getContentLength = require("../utils/getVideoLength.js");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
-const {
-  cloudinaryFileDelete,
-  cloudinaryImageDelete,
-} = require("../utils/fileDelete.cloudinary.js");
+const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
 
 /**
  * Testing route
@@ -271,15 +268,15 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
     .deleteOne()
     .then(() => {
       if (content[0].contentID) {
-        cloudinaryFileDelete(content[0].contentID);
+        cloudinaryFileDelete(content[0].contentID, next);
       }
 
       if (trailer[0].trailerId) {
-        cloudinaryFileDelete(trailer[0].trailerId);
+        cloudinaryFileDelete(trailer[0].trailerId, next);
       }
 
       if (thumbnail[0].thumbnailID) {
-        cloudinaryImageDelete(thumbnail[0].thumbnailID);
+        cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
       }
     })
     .catch((error) => {
@@ -342,7 +339,11 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       contentData.thumbnail.length > 0 &&
       contentData.thumbnail[0]?.thumbnailID
     ) {
-      cloudinaryImageDelete(contentData.thumbnail[0]?.thumbnailID, next);
+      cloudinaryFileDelete(
+        contentData.thumbnail[0]?.thumbnailID,
+        next,
+        "image"
+      );
     }
 
     contentFiles = await cloudinaryFileUpload(files, next);
@@ -367,13 +368,17 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   ).catch((error) => {
     // DELETE File passing particularId
     if (contentFiles.trailer) {
-      cloudinaryFileDelete(contentFiles.trailer[0].trailerId);
+      cloudinaryFileDelete(contentFiles.trailer[0].trailerId, next);
     }
     if (contentFiles.content) {
-      cloudinaryFileDelete(contentFiles.content[0].contentID);
+      cloudinaryFileDelete(contentFiles.content[0].contentID, next);
     }
     if (contentFiles.thumbnail) {
-      cloudinaryImageDelete(contentFiles.thumbnail[0].thumbnailID);
+      cloudinaryFileDelete(
+        contentFiles.thumbnail[0].thumbnailID,
+        next,
+        "image"
+      );
     }
     return next(new CustomError(`File not able to save!- ${error}`, 404));
   });
