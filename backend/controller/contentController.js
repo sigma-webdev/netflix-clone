@@ -7,13 +7,6 @@ const getContentLength = require("../utils/getVideoLength.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
 
-/**
- * Testing route
- */
-const contentApi = asyncHandler(async (req, res, next) => {
-  res.send("Pong");
-});
-
 /********************
  * @httpPostContent
  * @route http://localhost:8081/api/v1/content/
