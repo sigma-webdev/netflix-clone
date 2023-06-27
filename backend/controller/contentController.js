@@ -39,8 +39,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     originCountry,
   } = req.body;
 
-  // console.log("req.body originCountry ---", originCountry);
-
+  // setting default value to file values
   let details = {
     name,
     description,
@@ -85,9 +84,6 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     details.content[0].contentDuration = contentLength;
   }
 
-  // console.log("origin Country", originCountry);
-  // console.log("origin Country", details);
-
   // checking for missing fields
   const requiredFields = [
     "name",
@@ -109,14 +105,13 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     const missingField = missingRequiredFields[0];
     return next(new CustomError(`Missing Field - ${missingField}`));
   }
-  // file upload will be done in the update section
 
+  // create mongoose
   const contentDetails = Content(details);
-
-  // console.log("contentDetails --------------w", contentDetails);
 
   const contentData = await contentDetails.save();
 
+  // check for contentData
   if (!contentData) {
     return next(
       new CustomError("Content fail to save to database! Please try again", 400)
@@ -170,7 +165,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   const sorting = {};
   if (latest) sorting["latestContent"] = { releaseDate: -1 };
 
-  //TODO: work with most likes --------
   // get most-likes
   if (mostLikes) {
     sorting["likesCount"] = { likesCount: -1 };
