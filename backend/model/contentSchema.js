@@ -7,34 +7,44 @@ const contentSchema = new Schema(
     name: {
       type: String,
       required: [true, "Content name is required"],
-      minLength: [1, "Content movie name must be at least 5 characters"],
-      maxLength: [40, "Content movie name must be less than 40 characters"]
+      minLength: [5, "Content movie name must be at least 5 characters"],
+      maxLength: [40, "Content movie name must be less than 40 characters"],
     },
     description: {
       type: String,
       required: [true, "Content description is required"],
       minLength: [15, "Content description must be at least 15 characters"],
-      maxLength: [250, "Content description must be less than 100 characters "]
+      maxLength: [250, "Content description must be less than 250 characters "],
     },
     releaseDate: {
       type: Date,
-      required: [true, "Content release date required!"]
+      required: [true, "Content release date is required!"],
     },
     cast: [String],
     categories: {
       type: String,
-      enum: ["Movies", "Series"],
-      required: true
+      enum: ["Movie", "Series"],
+      required: true,
     },
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "userModel"
-      }
+        ref: "User",
+      },
+    ],
+    likesCount: {
+      type: Number,
+      default: 0,
+    },
+    dislikes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
     ],
     disLikesCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
 
     genres: {
@@ -52,15 +62,16 @@ const contentSchema = new Schema(
         "Sci-fi & Fantasy",
         "Sports",
         "Thrillers",
-        "Adventure"
-      ]
+        "Adventure",
+      ],
     },
     director: {
-      type: String
+      type: String,
+      required: [true, "Director is required"],
     },
     rating: {
       type: String,
-      required: true
+      required: true,
     },
     language: {
       type: String,
@@ -71,8 +82,8 @@ const contentSchema = new Schema(
         "Japan",
         "Tamil",
         "Spanish",
-        "German"
-      ]
+        "German",
+      ],
     },
     thumbnail: [
       {
@@ -80,13 +91,13 @@ const contentSchema = new Schema(
           type: String,
 
           default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp"
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp",
         },
         thumbnailID: {
-          type: String
+          type: String,
           // required: [true, "Thumbnail Id should be provided"],
-        }
-      }
+        },
+      },
     ],
     trailer: [
       {
@@ -94,11 +105,11 @@ const contentSchema = new Schema(
           type: String,
 
           default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png"
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
           // required: [true, "trailer video link must be provided"],
         },
-        trailerId: { type: String }
-      }
+        trailerId: { type: String },
+      },
     ],
 
     content: [
@@ -107,40 +118,40 @@ const contentSchema = new Schema(
           type: String,
 
           default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png"
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
 
           // required: [true, "Content video link must be provided"],
         },
         contentID: {
-          type: String
+          type: String,
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: String }
-      }
+        contentDuration: { type: String },
+      },
     ],
     // TODO: add series pending work
     episodes: [
       {
         episodeURL: {
-          type: String
+          type: String,
         },
         episodeId: {
-          type: String
-        }
-      }
+          type: String,
+        },
+      },
     ],
     display: {
       type: Boolean,
-      default: false
+      default: false,
     },
     originCountry: {
       type: String,
-      enum: ["India", "USA", "Korean", "Japan", "German", "Spain"]
+      enum: ["India", "USA", "Korea", "Japan", "German", "Spain"],
     },
     trending: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
 
   { timestamps: true }

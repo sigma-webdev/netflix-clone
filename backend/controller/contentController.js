@@ -7,13 +7,6 @@ const getContentLength = require("../utils/getVideoLength.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
 
-/**
- * Testing route
- */
-const contentApi = asyncHandler(async (req, res, next) => {
-  res.send("Pong");
-});
-
 /********************
  * @httpPostContent
  * @route http://localhost:8081/api/v1/content/
@@ -64,13 +57,16 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
       },
     ],
     // default content value
-    content: [
-      {
-        contentURL:
-          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
-      },
-    ],
+    // content: [
+    //   {
+    //     contentURL:
+    //       "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+    //   },
+    // ],
   };
+
+  // (details.contentType === "Movie") ?
+  //   details.content[0].contentURL = "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4"
 
   // get content video length
   if (details.content[0].contentURL) {
@@ -199,6 +195,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
+    // TODO: testing fail - work on it
     .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
 
   // if no content available
@@ -453,7 +450,6 @@ const contentLikes = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = {
-  contentApi,
   httpPostContent,
   httpGetContent,
   httpGetContentById,
