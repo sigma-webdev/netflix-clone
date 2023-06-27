@@ -6,18 +6,18 @@ import { useState } from "react";
 import netflixLogo from "../assets/netflix_logo.png";
 import { Loading } from "../components/icons";
 //components
-import Registration from "../components/signUp/Registration.jsx";
-import RegForm from "../components/signUp/RegForm.jsx";
-import Password from "../components/signUp/Password.jsx";
-import Choose from "../components/signUp/Choose";
-import PlanForm from "../components/signUp/PlanForm";
-import ResetPassword from "../components/signUp/ResetPassword.jsx";
-import LoginHelp from "../components/signUp/LoginHelp.jsx";
-import ForgotPassword from "../components/signUp/ForgotPassword.jsx";
-import SignOut from "../components/signUp/SignOut";
+import Registration from "../components/signup/Registration.jsx";
+import RegForm from "../components/signup/RegForm.jsx";
+import Password from "../components/signup/Password.jsx";
+import Choose from "../components/signup/Choose";
+import PlanForm from "../components/signup/PlanForm";
+import ResetPassword from "../components/signup/ResetPassword.jsx";
+import LoginHelp from "../components/signup/LoginHelp.jsx";
+import ForgotPassword from "../components/signup/ForgotPassword.jsx";
+import SignOut from "../components/signup/SignOut";
 // thunk
 import { SIGN_OUT } from "../store/authSlice";
-import PaymentSuccess from "../components/signUp/PaymentSuccess";
+import PaymentSuccess from "../components/signup/PaymentSuccess";
 const SignUp = ({ page, theme = "light" }) => {
   const { loading } = useSelector((state) => state.auth);
 
