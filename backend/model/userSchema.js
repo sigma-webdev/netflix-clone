@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 const crypto = require("crypto");
+const contentModel = require("./contentSchema");
 
-const userSchema = new Schema(
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -14,16 +14,11 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
-      required: [true, "user email is required"],
+      required: [true, "Email is required"],
       unique: true,
       lowercase: true,
-      unique: [true, "already registered"],
     },
     password: {
-      type: String,
-      select: false,
-    },
-    forgotPasswordToken: {
       type: String,
       select: false,
     },
@@ -32,11 +27,20 @@ const userSchema = new Schema(
       default: "NONE",
       enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"],
     },
+    watchHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Content" }],
     subscription: {
       id: String,
       status: String,
     },
-    role: { type: String, default: "USER", enum: ["ADMIN", "USER"] },
+    role: {
+      type: String,
+      default: "USER",
+      enum: ["ADMIN", "USER"],
+    },
+    forgotPasswordToken: {
+      type: String,
+      select: false,
+    },
     forgotPasswordExpiryDate: { type: Date, select: false },
   },
   { timestamps: true }
@@ -69,12 +73,12 @@ userSchema.methods = {
   generateJwtToken() {
     const token = JWT.sign(
       { id: this._id, email: this.email },
-      process.env.SECRETE,
-      { expiresIn: 24 * 60 * 60 * 1000 } //24
+      process.env.SECRETE, // FIXME: Spelling mistake - It must be SECRET
+      { expiresIn: 24 * 60 * 60 * 1000 } // 24 hours
     );
     return token;
   },
 };
 
-const userModel = mongoose.model("user", userSchema);
+const userModel = mongoose.model("User", userSchema);
 module.exports = userModel;

@@ -7,13 +7,6 @@ const getContentLength = require("../utils/getVideoLength.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
 
-/**
- * Testing route
- */
-const contentApi = asyncHandler(async (req, res, next) => {
-  res.send("Pong");
-});
-
 /********************
  * @httpPostContent
  * @route http://localhost:8081/api/v1/content/
@@ -27,7 +20,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    categories,
+    contentType,
     genres,
     rating,
     language,
@@ -41,7 +34,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    categories,
+    contentType,
     genres,
     rating,
     language,
@@ -55,7 +48,6 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
           "https://res.cloudinary.com/dp3qsxfn5/image/upload/v1687258494/default_thumbnail_mi4zwc.webp",
       },
     ],
-
     // default trailer value
     trailer: [
       {
@@ -86,7 +78,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     "name",
     "description",
     "releaseDate",
-    "categories",
+    "contentType",
     "genres",
     "rating",
     "language",
@@ -152,7 +144,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   // content Movies or Series
   if (category) {
-    query["categories"] = new RegExp(category, "i");
+    query["contentType"] = new RegExp(category, "i");
   }
 
   // contents with specific genre

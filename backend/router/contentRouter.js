@@ -1,4 +1,5 @@
 const express = require("express");
+
 const {
   contentApi,
   httpPostContent,
@@ -6,13 +7,12 @@ const {
   httpGetContentById,
   httpDeleteById,
   httpUpdateById,
-  contentLikes,
+  contentLikes
 } = require("../controller/contentController");
 const jwtAuth = require("../middleware/jwtAuth");
 
 const contentRoute = express.Router();
 
-contentRoute.route("/ping").get(contentApi);
 contentRoute.route("/").post(httpPostContent).get(httpGetContent);
 contentRoute
   .route("/:contentId")

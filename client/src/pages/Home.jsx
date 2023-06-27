@@ -35,11 +35,9 @@ const Home = () => {
     const isEmailValid = validator.validate(e.target.email.value);
     if (!isEmailValid) return toast.error("please enter valid email 📩");
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
-    if (isUserExist.payload.isUserExist) {
-      localStorage.setItem("email", e.target.email.value);
+    if (isUserExist.payload.data.isUserExist) {
       navigate("/signup/password");
     } else {
-      localStorage.setItem("email", e.target.email.value);
       navigate("signup/registration");
     }
   }
@@ -53,7 +51,7 @@ const Home = () => {
               className="h-[43.75rem] w-full   bg-[rgb(0 0 0 / 40%)]"
               style={{
                 backgroundImage:
-                  "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%)"
+                  "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%)",
               }}
             ></div>
           </div>
@@ -78,7 +76,7 @@ const Home = () => {
                   <Link to="/signup/choose">
                     <button
                       type="submit"
-                      className="align-middle text-2xl px-6 py-3 font-bold bg-red-600 rounded text-white hover:bg-red-700"
+                      className="align-middle text-lg px-4 py-2 font-medium bg-red-600 rounded text-white hover:bg-red-700 mt-5"
                     >
                       Finish signUp
                       <StartIcon />

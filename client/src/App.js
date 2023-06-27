@@ -1,3 +1,5 @@
+// import { RouterProvider } from "react-router-dom";
+// import router from "./router/routes";
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -28,7 +30,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      // auth
+      {/* auth */}
       <Route path="/signup/password" element={<SignUp page="PASSWORD" />} />
       <Route path="/signup/choose" element={<SignUp page="CHOOSE" />} />
       <Route path="/signup/planform" element={<SignUp page="PLAN_FORM" />} />
@@ -60,11 +62,12 @@ function App() {
         path="signup/paymentfail"
         element={<SignUp page="PAYMENT_FAIL" />}
       />
-      //
       <Route path="/browse" element={<Browse />} />
       <Route path="/watch" element={<Watch />} />
       <Route path="/admin/*" element={<Admin />} />
     </Routes>
+
+    // <RouterProvider router={router} />
   );
 }
 

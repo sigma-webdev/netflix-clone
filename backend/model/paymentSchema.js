@@ -3,17 +3,18 @@ const mongoose = require("mongoose");
 const paymentSchema = new mongoose.Schema({
   razorpayPaymentId: {
     type: String,
-    required: true
+    required: true,
   },
   razorpaySubscriptionId: {
     type: String,
-    required: true
+    required: true,
   },
   razorpaySignature: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const paymentModel = mongoose.model("Payment", paymentSchema);
+
 module.exports = paymentModel;
