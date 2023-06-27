@@ -1,8 +1,15 @@
 import { Link } from "react-router-dom";
-import { AddIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
+import {
+  AddIcon,
+  DisLikeIcon,
+  DownArrowIcon,
+  LikeIcon,
+  PlayIcon,
+} from "../icons";
 import DetailsCard from "./DetailsCard";
 import { createPortal } from "react-dom";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const PreviewCard = ({
   name,
@@ -16,12 +23,25 @@ const PreviewCard = ({
   rating,
 }) => {
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.user.userData);
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
   };
 
-  document.getElementById("content-details");
+  const likeContent = () => {
+    dispatch(likeContent());
+    setIsLiked(!isLiked);
+  };
+
+  const dislikeContent = () => {
+    dispatch(dislikeContent());
+    setIsDisliked(!isDisliked);
+  };
 
   return (
     <div className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out my-8 w-48 md:w-64 scale-100 hover:scale-125 hover:opacity-100 hover:z-10 hover:ml-10">
@@ -44,8 +64,11 @@ const PreviewCard = ({
                 <PlayIcon />
               </Link>
             </div>
-            <div>
-              <LikeIcon />
+            <div onClick={likeContent} className="cursor-pointer">
+              <LikeIcon isLiked={isLiked} />
+            </div>
+            <div onClick={dislikeContent} className="cursor-pointer">
+              <DisLikeIcon isDisliked={isDisliked} />
             </div>
           </div>
           <div onClick={openCloseDetails} className="cursor-pointer">

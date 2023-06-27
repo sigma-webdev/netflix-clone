@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // import { content } from "../data";
 import axiosInstance from "../helpers/axiosInstance";
+import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
   allContent: [],
@@ -14,10 +15,29 @@ export const likeContent = createAsyncThunk(
   "content/likeContent",
   async (contentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/content/${contentId}/likes`);
+      const response = await axiosInstance.get(`/content/${contentId}/like`);
+
+      const data = response.data.data;
+      const contenId = data._id;
+
+      return { contenId, data };
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const dislikeContent = createAsyncThunk(
+  "content/dislikeContent",
+  async (contentId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/content/${contentId}/dislike`);
 
       const data = response.data.data.contents;
-      return data;
+      const contentObject = convertResponseToContentObject(data);
+      const contenId = data._id;
+
+      return { contenId, contentObject };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -59,7 +79,7 @@ export const addNewContent = createAsyncThunk(
     try {
       const response = await axiosInstance.post(`/content`, newContent);
       const data = response.data.data;
-      // fetchContentById()
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -103,30 +123,16 @@ export const deleteContentById = createAsyncThunk(
   }
 );
 
-// export const updateContentById = async (id, data) => {
-//   console.log(data)
-//   try{
-//     const response = await axiosInstance.put(`/content/${id}`, data, {
-//       onUploadProgress: (progressEvent) => {
-//         const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-//         onProgress(progress);
-//       },
-//     });
-//     console.log(response)
-//     return response
-//   } catch (err) {
-//     return err.response
-//   }
-// }
-
 export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
   async (contentId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/content/${contentId}`);
       const data = response.data.data;
+      const contentObject = convertResponseToContentObject(data);
 
-      return data;
+      console.log(contentObject);
+      return contentObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -140,7 +146,7 @@ export const fetchContent = createAsyncThunk(
       const response = await axiosInstance.get("/content/");
 
       const data = response.data.data.contents;
-      console.log(data);
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -249,6 +255,50 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchContentBySearch.rejected, (state) => {
+        state.filteredContent = [];
+        state.loading = false;
+      })
+
+      //like content
+      .addCase(likeContent.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(likeContent.fulfilled, (state, action) => {
+        const likedContentId = action.payload.contenId;
+        const likedContent = action.payload.data;
+
+        state.allContent.forEach((item) => {
+          if (item._id === likedContentId) {
+            item.likesCount = likedContent.likesCount;
+            item.disLikesCount = likeContent.disLikesCount;
+          }
+        });
+
+        state.loading = false;
+      })
+      .addCase(likeContent.rejected, (state) => {
+        state.filteredContent = [];
+        state.loading = false;
+      })
+
+      //dislike content
+      .addCase(dislikeContent.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(dislikeContent.fulfilled, (state, action) => {
+        const dislikedContentId = action.payload.contenId;
+        const dislikedContent = action.payload.data;
+
+        state.allContent.forEach((item) => {
+          if (item._id === dislikedContent) {
+            item.likesCount = dislikedContentId.likesCount;
+            item.disLikesCount = dislikedContent.disLikesCount;
+          }
+        });
+
+        state.loading = false;
+      })
+      .addCase(dislikeContent.rejected, (state) => {
         state.filteredContent = [];
         state.loading = false;
       });

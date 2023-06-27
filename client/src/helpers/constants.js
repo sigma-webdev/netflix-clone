@@ -1,16 +1,59 @@
-export const GENRES = [
-  { id: 1, name: "Action" },
-  { id: 2, name: "Anime" },
-  { id: 3, name: "Children & Family" },
-  { id: 5, name: "Anime" },
-  { id: 6, name: "Children & Family" },
-  { id: 7, name: "Classic" },
-  { id: 8, name: "Comedies" },
-  { id: 9, name: "Documentaries" },
-  { id: 10, name: "Dramas" },
-  { id: 11, name: "Horror" },
-  { id: 12, name: "Romantic" },
-  { id: 13, name: "Sci-fi & Fantasy" },
-  { id: 14, name: "Sports" },
-  { id: 15, name: "Thrillers" },
-];
+export const Content = class {
+  constructor(
+    name,
+    description,
+    cast,
+    director,
+    thumbnailUrl,
+    trailerUrl,
+    geners,
+    contentId,
+    rating,
+    isLiked,
+    isDisked
+  ) {
+    this.contentId = contentId;
+    this.name = name;
+    this.description = description;
+    this.cast = cast;
+    this.director = director;
+    this.thumbnailUrl = thumbnailUrl;
+    this.trailerUrl = trailerUrl;
+    this.geners = geners;
+    this.rating = rating;
+    this.isLiked = isLiked;
+    this.isDisked = isDisked;
+  }
+};
+
+export const convertResponseToContentObject = (
+  name,
+  description,
+  cast,
+  director,
+  thumbnailUrl,
+  trailerUrl,
+  geners,
+  contentId,
+  rating,
+  likes,
+  dislikes,
+  userId
+) => {
+  const isLiked = likes.find((item) => item === userId) ? true : false;
+  const isDisliked = dislikes.find((item) => item === userId) ? true : false;
+
+  return Content(
+    contentId,
+    name,
+    description,
+    cast,
+    director,
+    thumbnailUrl,
+    trailerUrl,
+    geners,
+    rating,
+    isLiked,
+    isDisliked
+  );
+};

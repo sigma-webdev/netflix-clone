@@ -29,7 +29,7 @@ const Crousal = ({ content }) => {
         </IconContext.Provider>
       </div>
       {content &&
-        content.map((item) => {
+        Array.from(content).map((item) => {
           return (
             <PreviewCard
               key={item._id}

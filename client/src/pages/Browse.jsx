@@ -36,8 +36,6 @@ const Browse = () => {
     dispatch(fetchContent());
   }, [dispatch]);
 
-  console.log(content);
-
   return (
     <Layout isLogin={true}>
       <div id="content-details" className="relative w-full h-full"></div>
@@ -82,15 +80,9 @@ const Browse = () => {
 
           {/* browse content */}
           <div className="text-white bg-netflix-blue">
-            <div>
-              <div className="px-4 md:px-8 space-y-5">
-                {Array(content).map((item) => {
-                  return (
-                    <div key={item._id}>
-                      <Crousal content={item}></Crousal>
-                    </div>
-                  );
-                })}
+            <div className="px-4 md:px-8 space-y-5">
+              <div>
+                <Crousal content={content}></Crousal>
               </div>
             </div>
           </div>

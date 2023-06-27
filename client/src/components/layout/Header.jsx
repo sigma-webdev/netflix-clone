@@ -73,9 +73,6 @@ const Header = ({ isLogin }) => {
     setSearchText(e.target.value);
   };
 
-  console.log(searchText);
-  console.log(currentCategory);
-
   return (
     <header
       ref={headerRef}
