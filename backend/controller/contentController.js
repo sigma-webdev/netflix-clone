@@ -202,6 +202,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
+    // TODO: testing fail - work on it
     .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
 
   // if no content available
