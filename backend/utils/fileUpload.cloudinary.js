@@ -24,7 +24,7 @@ const cloudinaryFileUpload = async (files, next) => {
             }
           }
         );
-        // console.log("trailerTemp---", trailerTemp);
+
         filesDetails["trailer"] = [
           {
             trailerUrl: trailerTemp.secure_url,

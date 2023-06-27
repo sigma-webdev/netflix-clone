@@ -5,17 +5,20 @@ const {
   httpGetContent,
   httpGetContentById,
   httpDeleteById,
-  httpUpdateById
+  httpUpdateById,
+  contentLikes
 } = require("../controller/contentController");
+const jwtAuth = require("../middleware/jwtAuth");
 
 const contentRoute = express.Router();
 
 contentRoute.route("/ping").get(contentApi);
 contentRoute.route("/").post(httpPostContent).get(httpGetContent);
 contentRoute
-  .route("/:postId")
+  .route("/:contentId")
   .get(httpGetContentById)
   .delete(httpDeleteById)
   .put(httpUpdateById);
+contentRoute.route("/:contentId/likes").patch(jwtAuth, contentLikes);
 
 module.exports = contentRoute;

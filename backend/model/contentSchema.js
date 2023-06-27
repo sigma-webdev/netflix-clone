@@ -16,17 +16,25 @@ const contentSchema = new Schema(
       minLength: [15, "Content description must be at least 15 characters"],
       maxLength: [250, "Content description must be less than 100 characters "]
     },
+    releaseDate: {
+      type: Date,
+      required: [true, "Content release date required!"]
+    },
     cast: [String],
     categories: {
       type: String,
-      enum: ["Movies", "TV shows"],
+      enum: ["Movies", "Series"],
       required: true
     },
-    // TODO: pending
-    likes: [String],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "userModel"
+      }
+    ],
 
     genres: {
-      type: String,
+      type: [String],
       enum: [
         "Action",
         "Anime",
@@ -39,16 +47,28 @@ const contentSchema = new Schema(
         "Romantic",
         "Sci-fi & Fantasy",
         "Sports",
-        "Thrillers"
+        "Thrillers",
+        "Adventure"
       ]
     },
-    creator: [String],
+    director: {
+      type: String
+    },
     rating: {
       type: String,
       required: true
     },
     language: {
-      type: String
+      type: String,
+      enum: [
+        "English",
+        "Hindi",
+        "Korean",
+        "Japan",
+        "Tamil",
+        "Spanish",
+        "German"
+      ]
     },
     thumbnail: [
       {
@@ -91,10 +111,10 @@ const contentSchema = new Schema(
           type: String
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: Number }
+        contentDuration: { type: String }
       }
     ],
-
+    // TODO: add series pending work
     episodes: [
       {
         episodeURL: {
@@ -108,6 +128,10 @@ const contentSchema = new Schema(
     display: {
       type: Boolean,
       default: false
+    },
+    originCountry: {
+      type: String,
+      enum: ["India", "USA", "Korean", "Japan", "German", "Spain"]
     }
   },
 

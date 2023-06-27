@@ -2,6 +2,7 @@ const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
 const Content = require("../model/contentSchema.js");
+const getContentLength = require("../utils/getVideoLength.js");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const {
@@ -12,40 +13,93 @@ const {
 /**
  * Testing route
  */
-const contentApi = asyncHandler(async (req, res) => {
+const contentApi = asyncHandler(async (req, res, next) => {
   res.send("Pong");
 });
 
 /********************
  * @httpPostContent
- * @route http://localhost:8081/api/v1/content/posts
+ * @route http://localhost:8081/api/v1/content/
  * @description  controller to create the content
  * @parameters {request body object}
  * @return { Object } content object
  ********************/
 const httpPostContent = asyncHandler(async (req, res, next) => {
   // get required field from body
+  const {
+    name,
+    description,
+    releaseDate,
+    categories,
+    genres,
+    rating,
+    language,
+    cast,
+    director,
+    originCountry,
+  } = req.body;
+
+  // console.log("req.body originCountry ---", originCountry);
+
   let details = {
-    name: req.body.name,
-    description: req.body.description,
-    cast: req.body.cast,
-    categories: req.body.categories,
-    genres: req.body.genres,
-    creator: req.body.creator,
-    rating: req.body.rating,
-    language: req.body.language,
+    name,
+    description,
+    releaseDate,
+    categories,
+    genres,
+    rating,
+    language,
+    cast,
+    director,
+    originCountry,
+    //default thumbnail value
+    thumbnail: [
+      {
+        thumbnailUrl:
+          "https://res.cloudinary.com/dp3qsxfn5/image/upload/v1687258494/default_thumbnail_mi4zwc.webp",
+      },
+    ],
+
+    // default trailer value
+    trailer: [
+      {
+        trailerUrl:
+          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+      },
+    ],
+    // default content value
+    content: [
+      {
+        contentURL:
+          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+      },
+    ],
   };
+
+  // get content video length
+  if (details.content[0].contentURL) {
+    const contentLength = await getContentLength(
+      details.content[0].contentURL,
+      next
+    );
+    details.content[0].contentDuration = contentLength;
+  }
+
+  // console.log("origin Country", originCountry);
+  // console.log("origin Country", details);
 
   // checking for missing fields
   const requiredFields = [
     "name",
     "description",
+    "releaseDate",
     "categories",
     "genres",
     "rating",
     "language",
     "cast",
-    "creator",
+    "director",
+    "originCountry",
   ];
   const missingRequiredFields = requiredFields.filter(
     (field) => !details[field]
@@ -58,7 +112,9 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   // file upload will be done in the update section
 
   const contentDetails = Content(details);
-  console.log("Content details ----", contentDetails);
+
+  // console.log("contentDetails --------------w", contentDetails);
+
   const contentData = await contentDetails.save();
 
   if (!contentData) {
@@ -69,49 +125,91 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    contentData,
+    data: contentData,
   });
 });
 
 /********************
  * @httpGetContent
- * @route http://localhost:8081/api/v1/content/posts
+ * @route http://localhost:8081/api/v1/content/
  * @description  controller to create the content
  * @parameters {string, object, enum, array}
  * @return { Object } content object
  ********************/
 const httpGetContent = asyncHandler(async (req, res, next) => {
-  // find all content --
-  const contents = await Content.find();
-  // console.log(contents);
-  // if no content available
-  if (!contents.length) {
-    return res.status(200).json({
-      success: true,
-      message: "Content Not found",
-      contents,
-    });
+  const { search, category, genre, display, page, limit, latest } = req.query;
+  const query = {};
+  const PAGE = Number(page) || 1;
+  const LIMIT = Number(limit) || 20;
+
+  const startIndex = (PAGE - 1) * LIMIT;
+  const endIndex = PAGE * LIMIT;
+
+  // search content name
+  if (search) query["name"] = { $regex: search, $options: "i" };
+
+  // content Movies or Series
+  if (category) {
+    query["categories"] = new RegExp(category, "i");
   }
+
+  // contents with specific genre
+  if (genre) query["genres"] = new RegExp(genre, "i");
+
+  // get latest move - release date -
+  const sorting = {};
+  if (latest) sorting["latestContent"] = { releaseDate: -1 };
+
+  // pagination
+  const totalContents = await Content.find(query).countDocuments();
+  const result = {};
+  if (endIndex < totalContents) {
+    result.next = {
+      pageNumber: PAGE + 1,
+      limit: LIMIT,
+    };
+  }
+  if (startIndex > 0) {
+    result.previous = {
+      pageNumber: PAGE - 1,
+      limit: LIMIT,
+    };
+  }
+
+  // display condition
+  // TODO: Integrate middleware
+  if (req.role === "ADMIN" && display) {
+    query["display"] = display;
+  } else if (req.role === "USER") {
+    query["display"] = true;
+  }
+
+  // find all content and search all content
+  result.contents = await Content.find(query)
+    .skip(startIndex)
+    .limit(LIMIT)
+    .sort(sorting.latestContent);
+
+  // if no content available
 
   return res.status(200).json({
     success: true,
-    message: "All contents ...",
-    contents,
+    data: result,
   });
 });
 
 /********************
  *
  * @httpGetContentById
- * @route http://localhost:8081/api/v1/content/posts/id
+ * @route http://localhost:8081/api/v1/content/id
  * @description  controller to create the content
  * @parameters {Object id}
  * @return { Object } content object
  ********************/
 const httpGetContentById = asyncHandler(async (req, res, next) => {
-  const { postId } = req.params;
+  const { contentId } = req.params;
 
-  const contentData = await Content.findById(postId);
+  const contentData = await Content.findById(contentId);
 
   if (!contentData) {
     return next(
@@ -122,23 +220,23 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Content fetched Successfully",
-    contentData,
+    data: contentData,
   });
 });
 
 /********************
  * @httpDeleteById
- * @route http://localhost:8081/api/v1/content/posts/id
+ * @route http://localhost:8081/api/v1/content/id
  * @description  controller to delete the content
  * @parameters {Object id}
  * @return { Object } content object
  ********************/
 const httpDeleteById = asyncHandler(async (req, res, next) => {
   // extract id
-  const { postId } = req.params;
+  const { contentId } = req.params;
 
   // find content with id
-  const contentData = await Content.findById(postId);
+  const contentData = await Content.findById(contentId);
 
   if (!contentData) {
     return next(
@@ -147,35 +245,51 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   }
 
   const { thumbnail, trailer, content } = contentData;
-  console.log("Thumbnail", thumbnail[0].thumbnailID);
-  console.log("trailer", trailer[0].trailerId);
-  console.log("content", content[0].contentID);
 
-  contentData.deleteOne().then(() => {
-    cloudinaryFileDelete(content[0].contentID);
-    cloudinaryFileDelete(trailer[0].trailerId);
-    cloudinaryImageDelete(thumbnail[0].thumbnailID);
-  });
+  contentData
+    .deleteOne()
+    .then(() => {
+      if (content[0].contentID) {
+        cloudinaryFileDelete(content[0].contentID);
+      }
+
+      if (trailer[0].trailerId) {
+        cloudinaryFileDelete(trailer[0].trailerId);
+      }
+
+      if (thumbnail[0].thumbnailID) {
+        cloudinaryImageDelete(thumbnail[0].thumbnailID);
+      }
+    })
+    .catch((error) => {
+      return next(
+        new CustomError(
+          `Delete Fail, make sure valid id is provided - ${error}`,
+          500
+        )
+      );
+    });
 
   res.status(200).json({
     success: true,
     message: "Content deleted successfully",
+    data: contentData,
   });
 });
 
 /********************
  * @httpUpdateById
- * @route http://localhost:8081/api/v1/content/posts/id
+ * @route http://localhost:8081/api/v1/content/id
  * @description  controller to update the content
  * @parameters {Object id}
  * @return { Object } content object
  ********************/
 const httpUpdateById = asyncHandler(async (req, res, next) => {
-  const { postId } = req.params;
+  const { contentId } = req.params;
   const { body, files } = req;
 
   // check for the availability of content
-  const contentData = await Content.findById(postId);
+  const contentData = await Content.findById(contentId);
 
   if (!contentData) {
     return next(new CustomError("Content not available for the provided Id! "));
@@ -186,24 +300,44 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
   if (files) {
     // delete pre-existing file
-    if (files.content && contentData.content.length > 0) {
-      cloudinaryFileDelete(contentData.content[0].contentID, next);
+    if (
+      files.content &&
+      contentData.content.length > 0 &&
+      contentData.content[0]?.contentID
+    ) {
+      cloudinaryFileDelete(contentData.content[0]?.contentID, next);
     }
 
-    if (files.trailer && contentData.trailer.length > 0) {
-      cloudinaryFileDelete(contentData.trailer[0].trailerId, next);
+    if (
+      files.trailer &&
+      contentData.trailer.length > 0 &&
+      contentData.trailer[0]?.trailerId
+    ) {
+      cloudinaryFileDelete(contentData.trailer[0]?.trailerId, next);
     }
 
-    if (files.thumbnail && contentData.thumbnail.length > 0) {
+    if (
+      files.thumbnail &&
+      contentData.thumbnail.length > 0 &&
+      contentData.thumbnail[0]?.thumbnailID
+    ) {
       cloudinaryImageDelete(contentData.thumbnail[0]?.thumbnailID, next);
     }
 
-    // TODO - fix thumbnail updefined
     contentFiles = await cloudinaryFileUpload(files, next);
+
+    if (contentFiles.content) {
+      if (contentFiles.content[0]?.contentID) {
+        contentFiles.content[0].contentDuration = await getContentLength(
+          contentFiles.content[0]?.contentURL,
+          next
+        );
+      }
+    }
   }
 
   const updatedData = await Content.findByIdAndUpdate(
-    postId,
+    contentId,
     { ...body, ...contentFiles },
     {
       new: true,
@@ -219,7 +353,6 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     }
     if (contentFiles.thumbnail) {
       cloudinaryImageDelete(contentFiles.thumbnail[0].thumbnailID);
-      console.log("deleting....................");
     }
     return next(new CustomError(`File not able to save!- ${error}`, 404));
   });
@@ -229,21 +362,48 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       new CustomError("Content fail to save to database! Please try again", 400)
     );
   }
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Content Updated successfully",
-    updatedData,
+    data: updatedData,
   });
 });
 
 /********************
- * @httpUpdateById
- * @route http://localhost:8081/api/v1/content/posts/query
- * @description  controller to update the content
- * @parameters {Object id}
- * @return { Object } content object
+ * @contentLikes
+ * @route http://localhost:8081/api/v1/content/:contentId/likes
+ * @description  controller to like and dislike content
+ * @parameters {user id , content id}
+ * @return { Object } updated content object
  ********************/
-const searchByMovieName = () => {};
+/******* User likes ****** */
+const contentLikes = asyncHandler(async (req, res, next) => {
+  const { contentId } = req.params;
+  const { id: userId } = req.user;
+
+  const content = await Content.findById(contentId);
+
+  if (!content) {
+    return next(new CustomError("content is not available", 404));
+  }
+
+  if (content.likes.includes(userId)) {
+    content.likes.pop(userId);
+    await content.save();
+
+    return res.status(200).json({
+      message: "content disliked",
+      data: content,
+    });
+  } else {
+    content.likes.push(userId);
+    await content.save();
+    return res.status(200).json({
+      message: "content liked",
+      data: content,
+    });
+  }
+});
 
 module.exports = {
   contentApi,
@@ -252,4 +412,5 @@ module.exports = {
   httpGetContentById,
   httpDeleteById,
   httpUpdateById,
+  contentLikes,
 };
