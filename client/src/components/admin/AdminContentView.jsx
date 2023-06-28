@@ -26,14 +26,14 @@ const AdminContentView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchContentById(params.id));
+    dispatch(fetchContentById({ contentId: params.id }));
     setEditedContentData(contentData);
   }, []);
 
   const handleDelete = () => {
     console.log("delete this");
     // redirect('/admin/managecontents/')
-    dispatch(deleteContentById(contentData._id));
+    dispatch(deleteContentById(contentData.contentId));
     navigate("/admin/managecontents");
     //   redirect('/admin/managecontents')
   };
@@ -415,7 +415,7 @@ const AdminContentView = () => {
     </table> */}
         {isLoading ? (
           <h2 className="text-white">Loading..</h2>
-        ) : Object.keys(contentData).length !== 0 ? (
+        ) : contentData ? (
           <>
             <div className="flex w-full gap-4 px-4">
               {/* <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded text-white'>Edit</button> */}
@@ -445,7 +445,7 @@ const AdminContentView = () => {
                   <BsCloudUpload className="absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] text-8xl opacity-0 transition group-hover:opacity-100" />
                   <img
                     className="h-[450px] w-full transition hover:bg-black group-hover:opacity-40"
-                    src={contentData.thumbnail[0].thumbnailUrl}
+                    src={contentData.thumbnailUrl}
                     alt=""
                   />
                 </div>
@@ -499,7 +499,7 @@ const AdminContentView = () => {
                     <video
                       width="520"
                       height="440"
-                      src={contentData.trailer[0].trailerUrl}
+                      src={contentData.trailerUrl}
                       controls
                     ></video>
                     <div>
@@ -516,7 +516,7 @@ const AdminContentView = () => {
                     <video
                       width="520"
                       height="440"
-                      src={contentData.content[0].contentURL}
+                      src={contentData.contentURL}
                       controls
                     ></video>
                     <div>

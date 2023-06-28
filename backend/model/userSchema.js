@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 const crypto = require("crypto");
+const contentModel = require("./contentSchema");
 
 const userSchema = new mongoose.Schema(
   {
@@ -26,6 +27,7 @@ const userSchema = new mongoose.Schema(
       default: "NONE",
       enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"],
     },
+    watchHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Content" }],
     subscription: {
       id: String,
       status: String,
@@ -79,5 +81,4 @@ userSchema.methods = {
 };
 
 const userModel = mongoose.model("User", userSchema);
-
 module.exports = userModel;

@@ -59,49 +59,21 @@ const AdminManageUsers = () => {
     <>
       {isOpen && (
         <div className="absolute flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-50">
-          <div className="relative w-96 rounded-lg bg-cyan-600 px-4 py-12">
+          <div className="relative w-96 rounded-lg bg-white px-4 py-12">
             <div
               onClick={() => toggleModal(false)}
-              className="absolute right-3 top-2 cursor-pointer text-3xl text-white"
+              className="absolute right-3 top-2 cursor-pointer text-3xl text-black"
             >
-              X
+              &times;
             </div>
             <form
               onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col gap-2 text-white"
+              className="flex flex-col gap-2 text-black"
             >
-              <label htmlFor="name">Name:</label>
-              <input
-                className="rounded border bg-transparent p-2"
-                type="text"
-                name="name"
-                id="name"
-                value="Nasikh CL"
-              />
-              <label htmlFor="name">Email:</label>
-              <input
-                className="rounded border bg-transparent p-2"
-                type="email"
-                name="email"
-                id="email"
-                value="nasikh@ineuron.ai"
-              />
-              <label htmlFor="name">Phone:</label>
-              <input
-                className="rounded border bg-transparent p-2"
-                type="tel"
-                name="phone"
-                id="phone"
-                value="9988998781"
-              />
-              <label htmlFor="name"> Plan:</label>
-              <input
-                className="rounded border bg-transparent p-2"
-                type="text"
-                name="plan"
-                id="plan"
-                value="NONE"
-              />
+              <div className="flex items-center gap-x-2 border-y-2 py-2 ">
+                <span>Name :</span>
+                <p className="font-semibold">Nasikh CL</p>
+              </div>
               <button className="rounded bg-red-600 py-2 text-white hover:bg-red-700">
                 Block User
               </button>
@@ -109,11 +81,11 @@ const AdminManageUsers = () => {
           </div>
         </div>
       )}
-      <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-slate-800 py-4">
-        <h2 className="text-white">Manage Users</h2>
+      <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-slate-100 py-4">
+        <h2 className="text-[#E50914]">Manage Users</h2>
         <table className="w-5/6 table-auto overflow-scroll border border-gray-300 text-gray-200">
           <thead className="text-left">
-            <tr>
+            <tr className="bg-[#E50914] text-white">
               <th className="px-4 py-2">S. No</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Email</th>
@@ -128,7 +100,7 @@ const AdminManageUsers = () => {
                   <tr
                     key={index}
                     className={
-                      (index + 1) % 2 === 0 ? "bg-[#2b2c34]" : "bg-[#2e2f3a]"
+                      (index + 1) % 2 === 0 ? "bg-[#342e2b]" : "bg-[#2e2f3a]"
                     }
                   >
                     <td className="px-4 py-3">{index + 1}</td>

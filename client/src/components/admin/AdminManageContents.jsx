@@ -432,7 +432,7 @@ const AdminManageContents = () => {
                       <td className="flex items-center gap-4 px-4 py-3">
                         <img
                           className="h-16 w-32 rounded-xl object-center"
-                          src={content?.thumbnail[0]?.thumbnailUrl}
+                          src={content?.thumbnailUrl}
                           alt=""
                         />
                         {content.name}
@@ -441,7 +441,7 @@ const AdminManageContents = () => {
                       <td className="px-4 py-3">{content.genres}</td>
                       <td className="px-4 py-3">{content.genres}</td>
                       <td className="px-4 py-2">
-                        <Link to={`${content._id}`}>
+                        <Link to={`${content.contentId}`}>
                           <div className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]">
                             View
                           </div>

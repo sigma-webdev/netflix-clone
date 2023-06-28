@@ -1,8 +1,11 @@
 export const convertResponseToContentObject = (data, userId) => {
-  const isLiked = data.likes.find((item) => item === userId) ? true : false;
-  const isDisliked = data.dislikes.find((item) => item === userId)
-    ? true
-    : false;
+  let isLiked = false;
+  let isDisliked = false;
+
+  if (userId) {
+    isLiked = data.likes.find((item) => item === userId) ? true : false;
+    isDisliked = data.dislikes.find((item) => item === userId) ? true : false;
+  }
 
   return {
     contentId: data._id.toString(),

@@ -7,6 +7,7 @@ const initialState = {
   loading: false,
   forgotPasswordLoading: false,
   resetPasswordLoading: false,
+  isUserExistLoading: false
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
@@ -124,8 +125,9 @@ const authSlice = createSlice({
       .addCase(SIGN_UP.fulfilled, (state, action) => {
         state.user = action.payload.data;
         state.isLoggedIn = true;
-        state.loading = false;
-        toast.success(action?.payload?.message);
+        state.signUpLoading = false;
+        localStorage.removeItem("netflixCloneEmail");
+        toast.success("successfully signup");
       })
       .addCase(SIGN_UP.rejected, (state, action) => {
         state.loading = false;
@@ -181,6 +183,16 @@ const authSlice = createSlice({
       .addCase(RESET_PASSWORD.rejected, (state, action) => {
         state.loading = false;
         toast.error(action.payload.message);
+      })
+      .addCase(IS_USER_EXIST.pending, (state) => {
+        state.isUserExistLoading = true;
+      })
+      .addCase(IS_USER_EXIST.fulfilled, (state, action) => {
+        state.isUserExistLoading = false;
+        localStorage.setItem("netflixCloneEmail", action.payload.data.email);
+      })
+      .addCase(IS_USER_EXIST.rejected, (state) => {
+        state.isUserExistLoading = false;
       });
   },
 });
