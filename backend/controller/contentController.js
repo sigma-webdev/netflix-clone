@@ -57,16 +57,13 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
       },
     ],
     // default content value
-    // content: [
-    //   {
-    //     contentURL:
-    //       "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
-    //   },
-    // ],
+    content: [
+      {
+        contentURL:
+          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+      },
+    ],
   };
-
-  // (details.contentType === "Movie") ?
-  //   details.content[0].contentURL = "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4"
 
   // get content video length
   if (details.content[0].contentURL) {
@@ -77,6 +74,39 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     details.content[0].contentDuration = contentLength;
   }
 
+  // if (details.contentType === "Movie") {
+  //   if (details.content) {
+  //     details.content[0].contentURL =
+  //       "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4";
+
+  //     // get content video length
+  //     if (details.content[0].contentURL) {
+  //       const contentLength = await getContentLength(
+  //         details.content[0].contentURL,
+  //         next
+  //       );
+  //       details.content[0].contentDuration = contentLength;
+  //     }
+  //   }
+  // }
+
+  // if (details.contentType === "Series") {
+  //   if (details.episodes) {
+  //     details.episodes[0].episodeURL =
+  //       "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4";
+
+  //     // get content video length
+  //     // if (details.content[0].contentURL) {
+  //     //   const contentLength = await getContentLength(
+  //     //     details.content[0].contentURL,
+  //     //     next
+  //     //   );
+  //     //   details.content[0].contentDuration = contentLength;
+  //     // }
+  //   }
+  // }
+
+  // console.log("details --------", details.episodeURL);
   // checking for missing fields
   const requiredFields = [
     "name",
