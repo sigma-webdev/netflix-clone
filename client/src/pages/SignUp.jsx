@@ -41,8 +41,8 @@ const SignUp = ({ page, theme = "light" }) => {
       <nav
         className={
           page === "SIGN_OUT"
-            ? "flex  justify-between items-center px-3 md:px-10 h-16 md:h-24 "
-            : "flex  justify-between items-center px-3 md:px-10 h-16 md:h-24 border-b-[1px] border-gray"
+            ? "flex  h-16 items-center justify-between px-3 md:h-24 md:px-10 "
+            : "border-gray  flex h-16 items-center justify-between border-b-[1px] px-3 md:h-24 md:px-10"
         }
       >
         <Link to="/">
@@ -58,8 +58,8 @@ const SignUp = ({ page, theme = "light" }) => {
             }}
             className={
               page === "SIGN_OUT"
-                ? "font-bold  text-white text-lg border-black  border-b-[3px] hover:border-white cursor-pointer "
-                : "font-bold  text-[#333] text-lg border-white  border-b-[3px] hover:border-black cursor-pointer "
+                ? "cursor-pointer  border-b-[3px] border-black text-lg  font-bold text-white hover:border-white "
+                : "cursor-pointer  border-b-[3px] border-white text-lg  font-bold text-[#333] hover:border-black "
             }
           >
             {IS_LOGGED_IN ? "Sign out" : "Sign In"}
@@ -68,7 +68,7 @@ const SignUp = ({ page, theme = "light" }) => {
         {/* sign-in sign-out button */}
       </nav>
 
-      <div className="flex justify-center  items-center h-[90vh]">
+      <div className="flex h-[90vh]  items-center justify-center">
         {page === "PASSWORD" ? <Password /> : null}
         {page === "REGISTRATION" ? <Registration /> : null}
         {page === "REG_FORM" ? <RegForm /> : null}
@@ -85,8 +85,8 @@ const SignUp = ({ page, theme = "light" }) => {
       <footer
         className={page === "SIGN_OUT" ? "bg-black p-8" : "bg-[#f3f3f3] p-8"}
       >
-        <p className="text-[#848484] text-lg">Questions?</p>
-        <ul className="text-[#848484] flex justify-evenly">
+        <p className="text-lg text-[#848484]">Questions?</p>
+        <ul className="flex justify-evenly text-[#848484]">
           <li>FAQ</li>
           <li>Help center</li>
           <li>Netflix Shop</li>

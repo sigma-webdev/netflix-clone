@@ -15,7 +15,7 @@ export const StartIcon = () => {
       fill="currentColor"
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
-      className=" inline w-7 h-7"
+      className=" inline h-7 w-7"
     >
       <path
         clip-rule="evenodd"
@@ -52,7 +52,7 @@ export const CrossIcon = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-6 h-6 md:w-10 md:h-10"
+      className="h-6 w-6 md:h-10 md:w-10"
     >
       <path
         strokeLinecap="round"
@@ -70,7 +70,7 @@ export const GlobeIcon = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-2 h-2 md:w-6 md:h-6"
+      className="h-2 w-2 md:h-6 md:w-6"
     >
       <path
         strokeLinecap="round"
@@ -131,7 +131,7 @@ export const PlusIcon = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-6 h-6 md:w-10 md:h-10"
+      className="h-6 w-6 md:h-10 md:w-10"
     >
       :
       <path
@@ -202,7 +202,7 @@ export const Loading = ({ color = "white" }) => {
     <svg
       aria-hidden="true"
       role="status"
-      className="inline w-4 h-4 mr-3 animate-spin"
+      className="mr-3 inline h-4 w-4 animate-spin"
       viewBox="0 0 100 101"
       fill={color}
       xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +224,7 @@ export const formLoader = () => {
     <div role="status">
       <svg
         aria-hidden="true"
-        className="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        className="mr-2 h-4 w-4 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -244,14 +244,14 @@ export const formLoader = () => {
 };
 export const LikeIcon = ({ isLiked }) => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-white">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className="w-4 h-4"
+        className="h-4 w-4"
       >
         <path
           strokeLinecap="round"
@@ -266,14 +266,14 @@ export const LikeIcon = ({ isLiked }) => {
 
 export const DisLikeIcon = ({ isDisliked }) => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-white">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className="w-4 h-4"
+        className="h-4 w-4"
       >
         <path
           strokeLinecap="round"
@@ -288,14 +288,14 @@ export const DisLikeIcon = ({ isDisliked }) => {
 
 export const LikeIcon2 = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] md:w-[50px] md:h-[50px] border-gray-400 border-4 box-border">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-4 border-gray-400 md:h-[50px] md:w-[50px]">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className="w-4 h-4 md:w-6 md:h-6"
+        className="h-4 w-4 md:h-6 md:w-6"
       >
         <path
           strokeLinecap="round"
@@ -311,7 +311,7 @@ export const LikeIcon2 = () => {
 
 export const AddIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-white">
       <IconContext.Provider value={{ color: "white", size: "20px" }}>
         <AiOutlinePlus />
       </IconContext.Provider>
@@ -321,7 +321,7 @@ export const AddIcon = () => {
 
 export const PlayIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-white">
       <IconContext.Provider value={{ color: "white", size: "20px" }}>
         <RiPlayMiniFill />
       </IconContext.Provider>
@@ -331,7 +331,7 @@ export const PlayIcon = () => {
 
 export const PauseIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-white">
       <IconContext.Provider value={{ color: "white", size: "20px" }}>
         <RiPauseMiniFill />
       </IconContext.Provider>
@@ -341,7 +341,7 @@ export const PauseIcon = () => {
 
 export const DownArrowIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-white border-2 box-border">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-white">
       <IconContext.Provider value={{ color: "white", size: "15px" }}>
         <BsChevronDown />
       </IconContext.Provider>
@@ -351,7 +351,7 @@ export const DownArrowIcon = () => {
 
 export const InfoIcon = () => {
   return (
-    <div className="flex items-center gap-2 text-black font-semibold bg-white px-4 py-2 rounded">
+    <div className="flex items-center gap-2 rounded bg-white px-4 py-2 font-semibold text-black">
       <IconContext.Provider value={{ color: "white", size: "15px" }}>
         <AiOutlineInfoCircle />
       </IconContext.Provider>
@@ -361,14 +361,14 @@ export const InfoIcon = () => {
 
 export const CloseIcon = () => {
   return (
-    <div className="flex items-center justify-center rounded-full w-[35px] h-[35px] border-black bg-black border-2 box-border">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-black bg-black">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="white"
-        className="w-6 h-6"
+        className="h-6 w-6"
       >
         <path
           strokeLinecap="round"
@@ -382,7 +382,7 @@ export const CloseIcon = () => {
 
 export const SearchIcon = () => {
   return (
-    <div className="flex items-center gap-2 text-white  bg-black/50 px-1 py-1  ">
+    <div className="flex items-center gap-2 bg-black/50  px-1 py-1 text-white  ">
       <AiOutlineSearch />
     </div>
   );

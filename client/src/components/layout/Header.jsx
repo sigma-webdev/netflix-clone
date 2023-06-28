@@ -85,11 +85,11 @@ const Header = ({ isLogin }) => {
   return (
     <header
       ref={headerRef}
-      className={`flex items-center justify-between w-full h-16 md:h-20 px-4 md:px-8 text-white z-20 transition ease-in-out duration-300 ${
+      className={`z-20 flex h-16 w-full items-center justify-between px-4 text-white transition duration-300 ease-in-out md:h-20 md:px-8 ${
         isLogin ? "fixed top-0" : "absolute"
       }`}
     >
-      <div className="flex gap-4 text-sm md:text-md">
+      <div className="md:text-md flex gap-4 text-sm">
         <div className={isLogin ? "w-16 md:w-24" : "w-16 md:w-32"}>
           <Link to="/">
             <img src={netflixLogo} alt="netflix logo" className="w-full" />
@@ -99,7 +99,7 @@ const Header = ({ isLogin }) => {
         {isLogin ? (
           <div className="flex items-center">
             <nav>
-              <ul className="hidden md:flex gap-4 ">
+              <ul className="hidden gap-4 md:flex ">
                 <li
                   className="cursor-pointer"
                   onClick={() => setCategory(null)}
@@ -136,7 +136,7 @@ const Header = ({ isLogin }) => {
           onClick={() => {
             handleSignInSignOut();
           }}
-          className="px-3 py-1 bg-red-600 rounded text-white border-2 border-red-600"
+          className="rounded border-2 border-red-600 bg-red-600 px-3 py-1 text-white"
         >
           {buttonLoading ? (
             <Loading />
@@ -153,7 +153,7 @@ const Header = ({ isLogin }) => {
               </div>
               <div>
                 <input
-                  className="focus:outline-none w-full transition ease-in-out bg-black/50 h-full text-white"
+                  className="h-full w-full bg-black/50 text-white transition ease-in-out focus:outline-none"
                   onChange={handleSearch}
                   value={searchText}
                 ></input>
@@ -161,7 +161,7 @@ const Header = ({ isLogin }) => {
             </div>
           </IconContext.Provider>
           <div className="flex items-center gap-2">
-            <div className="w-10 rounded overflow-hidden">
+            <div className="w-10 overflow-hidden rounded">
               <img
                 src={netflixAvatar}
                 className="object-contain"
@@ -170,9 +170,9 @@ const Header = ({ isLogin }) => {
             </div>
 
             <Menu>
-              <ul className="bg-netflix-black p-4 rounded">
+              <ul className="rounded bg-netflix-black p-4">
                 <li className="flex items-center gap-4">
-                  <div className="w-8 rounded overflow-hidden">
+                  <div className="w-8 overflow-hidden rounded">
                     <img
                       src={netflixAvatar}
                       className="object-contain"
@@ -184,7 +184,7 @@ const Header = ({ isLogin }) => {
                 </li>
                 <hr className="my-4" />
                 <li
-                  className="flex items-center gap-4 cursor-pointer"
+                  className="flex cursor-pointer items-center gap-4"
                   onClick={() => handleSignInSignOut()}
                 >
                   <IconContext.Provider value={{ size: "25px" }}>

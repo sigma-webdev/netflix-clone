@@ -102,7 +102,7 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
 
   return (
     <div className="relative h-screen bg-netflix-black">
-      <div className="box-border absolute m-auto w-[98%] h-screen z-10 opacity-0 hover:opacity-100 transition duration-300 delay-150 ease-out">
+      <div className="absolute z-10 m-auto box-border h-screen w-[98%] opacity-0 transition delay-150 duration-300 ease-out hover:opacity-100">
         <div className="absolute left-4 top-4">
           <IconContext.Provider value={{ size: "40px", color: "white" }}>
             <Link to="/browse">
@@ -112,35 +112,35 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
         </div>
         <div
           ref={progressBarRef}
-          className="absolute w-full h-1 rounded bg-white left-4 bottom-16"
+          className="absolute bottom-16 left-4 h-1 w-full rounded bg-white"
         >
           <div
             ref={progressRef}
             className={`h-full w-[0px] rounded bg-slate-500`}
           ></div>
         </div>
-        <div className="flex justify-between items-center gap-4 w-full absolute left-4 bottom-4">
+        <div className="absolute bottom-4 left-4 flex w-full items-center justify-between gap-4">
           <div className="flex gap-4">
             <IconContext.Provider value={{ size: "40px", color: "white" }}>
               <div
                 onClick={playPauseMedia}
-                className="flex items-center cursor-pointer"
+                className="flex cursor-pointer items-center"
               >
                 {!isVideoPlaying ? <BsFillPlayFill /> : <BsFillPauseFill />}
               </div>
               <div
                 onClick={mediaBackward}
-                className="flex items-center cursor-pointer"
+                className="flex cursor-pointer items-center"
               >
                 <SkipBackward />
               </div>
               <div
                 onClick={mediaForward}
-                className="flex items-center cursor-pointer"
+                className="flex cursor-pointer items-center"
               >
                 <SkipForward />
               </div>
-              <div className="flex items-center cursor-pointer">
+              <div className="flex cursor-pointer items-center">
                 <div onClick={mute}>
                   <BsVolumeUp />
                 </div>
@@ -173,7 +173,7 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
 
       <video
         ref={videoRef}
-        className="h-full mx-auto"
+        className="mx-auto h-full"
         src={contentURL}
         poster={thumbnailURL}
         onEnded={stopMedia}

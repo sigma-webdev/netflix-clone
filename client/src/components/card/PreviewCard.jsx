@@ -35,11 +35,11 @@ const PreviewCard = ({
   };
 
   return (
-    <div className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out my-8 w-48 md:w-64 scale-100 hover:scale-125 hover:opacity-100 hover:z-10 hover:ml-10">
+    <div className="tranistion my-8 w-48 scale-100 rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:opacity-100 md:w-64">
       {/* preview video*/}
       <div className="w-48 md:w-64">
         <video
-          className="rounded-tl rounded-tr object-cover w-48 md:w-64 h-28 md:h-32"
+          className="h-28 w-48 rounded-tl rounded-tr object-cover md:h-32 md:w-64"
           poster={thumbnailUrl}
           src={trailerUrl}
           loop
@@ -47,7 +47,7 @@ const PreviewCard = ({
       </div>
 
       {/* preview details */}
-      <div className="p-4 space-y-4">
+      <div className="space-y-4 p-4">
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
@@ -67,11 +67,11 @@ const PreviewCard = ({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-green-600 font-semibold">94% Matched</div>
-          <div className="text-white border-[1px] border-white px-2 text-sm">
+          <div className="font-semibold text-green-600">94% Matched</div>
+          <div className="border-[1px] border-white px-2 text-sm text-white">
             {rating}
           </div>
-          <div className="text-white border-[1px] border-white px-1 rounded text-xs h-fit">
+          <div className="h-fit rounded border-[1px] border-white px-1 text-xs text-white">
             HD
           </div>
         </div>
@@ -80,7 +80,7 @@ const PreviewCard = ({
 
       {isOpenDetails &&
         createPortal(
-          <div className="fixed top-0 z-50 pt-[4%] w-full h-full bg-black/60">
+          <div className="fixed top-0 z-50 h-full w-full bg-black/60 pt-[4%]">
             <DetailsCard
               name={name}
               description={description}

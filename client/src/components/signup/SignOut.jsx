@@ -8,17 +8,17 @@ function SignOut() {
     return () => clearTimeout(redirect);
   }, []);
   return (
-    <div className=" w-[460px] p-10 shadow-xl flex flex-col bg-[#f3f3f3]">
+    <div className="flex w-[460px] flex-col bg-[#f3f3f3] p-10 shadow-xl">
       <h2 className="mb-5">Leaving So Soon?</h2>
-      <p className=" text-lg mb-2">
+      <p className="mb-2 text-lg">
         Just so you know, you don’t always need to sign out of Netflix. It’s
         only necessary if you’re on a shared or public computer.
       </p>
-      <p className=" text-lg mb-2">
+      <p className="mb-2 text-lg">
         You’ll be redirected to Netflix home page in 30 seconds.
       </p>
       <Link to="/">
-        <button className="   w-full text-lg  text-white h-10  font-semibold bg-[#017bf5] hover:bg-[#2490fd]   ">
+        <button className="h-10 w-full  bg-[#017bf5] text-lg  font-semibold text-white hover:bg-[#2490fd]   ">
           Go Now
         </button>
       </Link>

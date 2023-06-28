@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 function LoginHelp() {
   const { email } = useParams();
   return (
-    <div className=" w-[460px] p-10 shadow-xl flex flex-col bg-[#f3f3f3]">
+    <div className=" flex w-[460px] flex-col bg-[#f3f3f3] p-10 shadow-xl">
       <h2>Email Sent</h2>
       <p className="my-10   text-lg">
         An email with instructions on how to reset your password has been sent

@@ -32,14 +32,14 @@ const DetailsCard = ({
   }
 
   return (
-    <div className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out relative w-[90%] md:w-[800px] mx-auto">
+    <div className="tranistion relative mx-auto w-[90%] rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
       <div className="relative">
         {/* preview video*/}
-        <div className="absolute w-full bg-gradient-to-b to-netflix-black/100 from-netflix-black/0 h-[25px] md:h-[50px] lg:h-[100px] -bottom-1"></div>
+        <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[50px] lg:h-[100px]"></div>
         <div className="w-full">
           <video
             ref={videoRef}
-            className="rounded-tl rounded-tr w-full"
+            className="w-full rounded-tl rounded-tr"
             poster={thumbnailURL}
             src={trailerUrl}
             loop
@@ -54,30 +54,30 @@ const DetailsCard = ({
         </div>
 
         {/* hero text */}
-        <div className="absolute flex gap-2 bottom-8 left-6 md:bottom-10 md:left-12 cursor-pointer">
+        <div className="absolute bottom-8 left-6 flex cursor-pointer gap-2 md:bottom-10 md:left-12">
           <div
-            className="flex items-center gap-2 text-black font-semibold bg-white px-2 md:px-4 py-1 rounded cursor-pointer text-sm md:text-lg "
+            className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg "
             onClick={playPauseMedia}
           >
             <RiPlayMiniFill className="text-xl lg:text-4xl" />
             Play
           </div>
-          <div className="flex items-center gap-2 font-semibold  text-white px-2 md:px-4 rounded opacity-80 cursor-pointer text-sm md:text-lg">
+          <div className="flex cursor-pointer items-center gap-2  rounded px-2 text-sm font-semibold text-white opacity-80 md:px-4 md:text-lg">
             <LikeIcon2 />
           </div>
         </div>
       </div>
 
       {/* preview details */}
-      <div className="text-white px-6 md:px-12 pb-3 md:pb-8 space-y-2">
-        <div className="flex items-center gap-2 mt-1">
+      <div className="space-y-2 px-6 pb-3 text-white md:px-12 md:pb-8">
+        <div className="mt-1 flex items-center gap-2">
           <div>2023</div>
           <div>1hr 55m</div>
-          <div className="text-white border-[1px] border-gray-500 px-1 rounded text-xs h-fit">
+          <div className="h-fit rounded border-[1px] border-gray-500 px-1 text-xs text-white">
             HD
           </div>
         </div>
-        <div className="text-white border-[1px] border-gray-500 px-2 text-sm w-fit">
+        <div className="w-fit border-[1px] border-gray-500 px-2 text-sm text-white">
           {rating}
         </div>
         <div className="basis-2/3">{description}</div>
@@ -96,7 +96,7 @@ const DetailsCard = ({
             </div>
             <div>
               <span className="text-gray-400">Maturity Rating:</span>
-              <span className="text-gray-500 border-[1px] border-white px-1 text-sm">
+              <span className="border-[1px] border-white px-1 text-sm text-gray-500">
                 {rating}
               </span>
             </div>
