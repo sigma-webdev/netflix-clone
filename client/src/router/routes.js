@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home.jsx";
 import SignUp from "../pages/SignUp/SignUp.js";
+import Browse from "../pages/Browse";
+import Watch from "../pages/Watch";
 import PlanForm from "../pages/SignUp/PlanForm.js";
 import UserRegistration from "../pages/SignUp/UserRegistration.js";
 import CheckPlan from "../pages/SignUp/CheckPlan.js";
@@ -36,6 +38,16 @@ const router = createBrowserRouter([
   {
     path: "/signup/paymentfail",
     element: <PaymentFail />,
+  },
+  {
+    path: "/browse",
+    element: <Browse />,
+    children: [],
+  },
+  {
+    path: "/watch/:contentId",
+    element: <Watch />,
+    children: [],
   },
 ]);
 

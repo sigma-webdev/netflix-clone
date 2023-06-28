@@ -36,15 +36,15 @@ function ForgotPassword() {
       onSubmit={(e) => {
         handleSubmit(e);
       }}
-      className=" w-[460px] p-10 shadow-xl flex flex-col bg-[#f3f3f3]"
+      className=" flex w-[460px] flex-col bg-[#f3f3f3] p-10 shadow-xl"
     >
-      <h2 className="font-semibold mb-10">Forgot Email/Password</h2>
+      <h2 className="mb-10 font-semibold">Forgot Email/Password</h2>
 
       <p className="my-5   text-lg">
         we will send you an email with instruction on how to reset you password.
       </p>
       <input
-        className=" h-12 my-4 border-2 p-2 focus:outline-none"
+        className=" my-4 h-12 border-2 p-2 focus:outline-none"
         type="email"
         name="email"
         placeholder="name@example.com"
@@ -53,7 +53,7 @@ function ForgotPassword() {
 
       <button
         type="submit"
-        className="hover:bg-[#2490fd] bg-[#007efa]  h-12 my-4   text-lg text-white"
+        className="my-4 h-12  bg-[#007efa] text-lg   text-white hover:bg-[#2490fd]"
       >
         {FORGOT_PASSWORD_LOADING ? <Loading /> : "Email Me"}
       </button>

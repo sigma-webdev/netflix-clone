@@ -58,11 +58,11 @@ const AdminManageUsers = () => {
   return (
     <>
       {isOpen && (
-        <div className="absolute w-full h-full bg-gray-600 bg-opacity-50 flex items-center justify-center">
-          <div className="relative w-96 bg-white rounded-lg py-12 px-4">
+        <div className="absolute flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-50">
+          <div className="relative w-96 rounded-lg bg-white px-4 py-12">
             <div
               onClick={() => toggleModal(false)}
-              className="absolute top-2 right-3 text-black text-3xl cursor-pointer"
+              className="absolute right-3 top-2 cursor-pointer text-3xl text-black"
             >
               &times;
             </div>
@@ -70,22 +70,22 @@ const AdminManageUsers = () => {
               onSubmit={(e) => e.preventDefault()}
               className="flex flex-col gap-2 text-black"
             >
-              <div className="flex gap-x-2 items-center border-y-2 py-2 ">
+              <div className="flex items-center gap-x-2 border-y-2 py-2 ">
                 <span>Name :</span>
                 <p className="font-semibold">Nasikh CL</p>
               </div>
-              <button className="bg-red-600 hover:bg-red-700 text-white rounded py-2">
+              <button className="rounded bg-red-600 py-2 text-white hover:bg-red-700">
                 Block User
               </button>
             </form>
           </div>
         </div>
       )}
-      <div className="w-10/12 flex flex-col gap-5 items-center py-4 bg-slate-100 overflow-y-scroll max-h-[100vh]">
+      <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-slate-100 py-4">
         <h2 className="text-[#E50914]">Manage Users</h2>
-        <table className="table-auto w-5/6 overflow-scroll text-gray-200 border border-gray-300">
+        <table className="w-5/6 table-auto overflow-scroll border border-gray-300 text-gray-200">
           <thead className="text-left">
-            <tr className="text-white bg-[#E50914]">
+            <tr className="bg-[#E50914] text-white">
               <th className="px-4 py-2">S. No</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Email</th>
@@ -110,7 +110,7 @@ const AdminManageUsers = () => {
                     <td className="px-4 py-2">
                       <div
                         onClick={toggleModal}
-                        className="py-2 text-center bg-[#E50914] hover:bg-[#d4252e] text-white font-bold rounded cursor-pointer"
+                        className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]"
                       >
                         View
                       </div>

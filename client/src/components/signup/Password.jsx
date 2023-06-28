@@ -38,48 +38,48 @@ function Password() {
   }
 
   return (
-    <form className="   max-w-[440px]  m-4" onSubmit={(e) => handleSignIn(e)}>
+    <form className="   m-4  max-w-[440px]" onSubmit={(e) => handleSignIn(e)}>
       <p className="text-[#333]">
         STEP <span className="font-bold">1</span> OF {""}
         <span className="font-bold">3</span>
       </p>
-      <p className="text-[#333] text-3xl  mb-3 font-bold">Welcome back!</p>
-      <p className="text-[#333] text-3xl  mb-3 font-bold">
+      <p className="mb-3 text-3xl  font-bold text-[#333]">Welcome back!</p>
+      <p className="mb-3 text-3xl  font-bold text-[#333]">
         Joining Netflix is easy.
       </p>
-      <p className="text-xl text-[#333]  mb-4">
+      <p className="mb-4 text-xl  text-[#333]">
         Enter your password and you'll be watching in no time.
       </p>
 
       <p className="text-base text-[#333]  ">Email</p>
-      <p className="text-base text-[#333] font-bold mb-4">{email}</p>
+      <p className="mb-4 text-base font-bold text-[#333]">{email}</p>
 
       {/* password */}
-      <div className="relative z-0 w-full mb-4 group border-[1px] border-gray ">
+      <div className="border-gray group relative z-0 mb-4 w-full border-[1px] ">
         <input
           type="password"
           name="password"
           id="floating_password"
-          className="m-3 block py-2.5 px-0 w-full text-sm  font-semibold text-gray-900 bg-transparent border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-500 peer"
+          className="peer m-3 block w-full appearance-none border-gray-300  bg-transparent px-0 py-2.5 text-sm font-semibold text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-0"
           required
           placeholder=" "
         />
         <label
           htmlFor="floating_password"
-          className="m-3  absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-500  peer-focus:font-semibold  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          className="absolute  top-3 -z-10 m-3 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100  peer-focus:left-0  peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-semibold peer-focus:text-gray-500"
         >
           Enter a password
         </label>
       </div>
       <Link to="/forgotpassword">
-        <p className="  text-blue-600  border-b-2  border-white  hover:border-blue-600 w-fit">
+        <p className="  w-fit  border-b-2  border-white  text-blue-600 hover:border-blue-600">
           Forgot your password?
         </p>
       </Link>
       {/* password */}
       <button
         type="submit"
-        className="mt-3 bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl"
+        className="mt-3 h-16  w-full  rounded-md bg-[#e50914] text-xl font-semibold text-white  hover:bg-[#f6121d]"
       >
         {SIGN_IN_LOADING ? <Loading /> : "Next"}
       </button>
