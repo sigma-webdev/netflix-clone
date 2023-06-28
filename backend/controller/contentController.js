@@ -20,7 +20,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    categories,
+    contentType,
     genres,
     rating,
     language,
@@ -34,7 +34,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    categories,
+    contentType,
     genres,
     rating,
     language,
@@ -97,13 +97,12 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     }
   }
 
-  console.log("details --------", details.episodeURL);
   // checking for missing fields
   const requiredFields = [
     "name",
     "description",
     "releaseDate",
-    "categories",
+    "contentType",
     "genres",
     "rating",
     "language",
@@ -148,7 +147,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 const httpGetContent = asyncHandler(async (req, res, next) => {
   const {
     search,
-    category,
+    contentType,
     genre,
     display,
     page,
@@ -168,8 +167,8 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   if (search) query["name"] = { $regex: search, $options: "i" };
 
   // content Movies or Series
-  if (category) {
-    query["categories"] = new RegExp(category, "i");
+  if (contentType) {
+    query["contentType"] = new RegExp(contentType, "i");
   }
 
   // contents with specific genre
