@@ -21,7 +21,7 @@ const contentSchema = new Schema(
       required: [true, "Content release date is required!"],
     },
     cast: [String],
-    categories: {
+    contentType: {
       type: String,
       enum: ["Movie", "Series"],
       required: true,
