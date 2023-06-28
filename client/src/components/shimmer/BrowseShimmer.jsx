@@ -22,8 +22,8 @@ const BrowseShimmer = () => {
       </div>
       <div>
         <div className="mx-6 my-6 flex gap-4">
-          {[1, 1, 1, 1, 1, 1, 1, 1, 1].map((item) => {
-            return <VideoShimmer />;
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => {
+            return <VideoShimmer key={item} />;
           })}
         </div>
       </div>

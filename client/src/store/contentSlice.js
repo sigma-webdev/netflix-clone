@@ -59,7 +59,6 @@ export const fetchContentBySearch = createAsyncThunk(
       const contentsObject = data.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
-
       return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);

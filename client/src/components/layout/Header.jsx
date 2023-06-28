@@ -4,9 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 // icons
-import { GlobeIcon, SearchIcon } from "../icons";
-import { AiOutlineSearch } from "react-icons/ai";
-import { BiBell } from "react-icons/bi";
+import { SearchIcon } from "../icons";
 import { Loading } from "../icons.jsx";
 // THUNK
 import { SIGN_OUT } from "../../store/authSlice.js";
