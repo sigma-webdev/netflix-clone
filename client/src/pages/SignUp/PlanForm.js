@@ -67,7 +67,7 @@ function PlanForm() {
           navigate("/signup/paymentSuccess");
         } else {
           toast.error(verifySubscription.payload.message);
-          navigate("/signin/paymentfail");
+          navigate("/signup/paymentfail");
         }
       },
       theme: {
@@ -267,7 +267,7 @@ function PlanForm() {
         <div className="flex justify-center">
           <button
             onClick={() => handlesubmit()}
-            className="mt-3  max-w-[440px] bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl"
+            className="mt-3  max-w-[440px] bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl flex items-center justify-center"
           >
             {buttonLoading ? <BiLoader /> : "Next"}
           </button>
