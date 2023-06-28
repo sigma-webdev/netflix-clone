@@ -11,7 +11,7 @@ const jwtAuth = (req, res, next) => {
     if (error) {
       return res.status(400).json({ success: false, message: err.message });
     } else {
-      req.user = { id: payload.id, email: payload.email };
+      req.user = { id: payload.id, email: payload.email, role: payload.role };
     }
   });
 
