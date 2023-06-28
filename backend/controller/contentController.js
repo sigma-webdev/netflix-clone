@@ -56,44 +56,23 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
           "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
       },
     ],
-    // default content value
-    // content: [
-    //   {
-    //     contentURL:
-    //       "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
-    //   },
-    // ],
   };
 
   if (details.contentType === "Movie") {
-    if (details.content) {
-      details.content[0].contentURL =
-        "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4";
+    details["content"] = [
+      {
+        contentURL:
+          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+      },
+    ];
 
-      // get content video length
-      if (details.content[0].contentURL) {
-        const contentLength = await getContentLength(
-          details.content[0].contentURL,
-          next
-        );
-        details.content[0].contentDuration = contentLength;
-      }
-    }
-  }
-
-  if (details.contentType === "Series") {
-    if (details.episodes) {
-      details.episodes[0].episodeURL =
-        "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4";
-
-      // get content video length
-      // if (details.content[0].contentURL) {
-      //   const contentLength = await getContentLength(
-      //     details.content[0].contentURL,
-      //     next
-      //   );
-      //   details.content[0].contentDuration = contentLength;
-      // }
+    // get content video length
+    if (details.content[0].contentURL) {
+      const contentLength = await getContentLength(
+        details.content[0]?.contentURL,
+        next
+      );
+      details.content[0].contentDuration = contentLength;
     }
   }
 
@@ -155,6 +134,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     latest,
     mostLikes,
     trending,
+    originCountry,
   } = req.query;
   const query = {};
   const PAGE = Number(page) || 1;
@@ -187,6 +167,11 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     sorting["trending"] = { trending: -1 };
   }
 
+  // get content from specific origin
+  if (originCountry) {
+    query["originCountry"] = new RegExp(originCountry, "i");
+  }
+
   // pagination
   const totalContents = await Content.find(query).countDocuments();
   const result = {};
@@ -204,7 +189,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   }
 
   // display condition
-  // TODO: Integrate middleware
   if (req.role === "ADMIN" && display) {
     query["display"] = display;
   } else if (req.role === "USER") {
@@ -238,17 +222,15 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   const contentData = await Content.findById(contentId);
-
-  if (contentData) {
-    contentData.trending += 1;
-    await contentData.save();
-  }
-  console.log("content Trending ===", contentData.trending);
-
   if (!contentData) {
     return next(
       new CustomError("Invalid Content Id, or Content Not found", 404)
     );
+  }
+
+  if (contentData) {
+    contentData.trending += 1;
+    await contentData.save();
   }
 
   res.status(200).json({
