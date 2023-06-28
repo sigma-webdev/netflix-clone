@@ -61,16 +61,19 @@ const Header = ({ isLogin }) => {
   }
 
   const handleSearch = (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
+
     dispatch(
       fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
     );
   };
 
-  const handleCategory = (category) => {
+  const handleCategory = (contentType) => {
     dispatch(
       fetchContentByCategory({
-        category,
+        contentType,
         userId: "64789b082f388ccff2e33eaa",
       })
     );
@@ -142,7 +145,7 @@ const Header = ({ isLogin }) => {
         <div className="flex h-fit items-center gap-3">
           <IconContext.Provider value={{ size: "25px" }}>
             <div className="flex border-2 border-white  text-white">
-              <div className="cursor-pointer">
+              <div className="cursor-pointer" onClick={handleSearch}>
                 <SearchIcon />
               </div>
 

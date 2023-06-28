@@ -9,10 +9,10 @@ import Layout from "../components/layout/Layout";
 // actions
 import { fetchContent } from "../store/contentSlice";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
+import BrowseShimmer from "../components/shimmer/BrowseShimmer";
 
 const Browse = () => {
   const content = useSelector((state) => state.content.filteredContent);
-
   const LOADING = useSelector((state) => state.content.loading);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
@@ -38,7 +38,7 @@ const Browse = () => {
     <Layout isLogin={true}>
       <div id="content-details" className="relative h-full w-full"></div>
       {LOADING ? (
-        "loading..."
+        <BrowseShimmer />
       ) : content.length === 0 ? (
         "No Data Found"
       ) : (

@@ -7,8 +7,6 @@ export const convertResponseToContentObject = (data, userId) => {
     isDisliked = data.dislikes.find((item) => item === userId) ? true : false;
   }
 
-  console.log(data.content[0].contentURL);
-
   return {
     contentId: data._id,
     name: data.name,

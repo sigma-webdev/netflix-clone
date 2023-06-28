@@ -17,6 +17,7 @@ export const likeContent = createAsyncThunk(
       const response = await axiosInstance.patch(`/contents/${contentId}/like`);
 
       const data = response.data.data;
+
       const contentObject = convertResponseToContentObject(data, userId);
       const contenId = data._id;
 
@@ -59,8 +60,6 @@ export const fetchContentBySearch = createAsyncThunk(
         return convertResponseToContentObject(item, userId);
       });
 
-      console.log(contentsObject);
-
       return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -70,10 +69,10 @@ export const fetchContentBySearch = createAsyncThunk(
 
 export const fetchContentByCategory = createAsyncThunk(
   "content/fetchContentByCategory",
-  async ({ category, userId }, { rejectWithValue }) => {
+  async ({ contentType, userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/contents?category=${category}`
+        `/contents?contentType=${contentType}`
       );
 
       const data = response.data.data.contents;
@@ -81,8 +80,6 @@ export const fetchContentByCategory = createAsyncThunk(
       const contentsObject = data.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
-
-      console.log(contentsObject);
 
       return contentsObject;
     } catch (error) {
@@ -166,7 +163,7 @@ export const fetchContent = createAsyncThunk(
   "content/fetchContent",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("/contents/");
+      const response = await axiosInstance.get("/contents?contentType=movie");
 
       const data = response.data.data.contents;
       const contentsObject = data.map((item) => {
@@ -175,6 +172,7 @@ export const fetchContent = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -294,11 +292,11 @@ export const contentSlice = createSlice({
         const likedContentId = action.payload.contenId;
         const likedContent = action.payload.contentObject;
 
-        const newAllContent = state.allContent.map((content) =>
+        const newAllContent = state.filteredContent.map((content) =>
           content.contentId === likedContentId ? likedContent : content
         );
 
-        state.allContent = newAllContent;
+        state.filteredContent = newAllContent;
         state.loading = false;
       })
       .addCase(likeContent.rejected, (state) => {
@@ -313,13 +311,11 @@ export const contentSlice = createSlice({
         const dislikedContentId = action.payload.contenId;
         const dislikedContent = action.payload.contentObject;
 
-        const newAllContent = state.allContent.map((content) =>
+        const newAllContent = state.filteredContent.map((content) =>
           content.contentId === dislikedContentId ? dislikedContent : content
         );
 
-        console.log(newAllContent);
-        state.allContent = newAllContent;
-
+        state.filteredContent = newAllContent;
         state.loading = false;
       })
       .addCase(dislikeContent.rejected, (state) => {
@@ -328,5 +324,4 @@ export const contentSlice = createSlice({
   },
 });
 
-//export const {} = contentSlice.actions;
 export default contentSlice.reducer;

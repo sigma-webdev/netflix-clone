@@ -8,7 +8,6 @@ const Crousal = ({ content }) => {
 
   const handleLeftArrow = () => {
     ref.current.scrollLeft -= ref.current.offsetWidth;
-    console.log(ref.current.scrollLeft);
   };
 
   const handleRightArrow = () => {
