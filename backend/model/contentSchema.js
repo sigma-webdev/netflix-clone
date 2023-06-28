@@ -129,17 +129,6 @@ const contentSchema = new Schema(
         contentDuration: { type: String },
       },
     ],
-    // TODO: add series pending work
-    episodes: [
-      {
-        episodeURL: {
-          type: String,
-        },
-        episodeId: {
-          type: String,
-        },
-      },
-    ],
     display: {
       type: Boolean,
       default: false,
