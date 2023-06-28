@@ -1,11 +1,35 @@
 const userModel = require("../model/userSchema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
+const CustomError = require("../utils/customError.js");
+
+/******************************************************
+ * @getUser
+ * @route /api/v1/auth/users/:userId
+ * @description get the specific user
+ * @params userId
+ * @returns object with isUserExist boolean value
+ ******************************************************/
 
 const getUser = asyncHandler(async (req, res, next) => {
-  const userId = req.user.id;
-  const result = await userModel.findById(userId);
-  return res.status(200).json({ success: true, data: result });
+  const { userId } = req.params;
+
+  // get user from database using user id
+  const user = await userModel.findById(userId);
+
+  // if user is null return error message
+  if (!user) {
+    return next(new CustomError("user Not found", 400));
+  }
+  return res.status(200).json({ success: true, data: user });
 });
+
+/******************************************************
+ * @getUsers
+ * @route /api/v1/auth/users
+ * @description get user base on query
+ * @query page , limit , plan , subscription
+ * @returns array of user objects
+ ******************************************************/
 
 const getUsers = asyncHandler(async (req, res, next) => {
   const { page, limit, plan, subscribed } = req.query;
@@ -29,14 +53,14 @@ const getUsers = asyncHandler(async (req, res, next) => {
   if (endIndex < totalUsers) {
     result.next = {
       pageNumber: 1,
-      limit: LIMIT
+      limit: LIMIT,
     };
   }
 
   if (startIndex > 0) {
     result.previous = {
       pageNumber: PAGE - 1,
-      limit: LIMIT
+      limit: LIMIT,
     };
   }
 
@@ -49,12 +73,20 @@ const getUsers = asyncHandler(async (req, res, next) => {
   return res.status(200).json({ success: true, data: result });
 });
 
+/******************************************************
+ * @contentWatchHistory
+ * @route /api/v1/auth/watchhistory/:contentId
+ * @description add the contentId in watchhistory array, if contentId is not present
+ * @params contentId
+ * @returns watchhistory (array contentIds)
+ ******************************************************/
+
 const contentWatchHistory = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { contentId } = req.params;
 
   const { watchHistory } = await userModel.findById(userId, {
-    watchHistory: 1
+    watchHistory: 1,
   });
 
   const isContentIdPresent = watchHistory.includes(contentId);
@@ -64,12 +96,41 @@ const contentWatchHistory = asyncHandler(async (req, res, next) => {
   const result = await userModel.findByIdAndUpdate(
     userId,
     {
-      watchHistory: watchHistory
+      watchHistory: watchHistory,
     },
     { new: true }
   );
   res.status(200).json({ success: true, data: result.watchHistory });
 });
+
+/******************************************************
+ * @getWatchContent
+ * @method delete
+ * @route /api/v1/auth/watchhistory
+ * @description get all content present in watchHistory base on contentId (populate)
+ * @params contentId
+ * @returns array of content object with specific fields
+ ******************************************************/
+
+const removeContentFromWatchHistory = asyncHandler(async (req, res, next) => {
+  const { contentId } = req.params;
+  const result = await userModel.findByIdAndUpdate(
+    userId,
+    {
+      $pop: { watchHistory: contentId },
+    },
+    { new: true }
+  );
+  res.status(200).json({ success: true, data: result.watchHistory });
+});
+
+/******************************************************
+ * @getWatchContent
+ * @route /api/v1/auth/watchhistory
+ * @description get all content present in watchHistory base on contentId (populate)
+ * @params contentId
+ * @returns array of content object with specific fields
+ ******************************************************/
 
 const getWatchContent = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
@@ -86,14 +147,14 @@ const getWatchContent = asyncHandler(async (req, res, next) => {
   if (endIndex < totalWatchContent) {
     result.next = {
       pageNumber: 1,
-      limit: LIMIT
+      limit: LIMIT,
     };
   }
 
   if (startIndex > 0) {
     result.previous = {
       pageNumber: PAGE - 1,
-      limit: LIMIT
+      limit: LIMIT,
     };
   }
 
@@ -103,13 +164,19 @@ const getWatchContent = asyncHandler(async (req, res, next) => {
       select: "name thumbnail likesCount rating language categories genres",
       options: {
         skip: startIndex,
-        limit: LIMIT
-      }
-    }
+        limit: LIMIT,
+      },
+    },
   ]);
 
   result.watchContent = watchContent.watchHistory;
   res.status(200).json({ success: true, data: result });
 });
 
-module.exports = { getUser, getUsers, contentWatchHistory, getWatchContent };
+module.exports = {
+  getUser,
+  getUsers,
+  contentWatchHistory,
+  getWatchContent,
+  removeContentFromWatchHistory,
+};

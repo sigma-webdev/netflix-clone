@@ -20,7 +20,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    contentType,
+    categories,
     genres,
     rating,
     language,
@@ -34,7 +34,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     name,
     description,
     releaseDate,
-    contentType,
+    categories,
     genres,
     rating,
     language,
@@ -103,7 +103,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     "name",
     "description",
     "releaseDate",
-    "contentType",
+    "categories",
     "genres",
     "rating",
     "language",
@@ -169,7 +169,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   // content Movies or Series
   if (category) {
-    query["contentType"] = new RegExp(category, "i");
+    query["categories"] = new RegExp(category, "i");
   }
 
   // contents with specific genre

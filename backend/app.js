@@ -13,7 +13,6 @@ const authRouter = require("./router/authRouter.js");
 const paymentRouter = require("./router/paymentRouter.js");
 const contentRoute = require("./router/contentRouter");
 const userRouter = require("./router/userRouter.js");
-
 // database connection
 require("./config/databaseConnection");
 
@@ -49,6 +48,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/contents", contentRoute);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1/users", userRouter);
 
 // errorhandler
 app.use(errorHandler);
