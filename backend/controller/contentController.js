@@ -445,7 +445,6 @@ const contentLikes = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = {
-  contentApi,
   httpPostContent,
   httpGetContent,
   httpGetContentById,
