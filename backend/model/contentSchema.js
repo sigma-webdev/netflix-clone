@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 // TODO more required field movie likes and array of episode series
-const contentSchema = new mongoose.Schema(
+const contentSchema = new Schema(
   {
     name: {
       type: String,
@@ -20,7 +21,7 @@ const contentSchema = new mongoose.Schema(
       required: [true, "Content release date is required!"],
     },
     cast: [String],
-    contentType: {
+    categories: {
       type: String,
       enum: ["Movie", "Series"],
       required: true,
@@ -43,8 +44,9 @@ const contentSchema = new mongoose.Schema(
     ],
     disLikesCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
+
     genres: {
       type: [String],
       enum: [
@@ -60,8 +62,8 @@ const contentSchema = new mongoose.Schema(
         "Sci-fi & Fantasy",
         "Sports",
         "Thrillers",
-        "Adventure"
-      ]
+        "Adventure",
+      ],
     },
     director: {
       type: String,
@@ -69,7 +71,7 @@ const contentSchema = new mongoose.Schema(
     },
     rating: {
       type: String,
-      required: true
+      required: true,
     },
     language: {
       type: String,
@@ -80,8 +82,8 @@ const contentSchema = new mongoose.Schema(
         "Japan",
         "Tamil",
         "Spanish",
-        "German"
-      ]
+        "German",
+      ],
     },
     thumbnail: [
       {
@@ -89,13 +91,13 @@ const contentSchema = new mongoose.Schema(
           type: String,
 
           default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp"
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp",
         },
         thumbnailID: {
-          type: String
+          type: String,
           // required: [true, "Thumbnail Id should be provided"],
-        }
-      }
+        },
+      },
     ],
     trailer: [
       {
@@ -103,11 +105,11 @@ const contentSchema = new mongoose.Schema(
           type: String,
 
           default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png"
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
           // required: [true, "trailer video link must be provided"],
         },
-        trailerId: { type: String }
-      }
+        trailerId: { type: String },
+      },
     ],
 
     content: [
@@ -116,31 +118,31 @@ const contentSchema = new mongoose.Schema(
           type: String,
 
           default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png"
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
 
           // required: [true, "Content video link must be provided"],
         },
         contentID: {
-          type: String
+          type: String,
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: String }
-      }
+        contentDuration: { type: String },
+      },
     ],
     // TODO: add series pending work
     episodes: [
       {
         episodeURL: {
-          type: String
+          type: String,
         },
         episodeId: {
-          type: String
-        }
-      }
+          type: String,
+        },
+      },
     ],
     display: {
       type: Boolean,
-      default: false
+      default: false,
     },
     originCountry: {
       type: String,
@@ -148,12 +150,11 @@ const contentSchema = new mongoose.Schema(
     },
     trending: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
-  {
-    timestamps: true,
-  }
+
+  { timestamps: true }
 );
 
 contentSchema.index("name");
@@ -166,5 +167,4 @@ contentSchema.pre("save", function (next) {
 });
 
 const contentModel = mongoose.model("Content", contentSchema);
-
 module.exports = contentModel;

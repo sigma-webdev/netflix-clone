@@ -1,7 +1,6 @@
 const express = require("express");
 
 const {
-  contentApi,
   httpPostContent,
   httpGetContent,
   httpGetContentById,
@@ -10,14 +9,25 @@ const {
   contentLikes,
 } = require("../controller/contentController");
 const jwtAuth = require("../middleware/jwtAuth");
+const authAdmin = require("../middleware/authAdmin");
+const checkUserSubscription = require("../middleware/ckeckUserSubscribtion");
 
 const contentRoute = express.Router();
+// like & dislike routes --
+contentRoute
+  .route("/:contentId/:action")
+  .patch(jwtAuth, checkUserSubscription, contentLikes);
 
-contentRoute.route("/:contentId/:action").patch(jwtAuth, contentLikes);
-contentRoute.route("/").post(httpPostContent).get(httpGetContent);
+// create and get content
+contentRoute
+  .route("/")
+  .post(jwtAuth, authAdmin, httpPostContent)
+  .get(jwtAuth, checkUserSubscription, httpGetContent);
+
+// perform crud with the provided contentID
 contentRoute
   .route("/:contentId")
-  .get(httpGetContentById)
-  .delete(httpDeleteById)
-  .put(httpUpdateById);
+  .get(jwtAuth, checkUserSubscription, httpGetContentById)
+  .delete(jwtAuth, authAdmin, httpDeleteById)
+  .put(jwtAuth, authAdmin, httpUpdateById);
 module.exports = contentRoute;
