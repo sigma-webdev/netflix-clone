@@ -20,7 +20,7 @@ const SignUpHeader = () => {
           <FiLoader />
         ) : (
           <button
-            className="text-xl font-bold"
+            className="text-xl font-semibold"
             onClick={() => {
               navigate("/signin");
             }}
