@@ -5,18 +5,15 @@ import axiosInstance from "../helpers/axiosInstance";
 const initialState = {
   allContent: [],
   currentContent: {},
-  loading: false
+  loading: false,
 };
-
-
-
 
 export const addNewContent = createAsyncThunk(
   "content/addNewContent",
-  async (newContent ,  { rejectWithValue }) => {
-    console.log('reached',newContent)
+  async (newContent, { rejectWithValue }) => {
+    console.log("reached", newContent);
     try {
-      const response = await axiosInstance.post(`/content`, newContent);
+      const response = await axiosInstance.post(`/contents`, newContent);
       const data = response.data.data;
       // fetchContentById()
       return data;
@@ -24,45 +21,47 @@ export const addNewContent = createAsyncThunk(
       return rejectWithValue(error.response.data);
     }
   }
-); 
-
- 
+);
 
 export const updateContentById = createAsyncThunk(
   "content/updateContentById",
-  async ({id, sentFormData} ,  { rejectWithValue }) => {
-    let progress=0;
-    console.log('called updar', sentFormData, '//////',id)
+  async ({ id, sentFormData }, { rejectWithValue }) => {
+    let progress = 0;
+    console.log("called updar", sentFormData, "//////", id);
     try {
-      const response = await axiosInstance.put(`/content/${id}`, sentFormData, {
-        onUploadProgress: (progressEvent) => {
-                progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-                  
-                }
-              });
-      const data = response.data.data
+      const response = await axiosInstance.put(
+        `/contents/${id}`,
+        sentFormData,
+        {
+          onUploadProgress: (progressEvent) => {
+            progress = Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            );
+          },
+        }
+      );
+      const data = response.data.data;
 
-      return {...data, progress};
+      return { ...data, progress };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
-); 
-
+);
 
 export const deleteContentById = createAsyncThunk(
   "content/deleteContentById",
   async (contentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`/content/${contentId}`);
+      const response = await axiosInstance.delete(`/contents/${contentId}`);
       const data = response.data.contentData;
 
-      return {data, contentId};
+      return { data, contentId };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
-);  
+);
 
 // export const updateContentById = async (id, data) => {
 //   console.log(data)
@@ -84,7 +83,7 @@ export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
   async (contentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/content/${contentId}`);
+      const response = await axiosInstance.get(`/contents/${contentId}`);
       const data = response.data.data;
 
       return data;
@@ -92,15 +91,15 @@ export const fetchContentById = createAsyncThunk(
       return rejectWithValue(error.response.data);
     }
   }
-);   
+);
 
 export const fetchContent = createAsyncThunk(
   "content/fetchContent",
   async () => {
     try {
-      const response = await axiosInstance.get("/content/");
+      const response = await axiosInstance.get("/contents/");
       const data = response.data.data;
-      console.log(data)
+      console.log(data);
       return data;
     } catch (error) {
       console.error(error);
@@ -119,7 +118,7 @@ export const contentSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchContent.fulfilled, (state, action) => {
-        console.log(action.payload)
+        console.log(action.payload);
         state.allContent = [...action.payload.contents];
         state.loading = false;
       })
@@ -141,12 +140,12 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
-       // add new content
-       .addCase(addNewContent.pending, (state) => {
+      // add new content
+      .addCase(addNewContent.pending, (state) => {
         state.contentLoading = true;
       })
       .addCase(addNewContent.fulfilled, (state, action) => {
-        state.allContent = [...state.allContent , action.payload];
+        state.allContent = [...state.allContent, action.payload];
         state.contentLoading = false;
       })
       .addCase(addNewContent.rejected, (state) => {
@@ -160,7 +159,9 @@ export const contentSlice = createSlice({
       })
       .addCase(deleteContentById.fulfilled, (state, action) => {
         const deletedContentId = action.payload.contentId;
-        const filteredContent = state.allContent.filter(item => item._id !== deletedContentId)
+        const filteredContent = state.allContent.filter(
+          (item) => item._id !== deletedContentId
+        );
         state.allContent = filteredContent;
         state.loading = false;
       })
@@ -175,14 +176,16 @@ export const contentSlice = createSlice({
       })
       .addCase(updateContentById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
-        const newAllContent = state.allContent.map(content => (content._id === updatedContent._id) ? updatedContent : content)
+        const newAllContent = state.allContent.map((content) =>
+          content._id === updatedContent._id ? updatedContent : content
+        );
         state.allContent = newAllContent;
         state.loading = false;
       })
       .addCase(updateContentById.rejected, (state) => {
         state.allContent = [];
         state.loading = false;
-      })
+      });
   },
 });
 
