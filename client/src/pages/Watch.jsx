@@ -3,10 +3,11 @@ import VideoController from "../components/video/VideoController";
 import { fetchContentById } from "../store/contentSlice";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import VideoShimmer from "../components/shimmer/VideoShimmer";
 
 const Watch = () => {
   const { contentId } = useParams();
-  const CONTENT_LOADING = useSelector((state) => state.content.loading);
+  const LOADING = useSelector((state) => state.content.loading);
   const currentContent = useSelector((state) => state.content.currentContent);
   const dispatch = useDispatch();
 
@@ -18,14 +19,18 @@ const Watch = () => {
 
   return (
     <div>
-      {CONTENT_LOADING
-        ? "...loading"
-        : currentContent && (
-            <VideoController
-              contentURL={currentContent.contentURL}
-              thumbnailURL={currentContent.thumbnailUrl}
-            />
-          )}
+      {LOADING ? (
+        <div className="h-screen">
+          <VideoShimmer />
+        </div>
+      ) : (
+        currentContent && (
+          <VideoController
+            contentURL={currentContent.contentUrl}
+            thumbnailURL={currentContent.thumbnailUrl}
+          />
+        )
+      )}
     </div>
   );
 };

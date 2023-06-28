@@ -13,8 +13,8 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
   const progressRef = useRef(null);
   const progressBarRef = useRef(null);
 
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [volume, setVolume] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+  const [volume, setVolume] = useState();
 
   function playPauseMedia() {
     const media = videoRef.current;
@@ -178,6 +178,7 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
         poster={thumbnailURL}
         onEnded={stopMedia}
         onTimeUpdate={setTime}
+        autoPlay
       ></video>
     </div>
   );

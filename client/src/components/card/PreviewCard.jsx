@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
 
