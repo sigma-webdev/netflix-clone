@@ -11,10 +11,7 @@ import { fetchContent } from "../store/contentSlice";
 import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
 
 const Browse = () => {
-  const allContent = useSelector((state) => state.content.allContent);
-  const filteredContent = useSelector((state) => state.content.filteredContent);
-
-  const content = allContent;
+  const content = useSelector((state) => state.content.filteredContent);
 
   const LOADING = useSelector((state) => state.content.loading);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);

@@ -27,7 +27,6 @@ const Header = ({ isLogin }) => {
   const SIGN_OUT_LOADING = useSelector((state) => state.auth.signOutLoading);
   const [buttonLoading, setButtonLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [category, setCategory] = useState(null);
 
   useEffect(() => {
     setButtonLoading(GET_USER_LOADING || SIGN_OUT_LOADING);
@@ -51,23 +50,6 @@ const Header = ({ isLogin }) => {
     return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
-  useEffect(() => {
-    setCategory(null);
-    dispatch(
-      fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
-    );
-  }, [searchText]);
-
-  useEffect(() => {
-    setSearchText("");
-    dispatch(
-      fetchContentByCategory({
-        category,
-        userId: "64789b082f388ccff2e33eaa",
-      })
-    );
-  }, [category]);
-
   async function handleSignInSignOut() {
     if (!IS_LOGGED_IN) return navigate("/signin");
 
@@ -79,7 +61,19 @@ const Header = ({ isLogin }) => {
   }
 
   const handleSearch = (e) => {
-    setSearchText(e.target.value);
+    e.preventDefault();
+    dispatch(
+      fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
+    );
+  };
+
+  const handleCategory = (category) => {
+    dispatch(
+      fetchContentByCategory({
+        category,
+        userId: "64789b082f388ccff2e33eaa",
+      })
+    );
   };
 
   return (
@@ -102,19 +96,19 @@ const Header = ({ isLogin }) => {
               <ul className="hidden gap-4 md:flex ">
                 <li
                   className="cursor-pointer"
-                  onClick={() => setCategory(null)}
+                  onClick={() => handleCategory("")}
                 >
                   Home
                 </li>
                 <li
                   className="cursor-pointer"
-                  onClick={() => setCategory("Movies")}
+                  onClick={() => handleCategory("Movies")}
                 >
                   Movies
                 </li>
                 <li
                   className="cursor-pointer"
-                  onClick={() => setCategory("Series")}
+                  onClick={() => handleCategory("Series")}
                 >
                   Series
                 </li>
@@ -151,13 +145,14 @@ const Header = ({ isLogin }) => {
               <div className="cursor-pointer">
                 <SearchIcon />
               </div>
-              <div>
+
+              <form onSubmit={handleSearch}>
                 <input
                   className="h-full w-full bg-black/50 text-white transition ease-in-out focus:outline-none"
-                  onChange={handleSearch}
+                  onChange={(e) => setSearchText(e.target.value)}
                   value={searchText}
                 ></input>
-              </div>
+              </form>
             </div>
           </IconContext.Provider>
           <div className="flex items-center gap-2">

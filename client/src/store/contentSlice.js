@@ -59,6 +59,8 @@ export const fetchContentBySearch = createAsyncThunk(
         return convertResponseToContentObject(item, userId);
       });
 
+      console.log(contentsObject);
+
       return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -80,8 +82,11 @@ export const fetchContentByCategory = createAsyncThunk(
         return convertResponseToContentObject(item, userId);
       });
 
+      console.log(contentsObject);
+
       return contentsObject;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -186,7 +191,8 @@ export const contentSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchContent.fulfilled, (state, action) => {
-        state.allContent = [...action.payload];
+        state.allContent = action.payload;
+        state.filteredContent = action.payload;
         state.loading = false;
       })
       .addCase(fetchContent.rejected, (state) => {
