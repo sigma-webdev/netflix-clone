@@ -5,6 +5,8 @@ const CustomError = require("../utils/customError");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary");
 
+const likeAndDislike = require("../utils/likeDislike");
+
 /********************
  * @httpCreateSeries
  * @route http://localhost:8081/api/v1/series/
@@ -267,7 +269,7 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
  * @parameters { seriesId, userId }
  * @return { Object } series object with likes and dislike
  ********************/
-const likeAndDislike = asyncHandler(async (req, res, next) => {
+const seriesLikeAndDislike = asyncHandler(async (req, res, next) => {
   const { seriesId, action } = req.params;
   const { id: userId } = req.user;
 
@@ -276,6 +278,14 @@ const likeAndDislike = asyncHandler(async (req, res, next) => {
   if (!seriesData) {
     return next(new CustomError("Series Data not available!", 404));
   }
+
+  const message = likeAndDislike(action, userId, seriesData);
+
+  await seriesData.save();
+  return res.status(200).json({
+    message: message,
+    data: seriesData,
+  });
 });
 
 module.exports = {
@@ -284,4 +294,5 @@ module.exports = {
   httpGetSeriesById,
   httpDeleteSeries,
   httpUpdateSeries,
+  seriesLikeAndDislike,
 };

@@ -5,6 +5,7 @@ const {
   httpGetSeriesById,
   httpDeleteSeries,
   httpUpdateSeries,
+  seriesLikeAndDislike,
 } = require("../controller/seriesController");
 
 // authentication and authorizations route
@@ -25,5 +26,9 @@ seriesRoute
   .get(jwtAuth, checkUserSubscription, httpGetSeriesById)
   .delete(jwtAuth, authAdmin, httpDeleteSeries)
   .put(jwtAuth, authAdmin, httpUpdateSeries);
+
+seriesRoute
+  .route("/:seriesId/:action")
+  .patch(jwtAuth, checkUserSubscription, seriesLikeAndDislike);
 
 module.exports = seriesRoute;

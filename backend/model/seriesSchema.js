@@ -117,6 +117,12 @@ const seriesSchema = new Schema(
 
   { timestamps: true }
 );
+seriesSchema.pre("save", function (next) {
+  this.likesCount = this.likes.length;
+  this.disLikesCount = this.dislikes.length;
+
+  return next();
+});
 
 const seriesModel = mongoose.model("Series", seriesSchema);
 
