@@ -2,12 +2,6 @@ const asyncHandler = require("../middleware/asyncHandler");
 const seriesModel = require("../model/seriesSchema");
 const CustomError = require("../utils/customError");
 
-const pong = (req, res) => {
-  res.status(200).json({
-    message: "ping",
-  });
-};
-
 /********************
  * @httpCreateSeries
  * @route http://localhost:8081/api/v1/series/
@@ -97,4 +91,84 @@ const httpCreateSeries = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { httpCreateSeries, pong };
+/********************
+ * @httpCreateSeries
+ * @route http://localhost:8081/api/v1/series/
+ * @description  controller to create the series
+ * @parameters {request body object}
+ * @return { Object } content object
+ ********************/
+const httpGetSeries = asyncHandler(async (req, res, next) => {
+  const seriesData = await seriesModel.find();
+
+  if (!seriesData) {
+    return next(new CustomError("Series data not available!", 404));
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: seriesData,
+  });
+});
+
+/********************
+ * @httpGetSeriesById
+ * @route http://localhost:8081/api/v1/series/:seriesId
+ * @description  controller to get a particular series with Id
+ * @parameters { seriesId }
+ * @return { Object } content object
+ ********************/
+const httpGetSeriesById = asyncHandler(async (req, res, next) => {
+  const { seriesId } = req.params;
+
+  const seriesData = await seriesModel.findById(seriesId);
+
+  if (seriesData) {
+    seriesData.trending += 1;
+    await seriesData.save();
+  }
+
+  if (!seriesData) {
+    return next(new CustomError("Invalid Series Id, or Series Not found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Series fetched Successfully",
+    data: seriesData,
+  });
+});
+
+/********************
+ * @httpDeleteSeries
+ * @route http://localhost:8081/api/v1/series/:seriesId
+ * @description  delete series controller
+ * @parameters { seriesId }
+ * @return { Object } content object
+ ********************/
+const httpDeleteSeries = asyncHandler(async (req, res, next) => {
+  const { seriesId } = req.params;
+
+  const seriesData = await seriesModel.findById(seriesId);
+
+  if (!seriesData) {
+    return next(
+      new CustomError("Series with the given Id does not exist.", 404)
+    );
+  }
+
+  await seriesData.deleteOne();
+
+  res.status(200).json({
+    success: true,
+    message: "Series deleted successfully",
+    data: seriesData,
+  });
+});
+
+module.exports = {
+  httpCreateSeries,
+  httpGetSeries,
+  httpGetSeriesById,
+  httpDeleteSeries,
+};
