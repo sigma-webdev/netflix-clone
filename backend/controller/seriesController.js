@@ -1,5 +1,6 @@
 const asyncHandler = require("../middleware/asyncHandler");
 const seriesModel = require("../model/seriesSchema");
+const CustomError = require("../utils/customError");
 
 const pong = (req, res) => {
   res.status(200).json({
@@ -77,7 +78,7 @@ const httpCreateSeries = asyncHandler(async (req, res, next) => {
   }
 
   // create mongoose
-  const seriesObject = Content(seriesDetails);
+  const seriesObject = seriesModel(seriesDetails);
   const seriesData = await seriesObject.save();
 
   // check for contentData
