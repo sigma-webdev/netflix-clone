@@ -7,7 +7,7 @@ const initialState = {
   loading: false,
   forgotPasswordLoading: false,
   resetPasswordLoading: false,
-  isUserExistLoading: false
+  isUserExistLoading: false,
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
@@ -58,17 +58,17 @@ export const SIGN_OUT = createAsyncThunk(
   }
 );
 
-export const GET_USER = createAsyncThunk(
-  "/auth/user",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get("/auth/user");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+// export const GET_USER = createAsyncThunk(
+//   "/auth/user",
+//   async (data, { rejectWithValue }) => {
+//     try {
+//       const response = await axiosInstance.get("/auth/user");
+//       return response.data;
+//     } catch (error) {
+//       return rejectWithValue(error.response.data);
+//     }
+//   }
+// );
 
 export const FORGOT_PASSWORD = createAsyncThunk(
   "/auth/forgotpassword",
@@ -135,17 +135,17 @@ const authSlice = createSlice({
       })
 
       // get user
-      .addCase(GET_USER.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(GET_USER.fulfilled, (state, action) => {
-        state.userData = action.payload.data;
-        state.isLoggedIn = true;
-        state.loading = false;
-      })
-      .addCase(GET_USER.rejected, (state, action) => {
-        state.loading = false;
-      })
+      // .addCase(GET_USER.pending, (state) => {
+      //   state.loading = true;
+      // })
+      // .addCase(GET_USER.fulfilled, (state, action) => {
+      //   state.userData = action.payload.data;
+      //   state.isLoggedIn = true;
+      //   state.loading = false;
+      // })
+      // .addCase(GET_USER.rejected, (state, action) => {
+      //   state.loading = false;
+      // })
 
       // sign out
       .addCase(SIGN_OUT.pending, (state) => {

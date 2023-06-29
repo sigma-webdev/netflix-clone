@@ -45,7 +45,7 @@ const AdminManageContents = () => {
   useEffect(() => {
     dispatch(fetchContent());
     // setContentData(content)
-  }, []);
+  }, [dispatch]);
 
   // useEffect(() => {
 
@@ -212,6 +212,7 @@ const AdminManageContents = () => {
                 <option value="Thrillers">Thrillers</option>
               </select>
 
+
               <label htmlFor="text">Description:</label>
               <input
                 className="rounded border bg-transparent p-2"
@@ -278,7 +279,7 @@ const AdminManageContents = () => {
                 />
               </div>
 
-              <label htmlFor="creator"> Director:</label>
+                            <label htmlFor="creator"> Director:</label>
               <input
                 className="rounded border bg-transparent p-2"
                 type="text"
@@ -330,7 +331,8 @@ const AdminManageContents = () => {
                             <label htmlFor="content">  Content:</label>
                             <input className='bg-transparent border p-2 rounded' type="file" required name="content" accept="video/*" onChange={handleFileChange} /> */}
 
-              <button
+
+<button
                 type="submit"
                 disabled={isLoading}
                 className="flex items-center justify-center gap-4 rounded bg-[#E50914] py-2 text-white hover:bg-[#d4252e]"
