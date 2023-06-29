@@ -252,7 +252,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   // find content with id
-  const contentData = await Content.findById(contentId);
+  const contentData = await Content.findByIdAndDelete(contentId);
 
   if (!contentData) {
     return next(
@@ -262,29 +262,20 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
 
   const { thumbnail, trailer, content } = contentData;
 
-  await contentData
-    .deleteOne()
-    .then(() => {
-      if (content[0].contentID) {
-        cloudinaryFileDelete(content[0].contentID, next);
-      }
+  // perform delete in cloudinary
+  if (contentData) {
+    if (content[0].contentID) {
+      cloudinaryFileDelete(content[0].contentID, next);
+    }
 
-      if (trailer[0].trailerId) {
-        cloudinaryFileDelete(trailer[0].trailerId, next);
-      }
+    if (trailer[0].trailerId) {
+      cloudinaryFileDelete(trailer[0].trailerId, next);
+    }
 
-      if (thumbnail[0].thumbnailID) {
-        cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
-      }
-    })
-    .catch((error) => {
-      return next(
-        new CustomError(
-          `Delete Fail, make sure valid id is provided - ${error}`,
-          500
-        )
-      );
-    });
+    if (thumbnail[0].thumbnailID) {
+      cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
+    }
+  }
 
   res.status(200).json({
     success: true,
