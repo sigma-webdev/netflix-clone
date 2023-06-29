@@ -166,6 +166,15 @@ const httpDeleteSeries = asyncHandler(async (req, res, next) => {
   });
 });
 
+/********************
+ * @httpUpdateSeries
+ * @route http://localhost:8081/api/v1/series/:seriesId
+ * @description  delete series controller
+ * @parameters { seriesId }
+ * @return { Object } updated object
+ ********************/
+const httpUpdateSeries = asyncHandler(async (req, res, next) => {});
+
 module.exports = {
   httpCreateSeries,
   httpGetSeries,
