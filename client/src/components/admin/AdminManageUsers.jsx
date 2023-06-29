@@ -1,53 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllUsers } from "../../store/userSlice";
 
 const AdminManageUsers = () => {
-  const usersDetails = [
-    {
-      name: "nasikh cl",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-    {
-      name: "mang",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-    {
-      name: "subham",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-    {
-      name: "nasikh cl",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-    {
-      name: "mang",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-    {
-      name: "subham",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-    {
-      name: "nasikh cl",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-    {
-      name: "mang",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-    {
-      name: "subham",
-      email: "nasikcl@gmail.com",
-      phoneNumber: "9988776655",
-    },
-  ];
+  const dispatch = useDispatch();
+
+  const allUsers = useSelector((state) => state.user.allUsers);
+
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -89,24 +51,24 @@ const AdminManageUsers = () => {
               <th className="px-4 py-2">S. No</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">Number</th>
+              {/* <th className="px-4 py-2">Number</th> */}
               <th className="px-4 py-2 text-center">Action</th>
             </tr>
           </thead>
-          <tbody className=" border-opacity-0">
-            {usersDetails.length > 0 &&
-              usersDetails.map((user, index) => {
+          <tbody className=" border-opacity-0  ">
+            {allUsers.length > 0 &&
+              allUsers.map((user, index) => {
                 return (
                   <tr
-                    key={index}
+                    key={user._id}
                     className={
                       (index + 1) % 2 === 0 ? "bg-[#342e2b]" : "bg-[#2e2f3a]"
                     }
                   >
                     <td className="px-4 py-3">{index + 1}</td>
-                    <td className="px-4 py-3">{user.name}</td>
+                    <td className="px-4 py-3">{user.email.split("@")[0]}</td>
                     <td className="px-4 py-3">{user.email}</td>
-                    <td className="px-4 py-3">{user.phoneNumber}</td>
+                    {/* <td className="px-4 py-3">{user.phoneNumber}</td> */}
                     <td className="px-4 py-2">
                       <div
                         onClick={toggleModal}
