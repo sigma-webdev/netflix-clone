@@ -21,7 +21,7 @@ const contentSchema = new Schema(
       required: [true, "Content release date is required!"],
     },
     cast: [String],
-    categories: {
+    contentType: {
       type: String,
       enum: ["Movie", "Series"],
       required: true,
@@ -126,7 +126,7 @@ const contentSchema = new Schema(
           type: String,
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: String },
+        contentDuration: { type: Object },
       },
     ],
     // TODO: add series pending work
