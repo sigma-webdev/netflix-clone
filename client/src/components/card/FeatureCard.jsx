@@ -11,13 +11,13 @@ const FeatureCard = ({
     <article
       className={`flex-col ${
         currentIndex % 2 !== 0 && "md:flex-row-reverse"
-      } md:flex md:flex-row justify-center items-center gap-x-5`}
+      } items-center justify-center gap-x-5 md:flex md:flex-row`}
     >
       <div className="basis-1/2">
         <img src={featureImage} alt="banner" className="w-full" />
       </div>
-      <div className="space-y-8 basis-1/2">
-        <h2 className="text-xl sm:3xl md:text-5xl font-bold">
+      <div className="basis-1/2 space-y-8">
+        <h2 className="sm:3xl text-xl font-bold md:text-5xl">
           {featureHeading}
         </h2>
         <p className="text-lg md:text-xl lg:text-2xl">{aboutFeature}</p>

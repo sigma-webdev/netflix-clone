@@ -8,12 +8,12 @@ import {
 
 const VideoPreview = () => {
   return (
-    <div className="bg-netflix-black  drop-shadow-lg rounded-md overflow-hidden">
+    <div className="overflow-hidden  rounded-md bg-netflix-black drop-shadow-lg">
       <div>
         <video ref={videoRef} src={sampleVideo} loop></video>
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className="space-y-4 p-4">
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div onClick={playPauseMedia} className="cursor-pointer">
@@ -31,10 +31,10 @@ const VideoPreview = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-green-600 font-semibold">94% Matched</div>
-          <div className="text-white border-2 border-white px-2">A</div>
+          <div className="font-semibold text-green-600">94% Matched</div>
+          <div className="border-2 border-white px-2 text-white">A</div>
           <div className="text-white">2 Seasons</div>
-          <div className="text-white border-2 border-white px-1 rounded text-xs h-fit">
+          <div className="h-fit rounded border-2 border-white px-1 text-xs text-white">
             HD
           </div>
         </div>

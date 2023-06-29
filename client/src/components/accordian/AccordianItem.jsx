@@ -6,7 +6,7 @@ const AccordianItem = ({
   isActive,
   question,
   answer,
-  id
+  id,
 }) => {
   const tabHandler = () => {
     if (!isActive) {
@@ -18,14 +18,14 @@ const AccordianItem = ({
 
   return (
     <li onClick={tabHandler}>
-      <h5 className="flex justify-between px-6 py-4 sm:py-5 md:py-6 text-md sm:lg md:text-2xl bg-[#132144] hover:bg-[#223362]">
+      <h5 className="text-md sm:lg flex justify-between bg-[#132144] px-6 py-4 hover:bg-[#223362] sm:py-5 md:py-6 md:text-2xl">
         <button>{question}</button>
         <span>{!isActive ? <PlusIcon /> : <CrossIcon />}</span>
       </h5>
       <p
         className={`${
           isActive
-            ? "bg-[#132144] p-6 text-md sm:text-lg md:text-2xl"
+            ? "text-md bg-[#132144] p-6 sm:text-lg md:text-2xl"
             : "hidden"
         } `}
       >
