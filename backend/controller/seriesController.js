@@ -10,7 +10,7 @@ const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary");
  * @route http://localhost:8081/api/v1/series/
  * @description  controller to create the series
  * @parameters {request body object}
- * @return { Object } content object
+ * @return { Object } series object
  ********************/
 const httpCreateSeries = asyncHandler(async (req, res, next) => {
   // get require field
@@ -99,7 +99,7 @@ const httpCreateSeries = asyncHandler(async (req, res, next) => {
  * @route http://localhost:8081/api/v1/series/
  * @description  controller to create the series
  * @parameters {request body object}
- * @return { Object } content object
+ * @return { Object } series object
  ********************/
 const httpGetSeries = asyncHandler(async (req, res, next) => {
   const seriesData = await seriesModel.find();
@@ -119,7 +119,7 @@ const httpGetSeries = asyncHandler(async (req, res, next) => {
  * @route http://localhost:8081/api/v1/series/:seriesId
  * @description  controller to get a particular series with Id
  * @parameters { seriesId }
- * @return { Object } content object
+ * @return { Object } series object
  ********************/
 const httpGetSeriesById = asyncHandler(async (req, res, next) => {
   const { seriesId } = req.params;
@@ -147,12 +147,12 @@ const httpGetSeriesById = asyncHandler(async (req, res, next) => {
  * @route http://localhost:8081/api/v1/series/:seriesId
  * @description  delete series controller
  * @parameters { seriesId }
- * @return { Object } content object
+ * @return { Object }  object
  ********************/
 const httpDeleteSeries = asyncHandler(async (req, res, next) => {
   const { seriesId } = req.params;
 
-  const seriesData = await seriesModel.findById(seriesId);
+  const seriesData = await seriesModel.findByIdAndDelete(seriesId);
 
   if (!seriesData) {
     return next(
@@ -160,7 +160,18 @@ const httpDeleteSeries = asyncHandler(async (req, res, next) => {
     );
   }
 
-  await seriesData.deleteOne();
+  // TODO: to delete seasons and episode as well
+  const { thumbnail, trailer } = seriesData;
+  // perform delete in cloudinary
+  if (seriesData) {
+    if (trailer[0].trailerId) {
+      cloudinaryFileDelete(trailer[0].trailerId, next);
+    }
+
+    if (thumbnail[0].thumbnailID) {
+      cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
+    }
+  }
 
   res.status(200).json({
     success: true,
