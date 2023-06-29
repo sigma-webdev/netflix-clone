@@ -262,7 +262,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
 
   const { thumbnail, trailer, content } = contentData;
 
-  contentData
+  await contentData
     .deleteOne()
     .then(() => {
       if (content[0].contentID) {
