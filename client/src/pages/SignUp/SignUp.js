@@ -1,34 +1,33 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import netflixLogo from "../../assets/netflix_logo.png";
-import { SIGN_OUT } from "../../store/authSlice";
-import { FiLoader } from "react-icons/fi";
-import SignUpHeader from "../../components/signUp/SignUpHeader";
-import SignUpFooter from "../../components/signUp/SignUpFooter";
+import { AiOutlineCheck, AiOutlineCheckCircle } from "react-icons/ai";
+import SignUpLayout from "./SignUpLayout";
+import { Link } from "react-router-dom";
+import Devices from "../../assets/Devices.png";
 
 const SignUp = () => {
-  const { loading } = useSelector((state) => state.auth);
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
-
-  async function handleSignOut() {
-    const response = await dispatch(SIGN_OUT());
-    if (response.payload.success) {
-      navigate("/signup/signout");
-    }
-  }
-
   return (
     <div>
-      {/* adding the navigation menu */}
-      <SignUpHeader />
-
-      {/* adding the footer */}
-      <SignUpFooter />
+      <SignUpLayout>
+        <div className="w-80 text-center m-auto my-40">
+          <img className=" h-18 my-6" src={Devices} alt="devices" />
+          <p className="text-[#333]">
+            STEP <span className="font-bold">1</span> OF {""}
+            <span className="font-bold">3</span>
+          </p>
+          <p className="text-[#333] text-3xl  mb-3 font-bold">
+            Finish setting up your account
+          </p>
+          <p className="text-xl text-[#333]">
+            Netflix is personalised for you. Create a password to watch on any
+            device at any time.
+          </p>
+          <Link to="/signup/registration">
+            <button className=" mt-6 bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl">
+              Next
+            </button>
+          </Link>
+        </div>
+      </SignUpLayout>
     </div>
   );
 };
