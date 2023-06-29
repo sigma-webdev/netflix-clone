@@ -260,6 +260,24 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
   });
 });
 
+/********************
+ * @httpUpdateSeries
+ * @route http://localhost:8081/api/v1/series/:id/like
+ * @description  delete series controller
+ * @parameters { seriesId, userId }
+ * @return { Object } series object with likes and dislike
+ ********************/
+const likeAndDislike = asyncHandler(async (req, res, next) => {
+  const { seriesId, action } = req.params;
+  const { id: userId } = req.user;
+
+  const seriesData = await seriesModel.findById(seriesId);
+
+  if (!seriesData) {
+    return next(new CustomError("Series Data not available!", 404));
+  }
+});
+
 module.exports = {
   httpCreateSeries,
   httpGetSeries,
