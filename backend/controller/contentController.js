@@ -6,6 +6,7 @@ const getContentLength = require("../utils/getVideoLength.js");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
+const likeAndDislike = require("../utils/likeDislike.js");
 
 /********************
  * @httpPostContent
@@ -402,39 +403,9 @@ const contentLikes = asyncHandler(async (req, res, next) => {
     return next(new CustomError("content is not available", 404));
   }
 
-  const dislikeArr = content.dislikes;
-  const likeArr = content.likes;
-  let message = "";
-  if (action === "like") {
-    if (likeArr.includes(userId)) {
-      likeArr.pop(userId);
-      message = "removed like";
-    } else if (dislikeArr.includes(userId)) {
-      dislikeArr.pop(userId);
-      likeArr.push(userId);
-      message = " liked";
-    } else {
-      likeArr.push(userId);
-      message = " liked";
-    }
-  }
+  // like and dislike function and get message
+  const message = likeAndDislike(action, userId, content);
 
-  if (action === "dislike") {
-    if (dislikeArr.includes(userId)) {
-      message = "remove dislike";
-      dislikeArr.pop(userId);
-    } else if (likeArr.includes(userId)) {
-      likeArr.pop(userId);
-      dislikeArr.push(userId);
-      message = "disliked";
-    } else {
-      dislikeArr.push(userId);
-      message = "disliked";
-    }
-  }
-
-  content.likes = likeArr;
-  content.dislikes = dislikeArr;
   await content.save();
   return res.status(200).json({
     message: message,
