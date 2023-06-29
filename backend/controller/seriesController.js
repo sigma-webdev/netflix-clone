@@ -2,6 +2,9 @@ const asyncHandler = require("../middleware/asyncHandler");
 const seriesModel = require("../model/seriesSchema");
 const CustomError = require("../utils/customError");
 
+const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary");
+const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary");
+
 /********************
  * @httpCreateSeries
  * @route http://localhost:8081/api/v1/series/
@@ -75,7 +78,7 @@ const httpCreateSeries = asyncHandler(async (req, res, next) => {
   const seriesObject = seriesModel(seriesDetails);
   const seriesData = await seriesObject.save();
 
-  // check for contentData
+  // check for seriesFiles
   if (!seriesData) {
     return next(
       new CustomError(
@@ -173,11 +176,83 @@ const httpDeleteSeries = asyncHandler(async (req, res, next) => {
  * @parameters { seriesId }
  * @return { Object } updated object
  ********************/
-const httpUpdateSeries = asyncHandler(async (req, res, next) => {});
+const httpUpdateSeries = asyncHandler(async (req, res, next) => {
+  const { seriesId } = req.params;
+  const { body, files } = req;
+
+  // check for the availability of series
+  const seriesData = await seriesModel.findById(seriesId);
+
+  if (!seriesData) {
+    return next(new CustomError("Series not available for the provided Id! "));
+  }
+
+  // temp file storage
+  let seriesFiles;
+
+  if (files) {
+    // check for pre-existing trailer
+    if (
+      files.trailer &&
+      seriesData.trailer.length > 0 &&
+      seriesData.trailer[0]?.trailerId
+    ) {
+      cloudinaryFileDelete(seriesData.trailer[0]?.trailerId, next);
+    }
+
+    // check for pre-existing thumbnail
+    if (
+      files.thumbnail &&
+      seriesData.thumbnail.length > 0 &&
+      seriesData.thumbnail[0]?.thumbnailID
+    ) {
+      cloudinaryFileDelete(seriesData.thumbnail[0]?.thumbnailID, next, "image");
+    }
+
+    seriesFiles = await cloudinaryFileUpload(files, next);
+  }
+
+  const updatedData = await seriesModel
+    .findByIdAndUpdate(
+      seriesId,
+      { ...body, ...seriesFiles },
+      {
+        new: true,
+        runValidators: true,
+      }
+    )
+    .catch((error) => {
+      // DELETE File passing particularId
+      if (seriesFiles.trailer) {
+        cloudinaryFileDelete(seriesFiles.trailer[0].trailerId, next);
+      }
+
+      if (seriesFiles.thumbnail) {
+        cloudinaryFileDelete(
+          seriesFiles.thumbnail[0].thumbnailID,
+          next,
+          "image"
+        );
+      }
+      return next(new CustomError(`File not able to save!- ${error}`, 404));
+    });
+
+  if (!updatedData) {
+    return next(
+      new CustomError("Series fail to save to database! Please try again", 400)
+    );
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Series Updated successfully",
+    data: updatedData,
+  });
+});
 
 module.exports = {
   httpCreateSeries,
   httpGetSeries,
   httpGetSeriesById,
   httpDeleteSeries,
+  httpUpdateSeries,
 };

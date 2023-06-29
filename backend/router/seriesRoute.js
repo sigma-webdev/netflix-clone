@@ -1,17 +1,16 @@
 const express = require("express");
 const {
-  pong,
   httpCreateSeries,
   httpGetSeries,
   httpGetSeriesById,
   httpDeleteSeries,
+  httpUpdateSeries,
 } = require("../controller/seriesController");
 
 // authentication and authorizations route
 const jwtAuth = require("../middleware/jwtAuth");
 const authAdmin = require("../middleware/authAdmin");
 const checkUserSubscription = require("../middleware/ckeckUserSubscribtion");
-const { httpDeleteById } = require("../controller/contentController");
 
 const seriesRoute = express.Router();
 
@@ -24,6 +23,7 @@ seriesRoute
 seriesRoute
   .route("/:seriesId")
   .get(jwtAuth, checkUserSubscription, httpGetSeriesById)
-  .delete(jwtAuth, authAdmin, httpDeleteSeries);
+  .delete(jwtAuth, authAdmin, httpDeleteSeries)
+  .put(jwtAuth, authAdmin, httpUpdateSeries);
 
 module.exports = seriesRoute;
