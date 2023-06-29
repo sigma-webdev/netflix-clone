@@ -126,7 +126,7 @@ const contentSchema = new Schema(
           type: String,
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: String },
+        contentDuration: { type: Object },
       },
     ],
     display: {
