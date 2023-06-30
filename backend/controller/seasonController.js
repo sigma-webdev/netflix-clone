@@ -82,4 +82,57 @@ const httpGetSeasons = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { httpCreateSeason, httpGetSeasons };
+/********************
+ * @httpGetSeasonsById
+ * @route http://localhost:8081/api/v1/seasons/seasonId
+ * @description  controller to read single seasons with id
+ * @parameters {request body object}
+ * @return { Object } season object
+ ********************/
+const httpGetSeasonById = asyncHandler(async (req, res, next) => {
+  const { seasonId } = req.params;
+
+  const seasons = await seasonModel.findById(seasonId);
+
+  if (!seasons) {
+    return next(new CustomError("Seasons data not able to fetch!", 400));
+  }
+
+  return res.status(200).json({
+    statusCode: 200,
+    message: "Seasons fetch successfully",
+    success: true,
+    data: seasons,
+  });
+});
+
+/********************
+ * @httpDeleteSeasons
+ * @route http://localhost:8081/api/v1/seasons/seasonId
+ * @description  controller to delete single seasons with id
+ * @parameters {season id}
+ * @return { Object } season object
+ ********************/
+const httpDeleteSeason = asyncHandler(async (req, res, next) => {
+  const { seasonId } = req.params;
+
+  const seasons = await seasonModel.findByIdAndDelete(seasonId);
+  console.log("seasons --------", seasons);
+
+  if (!seasons) {
+    return next(new CustomError("Season Not found", 400));
+  }
+
+  return res.status(200).json({
+    statusCode: 200,
+    message: "deleted Successfully",
+    success: true,
+    data: seasons,
+  });
+});
+module.exports = {
+  httpCreateSeason,
+  httpGetSeasons,
+  httpGetSeasonById,
+  httpDeleteSeason,
+};
