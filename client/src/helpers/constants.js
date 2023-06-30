@@ -1,3 +1,15 @@
+const getFormatedDuration = (contentDuration) => {
+  const formatedTime = "";
+
+  if (contentDuration.hours != 0) {
+    formatedTime.concat(`${contentDuration.hours} hr`);
+  }
+
+  if (contentDuration.minutes != 0) {
+    formatedTime.concat(`${contentDuration.minutes} min`);
+  }
+};
+
 export const convertResponseToContentObject = (data, userId) => {
   let isLiked = false;
   let isDisliked = false;
@@ -20,5 +32,7 @@ export const convertResponseToContentObject = (data, userId) => {
     rating: data.rating,
     isLiked: isLiked,
     isDisliked: isDisliked,
+    contentDuration: getFormatedDuration(data.content[0].contentDuration),
+    releaseYear: new Date(data.content[0].releaseDate).getFullYear(),
   };
 };

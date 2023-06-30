@@ -15,6 +15,8 @@ const DetailsCard = ({
   handleClose,
   isLiked,
   isDisliked,
+  releaseYear,
+  contentDuration,
 }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
@@ -71,8 +73,8 @@ const DetailsCard = ({
       {/* preview details */}
       <div className="space-y-2 px-6 pb-3 text-white md:px-12 md:pb-8">
         <div className="mt-1 flex items-center gap-2">
-          <div>2023</div>
-          <div>1hr 55m</div>
+          <div>{releaseYear}</div>
+          <div>{contentDuration}</div>
           <div className="h-fit rounded border-[1px] border-gray-500 px-1 text-xs text-white">
             HD
           </div>
@@ -91,7 +93,7 @@ const DetailsCard = ({
               <span className="text-gray-400">Cast:</span> {cast}
             </div>
             <div>
-              <span className="text-gray-400">Genres:</span>{" "}
+              <span className="text-gray-400">Genres:</span>
               {geners.join(" . ")}
             </div>
             <div>

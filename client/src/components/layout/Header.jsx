@@ -12,7 +12,7 @@ import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
 import { FaSignOutAlt } from "react-icons/fa";
 import {
-  fetchContentByCategory,
+  fetchContentByContentType,
   fetchContentBySearch,
 } from "../../store/contentSlice";
 
@@ -70,7 +70,7 @@ const Header = ({ isLogin }) => {
 
   const handleCategory = (contentType) => {
     dispatch(
-      fetchContentByCategory({
+      fetchContentByContentType({
         contentType,
         userId: "64789b082f388ccff2e33eaa",
       })
@@ -176,7 +176,7 @@ const Header = ({ isLogin }) => {
                     />
                   </div>
 
-                  <div>{user.name}</div>
+                  <div>Mangesh Thakare</div>
                 </li>
                 <hr className="my-4" />
                 <li
