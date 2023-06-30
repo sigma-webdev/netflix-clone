@@ -288,6 +288,17 @@ const seriesLikeAndDislike = asyncHandler(async (req, res, next) => {
   });
 });
 
+/********************
+ * @addSeriesSeason
+ * @route http://localhost:8081/api/v1/series/:seriesId/season/:seasonId
+ * @description  delete series controller
+ * @parameters { seriesId, userId }
+ * @return { Object } series object with likes and dislike
+ ********************/
+const addSeriesSeason = asyncHandler(async (req, res, next) => {
+  const { seriesId, seasonId } = req.params;
+});
+
 module.exports = {
   httpCreateSeries,
   httpGetSeries,
