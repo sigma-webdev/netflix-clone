@@ -3,9 +3,10 @@ const { Schema } = mongoose;
 
 const seasonSchema = new Schema(
   {
-    seasonName: {
+    seasonNumber: {
       type: Number,
       required: [true, "Season name is Required"],
+      unique: true,
     },
     seasonSummary: {
       type: String,
