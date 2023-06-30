@@ -27,18 +27,19 @@ const getUser = asyncHandler(async (req, res, next) => {
  * @getUsers
  * @route /api/v1/auth/users
  * @description get user base on query
- * @query page , limit , plan , subscription
+ * @query page , limit , plan , subscription ,search
  * @returns array of user objects
  ******************************************************/
 
 const getUsers = asyncHandler(async (req, res, next) => {
-  const { page, limit, plan, subscribed } = req.query;
+  const { page, limit, plan, subscribed, search } = req.query;
 
   const PAGE = Number(page) || 1;
   const LIMIT = Number(limit) || 50;
   const startIndex = (PAGE - 1) * LIMIT;
   const endIndex = PAGE * LIMIT;
   const query = {};
+
   if (plan) query["plan"] = plan;
   if (subscribed && subscribed === "true") {
     query["subscribe.status"] = active;
@@ -46,6 +47,9 @@ const getUsers = asyncHandler(async (req, res, next) => {
   if (subscribed) {
     query["subscribe.status"] = "active";
   }
+
+  // search content name
+  if (search) query["email"] = { $regex: search, $options: "i" };
 
   const totalUsers = await userModel.find().countDocuments();
 
@@ -69,7 +73,6 @@ const getUsers = asyncHandler(async (req, res, next) => {
     .skip(startIndex)
     .limit(LIMIT)
     .sort({ createdAt: 1 });
-
   return res.status(200).json({ success: true, data: result });
 });
 
