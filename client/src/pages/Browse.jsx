@@ -7,7 +7,11 @@ import Crousal from "../components/crousal/Crousal";
 import Layout from "../components/layout/Layout";
 
 // actions
-import { fetchContent, fetchContentByTrending } from "../store/contentSlice";
+import {
+  fetchContent,
+  fetchContentByLatest,
+  fetchContentByTrending,
+} from "../store/contentSlice";
 import { RiPlayMiniFill } from "react-icons/ri";
 import PreviewCard from "../components/card/PreviewCard";
 import RowContentShimmer from "../components/shimmer/RowContentShimmer";
@@ -17,18 +21,22 @@ import { Link } from "react-router-dom";
 const Browse = () => {
   const content = useSelector((state) => state.content.filteredContent);
   const trendingContent = useSelector((state) => state.content.trendingContent);
+  const latestContent = useSelector((state) => state.content.latestContent);
   const loading = useSelector((state) => state.content.loading);
   const trendingContentLoading = useSelector(
     (state) => state.content.trendingContentLoading
   );
+  const latestContentLoading = useSelector(
+    (state) => state.content.latestContentLoading
+  );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchContent("64789b082f388ccff2e33eaa"));
     dispatch(fetchContentByTrending("64789b082f388ccff2e33eaa"));
+    dispatch(fetchContentByLatest("64789b082f388ccff2e33eaa"));
   }, [dispatch]);
-
-  console.log(content);
 
   return (
     <Layout isLogin={true}>
@@ -43,7 +51,8 @@ const Browse = () => {
             {loading ? (
               <PreviewShimmer />
             ) : (
-              content && (
+              content &&
+              content.length !== 0 && (
                 <>
                   <div className="absolute -bottom-1 h-[50px] w-full bg-gradient-to-b from-netflix-blue/0 to-netflix-blue/100 md:h-[100px] lg:h-[200px]"></div>
                   <video
@@ -58,7 +67,7 @@ const Browse = () => {
           </div>
 
           {/* hero text */}
-          {!loading && content && (
+          {!loading && content && content.length !== 0 && (
             <div className="absolute bottom-6 left-6 flex cursor-pointer gap-2 md:bottom-12 md:left-12">
               <Link to={`/watch/${content[0].contentId}`}>
                 <div className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg ">
@@ -78,7 +87,8 @@ const Browse = () => {
         {loading ? (
           <RowContentShimmer />
         ) : (
-          content && (
+          content &&
+          content.length !== 0 && (
             <div className="bg-netflix-blue text-white">
               <div className="px-4 md:px-8">
                 <h3>All</h3>
@@ -115,13 +125,52 @@ const Browse = () => {
         {trendingContentLoading ? (
           <RowContentShimmer />
         ) : (
-          trendingContent && (
+          trendingContent &&
+          trendingContent.length !== 0 && (
             <div className="bg-netflix-blue text-white">
               <div className="px-4 md:px-8">
                 <h3>Trending</h3>
                 <div className="space-y-5">
                   <Crousal>
                     {Array.from(trendingContent).map((item) => {
+                      return (
+                        <PreviewCard
+                          key={item.contentId}
+                          name={item.name}
+                          thumbnailUrl={item.thumbnailUrl}
+                          trailerUrl={item.trailerUrl}
+                          geners={item.genres}
+                          contentId={item.contentId}
+                          rating={item.rating}
+                          description={item.description}
+                          cast={item.cast}
+                          director={item.director}
+                          isLiked={item.isLiked}
+                          isDisliked={item.isDisliked}
+                          releaseYear={item.releaseYear}
+                          contentDuration={item.contentDuration}
+                        />
+                      );
+                    })}
+                  </Crousal>
+                </div>
+              </div>
+            </div>
+          )
+        )}
+
+        {/* browse latest content */}
+        {latestContentLoading ? (
+          <RowContentShimmer />
+        ) : (
+          latestContent &&
+          latestContent.length !== 0 && (
+            <div className="bg-netflix-blue text-white">
+              <div className="px-4 md:px-8">
+                <h3>Latest</h3>
+                <div className="space-y-5">
+                  <Crousal>
+                    {Array.from(latestContent).map((item) => {
                       return (
                         <PreviewCard
                           key={item.contentId}

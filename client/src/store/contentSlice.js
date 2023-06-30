@@ -8,7 +8,9 @@ const initialState = {
   currentContent: null,
   filteredContent: [],
   trendingContent: [],
-  trendingContentLoading: false,
+  latestContent: [],
+  trendingContentLoading: [],
+  latestContentLoading: false,
   loading: false,
 };
 
@@ -91,6 +93,24 @@ export const fetchContentByTrending = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/contents?trending=true");
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByLatest = createAsyncThunk(
+  "content/fetchContentByLatest",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/contents?latest=true");
 
       const data = response.data.data.contents;
       const contentsObject = data.map((item) => {
@@ -268,6 +288,19 @@ export const contentSlice = createSlice({
         state.trendingContentLoading = false;
       })
 
+      //fetch content by latest
+      .addCase(fetchContentByLatest.pending, (state) => {
+        state.latestContentLoading = true;
+      })
+      .addCase(fetchContentByLatest.fulfilled, (state, action) => {
+        state.latestContent = action.payload;
+        state.latestContentLoading = false;
+      })
+      .addCase(fetchContentByLatest.rejected, (state) => {
+        state.latestContent = [];
+        state.latestContentLoading = false;
+      })
+
       // add new content
       .addCase(addNewContent.pending, (state) => {
         state.contentLoading = true;
@@ -322,7 +355,6 @@ export const contentSlice = createSlice({
       .addCase(likeContent.fulfilled, (state, action) => {
         const likedContentId = action.payload.contenId;
         const likedContent = action.payload.contentObject;
-
         const newAllContent = state.filteredContent.map((content) =>
           content.contentId === likedContentId ? likedContent : content
         );
