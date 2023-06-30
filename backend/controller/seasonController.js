@@ -140,17 +140,39 @@ const httpDeleteSeason = asyncHandler(async (req, res, next) => {
  ********************/
 const httpUpdateSeason = asyncHandler(async (req, res, next) => {
   const { seasonId } = req.params;
+  const { seasonNumber, seasonSummary } = req.body;
 
-  const seasons = await seasonModel.findByIdAndDelete(seasonId);
-  console.log("seasons --------", seasons);
+  // read season and check for duplicate season number
+  const seasonData = await seasonModel.find();
+
+  // handle season duplicate number
+  let seasonPresent = false;
+
+  for (const i of seasonData) {
+    if (i.seasonNumber === seasonNumber) {
+      seasonPresent = true;
+      return next(new CustomError("Season Value already exist!", 400));
+    }
+  }
+
+  let seasons;
+
+  // if not duplicate
+  if (!seasonPresent) {
+    seasons = await seasonModel.findByIdAndUpdate(
+      seasonId,
+      { seasonNumber: seasonNumber, seasonSummary: seasonSummary },
+      { new: true, runValidators: true }
+    );
+  }
 
   if (!seasons) {
-    return next(new CustomError("Season Not found", 400));
+    return next(new CustomError("Season not able to update", 400));
   }
 
   return res.status(200).json({
     statusCode: 200,
-    message: "deleted Successfully",
+    message: "update Successfully",
     success: true,
     data: seasons,
   });
@@ -161,4 +183,5 @@ module.exports = {
   httpGetSeasons,
   httpGetSeasonById,
   httpDeleteSeason,
+  httpUpdateSeason,
 };
