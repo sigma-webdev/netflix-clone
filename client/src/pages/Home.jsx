@@ -15,6 +15,7 @@ import { IS_USER_EXIST } from "../store/authSlice.js";
 // icons
 import { StartIcon } from "../components/icons.jsx";
 import { faqs, features } from "../data";
+
 const Home = () => {
   const dispatch = useDispatch();
   const [activeItem, setActiveItem] = useState(-1);
@@ -38,7 +39,7 @@ const Home = () => {
     if (isUserExist.payload.data.isUserExist) {
       navigate("/signup/password");
     } else {
-      navigate("signup/registration");
+      navigate("/signup");
     }
   }
 
