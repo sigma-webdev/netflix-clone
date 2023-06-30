@@ -5,7 +5,7 @@ import netflixLogo from "../../assets/netflix_logo.png";
 
 const AdminNav = () => {
   return (
-    <div className="h-screen w-2/12 border-r bg-white p-2 text-black ">
+    <div className="h-screen w-2/12 border-r bg-white py-2 text-black ">
       <div className="flex w-full flex-wrap items-end ">
         <img className="mx-auto my-5 w-[60%]" src={netflixLogo} alt="" />
       </div>
