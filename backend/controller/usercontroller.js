@@ -52,7 +52,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
   const result = {};
   if (endIndex < totalUsers) {
     result.next = {
-      pageNumber: 1,
+      pageNumber: PAGE + 1,
       limit: LIMIT,
     };
   }
@@ -81,7 +81,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
  * @returns watchhistory (array contentIds)
  ******************************************************/
 
-const contentWatchHistory = asyncHandler(async (req, res, next) => {
+const addContentToWatchHistory = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { contentId } = req.params;
 
@@ -93,13 +93,17 @@ const contentWatchHistory = asyncHandler(async (req, res, next) => {
   if (!isContentIdPresent) {
     watchHistory.push(contentId);
   }
-  const result = await userModel.findByIdAndUpdate(
-    userId,
-    {
-      watchHistory: watchHistory,
-    },
-    { new: true }
-  );
+
+  const result = await userModel
+    .findByIdAndUpdate(
+      userId,
+      {
+        watchHistory: watchHistory,
+      },
+      { new: true }
+    )
+    .select("watchHistory");
+
   res.status(200).json({ success: true, data: result.watchHistory });
 });
 
@@ -113,26 +117,29 @@ const contentWatchHistory = asyncHandler(async (req, res, next) => {
  ******************************************************/
 
 const removeContentFromWatchHistory = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id;
   const { contentId } = req.params;
-  const result = await userModel.findByIdAndUpdate(
-    userId,
-    {
-      $pop: { watchHistory: contentId },
-    },
-    { new: true }
-  );
+  const result = await userModel
+    .findByIdAndUpdate(
+      userId,
+      {
+        $pull: { watchHistory: contentId },
+      },
+      { new: true }
+    )
+    .select("watchHistory");
   res.status(200).json({ success: true, data: result.watchHistory });
 });
 
 /******************************************************
- * @getWatchContent
+ * @getWatchHistoryContents
  * @route /api/v1/auth/watchhistory
  * @description get all content present in watchHistory base on contentId (populate)
  * @params contentId
  * @returns array of content object with specific fields
  ******************************************************/
 
-const getWatchContent = asyncHandler(async (req, res, next) => {
+const getWatchHistoryContents = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { page, limit } = req.query;
   const PAGE = Number(page) || 1;
@@ -158,7 +165,7 @@ const getWatchContent = asyncHandler(async (req, res, next) => {
     };
   }
 
-  const watchContent = await userModel.findById(userId).populate([
+  const user = await userModel.findById(userId).populate([
     {
       path: "watchHistory",
       select: "name thumbnail likesCount rating language categories genres",
@@ -169,14 +176,125 @@ const getWatchContent = asyncHandler(async (req, res, next) => {
     },
   ]);
 
-  result.watchContent = watchContent.watchHistory;
+  result.contents = user.watchHistory;
+  res.status(200).json({ success: true, data: result });
+});
+
+/******************************************************
+ * @addContentToWatchList
+ * @method patch
+ * @route /api/v1/auth/watch-history/:contentId
+ * @description ref the contentId in watchList arr in the user data
+ * @params contentId
+ * @returns watch list (array of contentId)
+ ******************************************************/
+
+const addContentToWatchList = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id;
+  const { contentId } = req.params;
+
+  const { watchList } = await userModel.findById(userId, {
+    watchList: 1,
+  });
+
+  const isContentIdPresent = watchList.includes(contentId);
+  if (!isContentIdPresent) {
+    watchList.push(contentId);
+  }
+
+  const result = await userModel
+    .findByIdAndUpdate(
+      userId,
+      {
+        watchList: watchList,
+      },
+      { new: true }
+    )
+    .select("watchList");
+
+  res.status(200).json({ success: true, data: result.watchList });
+});
+
+/******************************************************
+ * @removeContentFromWatchList
+ * @method delete
+ * @route /api/v1/auth/watch-history/:contentId
+ * @description pull the contentId from watch list
+ * @params contentId
+ * @returns watch list (array of contentID)
+ ******************************************************/
+
+const removeContentFromWatchList = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id;
+  const { contentId } = req.params;
+  const result = await userModel
+    .findByIdAndUpdate(
+      userId,
+      {
+        $pull: { watchList: contentId },
+      },
+      { new: true }
+    )
+    .select("watchList");
+  res.status(200).json({ success: true, data: result.watchList });
+});
+
+/******************************************************
+ * @getWatchListContent
+ * @route /api/v1/auth/watchhistory
+ * @description get all content present in watchHistory base on contentId (populate)
+ * @params contentId
+ * @returns array of content object with specific fields
+ *******************************************************/
+
+const getWatchListContent = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id;
+  const { page, limit } = req.query;
+  const PAGE = Number(page) || 1;
+  const LIMIT = Number(limit) || 50;
+  const startIndex = (PAGE - 1) * LIMIT;
+  const endIndex = PAGE * LIMIT;
+
+  const watchListArr = await userModel.findById(userId, "watchList");
+  const totalWatchListContent = watchListArr.watchList.length;
+
+  const result = {};
+  if (endIndex < totalWatchListContent) {
+    result.next = {
+      pageNumber: 1,
+      limit: LIMIT,
+    };
+  }
+
+  if (startIndex > 0) {
+    result.previous = {
+      pageNumber: PAGE - 1,
+      limit: LIMIT,
+    };
+  }
+
+  const user = await userModel.findById(userId).populate([
+    {
+      path: "watchList",
+      select: "name thumbnail likesCount rating language categories genres",
+      options: {
+        skip: startIndex,
+        limit: LIMIT,
+      },
+    },
+  ]);
+
+  result.contents = user.watchList;
   res.status(200).json({ success: true, data: result });
 });
 
 module.exports = {
   getUser,
   getUsers,
-  contentWatchHistory,
-  getWatchContent,
+  addContentToWatchHistory,
+  getWatchHistoryContents,
   removeContentFromWatchHistory,
+  addContentToWatchList,
+  removeContentFromWatchList,
+  getWatchListContent,
 };
