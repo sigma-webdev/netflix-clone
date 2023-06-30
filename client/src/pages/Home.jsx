@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import validator from "email-validator";
-import toast, { Toaster } from "react-hot-toast";
 
 // components
 import Accordian from "../components/accordian/Accordian";
@@ -15,6 +14,7 @@ import { IS_USER_EXIST } from "../store/authSlice.js";
 // icons
 import { StartIcon } from "../components/icons.jsx";
 import { faqs, features } from "../data";
+import { toast } from "react-hot-toast";
 const Home = () => {
   const dispatch = useDispatch();
   const [activeItem, setActiveItem] = useState(-1);
@@ -38,7 +38,7 @@ const Home = () => {
     if (isUserExist.payload.data.isUserExist) {
       navigate("/signup/password");
     } else {
-      navigate("signup/registration");
+      navigate("/signup");
     }
   }
 

@@ -11,7 +11,7 @@ import { AiOutlineCheck, AiOutlineCheckCircle } from "react-icons/ai";
 import { BiLoader } from "react-icons/bi";
 import SignUpLayout from "./SignUpLayout.js";
 
-function PlanForm() {
+const PlanForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -275,6 +275,6 @@ function PlanForm() {
       </div>
     </SignUpLayout>
   );
-}
+};
 
 export default PlanForm;

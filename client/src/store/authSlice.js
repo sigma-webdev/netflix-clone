@@ -7,14 +7,14 @@ const initialState = {
   loading: false,
   forgotPasswordLoading: false,
   resetPasswordLoading: false,
-  isUserExistLoading: false
+  isUserExistLoading: false,
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
   "auth/userexist",
   async (data, { rejectWithValue }) => {
     try {
-      let response = await axiosInstance.post("auth/userexist", data);
+      let response = await axiosInstance.post("auth/user-exist", data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
