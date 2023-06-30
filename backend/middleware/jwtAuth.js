@@ -7,7 +7,7 @@ const jwtAuth = (req, res, next) => {
     return res.status(400).json({ success: false, message: "NOT authorized" });
   }
 
-  JWT.verify(token, process.env.SECRETE, function (error, payload) {
+  JWT.verify(token, process.env.JWT_SECRET, function (error, payload) {
     if (error) {
       return res.status(400).json({ success: false, message: err.message });
     } else {
