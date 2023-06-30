@@ -163,6 +163,7 @@ export const fetchContent = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/contents?contentType=movie");
+      console.log(response)
 
       const data = response.data.data.contents;
       const contentsObject = data.map((item) => {

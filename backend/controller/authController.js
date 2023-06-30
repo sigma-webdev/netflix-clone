@@ -149,7 +149,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   transporter.sendMail(mailOptions, async (error, info) => {
     if (error) {
       user.forgotPasswordToken = undefined;
-      user.forgotPasswordExpiry = undefined;
+      user.forgotPasswordExpiryDate = undefined;
       await user.save();
       return next(error);
     }
