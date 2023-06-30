@@ -206,12 +206,8 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
-    // TODO: UPDATE: I(Shivam) have added a fix, verification required if working or not
-    .sort({
-      createdAt: sorting.latestContent,
-      likesCount: sorting.likesCount,
-      trending: sorting.trending,
-    });
+    // TODO: test fail, reverted back.
+    .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
 
   return res.status(200).json({
     success: true,
