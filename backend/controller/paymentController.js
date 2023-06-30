@@ -133,14 +133,14 @@ const createPlan = asyncHandler(async (req, res, next) => {
     return next(new CustomError(planResponse.error.description, 400));
   }
 
-  const planeInfo = SubscriptionPlanModel({
+  const planInfo = SubscriptionPlanModel({
     planName: planName.toUpperCase(),
     amount,
     description,
     active,
     planId: planResponse.id,
   });
-  const result = await planeInfo.save();
+  const result = await planInfo.save();
   return res.status(200).json({ success: true, data: result });
 });
 

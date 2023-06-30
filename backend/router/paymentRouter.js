@@ -9,7 +9,7 @@ const {
   getPlans,
 } = require("../controller/paymentController");
 const jwtAuth = require("../middleware/jwtAuth.js");
-const authAdmin = require("../middleware/authAdmin");
+const authorizeRoles = require("../middleware/authorizeRoles.js");
 
 const paymentRouter = express.Router();
 
@@ -19,16 +19,16 @@ paymentRouter.route("/rasorpaykey").get(jwtAuth, getRazorpayApiKey);
 
 paymentRouter
   .route("/verify-subscription")
-  .post(jwtAuth, authAdmin, verifySubscription);
+  .post(jwtAuth, authorizeRoles("USER , ADMIN"), verifySubscription);
 
 paymentRouter
   .route("/plan")
-  .post(jwtAuth, authAdmin, createPlan)
-  .get(jwtAuth, authAdmin, getPlans);
+  .post(jwtAuth, authorizeRoles("ADMIN"), createPlan)
+  .get(jwtAuth, authorizeRoles("ADMIN"), getPlans);
 
 paymentRouter
   .route("/plan/:planDocumentId")
-  .delete(jwtAuth, authAdmin, deletePlan)
-  .patch(jwtAuth, authAdmin, updatePlan);
+  .delete(jwtAuth, authorizeRoles("ADMIN"), deletePlan)
+  .patch(jwtAuth, authorizeRoles("ADMIN"), updatePlan);
 
 module.exports = paymentRouter;
