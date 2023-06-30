@@ -195,14 +195,14 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   // check both password and confirmPassword are present in body , if not send error message
   if (!password || !confirmPassword) {
     return next(
-      new customError("password and confirm Password is Required", 400)
+      new customError("Both Password and confirm Password are Required", 400)
     );
   }
 
   // check the password and confirmPassword are same or not, if different return error message
   if (password !== confirmPassword) {
     return next(
-      new customError("password and confirm password does not match", 400)
+      new customError("Password and confirm password do not match", 400)
     );
   }
 
@@ -214,7 +214,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
   if (!user) {
     return next(
-      new customError("forgot password token is invalid or expired", 400)
+      new customError("Forgot password token is invalid or expired", 400)
     );
   }
 
@@ -226,7 +226,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "successfully updated the password",
+    message: "Successfully updated the password",
   });
 });
 
@@ -245,7 +245,7 @@ const signOut = asyncHandler(async (req, res, next) => {
     sameSite: "Lax",
   });
 
-  res.status(200).json({ success: true, message: "log out successful" });
+  res.status(200).json({ success: true, message: "Logged out successfully" });
 });
 
 module.exports = {
