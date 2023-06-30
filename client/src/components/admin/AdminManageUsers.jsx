@@ -3,15 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../../store/userSlice";
 
 const AdminManageUsers = () => {
-  const dispatch = useDispatch();
 
+
+
+  const dispatch = useDispatch();
   const allUsers = useSelector((state) => state.user.allUsers);
 
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, [dispatch]);
-
   const [isOpen, setIsOpen] = useState(false);
+  const [page, setPage] = useState(1) 
+  const limit = 10
+  
+  useEffect(() => {
+    console.log("Dd");
+    dispatch(getAllUsers(page));
+  }, [page]);
+
+  
 
   const toggleModal = (val) => {
     setIsOpen(val);
@@ -43,9 +50,9 @@ const AdminManageUsers = () => {
           </div>
         </div>
       )}
-      <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-slate-100 py-4">
+      <div className=" max-h-screen w-10/12 overflow-y-scroll bg-slate-100 py-4">
         <h2 className="text-[#E50914]">Manage Users</h2>
-        <table className="w-5/6 table-auto overflow-scroll border border-gray-300 text-gray-200">
+        <table className="mx-auto w-5/6 table-auto overflow-scroll  text-gray-200">
           <thead className="text-left">
             <tr className="bg-[#E50914] text-white">
               <th className="px-4 py-2">S. No</th>
@@ -56,8 +63,8 @@ const AdminManageUsers = () => {
             </tr>
           </thead>
           <tbody className=" border-opacity-0  ">
-            {allUsers.length > 0 &&
-              allUsers.map((user, index) => {
+            {allUsers?.data?.users?.length > 0 &&
+              allUsers?.data?.users?.map((user, index) => {
                 return (
                   <tr
                     key={user._id}
@@ -79,9 +86,18 @@ const AdminManageUsers = () => {
                     </td>
                   </tr>
                 );
-              })}
+              })} 
           </tbody>
         </table>
+        <div className="flex justify-between w-10/12 my-2 mx-auto">
+                <div className="bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-2" onClick={()=>setPage((pre)=>pre-1)}>Previous</div>
+                <div className=" px-[10px ] border-2 border-[#E50914] text-[#E50914] text-xl font-bold rounded-full ">
+                  1
+                </div>
+                <button onClick={()=>{
+                  console.log("object");
+                  setPage((pre)=>pre+1)}} className="bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-4">Next</button>
+              </div>
       </div>
     </>
   );
