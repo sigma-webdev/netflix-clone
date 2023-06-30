@@ -18,6 +18,8 @@ const PreviewCard = ({
   rating,
   isLiked,
   isDisliked,
+  releaseYear,
+  contentDuration,
 }) => {
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
@@ -80,7 +82,7 @@ const PreviewCard = ({
 
       {isOpenDetails &&
         createPortal(
-          <div className="fixed top-0 z-50 h-full w-full bg-black/60 pt-[4%]">
+          <div className="fixed top-0 z-50 flex h-full w-full items-center bg-black/60  pt-[4%]">
             <DetailsCard
               name={name}
               description={description}
@@ -91,6 +93,8 @@ const PreviewCard = ({
               geners={geners}
               rating={rating}
               handleClose={openCloseDetails}
+              releaseYear={releaseYear}
+              contentDuration={contentDuration}
             />
           </div>,
           document.getElementById("content-details")
