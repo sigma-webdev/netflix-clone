@@ -6,6 +6,7 @@ const getContentLength = require("../utils/getVideoLength.js");
 
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
+const likeAndDislike = require("../utils/likeDislike.js");
 
 /********************
  * @httpPostContent
@@ -56,44 +57,23 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
           "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
       },
     ],
-    // default content value
-    // content: [
-    //   {
-    //     contentURL:
-    //       "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
-    //   },
-    // ],
   };
 
   if (details.contentType === "Movie") {
-    if (details.content) {
-      details.content[0].contentURL =
-        "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4";
+    details["content"] = [
+      {
+        contentURL:
+          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+      },
+    ];
 
-      // get content video length
-      if (details.content[0].contentURL) {
-        const contentLength = await getContentLength(
-          details.content[0].contentURL,
-          next
-        );
-        details.content[0].contentDuration = contentLength;
-      }
-    }
-  }
-
-  if (details.contentType === "Series") {
-    if (details.episodes) {
-      details.episodes[0].episodeURL =
-        "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4";
-
-      // get content video length
-      // if (details.content[0].contentURL) {
-      //   const contentLength = await getContentLength(
-      //     details.content[0].contentURL,
-      //     next
-      //   );
-      //   details.content[0].contentDuration = contentLength;
-      // }
+    // get content video length
+    if (details.content[0].contentURL) {
+      const contentLength = await getContentLength(
+        details.content[0]?.contentURL,
+        next
+      );
+      details.content[0].contentDuration = contentLength;
     }
   }
 
@@ -155,6 +135,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     latest,
     mostLikes,
     trending,
+    originCountry,
   } = req.query;
   const query = {};
   const PAGE = Number(page) || 1;
@@ -187,6 +168,11 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     sorting["trending"] = { trending: -1 };
   }
 
+  // get content from specific origin
+  if (originCountry) {
+    query["originCountry"] = new RegExp(originCountry, "i");
+  }
+
   // pagination
   const totalContents = await Content.find(query).countDocuments();
   const result = {};
@@ -204,7 +190,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   }
 
   // display condition
-  // TODO: Integrate middleware
   if (req.role === "ADMIN" && display) {
     query["display"] = display;
   } else if (req.role === "USER") {
@@ -238,17 +223,15 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   const contentData = await Content.findById(contentId);
-
-  if (contentData) {
-    contentData.trending += 1;
-    await contentData.save();
-  }
-  console.log("content Trending ===", contentData.trending);
-
   if (!contentData) {
     return next(
       new CustomError("Invalid Content Id, or Content Not found", 404)
     );
+  }
+
+  if (contentData) {
+    contentData.trending += 1;
+    await contentData.save();
   }
 
   res.status(200).json({
@@ -270,7 +253,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   // find content with id
-  const contentData = await Content.findById(contentId);
+  const contentData = await Content.findByIdAndDelete(contentId);
 
   if (!contentData) {
     return next(
@@ -280,29 +263,20 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
 
   const { thumbnail, trailer, content } = contentData;
 
-  contentData
-    .deleteOne()
-    .then(() => {
-      if (content[0].contentID) {
-        cloudinaryFileDelete(content[0].contentID, next);
-      }
+  // perform delete in cloudinary
+  if (contentData) {
+    if (content[0].contentID) {
+      cloudinaryFileDelete(content[0].contentID, next);
+    }
 
-      if (trailer[0].trailerId) {
-        cloudinaryFileDelete(trailer[0].trailerId, next);
-      }
+    if (trailer[0].trailerId) {
+      cloudinaryFileDelete(trailer[0].trailerId, next);
+    }
 
-      if (thumbnail[0].thumbnailID) {
-        cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
-      }
-    })
-    .catch((error) => {
-      return next(
-        new CustomError(
-          `Delete Fail, make sure valid id is provided - ${error}`,
-          500
-        )
-      );
-    });
+    if (thumbnail[0].thumbnailID) {
+      cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
+    }
+  }
 
   res.status(200).json({
     success: true,
@@ -429,39 +403,9 @@ const contentLikes = asyncHandler(async (req, res, next) => {
     return next(new CustomError("content is not available", 404));
   }
 
-  const dislikeArr = content.dislikes;
-  const likeArr = content.likes;
-  let message = "";
-  if (action === "like") {
-    if (likeArr.includes(userId)) {
-      likeArr.pop(userId);
-      message = "removed like";
-    } else if (dislikeArr.includes(userId)) {
-      dislikeArr.pop(userId);
-      likeArr.push(userId);
-      message = " liked";
-    } else {
-      likeArr.push(userId);
-      message = " liked";
-    }
-  }
+  // like and dislike function and get message
+  const message = likeAndDislike(action, userId, content);
 
-  if (action === "dislike") {
-    if (dislikeArr.includes(userId)) {
-      message = "remove dislike";
-      dislikeArr.pop(userId);
-    } else if (likeArr.includes(userId)) {
-      likeArr.pop(userId);
-      dislikeArr.push(userId);
-      message = "disliked";
-    } else {
-      dislikeArr.push(userId);
-      message = "disliked";
-    }
-  }
-
-  content.likes = likeArr;
-  content.dislikes = dislikeArr;
   await content.save();
   return res.status(200).json({
     message: message,

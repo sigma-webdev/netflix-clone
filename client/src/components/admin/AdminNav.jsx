@@ -5,9 +5,9 @@ import netflixLogo from "../../assets/netflix_logo.png";
 
 const AdminNav = () => {
   return (
-    <div className="p-2 w-2/12 h-screen bg-white text-black border-r ">
-      <div className="w-full flex flex-wrap items-end ">
-        <img className="w-[60%] mx-auto my-5" src={netflixLogo} alt="" />
+    <div className="h-screen w-2/12 border-r bg-white py-2 text-black ">
+      <div className="flex w-full flex-wrap items-end ">
+        <img className="mx-auto my-5 w-[60%]" src={netflixLogo} alt="" />
       </div>
       <ul>
         <NavLink to="/admin/dashboard">
@@ -15,8 +15,8 @@ const AdminNav = () => {
             <li
               className={
                 isActive
-                  ? "bg-[#E50914] text-white flex items-center mb-4 font-bold border-white py-2 px-2  cursor-pointer"
-                  : "flex items-center mb-4 py-2 px-2 hover:bg-[#e509143b] cursor-pointer"
+                  ? " flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-4 font-bold  text-white"
+                  : " flex cursor-pointer items-center px-2 py-4 hover:bg-[#e509143b]"
               }
             >
               <HiHome />
@@ -29,8 +29,8 @@ const AdminNav = () => {
             <li
               className={
                 isActive
-                  ? "bg-[#E50914] text-white flex items-center mb-4 font-bold border-white py-2 px-2  cursor-pointer"
-                  : "flex items-center mb-4 py-2 px-2 hover:bg-[#e509143b] cursor-pointer"
+                  ? " flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-4 font-bold  text-white"
+                  : " flex cursor-pointer items-center px-2 py-4 hover:bg-[#e509143b]"
               }
             >
               <HiUserGroup />
@@ -43,8 +43,8 @@ const AdminNav = () => {
             <li
               className={
                 isActive
-                  ? "bg-[#E50914] text-white flex items-center mb-4 font-bold border-white py-2 px-2  cursor-pointer"
-                  : "flex items-center mb-4 py-2 px-2 hover:bg-[#e509143b] cursor-pointer"
+                  ? "flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-4 font-bold  text-white"
+                  : " flex cursor-pointer items-center px-2 py-4 hover:bg-[#e509143b]"
               }
             >
               <HiServer />

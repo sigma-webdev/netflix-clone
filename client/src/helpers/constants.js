@@ -1,16 +1,24 @@
-export const GENRES = [
-  { id: 1, name: "Action" },
-  { id: 2, name: "Anime" },
-  { id: 3, name: "Children & Family" },
-  { id: 5, name: "Anime" },
-  { id: 6, name: "Children & Family" },
-  { id: 7, name: "Classic" },
-  { id: 8, name: "Comedies" },
-  { id: 9, name: "Documentaries" },
-  { id: 10, name: "Dramas" },
-  { id: 11, name: "Horror" },
-  { id: 12, name: "Romantic" },
-  { id: 13, name: "Sci-fi & Fantasy" },
-  { id: 14, name: "Sports" },
-  { id: 15, name: "Thrillers" },
-];
+export const convertResponseToContentObject = (data, userId) => {
+  let isLiked = false;
+  let isDisliked = false;
+
+  if (userId) {
+    isLiked = data.likes.find((item) => item === userId) ? true : false;
+    isDisliked = data.dislikes.find((item) => item === userId) ? true : false;
+  }
+
+  return {
+    contentId: data._id,
+    name: data.name,
+    description: data.description,
+    cast: data.cast,
+    director: data.director,
+    thumbnailUrl: data.thumbnail[0].thumbnailUrl,
+    trailerUrl: data.trailer[0].trailerUrl,
+    contentUrl: data.content[0].contentURL,
+    genres: data.genres,
+    rating: data.rating,
+    isLiked: isLiked,
+    isDisliked: isDisliked,
+  };
+};

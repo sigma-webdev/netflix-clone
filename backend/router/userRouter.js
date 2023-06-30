@@ -5,18 +5,30 @@ const checkUserSubscription = require("../middleware/ckeckUserSubscribtion.js");
 const {
   getUser,
   getUsers,
-  contentWatchHistory,
-  getWatchContent,
+  addContentToWatchHistory,
+  getWatchHistoryContents,
   removeContentFromWatchHistory,
+  getWatchListContent,
+  removeContentFromWatchList,
+  addContentToWatchList,
 } = require("../controller/userController.js");
+const authorizeRoles = require("../middleware/authorizeRoles.js");
 
 userRouter
-  .route("/watchhistory/:contentId")
-  .patch(jwtAuth, contentWatchHistory)
-  .delete(jwtAuth, removeContentFromWatchHistory);
+  .route("/watch-history")
+  .get(jwtAuth, checkUserSubscription, getWatchHistoryContents);
 userRouter
-  .route("/watchhistory")
-  .get(jwtAuth, checkUserSubscription, getWatchContent);
+  .route("/watch-history/:contentId")
+  .patch(jwtAuth, addContentToWatchHistory)
+  .delete(jwtAuth, removeContentFromWatchHistory);
+
+userRouter
+  .route("/watch-list")
+  .get(jwtAuth, authorizeRoles("ADMIN"), getWatchListContent);
+userRouter
+  .route("/watch-list/:contentId")
+  .patch(jwtAuth, authorizeRoles("ADMIN"), addContentToWatchList)
+  .delete(jwtAuth, authorizeRoles("ADMIN"), removeContentFromWatchList);
 
 userRouter.route("/").get(jwtAuth, getUsers);
 userRouter.route("/:userId").get(jwtAuth, getUser);

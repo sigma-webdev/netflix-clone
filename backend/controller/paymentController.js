@@ -4,6 +4,8 @@ const razorpay = require("../config/razorpayConfig.js");
 const crypto = require("crypto");
 const paymentModel = require("../model/paymentSchema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
+const CustomError = require("../utils/customError.js");
+const SubscriptionPlanModel = require("../model/subscriptionPlanSchema.js");
 
 const createSubscription = asyncHandler(async (req, res, next) => {
   // Extracting ID from request obj
@@ -14,7 +16,7 @@ const createSubscription = asyncHandler(async (req, res, next) => {
     RAZORPAY_STANDARD_PLAN,
     RAZORPAY_BASIC_PLAN,
     RAZORPAY_PREMIUM_PLAN,
-    RAZORPAY_MOBILE_PLAN
+    RAZORPAY_MOBILE_PLAN,
   } = process.env;
 
   const planID =
@@ -44,7 +46,7 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   const subscription = await razorpay.subscriptions.create({
     plan_id: planID, // The unique plan ID
     customer_notify: 1, // 1 means razorpay will handle notifying the customer, 0 means we will not notify the customer
-    total_count: 1 // 1 means it will charge only one month sub.
+    total_count: 1, // 1 means it will charge only one month sub.
   });
 
   // Adding the ID and the status to the user account
@@ -56,14 +58,14 @@ const createSubscription = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    subscription_id: subscription.id
+    subscription_id: subscription.id,
   });
 });
 
 const getRazorpayApiKey = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
-    key: process.env.RAZORPAY_KEY_ID
+    key: process.env.RAZORPAY_KEY_ID,
   });
 });
 
@@ -97,7 +99,7 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
   await paymentModel.create({
     razorpayPaymentId,
     razorpaySubscriptionId,
-    razorpaySignature
+    razorpaySignature,
   });
 
   // Update the user subscription status to active (This will be created before this)
@@ -109,12 +111,81 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "Payment verified successfully"
+    message: "Payment verified successfully",
   });
+});
+
+const createPlan = asyncHandler(async (req, res, next) => {
+  const { planName, amount, description, active } = req.body;
+
+  const planResponse = await razorpay.plans.create({
+    period: "monthly",
+    interval: 1,
+    item: {
+      name: planName.toUpperCase(),
+      amount: amount,
+      currency: "INR",
+      description: description,
+    },
+  });
+
+  if (planResponse.error) {
+    return next(new CustomError(planResponse.error.description, 400));
+  }
+
+  const planInfo = SubscriptionPlanModel({
+    planName: planName.toUpperCase(),
+    amount,
+    description,
+    active,
+    planId: planResponse.id,
+  });
+  const result = await planInfo.save();
+  return res.status(200).json({ success: true, data: result });
+});
+
+const updatePlan = asyncHandler(async (req, res, next) => {
+  const { planDocumentId } = req.params;
+  let active = req.body.active;
+  if (!active) return next(new CustomError("active field is required"));
+
+  if (active === true || active === "true") {
+    active = true;
+  } else if (active === false || active === "false") {
+    active = false;
+  } else {
+    return next(
+      new CustomError("please provide valid value for active (true or false)")
+    );
+  }
+  const result = await SubscriptionPlanModel.findByIdAndUpdate(
+    planDocumentId,
+    {
+      active,
+    },
+    { new: true }
+  );
+
+  return res.status(200).json({ success: true, data: result });
+});
+
+const deletePlan = asyncHandler(async (req, res, next) => {
+  const { planDocumentId } = req.params;
+  const result = await SubscriptionPlanModel.findByIdAndDelete(planDocumentId);
+  return res.status(200).json({ success: true, data: result });
+});
+
+const getPlans = asyncHandler(async (req, res, next) => {
+  const result = await SubscriptionPlanModel.find();
+  return res.status(200).json({ success: true, data: result });
 });
 
 module.exports = {
   createSubscription,
   getRazorpayApiKey,
-  verifySubscription
+  verifySubscription,
+  createPlan,
+  deletePlan,
+  updatePlan,
+  getPlans,
 };

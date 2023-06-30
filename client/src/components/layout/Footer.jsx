@@ -2,8 +2,8 @@ import { GlobeIcon } from "../icons";
 
 const Footer = () => {
   return (
-    <footer className="p-10 md:p-28 space-y-10 text-slate-400 bg-netflix-blue ">
-      <ul className="grid grid-rows-16 grid-cols-1 grid-flow-row sm:grid-rows-8 sm:grid-cols-2 sm:grid-flow-row md:grid-rows-4 md:grid-cols-4 md:grid-flow-col underline gap-y-4 mx-auto max-w-[80vw]">
+    <footer className="space-y-10 bg-netflix-blue p-10 text-slate-400 md:p-28 ">
+      <ul className="grid-rows-16 sm:grid-rows-8 mx-auto grid max-w-[80vw] grid-flow-row grid-cols-1 gap-y-4 underline sm:grid-flow-row sm:grid-cols-2 md:grid-flow-col md:grid-cols-4 md:grid-rows-4">
         <li>
           <a href="/">FAQ</a>
         </li>
@@ -51,9 +51,9 @@ const Footer = () => {
         </li>
       </ul>
       <div className="mx-auto max-w-[80vw]">
-        <div className="flex items-center h-fit w-fit bg-black text-white border-2 border-white rounded px-3 py-1 ">
+        <div className="flex h-fit w-fit items-center rounded border-2 border-white bg-black px-3 py-1 text-white ">
           <GlobeIcon />
-          <select className="bg-transparent rounded  " defaultValue={"English"}>
+          <select className="rounded bg-transparent  " defaultValue={"English"}>
             <option value="English">English</option>
             <option value="Hindi">Hindi</option>
           </select>

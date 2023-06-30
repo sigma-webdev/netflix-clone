@@ -9,7 +9,7 @@ const {
   contentLikes,
 } = require("../controller/contentController");
 const jwtAuth = require("../middleware/jwtAuth");
-const authAdmin = require("../middleware/authAdmin");
+const authAdmin = require("../middleware/authorizeRoles");
 const checkUserSubscription = require("../middleware/ckeckUserSubscribtion");
 
 const contentRoute = express.Router();

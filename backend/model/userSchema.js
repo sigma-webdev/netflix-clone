@@ -11,34 +11,39 @@ const userSchema = new Schema(
       type: String,
       minLength: [5, "Name must be at least 5 characters"],
       maxLength: [50, "Name must be less than 50 characters"],
-      trim: true
+      trim: true,
     },
     email: {
       type: String,
       required: [true, "user email is required"],
       unique: true,
-      lowercase: true
+      lowercase: true,
     },
     password: {
       type: String,
-      select: false
+      select: false,
     },
     forgotPasswordToken: {
       type: String,
-      select: false
+      select: false,
     },
     plan: {
       type: String,
       default: "NONE",
-      enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"]
+      enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"],
     },
-    watchHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Content" }],
+    watchHistory: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Content", select: false },
+    ],
+    watchList: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Content", select: false },
+    ],
     subscription: {
       id: String,
-      status: String
+      status: String,
     },
     role: { type: String, default: "USER", enum: ["ADMIN", "USER"] },
-    forgotPasswordExpiryDate: { type: Date, select: false }
+    forgotPasswordExpiryDate: { type: Date, select: false },
   },
   { timestamps: true }
 );
@@ -74,7 +79,7 @@ userSchema.methods = {
       { expiresIn: 24 * 60 * 60 * 1000 } //24
     );
     return token;
-  }
+  },
 };
 
 const userModel = mongoose.model("User", userSchema);
