@@ -300,6 +300,7 @@ export const contentSlice = createSlice({
         state.latestContentLoading = false;
       })
       // add new content
+
       .addCase(addNewContent.pending, (state) => {
         state.contentLoading = true;
       })
