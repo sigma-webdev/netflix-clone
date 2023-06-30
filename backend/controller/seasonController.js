@@ -130,6 +130,32 @@ const httpDeleteSeason = asyncHandler(async (req, res, next) => {
     data: seasons,
   });
 });
+
+/********************
+ * @httpUpdateSeason
+ * @route http://localhost:8081/api/v1/seasons/seasonId
+ * @description  controller to update single seasons with id
+ * @parameters {season id}
+ * @return { Object } season object
+ ********************/
+const httpUpdateSeason = asyncHandler(async (req, res, next) => {
+  const { seasonId } = req.params;
+
+  const seasons = await seasonModel.findByIdAndDelete(seasonId);
+  console.log("seasons --------", seasons);
+
+  if (!seasons) {
+    return next(new CustomError("Season Not found", 400));
+  }
+
+  return res.status(200).json({
+    statusCode: 200,
+    message: "deleted Successfully",
+    success: true,
+    data: seasons,
+  });
+});
+
 module.exports = {
   httpCreateSeason,
   httpGetSeasons,
