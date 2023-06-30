@@ -37,7 +37,7 @@ const PreviewCard = ({
   };
 
   return (
-    <div className="group tranistion my-8 w-48 scale-100 rounded hover:bg-netflix-black drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:opacity-100 md:w-64">
+    <div className="tranistion group my-8 w-48 scale-100 rounded drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
       {/* preview video*/}
       <div className="w-48 md:w-64">
         <video
@@ -49,7 +49,7 @@ const PreviewCard = ({
       </div>
 
       {/* preview details */}
-      <div className="hidden group-hover:block space-y-4 p-4">
+      <div className="hidden space-y-4 p-4 group-hover:block">
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">

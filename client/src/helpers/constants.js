@@ -1,13 +1,19 @@
 const getFormatedDuration = (contentDuration) => {
-  const formatedTime = "";
+  let formatedTime = "";
 
-  if (contentDuration.hours != 0) {
-    formatedTime.concat(`${contentDuration.hours} hr`);
+  if (contentDuration.hours && contentDuration.hours != 0) {
+    formatedTime = `${contentDuration.hours} hr`;
   }
 
-  if (contentDuration.minutes != 0) {
-    formatedTime.concat(`${contentDuration.minutes} min`);
+  if (contentDuration.minutes && contentDuration.minutes != 0) {
+    formatedTime = `${formatedTime} ${contentDuration.minutes} mins`;
   }
+
+  if (contentDuration.seconds && contentDuration.seconds != 0) {
+    formatedTime = `${formatedTime} ${contentDuration.seconds} secs`;
+  }
+
+  return formatedTime;
 };
 
 export const convertResponseToContentObject = (data, userId) => {
@@ -33,6 +39,6 @@ export const convertResponseToContentObject = (data, userId) => {
     isLiked: isLiked,
     isDisliked: isDisliked,
     contentDuration: getFormatedDuration(data.content[0].contentDuration),
-    releaseYear: new Date(data.content[0].releaseDate).getFullYear(),
+    releaseYear: new Date(data.releaseDate).getFullYear(),
   };
 };

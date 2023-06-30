@@ -27,6 +27,7 @@ export const fetchContent = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
