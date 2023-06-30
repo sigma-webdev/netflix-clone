@@ -52,7 +52,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
   const result = {};
   if (endIndex < totalUsers) {
     result.next = {
-      pageNumber: 1,
+      pageNumber: PAGE + 1,
       limit: LIMIT,
     };
   }
