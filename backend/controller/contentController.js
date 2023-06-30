@@ -1,11 +1,10 @@
-const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
-
 const Content = require("../model/contentSchema.js");
+const asyncHandler = require("../middleware/asyncHandler.js");
 const getContentLength = require("../utils/getVideoLength.js");
-
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
+const likeAndDislike = require("../utils/likeDislike.js");
 
 /********************
  * @httpPostContent
@@ -48,7 +47,6 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
           "https://res.cloudinary.com/dp3qsxfn5/image/upload/v1687258494/default_thumbnail_mi4zwc.webp",
       },
     ],
-
     // default trailer value
     trailer: [
       {
@@ -89,13 +87,16 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
     "director",
     "originCountry",
   ];
+
   const missingRequiredFields = requiredFields.filter(
     (field) => !details[field]
   );
+
   if (missingRequiredFields.length > 0) {
     // retrieve first missing fields and send the message
     const missingField = missingRequiredFields[0];
-    return next(new CustomError(`Missing Field - ${missingField}`));
+
+    return next(new CustomError(`Missing Field - ${missingField}`, 400));
   }
 
   // create mongoose
@@ -136,7 +137,9 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     trending,
     originCountry,
   } = req.query;
+
   const query = {};
+
   const PAGE = Number(page) || 1;
   const LIMIT = Number(limit) || 20;
 
@@ -156,6 +159,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   // get latest move - release date -
   const sorting = {};
+
   if (latest) sorting["latestContent"] = { releaseDate: -1 };
 
   // get most-likes
@@ -174,13 +178,16 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   // pagination
   const totalContents = await Content.find(query).countDocuments();
+
   const result = {};
+
   if (endIndex < totalContents) {
     result.next = {
       pageNumber: PAGE + 1,
       limit: LIMIT,
     };
   }
+
   if (startIndex > 0) {
     result.previous = {
       pageNumber: PAGE - 1,
@@ -199,10 +206,12 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
-    // TODO: testing fail - work on it
-    .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
-
-  // if no content available
+    // TODO: UPDATE: I(Shivam) have added a fix, verification required if working or not
+    .sort({
+      createdAt: sorting.latestContent,
+      likesCount: sorting.likesCount,
+      trending: sorting.trending,
+    });
 
   return res.status(200).json({
     success: true,
@@ -222,9 +231,10 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   const contentData = await Content.findById(contentId);
+
   if (!contentData) {
     return next(
-      new CustomError("Invalid Content Id, or Content Not found", 404)
+      new CustomError("Invalid Content ID or Content Not found", 404)
     );
   }
 
@@ -256,12 +266,13 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
 
   if (!contentData) {
     return next(
-      new CustomError("Content with the given Id does not exist.", 404)
+      new CustomError("Content with the given ID does not exist.", 404)
     );
   }
 
   const { thumbnail, trailer, content } = contentData;
 
+  // FIXME: Fix this as discussed (MANG)
   // perform delete in cloudinary
   if (contentData) {
     if (content[0].contentID) {
@@ -299,12 +310,15 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   const contentData = await Content.findById(contentId);
 
   if (!contentData) {
-    return next(new CustomError("Content not available for the provided Id! "));
+    return next(
+      new CustomError("Content not available for the provided Id!", 404)
+    );
   }
 
   // files temporary storage
   let contentFiles;
 
+  // FIXME: Fix the below [0] as discussed
   if (files) {
     // delete pre-existing file
     if (
@@ -349,7 +363,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
   const updatedData = await Content.findByIdAndUpdate(
     contentId,
-    { ...body, ...contentFiles },
+    { ...body, ...contentFiles }, // TODO: try to use $set here
     {
       new: true,
       runValidators: true,
@@ -369,7 +383,8 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
         "image"
       );
     }
-    return next(new CustomError(`File not able to save!- ${error}`, 404));
+
+    return next(new CustomError(`File not able to save!- ${error}`, 500));
   });
 
   if (!updatedData) {
@@ -377,6 +392,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
       new CustomError("Content fail to save to database! Please try again", 400)
     );
   }
+
   return res.status(200).json({
     success: true,
     message: "Content Updated successfully",
@@ -399,43 +415,14 @@ const contentLikes = asyncHandler(async (req, res, next) => {
   const content = await Content.findById(contentId);
 
   if (!content) {
-    return next(new CustomError("content is not available", 404));
+    return next(new CustomError("Content is not available", 404));
   }
 
-  const dislikeArr = content.dislikes;
-  const likeArr = content.likes;
-  let message = "";
-  if (action === "like") {
-    if (likeArr.includes(userId)) {
-      likeArr.pop(userId);
-      message = "removed like";
-    } else if (dislikeArr.includes(userId)) {
-      dislikeArr.pop(userId);
-      likeArr.push(userId);
-      message = " liked";
-    } else {
-      likeArr.push(userId);
-      message = " liked";
-    }
-  }
+  // like and dislike function and get message
+  const message = likeAndDislike(action, userId, content);
 
-  if (action === "dislike") {
-    if (dislikeArr.includes(userId)) {
-      message = "remove dislike";
-      dislikeArr.pop(userId);
-    } else if (likeArr.includes(userId)) {
-      likeArr.pop(userId);
-      dislikeArr.push(userId);
-      message = "disliked";
-    } else {
-      dislikeArr.push(userId);
-      message = "disliked";
-    }
-  }
-
-  content.likes = likeArr;
-  content.dislikes = dislikeArr;
   await content.save();
+
   return res.status(200).json({
     message: message,
     data: content,

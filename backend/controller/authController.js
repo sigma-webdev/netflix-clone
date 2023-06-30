@@ -1,11 +1,13 @@
+const crypto = require("crypto");
+
+const validator = require("email-validator");
+const bcrypt = require("bcrypt");
+
 const asyncHandler = require("../middleware/asyncHandler.js");
 const userModel = require("../model/userSchema.js");
 const customError = require("../utils/customError.js");
-const bcrypt = require("bcrypt");
 const cookieOptions = require("../utils/cookieOption.js");
 const transporter = require("../config/emailConfig.js");
-const validator = require("email-validator");
-const crypto = require("crypto");
 
 /******************************************************
  * @userExist
@@ -14,19 +16,21 @@ const crypto = require("crypto");
  * @body email
  * @returns object with isUserExist boolean value
  ******************************************************/
-
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
 
   // check if the email is valid or not using email-validator npm package
-  const isEmailExist = validator.validate(email);
-  if (!isEmailExist)
-    return next(new customError("please enter valid email 📩"));
+  const isEmailValid = validator.validate(email);
+
+  if (!isEmailValid)
+    return next(new customError("Please enter a valid email 📩", 400));
 
   // If email is valid and user with this emailID is present in database
   // return return isUserExist true or false if not present
   const result = await userModel.findOne({ email: email });
+
   const data = {};
+
   if (result) {
     data["isUserExist"] = true;
     data["email"] = email;
@@ -34,7 +38,8 @@ const userExist = asyncHandler(async (req, res, next) => {
     data["isUserExist"] = false;
     data["email"] = email;
   }
-  return res.status(200).json({ success: false, data: data });
+
+  return res.status(200).json({ success: true, data: data });
 });
 
 /******************************************************
@@ -44,16 +49,17 @@ const userExist = asyncHandler(async (req, res, next) => {
  * @body email , password
  * @returns user object and jwtToken in cookie
  ******************************************************/
-
 const signUp = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   // check if the email is valid or not using email-validator npm package
   const isEmailValid = validator.validate(email);
+
   if (!isEmailValid)
-    return next(new customError("please enter valid email 📩"));
+    return next(new customError("Please enter a valid email 📩", 400));
 
   const userInfo = userModel({ email, password });
+
   const result = await userInfo.save();
   result.password = undefined;
 
@@ -62,7 +68,8 @@ const signUp = asyncHandler(async (req, res, next) => {
 
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
-  return res.status(200).json({ success: true, data: result });
+
+  return res.status(201).json({ success: true, data: result });
 });
 
 /******************************************************
@@ -72,25 +79,28 @@ const signUp = asyncHandler(async (req, res, next) => {
  * @body email , password
  * @returns user object and jwtToken in cookie
  ******************************************************/
-
 const signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
-  const isEmailExist = validator.validate(email);
-  if (!isEmailExist)
-    return next(new customError("please enter valid email 📩"));
+  const isEmailValid = validator.validate(email);
+
+  if (!isEmailValid)
+    return next(new customError("Please enter a valid email 📩", 400));
 
   // check user exist or not if not return error message
   const user = await userModel.findOne({ email }).select("+password");
+
   if (!user)
     return next(
       new customError(
-        "sorry we can't find you account with this email address please try again or create a new account",
-        400
+        "Sorry we can't find you account with this email address please try again or create a new account",
+        404
       )
     );
+
   // check the password is correct or not if not return error message
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
   if (!isPasswordCorrect)
     return next(
       new customError(
@@ -101,8 +111,10 @@ const signIn = asyncHandler(async (req, res, next) => {
 
   // get the jwt token form userSchema methods
   const jwtToken = user.generateJwtToken();
+
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
+
   res.status(200).json({ success: true, data: user });
 });
 
@@ -113,14 +125,15 @@ const signIn = asyncHandler(async (req, res, next) => {
  * @body email
  * @returns user object and jwtToken in cookie
  ******************************************************/
-
 const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
+
   // if email is missing form body return error message
   if (!email) return next(new customError("Email is required", 400));
 
   // get the user from database using email
   const user = await userModel.findOne({ email });
+
   // if user is not present in database return error message
   if (!user) {
     return next(
@@ -130,6 +143,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
   // get the forgotPasswordToken from userSchema methods and save the user with the forgotPasswordToken
   const resetToken = user.getForgotPasswordToken();
+
   await user.save();
 
   // create the url for reset password which we will send on user email-id
@@ -149,10 +163,11 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   transporter.sendMail(mailOptions, async (error, info) => {
     if (error) {
       user.forgotPasswordToken = undefined;
-      user.forgotPasswordExpiry = undefined;
+      user.forgotPasswordExpiryDate = undefined;
       await user.save();
       return next(error);
     }
+
     return res.status(200).json({
       success: true,
       message: "Further instructions sent on you email:" + email,
@@ -164,30 +179,30 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
  * @reset-password
  * @route /api/v1/auth/reset-password
  * @description reset user password
- * @body password and conformPassword
+ * @body password and confirmPassword
  * @param token
  * @returns return message if password is successfully updated
  ******************************************************/
-
 const resetPassword = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
-  const { password, conformPassword } = req.body;
+  const { password, confirmPassword } = req.body;
 
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(token)
     .digest("hex");
 
-  // check both password and conformPassword are present in body , if not send error message
-  if (!password || !conformPassword) {
+  // check both password and confirmPassword are present in body , if not send error message
+  if (!password || !confirmPassword) {
     return next(
-      new customError("password and conform Password is Required", 400)
+      new customError("Both Password and confirm Password are Required", 400)
     );
   }
-  // check the password and conformPassword are same or not, if different return error message
-  if (password !== conformPassword) {
+
+  // check the password and confirmPassword are same or not, if different return error message
+  if (password !== confirmPassword) {
     return next(
-      new customError("password and conform password does not match", 400)
+      new customError("Password and confirm password do not match", 400)
     );
   }
 
@@ -199,18 +214,19 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
   if (!user) {
     return next(
-      new customError("forgot password token is invalid or expired", 400)
+      new customError("Forgot password token is invalid or expired", 400)
     );
   }
 
   user.password = password;
   user.forgotPasswordToken = undefined;
-  user.forgotPasswordExpiry = undefined;
+  user.forgotPasswordExpiryDate = undefined;
+
   await user.save();
 
   res.status(200).json({
     success: true,
-    message: "successfully updated the password",
+    message: "Successfully updated the password",
   });
 });
 
@@ -220,7 +236,6 @@ const resetPassword = asyncHandler(async (req, res, next) => {
  * @description signout the user by setting the cookie without jwtToken
  * @returns return logged out message
  ******************************************************/
-
 const signOut = asyncHandler(async (req, res, next) => {
   // set the cookie without jwtToken
   res.cookie("token", "", {
@@ -229,7 +244,8 @@ const signOut = asyncHandler(async (req, res, next) => {
     path: "/",
     sameSite: "Lax",
   });
-  res.status(200).json({ success: true, message: "log out successful" });
+
+  res.status(200).json({ success: true, message: "Logged out successfully" });
 });
 
 module.exports = {

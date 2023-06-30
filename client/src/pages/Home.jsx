@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import validator from "email-validator";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 // components
 import Accordian from "../components/accordian/Accordian";
@@ -38,7 +38,7 @@ const Home = () => {
     if (isUserExist.payload.data.isUserExist) {
       navigate("/signup/password");
     } else {
-      navigate("signup/registration");
+      navigate("/signup");
     }
   }
 
@@ -150,7 +150,6 @@ const Home = () => {
               );
             })}
           </Accordian>
-
           {!IS_LOGGED_IN && USER_DATA.plan === "NONE" ? (
             <>
               <p className="text-2xl">
