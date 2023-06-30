@@ -12,6 +12,7 @@ import PaymentFail from "../pages/SignUp/PaymentFail.js";
 import AdminDashboard from "../components/admin/AdminDashboard.jsx";
 import AdminManageUsers from "../components/admin/AdminManageUsers.jsx";
 import AdminManageContents from "../components/admin/AdminManageContents.jsx";
+import TestSignIn from "../pages/temp/signin.jsx";
 
 const router = createBrowserRouter([
   {
@@ -54,23 +55,28 @@ const router = createBrowserRouter([
     children: [],
   },
   {
-    path:"/admin",
-    element: <Admin/>,
-    children:[
+    path: "/admin",
+    element: <Admin />,
+    children: [
       {
-        path:"/admin/dashboard",
-        element:<AdminDashboard/>
-      },{
-        path:"/admin/manageusers",
-        element:<AdminManageUsers/>
+        path: "/admin/dashboard",
+        element: <AdminDashboard />,
       },
-        {
-          path:"/admin/managecontents",
-          element:<AdminManageContents/>
-        }
-    ]
-    
-  }
+      {
+        path: "/admin/manageusers",
+        element: <AdminManageUsers />,
+      },
+      {
+        path: "/admin/managecontents",
+        element: <AdminManageContents />,
+      },
+    ],
+  },
+  {
+    path: "/test/signin",
+    element: <TestSignIn />,
+    children: [],
+  },
 ]);
 
 export default router;
