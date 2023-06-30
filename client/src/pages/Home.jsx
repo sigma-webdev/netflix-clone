@@ -38,7 +38,7 @@ const Home = () => {
     if (isUserExist.payload.data.isUserExist) {
       navigate("/signup/password");
     } else {
-      navigate("signup/registration");
+      navigate("/signup");
     }
   }
 
