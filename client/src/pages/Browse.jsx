@@ -32,7 +32,7 @@ const Browse = () => {
 
   return (
     <Layout isLogin={true}>
-      <div id="content-details" className="relative h-full w-full"></div>
+      <div id="content-details" className="relative "></div>
 
       <div>
         {/* hero container */}
@@ -43,8 +43,7 @@ const Browse = () => {
             {loading ? (
               <PreviewShimmer />
             ) : (
-              content &&
-              content.length !== 0 && (
+              content && (
                 <>
                   <div className="absolute -bottom-1 h-[50px] w-full bg-gradient-to-b from-netflix-blue/0 to-netflix-blue/100 md:h-[100px] lg:h-[200px]"></div>
                   <video
@@ -59,7 +58,7 @@ const Browse = () => {
           </div>
 
           {/* hero text */}
-          {!loading && content && content.length !== 0 && (
+          {!loading && content && (
             <div className="absolute bottom-6 left-6 flex cursor-pointer gap-2 md:bottom-12 md:left-12">
               <Link to={`/watch/${content[0].contentId}`}>
                 <div className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg ">
@@ -79,8 +78,7 @@ const Browse = () => {
         {loading ? (
           <RowContentShimmer />
         ) : (
-          content &&
-          content.length !== 0 && (
+          content && (
             <div className="bg-netflix-blue text-white">
               <div className="px-4 md:px-8">
                 <h3>All</h3>
@@ -117,8 +115,7 @@ const Browse = () => {
         {trendingContentLoading ? (
           <RowContentShimmer />
         ) : (
-          trendingContent &&
-          trendingContent.length !== 0 && (
+          trendingContent && (
             <div className="bg-netflix-blue text-white">
               <div className="px-4 md:px-8">
                 <h3>Trending</h3>
