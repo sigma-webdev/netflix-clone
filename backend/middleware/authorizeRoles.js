@@ -4,7 +4,7 @@ const CustomError = require("../utils/customError");
 // Add this middleware in routes which you want only specific user can access
 
 // Middleware to check if user is authorized  or not
-export const authorizeRoles = (...roles) => {
+const authorizeRoles = (...roles) => {
   return (req, _res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
