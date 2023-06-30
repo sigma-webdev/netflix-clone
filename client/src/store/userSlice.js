@@ -10,10 +10,10 @@ const initialState = {
 
 export const getAllUsers = createAsyncThunk(
   "/users",
-  async (data, { rejectWithValue }) => {
+  async (page, { rejectWithValue }) => {
     try {
-      let response = await axiosInstance.get("/users");
-      return response.data.data.users;
+      let response = await axiosInstance.get(`/users?page=${page}&limit=10`);
+      return response.data
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
