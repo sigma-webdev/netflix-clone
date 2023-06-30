@@ -1,36 +1,53 @@
 import { Link } from "react-router-dom";
-import { AddIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
-import { useRef } from "react";
+import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
+import DetailsCard from "./DetailsCard";
+import { createPortal } from "react-dom";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { dislikeContent, likeContent } from "../../store/contentSlice";
 
 const PreviewCard = ({
-  thumbnailURL,
+  name,
+  description,
+  cast,
+  director,
+  thumbnailUrl,
   trailerUrl,
   geners,
   contentId,
   rating,
+  isLiked,
+  isDisliked,
 }) => {
-  const thumbnailRef = useRef(null);
-  const previewRef = useRef(null);
-  const videoRef = useRef(null);
+  const [isOpenDetails, setIsOpenDetatils] = useState(false);
+  const dispatch = useDispatch();
+
+  const openCloseDetails = () => {
+    setIsOpenDetatils(!isOpenDetails);
+  };
+
+  const likeContentHanlder = () => {
+    dispatch(likeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+  };
+
+  const dislikeContentHanlder = () => {
+    dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+  };
 
   return (
-    <div
-      className="bg-netflix-black drop-shadow-lg rounded tranistion duration-300 ease-in-out relative my-8 hover:scale-110 hover:z-50 hover:ml-2 w-48 md:w-72"
-      ref={thumbnailRef}
-    >
+    <div className="tranistion my-8 w-48 scale-100 rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:opacity-100 md:w-64">
       {/* preview video*/}
-      <div className="w-48 md:w-72">
+      <div className="w-48 md:w-64">
         <video
-          className="rounded-tl rounded-tr object-contain"
-          poster={thumbnailURL}
-          ref={videoRef}
+          className="h-28 w-48 rounded-tl rounded-tr object-cover md:h-32 md:w-64"
+          poster={thumbnailUrl}
           src={trailerUrl}
           loop
         ></video>
       </div>
 
       {/* preview details */}
-      <div className="p-4 space-y-4" ref={previewRef}>
+      <div className="space-y-4 p-4">
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
@@ -38,28 +55,46 @@ const PreviewCard = ({
                 <PlayIcon />
               </Link>
             </div>
-            <div>
-              <AddIcon />
+            <div onClick={likeContentHanlder} className="cursor-pointer">
+              <LikeIcon isLiked={isLiked} />
             </div>
-            <div>
-              <LikeIcon />
+            <div onClick={dislikeContentHanlder} className="cursor-pointer">
+              <DisLikeIcon isDisliked={isDisliked} />
             </div>
           </div>
-          <div>
+          <div onClick={openCloseDetails} className="cursor-pointer">
             <DownArrowIcon />
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-green-600 font-semibold">94% Matched</div>
-          <div className="text-white border-[1px] border-white px-2 text-sm">
+          <div className="font-semibold text-green-600">94% Matched</div>
+          <div className="border-[1px] border-white px-2 text-sm text-white">
             {rating}
           </div>
-          <div className="text-white border-[1px] border-white px-1 rounded text-xs h-fit">
+          <div className="h-fit rounded border-[1px] border-white px-1 text-xs text-white">
             HD
           </div>
         </div>
-        <div className="text-white">{geners}</div>
+        <div className="text-white">{geners.join(" . ")}</div>
       </div>
+
+      {isOpenDetails &&
+        createPortal(
+          <div className="fixed top-0 z-50 h-full w-full bg-black/60 pt-[4%]">
+            <DetailsCard
+              name={name}
+              description={description}
+              cast={cast}
+              director={director}
+              thumbnailURL={thumbnailUrl}
+              trailerUrl={trailerUrl}
+              geners={geners}
+              rating={rating}
+              handleClose={openCloseDetails}
+            />
+          </div>,
+          document.getElementById("content-details")
+        )}
     </div>
   );
 };

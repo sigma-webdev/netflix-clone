@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 // TODO more required field movie likes and array of episode series
-const contentSchema = new mongoose.Schema(
+const contentSchema = new Schema(
   {
     name: {
       type: String,
@@ -45,6 +46,7 @@ const contentSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
     genres: {
       type: [String],
       enum: [
@@ -87,9 +89,13 @@ const contentSchema = new mongoose.Schema(
       {
         thumbnailUrl: {
           type: String,
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp",
         },
         thumbnailID: {
           type: String,
+          // required: [true, "Thumbnail Id should be provided"],
         },
       },
     ],
@@ -97,6 +103,10 @@ const contentSchema = new mongoose.Schema(
       {
         trailerUrl: {
           type: String,
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
+          // required: [true, "trailer video link must be provided"],
         },
         trailerId: { type: String },
       },
@@ -106,12 +116,17 @@ const contentSchema = new mongoose.Schema(
       {
         contentURL: {
           type: String,
+
+          default:
+            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
+
+          // required: [true, "Content video link must be provided"],
         },
         contentID: {
           type: String,
           // required: [true, "content ID must be provided"],
         },
-        contentDuration: { type: String },
+        contentDuration: { type: Object },
       },
     ],
     // TODO: add series pending work
@@ -138,9 +153,8 @@ const contentSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  {
-    timestamps: true,
-  }
+
+  { timestamps: true }
 );
 
 contentSchema.index("name");
@@ -153,5 +167,4 @@ contentSchema.pre("save", function (next) {
 });
 
 const contentModel = mongoose.model("Content", contentSchema);
-
 module.exports = contentModel;

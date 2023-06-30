@@ -9,11 +9,11 @@ const Menu = ({ children }) => {
   };
 
   return (
-    <div className="relative text-sm md:text-md" onClick={handleMenu}>
+    <div className="md:text-md relative text-sm" onClick={handleMenu}>
       <div className="cursor-pointer">
         <BiDownArrow />
       </div>
-      {isOpen && <div className="absolute top-10 w-56 right-2">{children}</div>}
+      {isOpen && <div className="absolute right-2 top-10 w-56">{children}</div>}
     </div>
   );
 };
