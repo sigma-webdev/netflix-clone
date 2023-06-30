@@ -3,7 +3,7 @@ import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 import PreviewCard from "../../components/card/PreviewCard";
 import { IconContext } from "react-icons/lib";
 
-const Crousal = ({ content }) => {
+const Crousal = ({ children }) => {
   const ref = useRef(null);
 
   const handleLeftArrow = () => {
@@ -27,25 +27,10 @@ const Crousal = ({ content }) => {
           <SlArrowLeft />
         </IconContext.Provider>
       </div>
-      {content &&
-        Array.from(content).map((item) => {
-          return (
-            <PreviewCard
-              key={item.contentId}
-              name={item.name}
-              thumbnailUrl={item.thumbnailUrl}
-              trailerUrl={item.trailerUrl}
-              geners={item.genres}
-              contentId={item.contentId}
-              rating={item.rating}
-              description={item.description}
-              cast={item.cast}
-              director={item.director}
-              isLiked={item.isLiked}
-              isDisliked={item.isDisliked}
-            />
-          );
-        })}
+
+      {/* main content */}
+      {children}
+
       <div
         className="absolute right-0 z-20 hidden cursor-pointer p-8 px-2 opacity-10 transition hover:opacity-50 md:block"
         onClick={handleRightArrow}

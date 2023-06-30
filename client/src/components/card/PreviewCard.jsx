@@ -18,6 +18,8 @@ const PreviewCard = ({
   rating,
   isLiked,
   isDisliked,
+  releaseYear,
+  contentDuration,
 }) => {
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
@@ -33,6 +35,8 @@ const PreviewCard = ({
   const dislikeContentHanlder = () => {
     dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
   };
+
+  console.log(contentDuration);
 
   return (
     <div className="tranistion my-8 w-48 scale-100 rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:opacity-100 md:w-64">
@@ -91,6 +95,8 @@ const PreviewCard = ({
               geners={geners}
               rating={rating}
               handleClose={openCloseDetails}
+              releaseYear={releaseYear}
+              contentDuration={contentDuration}
             />
           </div>,
           document.getElementById("content-details")
