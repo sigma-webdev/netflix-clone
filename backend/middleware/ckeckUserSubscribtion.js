@@ -7,10 +7,11 @@ const CustomError = require("../utils/customError.js");
 async function checkUserSubscription(req, res, next) {
   const { id, role } = req.user;
 
-  if (role !== "ADMIN") {
-    const user = await userModel.findById(id, {
-      "subscription.status": 1,
-    });
+  try {
+    if (role !== "ADMIN") {
+      const user = await userModel.findById(id, {
+        "subscription.status": 1,
+      });
 
     const subscriptionStatus = user?.subscription?.status;
 

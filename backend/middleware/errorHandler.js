@@ -9,7 +9,9 @@ const errorHandler = (error, req, res, next) => {
     });
   }
 
-  res.status(errorStatusCode).json({ success: false, message: errorMessage });
+  res
+    .status(errorStatusCode)
+    .json({ success: false, message: errorMessage, stack: error.stack });
 };
 
 module.exports = errorHandler;
