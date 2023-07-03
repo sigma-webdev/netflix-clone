@@ -1,15 +1,15 @@
 const getFormatedDuration = (contentDuration) => {
   let formatedTime = "";
 
-  if (contentDuration.hours && contentDuration.hours != 0) {
+  if (contentDuration.hours && contentDuration.hours !== 0) {
     formatedTime = `${contentDuration.hours} hr`;
   }
 
-  if (contentDuration.minutes && contentDuration.minutes != 0) {
+  if (contentDuration.minutes && contentDuration.minutes !== 0) {
     formatedTime = `${formatedTime} ${contentDuration.minutes} mins`;
   }
 
-  if (contentDuration.seconds && contentDuration.seconds != 0) {
+  if (contentDuration.seconds && contentDuration.seconds !== 0) {
     formatedTime = `${formatedTime} ${contentDuration.seconds} secs`;
   }
 

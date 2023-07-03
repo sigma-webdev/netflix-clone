@@ -1,17 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import { content } from "../data";
 import axiosInstance from "../helpers/axiosInstance";
 import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
-  allContent: [],
   currentContent: null,
+  allContent: [],
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
-  trendingContentLoading: [],
-  latestContentLoading: false,
   loading: false,
+  trendingContentLoading: false,
+  latestContentLoading: false,
 };
 
 export const fetchContent = createAsyncThunk(

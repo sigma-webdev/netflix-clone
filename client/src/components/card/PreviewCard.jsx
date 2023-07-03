@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
-import DetailsCard from "./DetailsCard";
 import { createPortal } from "react-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
+import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
+import DetailsCard from "./DetailsCard";
 
 const PreviewCard = ({
   name,
@@ -26,6 +26,12 @@ const PreviewCard = ({
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
+
+    if (!isOpenDetails) {
+      window.document.body.style.overflow = "hidden";
+    } else {
+      window.document.body.style.overflow = "intial";
+    }
   };
 
   const likeContentHanlder = () => {
@@ -82,7 +88,7 @@ const PreviewCard = ({
 
       {isOpenDetails &&
         createPortal(
-          <div className="fixed top-0 z-50 flex h-full w-full items-center bg-black/60  pt-[4%]">
+          <div className="fixed top-0 z-50 flex h-full w-full items-center bg-black/60">
             <DetailsCard
               name={name}
               description={description}
