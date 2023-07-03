@@ -249,7 +249,6 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
-
       //fetch content by contentType
 
       .addCase(fetchContentByContentType.pending, (state) => {
@@ -352,9 +351,6 @@ export const contentSlice = createSlice({
       })
 
       //like content
-      .addCase(likeContent.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(likeContent.fulfilled, (state, action) => {
         const likedContentId = action.payload.contenId;
         const likedContent = action.payload.contentObject;
@@ -363,16 +359,9 @@ export const contentSlice = createSlice({
         );
 
         state.filteredContent = newAllContent;
-        state.loading = false;
-      })
-      .addCase(likeContent.rejected, (state) => {
-        state.loading = false;
       })
 
       //dislike content
-      .addCase(dislikeContent.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(dislikeContent.fulfilled, (state, action) => {
         const dislikedContentId = action.payload.contenId;
         const dislikedContent = action.payload.contentObject;
@@ -382,9 +371,6 @@ export const contentSlice = createSlice({
         );
 
         state.filteredContent = newAllContent;
-        state.loading = false;
-      })
-      .addCase(dislikeContent.rejected, (state) => {
         state.loading = false;
       });
   },

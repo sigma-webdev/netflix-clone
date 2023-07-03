@@ -16,8 +16,8 @@ const PreviewCard = ({
   trailerUrl,
   geners,
   rating,
-  like,
-  dislike,
+  isLiked,
+  isDisliked,
   releaseYear,
   contentDuration,
 }) => {
@@ -30,7 +30,7 @@ const PreviewCard = ({
     if (!isOpenDetails) {
       window.document.body.style.overflow = "hidden";
     } else {
-      window.document.body.style.overflow = "intial";
+      window.document.body.style.overflow = "initial";
     }
   };
 
@@ -43,7 +43,7 @@ const PreviewCard = ({
   };
 
   return (
-    <div className="tranistion group my-8 w-48 scale-100 rounded drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
+    <div className="group my-8 w-48 scale-100 rounded drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
       {/* preview video*/}
       <div className="w-48 md:w-64">
         <video
@@ -64,10 +64,10 @@ const PreviewCard = ({
               </Link>
             </div>
             <div onClick={likeContentHanlder} className="cursor-pointer">
-              <LikeIcon isLiked={like.isLiked} />
+              <LikeIcon isLiked={isLiked} />
             </div>
             <div onClick={dislikeContentHanlder} className="cursor-pointer">
-              <DisLikeIcon isDisliked={dislike.isDisliked} />
+              <DisLikeIcon isDisliked={isDisliked} />
             </div>
           </div>
           <div onClick={openCloseDetails} className="cursor-pointer">
@@ -103,8 +103,8 @@ const PreviewCard = ({
               handleClose={openCloseDetails}
               releaseYear={releaseYear}
               contentDuration={contentDuration}
-              like={like}
-              dislike={dislike}
+              isLiked={isLiked}
+              isDisliked={isDisliked}
             />
           </div>,
           document.getElementById("content-details")

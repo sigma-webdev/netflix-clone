@@ -48,7 +48,7 @@ const Browse = () => {
           {/* hero video */}
 
           <div className="h-[400px] w-full md:h-[800px]">
-            {loading ? (
+            {true ? (
               <PreviewShimmer />
             ) : (
               content &&
@@ -85,118 +85,124 @@ const Browse = () => {
         </div>
 
         {/* browse all content */}
-        {loading ? (
-          <RowContentShimmer />
-        ) : (
-          content &&
-          content.length !== 0 && (
-            <div className="bg-netflix-blue text-white">
-              <div className="px-4 md:px-8">
-                <h3>All</h3>
-                <div className="space-y-5">
-                  <Crousal>
-                    {Array.from(content).map((item) => {
-                      return (
-                        <PreviewCard
-                          key={item.contentId}
-                          name={item.name}
-                          thumbnailUrl={item.thumbnailUrl}
-                          trailerUrl={item.trailerUrl}
-                          geners={item.genres}
-                          contentId={item.contentId}
-                          rating={item.rating}
-                          description={item.description}
-                          cast={item.cast}
-                          director={item.director}
-                          like={item.like}
-                          dislike={item.dislike}
-                          releaseYear={item.releaseYear}
-                          contentDuration={item.contentDuration}
-                        />
-                      );
-                    })}
-                  </Crousal>
-                </div>
-              </div>
-            </div>
-          )
-        )}
+        <div className="bg-netflix-blue pt-4 text-white">
+          <div className="px-4 md:px-8">
+            {loading ? (
+              <RowContentShimmer />
+            ) : (
+              content &&
+              content.length !== 0 && (
+                <>
+                  <h3>All</h3>
+                  <div className="space-y-5">
+                    <Crousal>
+                      {Array.from(content).map((item) => {
+                        return (
+                          <PreviewCard
+                            key={item.contentId}
+                            name={item.name}
+                            thumbnailUrl={item.thumbnailUrl}
+                            trailerUrl={item.trailerUrl}
+                            geners={item.genres}
+                            contentId={item.contentId}
+                            rating={item.rating}
+                            description={item.description}
+                            cast={item.cast}
+                            director={item.director}
+                            isLiked={item.isLiked}
+                            isDisliked={item.isDisliked}
+                            releaseYear={item.releaseYear}
+                            contentDuration={item.contentDuration}
+                          />
+                        );
+                      })}
+                    </Crousal>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
 
         {/* browse trending content */}
-        {trendingContentLoading ? (
-          <RowContentShimmer />
-        ) : (
-          trendingContent &&
-          trendingContent.length !== 0 && (
-            <div className="bg-netflix-blue text-white">
-              <div className="px-4 md:px-8">
-                <h3>Trending</h3>
-                <div className="space-y-5">
-                  <Crousal>
-                    {Array.from(trendingContent).map((item) => {
-                      return (
-                        <PreviewCard
-                          key={item.contentId}
-                          name={item.name}
-                          thumbnailUrl={item.thumbnailUrl}
-                          trailerUrl={item.trailerUrl}
-                          geners={item.genres}
-                          contentId={item.contentId}
-                          rating={item.rating}
-                          description={item.description}
-                          cast={item.cast}
-                          director={item.director}
-                          like={item.like}
-                          dislike={item.dislike}
-                          releaseYear={item.releaseYear}
-                          contentDuration={item.contentDuration}
-                        />
-                      );
-                    })}
-                  </Crousal>
-                </div>
-              </div>
-            </div>
-          )
-        )}
+        <div className="bg-netflix-blue text-white">
+          <div className="px-4 md:px-8">
+            {trendingContentLoading ? (
+              <RowContentShimmer />
+            ) : (
+              trendingContent &&
+              trendingContent.length !== 0 && (
+                <>
+                  <h3>Trending</h3>
+                  <div className="space-y-5">
+                    <Crousal>
+                      {Array.from(content).map((item) => {
+                        return (
+                          <PreviewCard
+                            key={item.contentId}
+                            name={item.name}
+                            thumbnailUrl={item.thumbnailUrl}
+                            trailerUrl={item.trailerUrl}
+                            geners={item.genres}
+                            contentId={item.contentId}
+                            rating={item.rating}
+                            description={item.description}
+                            cast={item.cast}
+                            director={item.director}
+                            isLiked={item.isLiked}
+                            isDisliked={item.isDisliked}
+                            releaseYear={item.releaseYear}
+                            contentDuration={item.contentDuration}
+                          />
+                        );
+                      })}
+                    </Crousal>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
 
-        {/* browse latest content */}
-        {latestContentLoading ? (
-          <RowContentShimmer />
-        ) : (
-          latestContent &&
-          latestContent.length !== 0 && (
-            <div className="bg-netflix-blue text-white">
-              <div className="px-4 md:px-8">
-                <h3>Latest</h3>
-                <div className="space-y-5">
-                  <Crousal>
-                    {Array.from(latestContent).map((item) => {
-                      return (
-                        <PreviewCard
-                          key={item.contentId}
-                          name={item.name}
-                          thumbnailUrl={item.thumbnailUrl}
-                          trailerUrl={item.trailerUrl}
-                          geners={item.genres}
-                          contentId={item.contentId}
-                          rating={item.rating}
-                          description={item.description}
-                          cast={item.cast}
-                          director={item.director}
-                          like={item.like}
-                          dislike={item.dislike}
-                          releaseYear={item.releaseYear}
-                          contentDuration={item.contentDuration}
-                        />
-                      );
-                    })}
-                  </Crousal>
-                </div>
-              </div>
-            </div>
-          )
-        )}
+        {/* browse trending content */}
+        <div className="bg-netflix-blue text-white">
+          <div className="px-4 md:px-8">
+            {latestContentLoading ? (
+              <RowContentShimmer />
+            ) : (
+              latestContent &&
+              latestContent.length !== 0 && (
+                <>
+                  <h3>Latest</h3>
+                  <div className="space-y-5">
+                    <Crousal>
+                      {Array.from(content).map((item) => {
+                        return (
+                          <PreviewCard
+                            key={item.contentId}
+                            name={item.name}
+                            thumbnailUrl={item.thumbnailUrl}
+                            trailerUrl={item.trailerUrl}
+                            geners={item.genres}
+                            contentId={item.contentId}
+                            rating={item.rating}
+                            description={item.description}
+                            cast={item.cast}
+                            director={item.director}
+                            isLiked={item.isLiked}
+                            isDisliked={item.isDisliked}
+                            releaseYear={item.releaseYear}
+                            contentDuration={item.contentDuration}
+                          />
+                        );
+                      })}
+                    </Crousal>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
       </div>
     </Layout>
   );
