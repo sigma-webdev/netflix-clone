@@ -11,9 +11,10 @@ const AdminManageUsers = () => {
   const allUsers = useSelector((state) => state.user.allUsers);
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(1) 
+  const [searchText, setSearchText] = useState("")
   
   useEffect(() => {
-    dispatch(getAllUsers(page));
+    dispatch(getAllUsers({pageNo:page}));
   }, [page]);
 
   
@@ -41,6 +42,13 @@ const AdminManageUsers = () => {
       setPage((next)=>(next+1))
 
     }
+
+  }
+
+  const getSearch = (e) => {
+     e.preventDefault()
+    dispatch(getAllUsers({pageNo:page, searchValue:searchText}));
+    setSearchText("")
 
   }
  
@@ -75,8 +83,10 @@ const AdminManageUsers = () => {
         <div className="flex justify-between w-5/6 mx-auto">
         <h3 className="text-white bg-[#E50914] px-3 rounded-t-md">Manage Users</h3>
         <div className="flex justify-between border-2 border-[#E50914] items-center w-1/3 bg-white ">
+          <form onSubmit={getSearch} className="w-full">
+          <input onChange={(e)=>{setSearchText(e.target.value)}} value={searchText} type="text" placeholder="Search here" className=" px-2 outline-none w-full" />
+          </form>
           <HiSearch className="text-4xl"/>
-          <input type="text" placeholder="Search here" className=" px-2 outline-none w-full" />
         </div>
         </div>
         <table className="mx-auto w-5/6 table-auto overflow-scroll  text-gray-200">
