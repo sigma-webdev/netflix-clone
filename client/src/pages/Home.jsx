@@ -32,8 +32,7 @@ const Home = () => {
 
   async function handleIsUserExist(e) {
     e.preventDefault();
-
-    const isEmailValid = validator.validate(e.target.email.value);
+    const isEmailValid = validator.validate(e?.target?.email?.value);
     if (!isEmailValid) return toast.error("please enter valid email 📩");
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
     if (isUserExist?.payload?.data?.isUserExist) {
@@ -44,7 +43,7 @@ const Home = () => {
   }
 
   return (
-    <Layout isLogin={false}>
+    <Layout>
       <div className="relative bg-[#000000] text-white">
         <section className="m-auto w-full">
           <div className="bg-repeat-no h-[43.75rem] bg-netflix-home bg-cover">
