@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
 import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
@@ -21,6 +21,9 @@ const PreviewCard = ({
   releaseYear,
   contentDuration,
 }) => {
+  const likeDisLikeLoading = useSelector(
+    (state) => state.content.likeDisLikeLoading
+  );
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
 
@@ -63,12 +66,20 @@ const PreviewCard = ({
                 <PlayIcon />
               </Link>
             </div>
-            <div onClick={likeContentHanlder} className="cursor-pointer">
+            <button
+              onClick={likeContentHanlder}
+              className="cursor-pointer"
+              disabled={likeDisLikeLoading}
+            >
               <LikeIcon isLiked={isLiked} />
-            </div>
-            <div onClick={dislikeContentHanlder} className="cursor-pointer">
+            </button>
+            <button
+              onClick={dislikeContentHanlder}
+              className="cursor-pointer"
+              disabled={likeDisLikeLoading}
+            >
               <DisLikeIcon isDisliked={isDisliked} />
-            </div>
+            </button>
           </div>
           <div onClick={openCloseDetails} className="cursor-pointer">
             <DownArrowIcon />

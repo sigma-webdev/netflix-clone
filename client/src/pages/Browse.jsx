@@ -275,7 +275,8 @@ const Browse = () => {
               contentByCountryOrigin &&
               Object.keys(contentByCountryOrigin).find(
                 (item) => item === "USA"
-              ) && (
+              ) &&
+              contentByCountryOrigin["USA"].length !== 0 && (
                 <>
                   <h3>USA</h3>
                   <div className="space-y-5">
