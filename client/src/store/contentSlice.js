@@ -249,7 +249,9 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
+
       //fetch content by contentType
+
       .addCase(fetchContentByContentType.pending, (state) => {
         state.loading = true;
       })
@@ -302,6 +304,7 @@ export const contentSlice = createSlice({
       })
 
       // add new content
+
       .addCase(addNewContent.pending, (state) => {
         state.contentLoading = true;
       })
