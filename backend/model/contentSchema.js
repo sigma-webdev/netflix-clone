@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-// TODO more required field movie likes and array of episode series
 const contentSchema = new Schema(
   {
     name: {
@@ -127,17 +126,7 @@ const contentSchema = new Schema(
       },
       contentDuration: { type: Object },
     },
-    // TODO: add series pending work
-    // episodes: [
-    //   {
-    //     episodeURL: {
-    //       type: String,
-    //     },
-    //     episodeId: {
-    //       type: String,
-    //     },
-    //   },
-    // ],
+
     display: {
       type: Boolean,
       default: false,
