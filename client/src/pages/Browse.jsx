@@ -38,8 +38,6 @@ const Browse = () => {
     dispatch(fetchContentByLatest("64789b082f388ccff2e33eaa"));
   }, [dispatch]);
 
-  console.log(content);
-
   return (
     <Layout isLogin={true}>
       <div id="content-details" className="relative "></div>
@@ -61,8 +59,8 @@ const Browse = () => {
                     className="mx-auto h-[400px] w-full object-cover md:h-[800px]"
                     src={content[0].trailerUrl}
                     poster={content[0].thumbnailUrl}
-                      autoPlay={true}
-                      loop
+                    autoPlay={true}
+                    loop
                   ></video>
                 </>
               )
