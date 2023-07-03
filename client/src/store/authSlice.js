@@ -5,9 +5,6 @@ const initialState = {
   isLoggedIn: false,
   userData: {},
   loading: false,
-  forgotPasswordLoading: false,
-  resetPasswordLoading: false,
-  isUserExistLoading: false,
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
@@ -111,7 +108,7 @@ const authSlice = createSlice({
         state.user = action.payload.data;
         state.isLoggedIn = true;
         state.loading = false;
-        toast.success(action?.payload?.message);
+        toast.success("Logged in successfully");
       })
       .addCase(SIGN_IN.rejected, (state, action) => {
         state.loading = false;
