@@ -356,7 +356,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
   const updatedData = await Content.findByIdAndUpdate(
     contentId,
-    { $set: { ...body, ...contentFiles } }, // TODO: try to use $set here
+    { $set: { ...body, ...contentFiles } },
     {
       new: true,
       runValidators: true,
