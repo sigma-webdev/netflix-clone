@@ -10,6 +10,7 @@ import Layout from "../components/layout/Layout";
 import {
   fetchContent,
   fetchContentByLatest,
+  fetchContentByMostLiked,
   fetchContentByTrending,
 } from "../store/contentSlice";
 import { RiPlayMiniFill } from "react-icons/ri";
@@ -22,12 +23,19 @@ const Browse = () => {
   const content = useSelector((state) => state.content.filteredContent);
   const trendingContent = useSelector((state) => state.content.trendingContent);
   const latestContent = useSelector((state) => state.content.latestContent);
+  const mostLikedContent = useSelector(
+    (state) => state.content.mostLikedContent
+  );
+
   const loading = useSelector((state) => state.content.loading);
   const trendingContentLoading = useSelector(
     (state) => state.content.trendingContentLoading
   );
   const latestContentLoading = useSelector(
     (state) => state.content.latestContentLoading
+  );
+  const mostLikedContentLoading = useSelector(
+    (state) => state.content.mostLikedContentLoading
   );
 
   const dispatch = useDispatch();
@@ -36,6 +44,7 @@ const Browse = () => {
     dispatch(fetchContent("64789b082f388ccff2e33eaa"));
     dispatch(fetchContentByTrending("64789b082f388ccff2e33eaa"));
     dispatch(fetchContentByLatest("64789b082f388ccff2e33eaa"));
+    dispatch(fetchContentByMostLiked("64789b082f388ccff2e33eaa"));
   }, [dispatch]);
 
   return (
@@ -48,7 +57,7 @@ const Browse = () => {
           {/* hero video */}
 
           <div className="h-[400px] w-full md:h-[800px]">
-            {true ? (
+            {loading ? (
               <PreviewShimmer />
             ) : (
               content &&
@@ -164,7 +173,7 @@ const Browse = () => {
           </div>
         </div>
 
-        {/* browse trending content */}
+        {/* browse latest content */}
         <div className="bg-netflix-blue text-white">
           <div className="px-4 md:px-8">
             {latestContentLoading ? (
@@ -174,6 +183,46 @@ const Browse = () => {
               latestContent.length !== 0 && (
                 <>
                   <h3>Latest</h3>
+                  <div className="space-y-5">
+                    <Crousal>
+                      {Array.from(content).map((item) => {
+                        return (
+                          <PreviewCard
+                            key={item.contentId}
+                            name={item.name}
+                            thumbnailUrl={item.thumbnailUrl}
+                            trailerUrl={item.trailerUrl}
+                            geners={item.genres}
+                            contentId={item.contentId}
+                            rating={item.rating}
+                            description={item.description}
+                            cast={item.cast}
+                            director={item.director}
+                            isLiked={item.isLiked}
+                            isDisliked={item.isDisliked}
+                            releaseYear={item.releaseYear}
+                            contentDuration={item.contentDuration}
+                          />
+                        );
+                      })}
+                    </Crousal>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* browse most liked content */}
+        <div className="bg-netflix-blue text-white">
+          <div className="px-4 md:px-8">
+            {mostLikedContentLoading ? (
+              <RowContentShimmer />
+            ) : (
+              mostLikedContent &&
+              mostLikedContent.length !== 0 && (
+                <>
+                  <h3>Most Liked</h3>
                   <div className="space-y-5">
                     <Crousal>
                       {Array.from(content).map((item) => {

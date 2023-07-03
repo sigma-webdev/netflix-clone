@@ -8,9 +8,11 @@ const initialState = {
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
+  mostLikedContent: [],
   loading: false,
   trendingContentLoading: false,
   latestContentLoading: false,
+  mostLikedContentLoading: false,
 };
 
 export const fetchContent = createAsyncThunk(
@@ -111,6 +113,24 @@ export const fetchContentByLatest = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/contents?latest=true");
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByMostLiked = createAsyncThunk(
+  "content/fetchContentByMostLiked",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/contents?mostLikes=true");
 
       const data = response.data.data.contents;
       const contentsObject = data.map((item) => {
@@ -250,7 +270,6 @@ export const contentSlice = createSlice({
       })
 
       //fetch content by contentType
-
       .addCase(fetchContentByContentType.pending, (state) => {
         state.loading = true;
       })
@@ -302,8 +321,20 @@ export const contentSlice = createSlice({
         state.latestContentLoading = false;
       })
 
-      // add new content
+      //fetch content by most liked
+      .addCase(fetchContentByMostLiked.pending, (state) => {
+        state.mostLikedContentLoading = true;
+      })
+      .addCase(fetchContentByMostLiked.fulfilled, (state, action) => {
+        state.mostLikedContent = action.payload;
+        state.mostLikedContentLoading = false;
+      })
+      .addCase(fetchContentByMostLiked.rejected, (state) => {
+        state.mostLikedContent = [];
+        state.mostLikedContentLoading = false;
+      })
 
+      // add new content
       .addCase(addNewContent.pending, (state) => {
         state.contentLoading = true;
       })
