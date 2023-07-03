@@ -81,7 +81,7 @@ const UserExistLogin=()=> {
       {/* password */}
       <button
         type="submit"
-        className="mt-3 h-16  w-full  rounded-md bg-[#e50914] text-xl font-semibold text-white  hover:bg-[#f6121d]"
+        className="mt-3 h-16 w-full flex items-center justify-center rounded-md bg-[#e50914] text-xl font-semibold text-white  hover:bg-[#f6121d]"
       >
         {SIGN_IN_LOADING ? <AiOutlineLoading /> : "Next"}
       </button>

@@ -122,9 +122,8 @@ const authSlice = createSlice({
       .addCase(SIGN_UP.fulfilled, (state, action) => {
         state.user = action.payload.data;
         state.isLoggedIn = true;
-        state.signUpLoading = false;
         localStorage.removeItem("netflixCloneEmail");
-        toast.success("successfully signup");
+        toast.success("Account created successfully");
       })
       .addCase(SIGN_UP.rejected, (state, action) => {
         state.loading = false;
@@ -152,9 +151,11 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
         state.userData = {};
         state.loading = false;
+        localStorage.clear()
       })
       .addCase(SIGN_OUT.rejected, (state) => {
         state.loading = false;
+        toast.error("Failed to log out")
       })
 
       // forgotPassword

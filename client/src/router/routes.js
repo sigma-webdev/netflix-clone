@@ -15,6 +15,7 @@ import AdminManageContents from "../components/admin/AdminManageContents.jsx";
 import TestSignIn from "../pages/temp/signin.jsx";
 import SignIn from "../pages/SignIn/SignIn.js";
 import UserExistLogin from "../pages/SignIn/UserExistLogin.js";
+import Logout from "../pages/SignIn/Logout.js";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
   {
     path: "/signin/:email",
     element: <UserExistLogin />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
   },
   {
     path: "/browse",
