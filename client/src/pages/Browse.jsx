@@ -61,7 +61,8 @@ const Browse = () => {
                     className="mx-auto h-[400px] w-full object-cover md:h-[800px]"
                     src={content[0].trailerUrl}
                     poster={content[0].thumbnailUrl}
-                    autoPlay={true}
+                      autoPlay={true}
+                      loop
                   ></video>
                 </>
               )

@@ -43,11 +43,9 @@ const Header = () => {
 
   async function handleSignInSignOut() {
     if (!IS_LOGGED_IN) return navigate("/signin");
-
     const response = await dispatch(SIGN_OUT());
-
-    if (response.payload.success) {
-      navigate("signup/signout");
+    if (response?.payload?.success) {
+      navigate("/logout");
     }
   }
 

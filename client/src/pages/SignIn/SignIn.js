@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //components
-import Layout from "../components/layout/Layout";
+import Layout from "../../components/layout/Layout";
 // packages
 import { Link, useNavigate } from "react-router-dom";
 // thunk
-import { SIGN_IN } from "../store/authSlice.js";
+import { SIGN_IN } from "../../store/authSlice.js";
 // svg / icon
-import { Loading } from "../components/icons.jsx";
+import { Loading } from "../../components/icons.jsx";
 
 const SignIn = () => {
   const navigate = useNavigate();
