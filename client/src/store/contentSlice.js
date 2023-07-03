@@ -9,10 +9,12 @@ const initialState = {
   trendingContent: [],
   latestContent: [],
   mostLikedContent: [],
+  contentByCountryOrigin: {},
   loading: false,
   trendingContentLoading: false,
   latestContentLoading: false,
   mostLikedContentLoading: false,
+  countryOriginContentLoading: false,
 };
 
 export const fetchContent = createAsyncThunk(
@@ -138,6 +140,26 @@ export const fetchContentByMostLiked = createAsyncThunk(
       });
 
       return contentsObject;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByCountryOrigin = createAsyncThunk(
+  "content/fetchContentByCountryOrigin",
+  async ({ countryOrigin, userId }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/contents?originCountry=${countryOrigin}`
+      );
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return { countryOrigin, contentsObject };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -332,6 +354,27 @@ export const contentSlice = createSlice({
       .addCase(fetchContentByMostLiked.rejected, (state) => {
         state.mostLikedContent = [];
         state.mostLikedContentLoading = false;
+      })
+
+      //fetch content by country origin
+      .addCase(fetchContentByCountryOrigin.pending, (state) => {
+        state.countryOriginContentLoading = true;
+      })
+      .addCase(fetchContentByCountryOrigin.fulfilled, (state, action) => {
+        const countryOrigin = action.payload.countryOrigin;
+        const currentContent = state.contentByCountryOrigin;
+
+        const updatedContent = {
+          ...currentContent,
+          [countryOrigin]: action.payload.contentsObject,
+        };
+
+        state.contentByCountryOrigin = updatedContent;
+        state.countryOriginContentLoading = false;
+      })
+      .addCase(fetchContentByCountryOrigin.rejected, (state) => {
+        state.contentByCountryOrigin = [];
+        state.countryOriginContentLoading = false;
       })
 
       // add new content

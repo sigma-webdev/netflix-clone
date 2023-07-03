@@ -9,6 +9,7 @@ import Layout from "../components/layout/Layout";
 // actions
 import {
   fetchContent,
+  fetchContentByCountryOrigin,
   fetchContentByLatest,
   fetchContentByMostLiked,
   fetchContentByTrending,
@@ -26,6 +27,9 @@ const Browse = () => {
   const mostLikedContent = useSelector(
     (state) => state.content.mostLikedContent
   );
+  const contentByCountryOrigin = useSelector(
+    (state) => state.content.contentByCountryOrigin
+  );
 
   const loading = useSelector((state) => state.content.loading);
   const trendingContentLoading = useSelector(
@@ -37,6 +41,9 @@ const Browse = () => {
   const mostLikedContentLoading = useSelector(
     (state) => state.content.mostLikedContentLoading
   );
+  const countryOriginContentLoading = useSelector(
+    (state) => state.content.countryOriginContentLoading
+  );
 
   const dispatch = useDispatch();
 
@@ -45,6 +52,12 @@ const Browse = () => {
     dispatch(fetchContentByTrending("64789b082f388ccff2e33eaa"));
     dispatch(fetchContentByLatest("64789b082f388ccff2e33eaa"));
     dispatch(fetchContentByMostLiked("64789b082f388ccff2e33eaa"));
+    dispatch(
+      fetchContentByCountryOrigin({
+        userId: "64789b082f388ccff2e33eaa",
+        countryOrigin: "USA",
+      })
+    );
   }, [dispatch]);
 
   return (
@@ -145,7 +158,7 @@ const Browse = () => {
                   <h3>Trending</h3>
                   <div className="space-y-5">
                     <Crousal>
-                      {Array.from(content).map((item) => {
+                      {Array.from(trendingContent).map((item) => {
                         return (
                           <PreviewCard
                             key={item.contentId}
@@ -185,7 +198,7 @@ const Browse = () => {
                   <h3>Latest</h3>
                   <div className="space-y-5">
                     <Crousal>
-                      {Array.from(content).map((item) => {
+                      {Array.from(latestContent).map((item) => {
                         return (
                           <PreviewCard
                             key={item.contentId}
@@ -225,7 +238,49 @@ const Browse = () => {
                   <h3>Most Liked</h3>
                   <div className="space-y-5">
                     <Crousal>
-                      {Array.from(content).map((item) => {
+                      {Array.from(mostLikedContent).map((item) => {
+                        return (
+                          <PreviewCard
+                            key={item.contentId}
+                            name={item.name}
+                            thumbnailUrl={item.thumbnailUrl}
+                            trailerUrl={item.trailerUrl}
+                            geners={item.genres}
+                            contentId={item.contentId}
+                            rating={item.rating}
+                            description={item.description}
+                            cast={item.cast}
+                            director={item.director}
+                            isLiked={item.isLiked}
+                            isDisliked={item.isDisliked}
+                            releaseYear={item.releaseYear}
+                            contentDuration={item.contentDuration}
+                          />
+                        );
+                      })}
+                    </Crousal>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* browse content by country origin USA*/}
+        <div className="bg-netflix-blue text-white">
+          <div className="px-4 md:px-8">
+            {countryOriginContentLoading ? (
+              <RowContentShimmer />
+            ) : (
+              contentByCountryOrigin &&
+              Object.keys(contentByCountryOrigin).find(
+                (item) => item === "USA"
+              ) && (
+                <>
+                  <h3>USA</h3>
+                  <div className="space-y-5">
+                    <Crousal>
+                      {Array.from(contentByCountryOrigin["USA"]).map((item) => {
                         return (
                           <PreviewCard
                             key={item.contentId}
