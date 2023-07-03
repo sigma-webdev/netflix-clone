@@ -39,7 +39,9 @@ const userExist = asyncHandler(async (req, res, next) => {
     data["email"] = email;
   }
 
-  return res.status(200).json({ success: true, data: data });
+  return res
+    .status(200)
+    .json({ status: 200, success: true, message: "", data: data });
 });
 
 /******************************************************
@@ -69,7 +71,12 @@ const signUp = asyncHandler(async (req, res, next) => {
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
 
-  return res.status(201).json({ success: true, data: result });
+  return res.status(201).json({
+    status: 200,
+    success: true,
+    message: "successfully registered the user",
+    data: result,
+  });
 });
 
 /******************************************************
@@ -115,7 +122,12 @@ const signIn = asyncHandler(async (req, res, next) => {
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
 
-  res.status(200).json({ success: true, data: user });
+  res.status(200).json({
+    status: 200,
+    success: true,
+    message: "successfully singIn",
+    data: user,
+  });
 });
 
 /******************************************************
@@ -169,8 +181,10 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     }
 
     return res.status(200).json({
+      status: 200,
       success: true,
       message: "Further instructions sent on you email:" + email,
+      data: null,
     });
   });
 });
@@ -225,8 +239,10 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
   res.status(200).json({
+    status: 200,
     success: true,
     message: "Successfully updated the password",
+    data: null,
   });
 });
 
@@ -245,7 +261,12 @@ const signOut = asyncHandler(async (req, res, next) => {
     sameSite: "Lax",
   });
 
-  res.status(200).json({ success: true, message: "Logged out successfully" });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "Logged out successfully",
+    data: null,
+  });
 });
 
 module.exports = {
