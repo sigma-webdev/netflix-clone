@@ -5,9 +5,6 @@ const initialState = {
   isLoggedIn: false,
   userData: {},
   loading: false,
-  forgotPasswordLoading: false,
-  resetPasswordLoading: false,
-  isUserExistLoading: false,
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
