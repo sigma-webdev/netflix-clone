@@ -38,6 +38,8 @@ const Browse = () => {
     dispatch(fetchContentByLatest("64789b082f388ccff2e33eaa"));
   }, [dispatch]);
 
+  console.log(content);
+
   return (
     <Layout isLogin={true}>
       <div id="content-details" className="relative "></div>
