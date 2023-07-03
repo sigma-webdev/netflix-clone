@@ -98,7 +98,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   }
 
   // create mongoose
-  const contentDetails = Content(details);
+  const contentDetails = new Content(details);
 
   const contentData = await contentDetails.save();
 
@@ -208,12 +208,12 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
 
   if (!result.contents) {
-    next(new CustomError("Content Not able to fetch, Make sure you login"));
+    next(new CustomError("Content not able Fetch"));
   }
 
   return res.status(200).json({
     success: true,
-    data: result,
+    data: result.contents,
     message: "Content Fetched successfully",
   });
 });
@@ -262,6 +262,8 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   // find content with id
   const contentData = await Content.findByIdAndDelete(contentId);
 
+  console.log("Contentdatat =-------------", contentData);
+
   if (!contentData) {
     return next(
       new CustomError("Content with the given ID does not exist.", 404)
@@ -269,7 +271,6 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   }
 
   const { thumbnail, trailer, content } = contentData;
-
   if (contentData) {
     if (content?.contentID) {
       cloudinaryFileDelete(content?.contentID, next);
@@ -289,6 +290,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
       });
     }
   }
+
   res.status(200).json({
     success: true,
     message: "Content deleted successfully",
