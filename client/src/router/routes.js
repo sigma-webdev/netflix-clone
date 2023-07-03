@@ -13,7 +13,8 @@ import AdminDashboard from "../components/admin/AdminDashboard.jsx";
 import AdminManageUsers from "../components/admin/AdminManageUsers.jsx";
 import AdminManageContents from "../components/admin/AdminManageContents.jsx";
 import TestSignIn from "../pages/temp/signin.jsx";
-import SignIn from "../pages/SignIn.jsx";
+import SignIn from "../pages/SignIn/SignIn.js";
+import UserExistLogin from "../pages/SignIn/UserExistLogin.js";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
   {
     path: "/signin",
     element: <SignIn />,
+  },
+  {
+    path: "/signin/:email",
+    element: <UserExistLogin />,
   },
   {
     path: "/browse",

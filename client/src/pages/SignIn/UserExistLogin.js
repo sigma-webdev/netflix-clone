@@ -2,14 +2,14 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SIGN_IN } from "../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-// icons
-import { Loading } from "../icons.jsx";
+import { AiOutlineLoading } from "react-icons/ai";
+import SignUpLayout from "../SignUp/SignUpLayout";
 
-function Password() {
+const UserExistLogin=()=> {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const email = localStorage.getItem("netflixCloneEmail");
-  const SIGN_IN_LOADING = useSelector((state) => state.auth.signInLoading);
+  const SIGN_IN_LOADING = useSelector((state) => state.auth.loading);
 
   async function handleSignIn(e) {
     e.preventDefault();
@@ -30,15 +30,17 @@ function Password() {
     if (userData.success && userData.data.subscription.status === "active") {
       navigate("/browse");
     } else if (
-      userData.success &&
-      userData.data.subscription.status !== "active"
+      userData?.success &&
+      userData?.data?.subscription?.status !== "active"
     ) {
-      navigate("/signup/choose");
+      navigate("/signup/checkplan");
     } else if (!userData.success) return;
   }
 
   return (
-    <form className="   m-4  max-w-[440px]" onSubmit={(e) => handleSignIn(e)}>
+      <SignUpLayout>
+          <div className="w-full flex items-center justify-center">
+              <form className="my-20 max-w-[440px] shadow-gray-200 shadow-lg p-3" onSubmit={(e) => handleSignIn(e)}>
       <p className="text-[#333]">
         STEP <span className="font-bold">1</span> OF {""}
         <span className="font-bold">3</span>
@@ -81,10 +83,11 @@ function Password() {
         type="submit"
         className="mt-3 h-16  w-full  rounded-md bg-[#e50914] text-xl font-semibold text-white  hover:bg-[#f6121d]"
       >
-        {SIGN_IN_LOADING ? <Loading /> : "Next"}
+        {SIGN_IN_LOADING ? <AiOutlineLoading /> : "Next"}
       </button>
-    </form>
+    </form></div>
+   </SignUpLayout>
   );
 }
 
-export default Password;
+export default UserExistLogin;

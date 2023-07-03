@@ -36,7 +36,7 @@ const Home = () => {
     if (!isEmailValid) return toast.error("please enter valid email 📩");
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
     if (isUserExist?.payload?.data?.isUserExist) {
-      navigate("/signup/password");
+      navigate(`/signin/${e?.target?.email?.value}`);
     } else {
       navigate("/signup");
     }
