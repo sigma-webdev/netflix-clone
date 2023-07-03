@@ -9,9 +9,7 @@ import SignUpLayout from "../SignUp/SignUpLayout";
 function ForgotPassword() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const IS_LOADING = useSelector(
-    (state) => state.auth.loading
-  );
+  const IS_LOADING = useSelector((state) => state.auth.loading);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -27,38 +25,39 @@ function ForgotPassword() {
   }
 
   return (
-      <SignUpLayout>
-          {/* container for the form */}
-          <div className="flex items-center justify-center my-20">
-               <form
-      onSubmit={(e) => {
-        handleSubmit(e);
-      }}
-      className=" flex w-[460px] flex-col bg-[#f3f3f3] p-10 shadow-xl"
-    >
-      <h2 className="mb-10 font-semibold">Forgot Email/Password</h2>
+    <SignUpLayout>
+      {/* container for the form */}
+      <div className="my-20 flex items-center justify-center">
+        <form
+          onSubmit={(e) => {
+            handleSubmit(e);
+          }}
+          className=" flex w-[460px] flex-col bg-[#f3f3f3] p-10 shadow-xl"
+        >
+          <h2 className="mb-10 font-semibold">Forgot Email/Password</h2>
 
-      <p className="my-5   text-lg">
-        we will send you an email with instruction on how to reset you password.
-      </p>
-      <input
-        className=" my-4 h-12 border-2 p-2 focus:outline-none"
-        type="email"
-        name="email"
-        placeholder="name@example.com"
-        required
-      />
+          <p className="my-5   text-lg">
+            we will send you an email with instruction on how to reset you
+            password.
+          </p>
+          <input
+            className=" my-4 h-12 border-2 p-2 focus:outline-none"
+            type="email"
+            name="email"
+            placeholder="name@example.com"
+            required
+          />
 
-      <button
-                      type="submit"
-                      disabled={IS_LOADING}
-        className="my-4 h-12  bg-[#007efa] text-lg  text-white hover:bg-[#2490fd] flex items-center justify-center"
-      >
-        {IS_LOADING ? <AiOutlineLoading /> : "Email Me"}
-      </button>
-    </form>
-          </div>
-   </SignUpLayout>
+          <button
+            type="submit"
+            disabled={IS_LOADING}
+            className="my-4 flex  h-12 items-center  justify-center bg-[#007efa] text-lg text-white hover:bg-[#2490fd]"
+          >
+            {IS_LOADING ? <AiOutlineLoading /> : "Email Me"}
+          </button>
+        </form>
+      </div>
+    </SignUpLayout>
   );
 }
 

@@ -84,7 +84,7 @@ export const RESET_PASSWORD = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        `/auth/resetpassword/${data.resetPasswordToken}`,
+        `/auth/reset-password/${data.token}`,
         data.formData
       );
       return response.data;
@@ -151,11 +151,11 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
         state.userData = {};
         state.loading = false;
-        localStorage.clear()
+        localStorage.clear();
       })
       .addCase(SIGN_OUT.rejected, (state) => {
         state.loading = false;
-        toast.error("Failed to log out")
+        toast.error("Failed to log out");
       })
 
       // forgotPassword

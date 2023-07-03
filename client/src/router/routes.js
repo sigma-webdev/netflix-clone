@@ -18,6 +18,7 @@ import UserExistLogin from "../pages/SignIn/UserExistLogin.jsx";
 import Logout from "../pages/SignIn/Logout.jsx";
 import ForgotPassword from "../pages/SignIn/ForgetPassword.jsx";
 import SignInHelp from "../pages/SignIn/SignInHelp.jsx";
+import ResetPassword from "../pages/SignIn/ResetPassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
   {
     path: "/password/forget/:email",
     element: <SignInHelp />,
+  },
+  {
+    path: "/reset-password/:token",
+    element: <ResetPassword />,
   },
   {
     path: "/browse",

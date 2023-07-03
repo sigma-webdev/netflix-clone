@@ -31,7 +31,7 @@ const SignIn = () => {
   return (
     <Layout bgcolor="bg-[#00081D]" padding="py-20">
       <div className="flex h-screen w-full items-center justify-center bg-netflix-home bg-cover bg-no-repeat">
-        <div className="h-fit rounded-lg bg-black bg-opacity-90 px-16 py-12 my-60">
+        <div className="my-60 h-fit rounded-lg bg-black bg-opacity-90 px-16 py-12">
           <div className="text-3xl text-white">Sign In</div>
           {signInError.error ? (
             <div className="mt-4 max-w-[300px] rounded-lg bg-[#e87c03] p-3">
