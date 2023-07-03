@@ -112,34 +112,32 @@ const contentSchema = new Schema(
       },
     ],
 
-    content: [
-      {
-        contentURL: {
-          type: String,
+    content: {
+      contentURL: {
+        type: String,
 
-          default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
+        default:
+          "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
 
-          // required: [true, "Content video link must be provided"],
-        },
-        contentID: {
-          type: String,
-          // required: [true, "content ID must be provided"],
-        },
-        contentDuration: { type: Object },
+        // required: [true, "Content video link must be provided"],
       },
-    ],
+      contentID: {
+        type: String,
+        // required: [true, "content ID must be provided"],
+      },
+      contentDuration: { type: Object },
+    },
     // TODO: add series pending work
-    episodes: [
-      {
-        episodeURL: {
-          type: String,
-        },
-        episodeId: {
-          type: String,
-        },
-      },
-    ],
+    // episodes: [
+    //   {
+    //     episodeURL: {
+    //       type: String,
+    //     },
+    //     episodeId: {
+    //       type: String,
+    //     },
+    //   },
+    // ],
     display: {
       type: Boolean,
       default: false,
