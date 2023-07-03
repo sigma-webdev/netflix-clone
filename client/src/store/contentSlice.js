@@ -1,17 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import { content } from "../data";
 import axiosInstance from "../helpers/axiosInstance";
 import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
-  allContent: [],
   currentContent: null,
+  allContent: [],
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
-  trendingContentLoading: [],
-  latestContentLoading: false,
   loading: false,
+  trendingContentLoading: false,
+  latestContentLoading: false,
 };
 
 export const fetchContent = createAsyncThunk(
@@ -27,6 +26,7 @@ export const fetchContent = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -249,7 +249,9 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
+
       //fetch content by contentType
+
       .addCase(fetchContentByContentType.pending, (state) => {
         state.loading = true;
       })
@@ -302,6 +304,7 @@ export const contentSlice = createSlice({
       })
 
       // add new content
+
       .addCase(addNewContent.pending, (state) => {
         state.contentLoading = true;
       })
