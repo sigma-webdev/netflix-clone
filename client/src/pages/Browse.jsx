@@ -107,8 +107,8 @@ const Browse = () => {
                           description={item.description}
                           cast={item.cast}
                           director={item.director}
-                          isLiked={item.isLiked}
-                          isDisliked={item.isDisliked}
+                          like={item.like}
+                          dislike={item.dislike}
                           releaseYear={item.releaseYear}
                           contentDuration={item.contentDuration}
                         />
@@ -145,8 +145,8 @@ const Browse = () => {
                           description={item.description}
                           cast={item.cast}
                           director={item.director}
-                          isLiked={item.isLiked}
-                          isDisliked={item.isDisliked}
+                          like={item.like}
+                          dislike={item.dislike}
                           releaseYear={item.releaseYear}
                           contentDuration={item.contentDuration}
                         />
@@ -183,8 +183,8 @@ const Browse = () => {
                           description={item.description}
                           cast={item.cast}
                           director={item.director}
-                          isLiked={item.isLiked}
-                          isDisliked={item.isDisliked}
+                          like={item.like}
+                          dislike={item.dislike}
                           releaseYear={item.releaseYear}
                           contentDuration={item.contentDuration}
                         />

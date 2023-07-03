@@ -7,6 +7,7 @@ import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
 
 const PreviewCard = ({
+  contentId,
   name,
   description,
   cast,
@@ -14,10 +15,9 @@ const PreviewCard = ({
   thumbnailUrl,
   trailerUrl,
   geners,
-  contentId,
   rating,
-  isLiked,
-  isDisliked,
+  like,
+  dislike,
   releaseYear,
   contentDuration,
 }) => {
@@ -64,16 +64,17 @@ const PreviewCard = ({
               </Link>
             </div>
             <div onClick={likeContentHanlder} className="cursor-pointer">
-              <LikeIcon isLiked={isLiked} />
+              <LikeIcon isLiked={like.isLiked} />
             </div>
             <div onClick={dislikeContentHanlder} className="cursor-pointer">
-              <DisLikeIcon isDisliked={isDisliked} />
+              <DisLikeIcon isDisliked={dislike.isDisliked} />
             </div>
           </div>
           <div onClick={openCloseDetails} className="cursor-pointer">
             <DownArrowIcon />
           </div>
         </div>
+
         <div className="flex items-center gap-2">
           <div className="font-semibold text-green-600">94% Matched</div>
           <div className="border-[1px] border-white px-2 text-sm text-white">
@@ -88,8 +89,9 @@ const PreviewCard = ({
 
       {isOpenDetails &&
         createPortal(
-          <div className="fixed top-0 z-50 flex h-full w-full items-center bg-black/60">
+          <div className="fixed top-0 z-50 flex h-full w-full items-center bg-black/60 ">
             <DetailsCard
+              contentId={contentId}
               name={name}
               description={description}
               cast={cast}
@@ -101,6 +103,8 @@ const PreviewCard = ({
               handleClose={openCloseDetails}
               releaseYear={releaseYear}
               contentDuration={contentDuration}
+              like={like}
+              dislike={dislike}
             />
           </div>,
           document.getElementById("content-details")
