@@ -5,9 +5,9 @@ import validator from "email-validator";
 import toast from "react-hot-toast";
 import { SIGN_UP } from "../../store/authSlice.js";
 import { BiLoader } from "react-icons/bi";
-import SignUpLayout from "./SignUpLayout.js";
+import SignUpLayout from "./SignUpLayout.jsx";
 
-function UserRegistration() {
+const UserRegistration = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState(localStorage.getItem("netflixCloneEmail"));
@@ -90,6 +90,6 @@ function UserRegistration() {
       </form>
     </SignUpLayout>
   );
-}
+};
 
 export default UserRegistration;

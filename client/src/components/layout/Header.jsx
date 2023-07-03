@@ -12,24 +12,17 @@ import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
 import { FaSignOutAlt } from "react-icons/fa";
 import {
-  fetchContentByCategory,
+  fetchContentByContentType,
   fetchContentBySearch,
 } from "../../store/contentSlice";
 
-const Header = ({ isLogin }) => {
+const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
   const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
-  const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
-  const SIGN_OUT_LOADING = useSelector((state) => state.auth.signOutLoading);
-  const [buttonLoading, setButtonLoading] = useState(false);
+  const IS_LOADING = useSelector((state) => state.auth.loading);
   const [searchText, setSearchText] = useState("");
-
-  useEffect(() => {
-    setButtonLoading(GET_USER_LOADING || SIGN_OUT_LOADING);
-  }, [GET_USER_LOADING, SIGN_OUT_LOADING]);
-
   const headerRef = useRef(null);
 
   const scrollHandler = () => {
@@ -41,7 +34,7 @@ const Header = ({ isLogin }) => {
   };
 
   useEffect(() => {
-    if (isLogin) {
+    if (IS_LOGGED_IN) {
       window.addEventListener("scroll", scrollHandler);
     }
 
@@ -50,11 +43,9 @@ const Header = ({ isLogin }) => {
 
   async function handleSignInSignOut() {
     if (!IS_LOGGED_IN) return navigate("/signin");
-
     const response = await dispatch(SIGN_OUT());
-
-    if (response.payload.success) {
-      navigate("signup/signout");
+    if (response?.payload?.success) {
+      navigate("/logout");
     }
   }
 
@@ -70,7 +61,7 @@ const Header = ({ isLogin }) => {
 
   const handleCategory = (contentType) => {
     dispatch(
-      fetchContentByCategory({
+      fetchContentByContentType({
         contentType,
         userId: "64789b082f388ccff2e33eaa",
       })
@@ -81,17 +72,17 @@ const Header = ({ isLogin }) => {
     <header
       ref={headerRef}
       className={`z-20 flex h-16 w-full items-center justify-between px-4 text-white transition duration-300 ease-in-out md:h-20 md:px-8 ${
-        isLogin ? "fixed top-0" : "absolute"
+        IS_LOGGED_IN ? "fixed top-0" : "absolute"
       }`}
     >
       <div className="md:text-md flex gap-4 text-sm">
-        <div className={isLogin ? "w-16 md:w-24" : "w-16 md:w-32"}>
+        <div className={IS_LOGGED_IN ? "w-16 md:w-24" : "w-16 md:w-32"}>
           <Link to="/">
             <img src={netflixLogo} alt="netflix logo" className="w-full" />
           </Link>
         </div>
         {/* login  */}
-        {isLogin ? (
+        {IS_LOGGED_IN ? (
           <div className="flex items-center">
             <nav>
               <ul className="hidden gap-4 md:flex ">
@@ -125,15 +116,16 @@ const Header = ({ isLogin }) => {
         ) : null}
       </div>
 
-      {!isLogin ? (
+      {!IS_LOGGED_IN ? (
         <button
           type="button"
+          disabled={IS_LOADING}
           onClick={() => {
             handleSignInSignOut();
           }}
           className="rounded border-2 border-red-600 bg-red-600 px-3 py-1 text-white"
         >
-          {buttonLoading ? (
+          {IS_LOADING ? (
             <Loading />
           ) : (
             <>{IS_LOGGED_IN ? "Sign out" : "Sign In"}</>
@@ -176,7 +168,7 @@ const Header = ({ isLogin }) => {
                     />
                   </div>
 
-                  <div>{user.name}</div>
+                  <div>Mangesh Thakare</div>
                 </li>
                 <hr className="my-4" />
                 <li

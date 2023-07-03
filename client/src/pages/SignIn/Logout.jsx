@@ -1,14 +1,20 @@
 import React from "react";
 import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-function SignOut() {
+import SignUpLayout from "../SignUp/SignUpLayout";
+function Logout() {
   const navigate = useNavigate();
   useEffect(() => {
     const redirect = setTimeout(() => navigate("/"), 30000);
     return () => clearTimeout(redirect);
   }, []);
+
   return (
-    <div className="flex w-[460px] flex-col bg-[#f3f3f3] p-10 shadow-xl">
+    <SignUpLayout>
+      {/* container div*/}
+      <div className="flex items-center justify-center my-20">
+        {/* creating the card */}
+        <div className="flex w-[460px] flex-col bg-[#f3f3f3] p-10 shadow-xl">
       <h2 className="mb-5">Leaving So Soon?</h2>
       <p className="mb-2 text-lg">
         Just so you know, you don’t always need to sign out of Netflix. It’s
@@ -23,7 +29,9 @@ function SignOut() {
         </button>
       </Link>
     </div>
+      </div>
+    </SignUpLayout>
   );
 }
 
-export default SignOut;
+export default Logout;

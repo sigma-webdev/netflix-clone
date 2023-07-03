@@ -15,6 +15,7 @@ import { IS_USER_EXIST } from "../store/authSlice.js";
 // icons
 import { StartIcon } from "../components/icons.jsx";
 import { faqs, features } from "../data";
+
 const Home = () => {
   const dispatch = useDispatch();
   const [activeItem, setActiveItem] = useState(-1);
@@ -31,39 +32,37 @@ const Home = () => {
 
   async function handleIsUserExist(e) {
     e.preventDefault();
-
-    const isEmailValid = validator.validate(e.target.email.value);
+    const isEmailValid = validator.validate(e?.target?.email?.value);
     if (!isEmailValid) return toast.error("please enter valid email 📩");
     const isUserExist = await dispatch(IS_USER_EXIST(e.target));
-    if (isUserExist.payload.data.isUserExist) {
-      navigate("/signup/password");
+    if (isUserExist?.payload?.data?.isUserExist) {
+      navigate(`/signin/${e?.target?.email?.value}`);
     } else {
-      navigate("signup/registration");
+      navigate("/signup");
     }
   }
 
   return (
-    <Layout isLogin={false}>
+    <Layout>
       <div className="relative bg-[#000000] text-white">
-        <section>
+        <section className="m-auto w-full">
           <div className="bg-repeat-no h-[43.75rem] bg-netflix-home bg-cover">
             <div
-              className="bg-[rgb(0 0   0 / 40%)] h-[43.75rem] w-full"
+              className="bg-[rgb(0 0   0 / 40%)] h-[43.75rem] w-full flex items-center justify-center "
               style={{
                 backgroundImage:
                   "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%)",
               }}
-            ></div>
-          </div>
-          <div className="absolute left-20 top-52  w-auto space-y-4">
-            <h1 className="sm:4xl text-2xl font-bold md:text-6xl">
+            >
+              <div className="w-auto space-y-4 flex flex-col items-center">
+            <h1 className="sm:4xl text-2xl font-bold md:text-5xl">
               Unlimited movies,
-              <br /> TV shows and more
+              TV shows and more
             </h1>
-            <p className="text-xl font-bold md:text-2xl">
+            <p className="text-xl font-semibold md:text-2xl">
               Watch anywhere. Cancel anytime.
             </p>
-            <p className="text-bold text-xl md:text-2xl">
+            <p className="text-bold text-xl md:text-xl">
               Ready to watch? Enter your email to create or restart your
               membership.
             </p>
@@ -116,7 +115,10 @@ const Home = () => {
                 )}
               </>
             )}
+              </div>
+            </div>
           </div>
+         
         </section>
 
         <section className="mx-auto max-w-[80vw]">

@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
-import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
-import DetailsCard from "./DetailsCard";
 import { createPortal } from "react-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
+import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
+import DetailsCard from "./DetailsCard";
 
 const PreviewCard = ({
+  contentId,
   name,
   description,
   cast,
@@ -14,16 +15,23 @@ const PreviewCard = ({
   thumbnailUrl,
   trailerUrl,
   geners,
-  contentId,
   rating,
-  isLiked,
-  isDisliked,
+  like,
+  dislike,
+  releaseYear,
+  contentDuration,
 }) => {
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
+
+    if (!isOpenDetails) {
+      window.document.body.style.overflow = "hidden";
+    } else {
+      window.document.body.style.overflow = "intial";
+    }
   };
 
   const likeContentHanlder = () => {
@@ -35,7 +43,7 @@ const PreviewCard = ({
   };
 
   return (
-    <div className="tranistion my-8 w-48 scale-100 rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:opacity-100 md:w-64">
+    <div className="tranistion group my-8 w-48 scale-100 rounded drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
       {/* preview video*/}
       <div className="w-48 md:w-64">
         <video
@@ -47,7 +55,7 @@ const PreviewCard = ({
       </div>
 
       {/* preview details */}
-      <div className="space-y-4 p-4">
+      <div className="hidden space-y-4 p-4 group-hover:block">
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
@@ -56,16 +64,17 @@ const PreviewCard = ({
               </Link>
             </div>
             <div onClick={likeContentHanlder} className="cursor-pointer">
-              <LikeIcon isLiked={isLiked} />
+              <LikeIcon isLiked={like.isLiked} />
             </div>
             <div onClick={dislikeContentHanlder} className="cursor-pointer">
-              <DisLikeIcon isDisliked={isDisliked} />
+              <DisLikeIcon isDisliked={dislike.isDisliked} />
             </div>
           </div>
           <div onClick={openCloseDetails} className="cursor-pointer">
             <DownArrowIcon />
           </div>
         </div>
+
         <div className="flex items-center gap-2">
           <div className="font-semibold text-green-600">94% Matched</div>
           <div className="border-[1px] border-white px-2 text-sm text-white">
@@ -80,8 +89,9 @@ const PreviewCard = ({
 
       {isOpenDetails &&
         createPortal(
-          <div className="fixed top-0 z-50 h-full w-full bg-black/60 pt-[4%]">
+          <div className="fixed top-0 z-50 flex h-full w-full items-center bg-black/60 ">
             <DetailsCard
+              contentId={contentId}
               name={name}
               description={description}
               cast={cast}
@@ -91,6 +101,10 @@ const PreviewCard = ({
               geners={geners}
               rating={rating}
               handleClose={openCloseDetails}
+              releaseYear={releaseYear}
+              contentDuration={contentDuration}
+              like={like}
+              dislike={dislike}
             />
           </div>,
           document.getElementById("content-details")

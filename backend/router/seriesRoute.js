@@ -10,7 +10,7 @@ const {
 
 // authentication and authorizations route
 const jwtAuth = require("../middleware/jwtAuth");
-const authAdmin = require("../middleware/authAdmin");
+const authorizeRoles = require("../middleware/authorizeRoles");
 const checkUserSubscription = require("../middleware/ckeckUserSubscribtion");
 
 const seriesRoute = express.Router();
@@ -18,14 +18,19 @@ const seriesRoute = express.Router();
 // create series route
 seriesRoute
   .route("/")
-  .post(jwtAuth, authAdmin, httpCreateSeries)
-  .get(jwtAuth, checkUserSubscription, httpGetSeries);
+  .post(jwtAuth, authorizeRoles("ADMIN"), httpCreateSeries)
+  .get(jwtAuth, authorizeRoles("USER"), checkUserSubscription, httpGetSeries);
 
 seriesRoute
   .route("/:seriesId")
-  .get(jwtAuth, checkUserSubscription, httpGetSeriesById)
-  .delete(jwtAuth, authAdmin, httpDeleteSeries)
-  .put(jwtAuth, authAdmin, httpUpdateSeries);
+  .get(
+    jwtAuth,
+    authorizeRoles("USER", "ADMIN"),
+    checkUserSubscription,
+    httpGetSeriesById
+  )
+  .delete(jwtAuth, authorizeRoles("ADMIN"), httpDeleteSeries)
+  .put(jwtAuth, authorizeRoles("ADMIN"), httpUpdateSeries);
 
 seriesRoute
   .route("/:seriesId/:action")

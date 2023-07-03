@@ -1,15 +1,25 @@
 const userModel = require("../model/userSchema.js");
 const CustomError = require("../utils/customError.js");
 
+// This middleware will check if user has active subscription or not, if not return error message
+// admin can access the route
+
 async function checkUserSubscription(req, res, next) {
   const { id, role } = req.user;
 
   if (role !== "ADMIN") {
     const user = await userModel.findById(id, {
-      "subscription.status": 1
+      "subscription.status": 1,
     });
 
-    const subscriptionStatus = user.subscription.status;
+    const subscriptionStatus = user?.subscription?.status;
+
+    if (!subscriptionStatus) {
+      return next(
+        new CustomError("You are not authorized to perform this action.", 403)
+      );
+    }
+
     if (user.subscription && subscriptionStatus !== "active") {
       return next(
         new CustomError("Please subscribe to access this route.", 403)

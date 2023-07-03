@@ -1,9 +1,12 @@
 import { useRef, useState } from "react";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import { RiPauseMiniFill, RiPlayMiniFill } from "react-icons/ri";
-import { CloseIcon, LikeIcon, LikeIcon2 } from "../icons";
+import { DisLikeIcon, LikeIcon } from "../icons";
+import { dislikeContent, likeContent } from "../../store/contentSlice";
+import { useDispatch } from "react-redux";
+import { RiPlayMiniFill } from "react-icons/ri";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const DetailsCard = ({
+  contentId,
   name,
   thumbnailURL,
   trailerUrl,
@@ -13,11 +16,14 @@ const DetailsCard = ({
   cast,
   director,
   handleClose,
-  isLiked,
-  isDisliked,
+  like,
+  dislike,
+  releaseYear,
+  contentDuration,
 }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
+  const dispatch = useDispatch();
 
   function playPauseMedia() {
     const media = videoRef.current;
@@ -31,8 +37,16 @@ const DetailsCard = ({
     }
   }
 
+  const likeContentHanlder = () => {
+    dispatch(likeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+  };
+
+  const dislikeContentHanlder = () => {
+    dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+  };
+
   return (
-    <div className="tranistion relative mx-auto w-[90%] rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
+    <div className=" tranistion relative mx-auto w-[90%] overflow-hidden rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
       <div className="relative">
         {/* preview video*/}
         <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[50px] lg:h-[100px]"></div>
@@ -50,20 +64,23 @@ const DetailsCard = ({
           className="absolute right-2 top-2 cursor-pointer"
           onClick={handleClose}
         >
-          <CloseIcon />
+          <AiOutlineCloseCircle className="text-4xl text-white" />
         </div>
 
         {/* hero text */}
-        <div className="absolute bottom-8 left-6 flex cursor-pointer gap-2 md:bottom-10 md:left-12">
+        <div className="absolute bottom-8 left-6 flex cursor-pointer items-center gap-2 md:bottom-10 md:left-12">
           <div
             className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg "
             onClick={playPauseMedia}
           >
-            <RiPlayMiniFill className="text-xl lg:text-4xl" />
+            <RiPlayMiniFill className="text-2xl lg:text-4xl" />
             Play
           </div>
-          <div className="flex cursor-pointer items-center gap-2  rounded px-2 text-sm font-semibold text-white opacity-80 md:px-4 md:text-lg">
-            <LikeIcon2 />
+          <div onClick={likeContentHanlder} className="cursor-pointer">
+            <LikeIcon isLiked={like.isLiked} />
+          </div>
+          <div onClick={dislikeContentHanlder} className="cursor-pointer">
+            <DisLikeIcon isDisliked={dislike.isDisliked} />
           </div>
         </div>
       </div>
@@ -71,8 +88,8 @@ const DetailsCard = ({
       {/* preview details */}
       <div className="space-y-2 px-6 pb-3 text-white md:px-12 md:pb-8">
         <div className="mt-1 flex items-center gap-2">
-          <div>2023</div>
-          <div>1hr 55m</div>
+          <div>{releaseYear}</div>
+          <div>{contentDuration}</div>
           <div className="h-fit rounded border-[1px] border-gray-500 px-1 text-xs text-white">
             HD
           </div>
@@ -91,12 +108,12 @@ const DetailsCard = ({
               <span className="text-gray-400">Cast:</span> {cast}
             </div>
             <div>
-              <span className="text-gray-400">Genres:</span>{" "}
+              <span className="text-gray-400">Genres:</span>
               {geners.join(" . ")}
             </div>
             <div>
               <span className="text-gray-400">Maturity Rating:</span>
-              <span className="border-[1px] border-white px-1 text-sm text-gray-500">
+              <span className="border-[1px] border-white px-1 text-sm">
                 {rating}
               </span>
             </div>

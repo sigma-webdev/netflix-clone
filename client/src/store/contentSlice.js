@@ -1,46 +1,46 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import { content } from "../data";
 import axiosInstance from "../helpers/axiosInstance";
 import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
-  allContent: [],
   currentContent: null,
+  allContent: [],
   filteredContent: [],
+  trendingContent: [],
+  latestContent: [],
   loading: false,
+  trendingContentLoading: false,
+  latestContentLoading: false,
 };
 
-export const likeContent = createAsyncThunk(
-  "content/likeContent",
-  async ({ contentId, userId }, { rejectWithValue }) => {
+export const fetchContent = createAsyncThunk(
+  "content/fetchContent",
+  async (userId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.patch(`/contents/${contentId}/like`);
+      const response = await axiosInstance.get("/contents?contentType=movie");
 
-      const data = response.data.data;
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
 
-      const contentObject = convertResponseToContentObject(data, userId);
-      const contenId = data._id;
-
-      return { contenId, contentObject };
+      return contentsObject;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-export const dislikeContent = createAsyncThunk(
-  "content/dislikeContent",
+export const fetchContentById = createAsyncThunk(
+  "content/fetchContentById",
   async ({ contentId, userId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.patch(
-        `/contents/${contentId}/dislike`
-      );
-
+      const response = await axiosInstance.get(`/contents/${contentId}`);
       const data = response.data.data;
       const contentObject = convertResponseToContentObject(data, userId);
-      const contenId = data._id;
 
-      return { contenId, contentObject };
+      return contentObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -66,7 +66,7 @@ export const fetchContentBySearch = createAsyncThunk(
   }
 );
 
-export const fetchContentByCategory = createAsyncThunk(
+export const fetchContentByContentType = createAsyncThunk(
   "content/fetchContentByCategory",
   async ({ contentType, userId }, { rejectWithValue }) => {
     try {
@@ -83,6 +83,42 @@ export const fetchContentByCategory = createAsyncThunk(
       return contentsObject;
     } catch (error) {
       console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByTrending = createAsyncThunk(
+  "content/fetchContentByTrending",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/contents?trending=true");
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByLatest = createAsyncThunk(
+  "content/fetchContentByLatest",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/contents?latest=true");
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
+    } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
@@ -143,36 +179,38 @@ export const deleteContentById = createAsyncThunk(
   }
 );
 
-export const fetchContentById = createAsyncThunk(
-  "content/fetchContentById",
+export const likeContent = createAsyncThunk(
+  "content/likeContent",
   async ({ contentId, userId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/contents/${contentId}`);
-      const data = response.data.data;
-      const contentObject = convertResponseToContentObject(data, userId);
+      const response = await axiosInstance.patch(`/contents/${contentId}/like`);
 
-      return contentObject;
+      const data = response.data.data;
+
+      const contentObject = convertResponseToContentObject(data, userId);
+      const contenId = data._id;
+
+      return { contenId, contentObject };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-export const fetchContent = createAsyncThunk(
-  "content/fetchContent",
-  async (userId, { rejectWithValue }) => {
+export const dislikeContent = createAsyncThunk(
+  "content/dislikeContent",
+  async ({ contentId, userId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("/contents?contentType=movie");
-      console.log(response)
+      const response = await axiosInstance.patch(
+        `/contents/${contentId}/dislike`
+      );
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
-        return convertResponseToContentObject(item, userId);
-      });
+      const data = response.data.data;
+      const contentObject = convertResponseToContentObject(data, userId);
+      const contenId = data._id;
 
-      return contentsObject;
+      return { contenId, contentObject };
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -211,7 +249,62 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
+
+      //fetch content by contentType
+
+      .addCase(fetchContentByContentType.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchContentByContentType.fulfilled, (state, action) => {
+        state.filteredContent = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchContentByContentType.rejected, (state) => {
+        state.filteredContent = [];
+        state.loading = false;
+      })
+
+      //fetch content by search
+      .addCase(fetchContentBySearch.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchContentBySearch.fulfilled, (state, action) => {
+        state.filteredContent = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchContentBySearch.rejected, (state) => {
+        state.filteredContent = [];
+        state.loading = false;
+      })
+
+      //fetch content by trending
+      .addCase(fetchContentByTrending.pending, (state) => {
+        state.trendingContentLoading = true;
+      })
+      .addCase(fetchContentByTrending.fulfilled, (state, action) => {
+        state.trendingContent = action.payload;
+        state.trendingContentLoading = false;
+      })
+      .addCase(fetchContentByTrending.rejected, (state) => {
+        state.trendingContent = [];
+        state.trendingContentLoading = false;
+      })
+
+      //fetch content by latest
+      .addCase(fetchContentByLatest.pending, (state) => {
+        state.latestContentLoading = true;
+      })
+      .addCase(fetchContentByLatest.fulfilled, (state, action) => {
+        state.latestContent = action.payload;
+        state.latestContentLoading = false;
+      })
+      .addCase(fetchContentByLatest.rejected, (state) => {
+        state.latestContent = [];
+        state.latestContentLoading = false;
+      })
+
       // add new content
+
       .addCase(addNewContent.pending, (state) => {
         state.contentLoading = true;
       })
@@ -258,32 +351,6 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
-      //fetch content by category
-      .addCase(fetchContentByCategory.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchContentByCategory.fulfilled, (state, action) => {
-        state.filteredContent = action.payload;
-        state.loading = false;
-      })
-      .addCase(fetchContentByCategory.rejected, (state) => {
-        state.filteredContent = [];
-        state.loading = false;
-      })
-
-      //fetch content by search
-      .addCase(fetchContentBySearch.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchContentBySearch.fulfilled, (state, action) => {
-        state.filteredContent = action.payload;
-        state.loading = false;
-      })
-      .addCase(fetchContentBySearch.rejected, (state) => {
-        state.filteredContent = [];
-        state.loading = false;
-      })
-
       //like content
       .addCase(likeContent.pending, (state) => {
         state.loading = true;
@@ -291,7 +358,6 @@ export const contentSlice = createSlice({
       .addCase(likeContent.fulfilled, (state, action) => {
         const likedContentId = action.payload.contenId;
         const likedContent = action.payload.contentObject;
-
         const newAllContent = state.filteredContent.map((content) =>
           content.contentId === likedContentId ? likedContent : content
         );

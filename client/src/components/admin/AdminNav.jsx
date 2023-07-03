@@ -15,8 +15,8 @@ const AdminNav = () => {
             <li
               className={
                 isActive
-                  ? "mb-4 flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-2 font-bold  text-white"
-                  : "mb-4 flex cursor-pointer items-center px-2 py-2 hover:bg-[#e509143b]"
+                  ? " flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-4 font-bold  text-white"
+                  : " flex cursor-pointer items-center px-2 py-4 hover:bg-[#e509143b]"
               }
             >
               <HiHome />
@@ -29,8 +29,8 @@ const AdminNav = () => {
             <li
               className={
                 isActive
-                  ? "mb-4 flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-2 font-bold  text-white"
-                  : "mb-4 flex cursor-pointer items-center px-2 py-2 hover:bg-[#e509143b]"
+                  ? " flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-4 font-bold  text-white"
+                  : " flex cursor-pointer items-center px-2 py-4 hover:bg-[#e509143b]"
               }
             >
               <HiUserGroup />
@@ -43,8 +43,8 @@ const AdminNav = () => {
             <li
               className={
                 isActive
-                  ? "mb-4 flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-2 font-bold  text-white"
-                  : "mb-4 flex cursor-pointer items-center px-2 py-2 hover:bg-[#e509143b]"
+                  ? "flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-4 font-bold  text-white"
+                  : " flex cursor-pointer items-center px-2 py-4 hover:bg-[#e509143b]"
               }
             >
               <HiServer />
