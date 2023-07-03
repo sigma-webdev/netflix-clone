@@ -7,19 +7,30 @@ const errorHandler = (error, req, res, next) => {
       statusCode: errorStatusCode,
       success: false,
       message: "Duplicate key error",
+      data: null,
     });
   }
 
   if (error.name === "CastError") {
     return res.status(errorStatusCode).json({
+      statusCode: errorStatusCode,
       success: false,
       message: `Resource not found, invalid ${error.path}`,
+      data: null,
     });
   }
 
-  res
-    .status(errorStatusCode)
-    .json({ success: false, message: errorMessage, stack: error.stack });
+  const errorObject = {
+    statusCode: errorStatusCode,
+    success: false,
+    message: errorMessage,
+    data: null,
+  };
+  if (process.env.NODE_ENV === "development") {
+    errorObject["stack"] = error.stack;
+  }
+
+  res.status(errorStatusCode).json(errorObject);
 };
 
 module.exports = errorHandler;
