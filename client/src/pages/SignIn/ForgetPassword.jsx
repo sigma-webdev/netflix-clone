@@ -1,38 +1,36 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import validator from "email-validator";
 import toast from "react-hot-toast";
-
-//thunk
 import { FORGOT_PASSWORD } from "../../store/authSlice";
-//icons
-import { Loading } from "../icons.jsx";
-import { CrossFillIcon } from "../icons.jsx";
+import { AiOutlineLoading } from "react-icons/ai";
+import SignUpLayout from "../SignUp/SignUpLayout";
+
 function ForgotPassword() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [error, setError] = useState({ error: false, message: "" });
-  const FORGOT_PASSWORD_LOADING = useSelector(
-    (state) => state.auth.forgotPasswordLoading
+  const IS_LOADING = useSelector(
+    (state) => state.auth.loading
   );
 
   async function handleSubmit(e) {
     e.preventDefault();
     // validating the email
-    const isEmailValid = validator.validate(e.target.email.value);
+    const isEmailValid = validator.validate(e?.target?.email?.value);
     if (!isEmailValid) return toast.error("please enter valid email 📩");
 
     const formData = new FormData(e.target);
     const response = await dispatch(FORGOT_PASSWORD(formData));
-    console.log(response);
-    if (response.payload.success) {
-      navigate(`/loginhelp/${e.target.email.value}`);
+    if (response?.payload?.success) {
+      navigate(`/password/forget/${e?.target?.email?.value}`);
     }
   }
 
   return (
-    <form
+      <SignUpLayout>
+          {/* container for the form */}
+          <div className="flex items-center justify-center my-20">
+               <form
       onSubmit={(e) => {
         handleSubmit(e);
       }}
@@ -52,12 +50,15 @@ function ForgotPassword() {
       />
 
       <button
-        type="submit"
-        className="my-4 h-12  bg-[#007efa] text-lg   text-white hover:bg-[#2490fd]"
+                      type="submit"
+                      disabled={IS_LOADING}
+        className="my-4 h-12  bg-[#007efa] text-lg  text-white hover:bg-[#2490fd] flex items-center justify-center"
       >
-        {FORGOT_PASSWORD_LOADING ? <Loading /> : "Email Me"}
+        {IS_LOADING ? <AiOutlineLoading /> : "Email Me"}
       </button>
     </form>
+          </div>
+   </SignUpLayout>
   );
 }
 

@@ -71,7 +71,7 @@ export const FORGOT_PASSWORD = createAsyncThunk(
   "/auth/forgotpassword",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("/auth/forgotpassword", data);
+      const response = await axiosInstance.post("/auth/forgot-password", data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -167,7 +167,7 @@ const authSlice = createSlice({
       })
       .addCase(FORGOT_PASSWORD.rejected, (state, action) => {
         state.loading = false;
-        toast.error(action.payload.message);
+        toast.error(action?.payload?.message);
       })
 
       // reset Password

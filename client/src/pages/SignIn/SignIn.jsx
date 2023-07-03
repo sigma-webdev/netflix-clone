@@ -40,7 +40,7 @@ const SignIn = () => {
           ) : null}
 
           <form
-            className="mb-24 flex flex-col"
+            className="mb-10 flex flex-col"
             onSubmit={(e) => handleSignIn(e)}
           >
             <div className="group relative z-0 my-6 w-full ">
