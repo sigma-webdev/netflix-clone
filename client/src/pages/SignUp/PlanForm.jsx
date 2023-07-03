@@ -9,7 +9,7 @@ import {
 } from "../../store/razorpaySlice.js";
 import { AiOutlineCheck, AiOutlineCheckCircle } from "react-icons/ai";
 import { BiLoader } from "react-icons/bi";
-import SignUpLayout from "./SignUpLayout.js";
+import SignUpLayout from "./SignUpLayout.jsx";
 
 const PlanForm = () => {
   const dispatch = useDispatch();

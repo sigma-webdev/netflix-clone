@@ -1,21 +1,24 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home.jsx";
-import SignUp from "../pages/SignUp/SignUp.js";
+import SignUp from "../pages/SignUp/SignUp.jsx";
 import Browse from "../pages/Browse";
 import Admin from "../pages/Admin";
 import Watch from "../pages/Watch";
-import PlanForm from "../pages/SignUp/PlanForm.js";
-import UserRegistration from "../pages/SignUp/UserRegistration.js";
-import CheckPlan from "../pages/SignUp/CheckPlan.js";
-import PaymentSuccess from "../pages/SignUp/PaymentSuccess.js";
-import PaymentFail from "../pages/SignUp/PaymentFail.js";
+import PlanForm from "../pages/SignUp/PlanForm.jsx";
+import UserRegistration from "../pages/SignUp/UserRegistration.jsx";
+import CheckPlan from "../pages/SignUp/CheckPlan.jsx";
+import PaymentSuccess from "../pages/SignUp/PaymentSuccess.jsx";
+import PaymentFail from "../pages/SignUp/PaymentFail.jsx";
 import AdminDashboard from "../components/admin/AdminDashboard.jsx";
 import AdminManageUsers from "../components/admin/AdminManageUsers.jsx";
 import AdminManageContents from "../components/admin/AdminManageContents.jsx";
 import TestSignIn from "../pages/temp/signin.jsx";
-import SignIn from "../pages/SignIn/SignIn.js";
-import UserExistLogin from "../pages/SignIn/UserExistLogin.js";
-import Logout from "../pages/SignIn/Logout.js";
+import SignIn from "../pages/SignIn/SignIn.jsx";
+import UserExistLogin from "../pages/SignIn/UserExistLogin.jsx";
+import Logout from "../pages/SignIn/Logout.jsx";
+import ForgotPassword from "../pages/SignIn/ForgetPassword.jsx";
+import SignInHelp from "../pages/SignIn/SignInHelp.jsx";
+import ResetPassword from "../pages/SignIn/ResetPassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +61,18 @@ const router = createBrowserRouter([
   {
     path: "/logout",
     element: <Logout />,
+  },
+  {
+    path: "/password/forget",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/password/forget/:email",
+    element: <SignInHelp />,
+  },
+  {
+    path: "/reset-password/:token",
+    element: <ResetPassword />,
   },
   {
     path: "/browse",
