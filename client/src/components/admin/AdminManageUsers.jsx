@@ -44,6 +44,7 @@ const AdminManageUsers = () => {
     }
 
   }
+  console.log(allUsers,'//ad')
 
   const getSearch = (e) => {
      e.preventDefault()

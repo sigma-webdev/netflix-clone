@@ -25,13 +25,14 @@ const AdminContentView = () => {
   console.log(params.contentId);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     dispatch(fetchContentById({ contentId: params.contentId, userId:'64789b082f388ccff2e33eaa' }));
-    setCastArr()
-  }, []);
+  }, [dispatch]);
+
+
   useEffect(()=>{
     setEditedContentData(contentData);
-    setCastArr([...contentData.cast])
   }, [contentData])
   
 
@@ -46,7 +47,7 @@ const AdminContentView = () => {
     setCastArr([...castArr, editedContentData.cast]);
     setEditedContentData({
       ...editedContentData,
-      cast: "",
+      cast: [],
     });
   };
   const handleRemoveCast = (castname) => {
