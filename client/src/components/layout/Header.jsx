@@ -53,11 +53,9 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
 
-    if (searchText) {
-      dispatch(
-        fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
-      );
-    }
+    dispatch(
+      fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
+    );
   };
 
   const handleCategory = (contentType) => {

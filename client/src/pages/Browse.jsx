@@ -70,18 +70,18 @@ const Browse = () => {
   return (
     <Layout isLogin={true}>
       <div id="content-details" className="relative"></div>
-      {searchContent && searchContent.length !== 0 && (
+      {searchContent && searchContent.length !== 0 ? (
         <div className="bg-netflix-blue pt-32 text-white">
           <div className="px-4 md:px-8">
             {loading ? (
               <RowContentShimmer />
             ) : (
-              content &&
-              content.length !== 0 && (
+              searchContent &&
+              searchContent.length !== 0 && (
                 <>
                   <h3 className="py-4">Search results</h3>
                   <div className="flex flex-wrap gap-4">
-                    {Array.from(content).map((item) => {
+                    {Array.from(searchContent).map((item) => {
                       return (
                         <PreviewCard
                           key={item.contentId}
@@ -107,9 +107,7 @@ const Browse = () => {
             )}
           </div>
         </div>
-      )}
-
-      {!searchContent && searchContent.length === 0 && (
+      ) : (
         <div>
           {/* hero container */}
           <div className="relative">
@@ -161,7 +159,7 @@ const Browse = () => {
                 content &&
                 content.length !== 0 && (
                   <>
-                    <h3>All</h3>
+                    <h3 className="py-4">All</h3>
                     <div className="space-y-5">
                       <Crousal>
                         {Array.from(content).map((item) => {
@@ -201,7 +199,7 @@ const Browse = () => {
                 trendingContent &&
                 trendingContent.length !== 0 && (
                   <>
-                    <h3>Trending</h3>
+                    <h3 className="py-4">Trending</h3>
                     <div className="space-y-5">
                       <Crousal>
                         {Array.from(trendingContent).map((item) => {
@@ -241,7 +239,7 @@ const Browse = () => {
                 latestContent &&
                 latestContent.length !== 0 && (
                   <>
-                    <h3>Latest</h3>
+                    <h3 className="py-4">Latest</h3>
                     <div className="space-y-5">
                       <Crousal>
                         {Array.from(latestContent).map((item) => {
@@ -281,7 +279,7 @@ const Browse = () => {
                 mostLikedContent &&
                 mostLikedContent.length !== 0 && (
                   <>
-                    <h3>Most Liked</h3>
+                    <h3 className="py-4">Most Liked</h3>
                     <div className="space-y-5">
                       <Crousal>
                         {Array.from(mostLikedContent).map((item) => {
@@ -324,7 +322,7 @@ const Browse = () => {
                 ) &&
                 contentByCountryOrigin["USA"].length !== 0 && (
                   <>
-                    <h3>USA</h3>
+                    <h3 className="py-4">USA</h3>
                     <div className="space-y-5">
                       <Crousal>
                         {Array.from(contentByCountryOrigin["USA"]).map(
@@ -369,7 +367,7 @@ const Browse = () => {
                 ) &&
                 contentByCountryOrigin["India"].length !== 0 && (
                   <>
-                    <h3>India</h3>
+                    <h3 className="py-4">India</h3>
                     <div className="space-y-5">
                       <Crousal>
                         {Array.from(contentByCountryOrigin["India"]).map(
