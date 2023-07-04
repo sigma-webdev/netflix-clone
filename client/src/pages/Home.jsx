@@ -20,12 +20,12 @@ const Home = () => {
   const dispatch = useDispatch();
   const [activeItem, setActiveItem] = useState(-1);
   const navigate = useNavigate();
-  const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
-  const GET_USER_LOADING = useSelector((state) => state.auth.getUserLoading);
+  const { isLoggedIn: IS_LOGGED_IN, loading } = useSelector(
+    (state) => state.auth
+  );
   const USER_DATA = useSelector((state) => state.auth.userData);
 
-  console.log(IS_LOGGED_IN && USER_DATA.plan === "NONE");
-
+  // handler for accordion
   const accordianHandler = (id) => {
     setActiveItem(id);
   };
@@ -48,77 +48,75 @@ const Home = () => {
         <section className="m-auto w-full">
           <div className="bg-repeat-no h-[43.75rem] bg-netflix-home bg-cover">
             <div
-              className="bg-[rgb(0 0   0 / 40%)] h-[43.75rem] w-full flex items-center justify-center "
+              className="bg-[rgb(0 0   0 / 40%)] flex h-[43.75rem] w-full items-center justify-center "
               style={{
                 backgroundImage:
                   "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%)",
               }}
             >
-              <div className="w-auto space-y-4 flex flex-col items-center">
-            <h1 className="sm:4xl text-2xl font-bold md:text-5xl">
-              Unlimited movies,
-              TV shows and more
-            </h1>
-            <p className="text-xl font-semibold md:text-2xl">
-              Watch anywhere. Cancel anytime.
-            </p>
-            <p className="text-bold text-xl md:text-xl">
-              Ready to watch? Enter your email to create or restart your
-              membership.
-            </p>
+              <div className="flex w-auto flex-col items-center space-y-4">
+                <h1 className="sm:4xl text-2xl font-bold md:text-5xl">
+                  Unlimited movies, TV shows and more
+                </h1>
+                <p className="text-xl font-semibold md:text-2xl">
+                  Watch anywhere. Cancel anytime.
+                </p>
+                <p className="text-bold text-xl md:text-xl">
+                  Ready to watch? Enter your email to create or restart your
+                  membership.
+                </p>
 
-            {GET_USER_LOADING ? (
-              "loading"
-            ) : (
-              <>
-                {IS_LOGGED_IN && USER_DATA.plan === "NONE" ? (
-                  <Link to="/signup/choose">
-                    <button
-                      type="submit"
-                      className="mt-5 rounded bg-red-600 px-4 py-2 align-middle text-lg font-medium text-white hover:bg-red-700"
-                    >
-                      Finish signUp
-                      <StartIcon />
-                    </button>
-                  </Link>
+                {loading ? (
+                  "loading"
                 ) : (
-                  <form
-                    className="flex flex-wrap md:space-x-4"
-                    onSubmit={(e) => handleIsUserExist(e)}
-                  >
-                    <div className="max-w-80 group relative z-0 mb-6 rounded border-2 bg-black text-sm opacity-75 md:w-96">
-                      <input
-                        type="email"
-                        name="email"
-                        id="floating_email"
-                        className="peer block w-full appearance-none bg-transparent p-4 focus:border-blue-600 focus:outline-none focus:ring-0"
-                        placeholder=" "
-                        required
-                      />
-                      <label
-                        htmlFor="floating_email"
-                        className="absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform px-4 pb-1 pt-1 text-xl text-slate-400 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-sm"
+                  <>
+                    {IS_LOGGED_IN && USER_DATA.plan === "NONE" ? (
+                      <Link to="/signup/choose">
+                        <button
+                          type="submit"
+                          className="mt-5 rounded bg-red-600 px-4 py-2 align-middle text-lg font-medium text-white hover:bg-red-700"
+                        >
+                          Finish signUp
+                          <StartIcon />
+                        </button>
+                      </Link>
+                    ) : (
+                      <form
+                        className="flex flex-wrap md:space-x-4"
+                        onSubmit={(e) => handleIsUserExist(e)}
                       >
-                        Email address
-                      </label>
-                    </div>
-                    <div>
-                      <button
-                        type="submit"
-                        className="rounded bg-red-600 px-6 py-3 align-middle text-2xl font-bold text-white hover:bg-red-700"
-                      >
-                        Get Started
-                        <StartIcon />
-                      </button>
-                    </div>
-                  </form>
+                        <div className="max-w-80 group relative z-0 mb-6 rounded border-2 bg-black text-sm opacity-75 md:w-96">
+                          <input
+                            type="email"
+                            name="email"
+                            id="floating_email"
+                            className="peer block w-full appearance-none bg-transparent p-4 focus:border-blue-600 focus:outline-none focus:ring-0"
+                            placeholder=" "
+                            required
+                          />
+                          <label
+                            htmlFor="floating_email"
+                            className="absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform px-4 pb-1 pt-1 text-xl text-slate-400 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-sm"
+                          >
+                            Email address
+                          </label>
+                        </div>
+                        <div>
+                          <button
+                            type="submit"
+                            className="rounded bg-red-600 px-6 py-3 align-middle text-2xl font-bold text-white hover:bg-red-700"
+                          >
+                            Get Started
+                            <StartIcon />
+                          </button>
+                        </div>
+                      </form>
+                    )}
+                  </>
                 )}
-              </>
-            )}
               </div>
             </div>
           </div>
-         
         </section>
 
         <section className="mx-auto max-w-[80vw]">
