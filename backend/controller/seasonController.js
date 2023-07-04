@@ -1,10 +1,11 @@
 const asyncHandler = require("../middleware/asyncHandler");
+const Content = require("../model/contentSchema");
 const seasonModel = require("../model/seasonSchema");
 const CustomError = require("../utils/customError");
 
 /********************
  * @httpPostContent
- * @route http://localhost:8081/api/v1/seasons/
+ * @route http://localhost:8081/api/v1/contents/contentId
  * @description  controller to create the season
  * @parameters {request body object}
  * @return { Object } season object
@@ -12,6 +13,17 @@ const CustomError = require("../utils/customError");
 const httpCreateSeason = asyncHandler(async (req, res, next) => {
   // get required field from body
   const { seasonNumber, seasonSummary } = req.body;
+
+  // make sure series is available
+  const { contentId } = req.params;
+
+  const seriesData = await Content.findById(contentId);
+
+  if (!seriesData) {
+    return next(
+      new CustomError("Data not available for the provided data", 404)
+    );
+  }
 
   // check for the field
   if (!seasonNumber || !seasonSummary) {
@@ -23,25 +35,23 @@ const httpCreateSeason = asyncHandler(async (req, res, next) => {
 
   // handle season duplicate number
   let seasonPresent = false;
-
   for (const season of seasons) {
     if (season.seasonNumber === seasonNumber) {
       seasonPresent = true;
       return next(new CustomError("Season Value already exist!", 400));
     }
   }
-
-  let seasonDetails = {
+  let seasonField = {
     seasonNumber,
     seasonSummary,
   };
 
   if (!seasonPresent) {
-    const seasonData = seasonModel(seasonDetails);
+    const seasonDetails = seasonModel(seasonField);
 
-    const data = await seasonData.save();
+    const seasonData = await seasonDetails.save();
     // check for season data
-    if (!data) {
+    if (!seasonData) {
       return next(
         new CustomError(
           "season fail to save to database! Please try again",
@@ -50,24 +60,33 @@ const httpCreateSeason = asyncHandler(async (req, res, next) => {
       );
     }
 
+    ////// add the season to series //////
+    if (!seriesData.contentSeries.includes(seasonData._id)) {
+      seriesData.contentSeries.push(seasonData._id);
+      await seriesData.save();
+    } else {
+      return next(new CustomError("Season already present!", 400));
+    }
+
     return res.status(201).json({
       statusCode: 201,
       success: true,
       message: "season created",
-      data: data,
+      data: seasonData,
     });
   }
 });
 
 /********************
  * @httpGetSeasons
- * @route http://localhost:8081/api/v1/seasons/
+ * @route http://localhost:8081/api/v1/contents/contentId/season
  * @description  controller to read all the seasons
  * @parameters {request body object}
  * @return { Object } season object
  ********************/
 const httpGetSeasons = asyncHandler(async (req, res, next) => {
-  const seasons = await seasonModel.find();
+  const seasons = await Content.find();
+  console.log(seasons, "///////seasons//");
 
   if (!seasons) {
     return next(new CustomError("Seasons data not able to fetch!", 500));
