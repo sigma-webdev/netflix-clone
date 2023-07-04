@@ -20,6 +20,9 @@ import Logout from "../pages/SignIn/Logout.jsx";
 import ForgotPassword from "../pages/SignIn/ForgetPassword.jsx";
 import SignInHelp from "../pages/SignIn/SignInHelp.jsx";
 import ResetPassword from "../pages/SignIn/ResetPassword.jsx";
+import NotRequireAuth from "../helpers/auth/NotRequireAuth.jsx";
+import RequireAuth from "../helpers/auth/RequireAuth.jsx";
+
 
 const router = createBrowserRouter([
   {

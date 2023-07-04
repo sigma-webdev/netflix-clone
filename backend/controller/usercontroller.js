@@ -4,12 +4,11 @@ const CustomError = require("../utils/customError.js");
 
 /******************************************************
  * @getUser
- * @route /api/v1/auth/users/:userId
+ * @route /api/v1/users/:userId
  * @description get the specific user
  * @params userId
  * @returns object with isUserExist boolean value
  ******************************************************/
-
 const getUser = asyncHandler(async (req, res, next) => {
   const { userId } = req.params;
 
@@ -18,14 +17,19 @@ const getUser = asyncHandler(async (req, res, next) => {
 
   // if user is null return error message
   if (!user) {
-    return next(new CustomError("user Not found", 400));
+    return next(new CustomError("User Not found", 404));
   }
-  return res.status(200).json({ success: true, data: user });
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "User detail the give Id fetched successfully",
+    data: user,
+  });
 });
 
 /******************************************************
  * @getUsers
- * @route /api/v1/auth/users
+ * @route /api/v1/users
  * @description get user base on query
  * @query page , limit , plan , subscription ,search
  * @returns array of user objects
@@ -44,6 +48,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
   if (subscribed && subscribed === "true") {
     query["subscribe.status"] = active;
   }
+
   if (subscribed) {
     query["subscribe.status"] = "active";
   }
@@ -68,12 +73,19 @@ const getUsers = asyncHandler(async (req, res, next) => {
     };
   }
 
+  result.totalPages = Math.floor(totalUsers / LIMIT);
   result.users = await userModel
     .find(query)
     .skip(startIndex)
     .limit(LIMIT)
     .sort({ createdAt: 1 });
-  return res.status(200).json({ success: true, data: result });
+  return res.status(200).json({
+    status: 200,
+    success: true,
+    message:
+      result.users.length > 0 ? "Fetch users successfully" : "No user found",
+    data: result,
+  });
 });
 
 /******************************************************
@@ -107,7 +119,14 @@ const addContentToWatchHistory = asyncHandler(async (req, res, next) => {
     )
     .select("watchHistory");
 
-  res.status(200).json({ success: true, data: result.watchHistory });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: isContentIdPresent
+      ? "Content already present in watch history"
+      : "Added content to watch history",
+    data: result.watchHistory,
+  });
 });
 
 /******************************************************
@@ -131,7 +150,12 @@ const removeContentFromWatchHistory = asyncHandler(async (req, res, next) => {
       { new: true }
     )
     .select("watchHistory");
-  res.status(200).json({ success: true, data: result.watchHistory });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    messaged: "Successfully remove Content from Watch history",
+    data: result.watchHistory,
+  });
 });
 
 /******************************************************
@@ -167,6 +191,7 @@ const getWatchHistoryContents = asyncHandler(async (req, res, next) => {
       limit: LIMIT,
     };
   }
+  result.totalPages = Math.floor(totalWatchContent / LIMIT);
 
   const user = await userModel.findById(userId).populate([
     {
@@ -180,7 +205,15 @@ const getWatchHistoryContents = asyncHandler(async (req, res, next) => {
   ]);
 
   result.contents = user.watchHistory;
-  res.status(200).json({ success: true, data: result });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message:
+      result.contents.length > 0
+        ? "Fetch contents successfully"
+        : "Content not found",
+    data: result,
+  });
 });
 
 /******************************************************
@@ -215,7 +248,14 @@ const addContentToWatchList = asyncHandler(async (req, res, next) => {
     )
     .select("watchList");
 
-  res.status(200).json({ success: true, data: result.watchList });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: isContentIdPresent
+      ? "Content already present in watch history"
+      : "Added content to watch history",
+    data: result.watchList,
+  });
 });
 
 /******************************************************
@@ -239,7 +279,12 @@ const removeContentFromWatchList = asyncHandler(async (req, res, next) => {
       { new: true }
     )
     .select("watchList");
-  res.status(200).json({ success: true, data: result.watchList });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "Successfully removed the content from watch List",
+    data: result.watchList,
+  });
 });
 
 /******************************************************
@@ -276,6 +321,8 @@ const getWatchListContent = asyncHandler(async (req, res, next) => {
     };
   }
 
+  result.totalPages = Math.floor(totalWatchListContent / LIMIT);
+
   const user = await userModel.findById(userId).populate([
     {
       path: "watchList",
@@ -288,7 +335,15 @@ const getWatchListContent = asyncHandler(async (req, res, next) => {
   ]);
 
   result.contents = user.watchList;
-  res.status(200).json({ success: true, data: result });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message:
+      result.contents.length > 0
+        ? "Fetch contents successfully"
+        : "Content not found",
+    data: result,
+  });
 });
 
 module.exports = {

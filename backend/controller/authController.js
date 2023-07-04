@@ -39,7 +39,12 @@ const userExist = asyncHandler(async (req, res, next) => {
     data["email"] = email;
   }
 
-  return res.status(200).json({ success: true, data: data });
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: result.isUserExist ? "User exist" : "User does not exist",
+    data: data,
+  });
 });
 
 /******************************************************
@@ -52,11 +57,32 @@ const userExist = asyncHandler(async (req, res, next) => {
 const signUp = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return next(new customError("Email and Password are required.", 400));
+  }
+
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
+  if (!passwordRegex.test(password)) {
+    return next(
+      new customError(
+        "password must be 6 to 60 characters in length and contain at-least one capital letter, one symbol and one number",
+        400
+      )
+    );
+  }
+
   // check if the email is valid or not using email-validator npm package
   const isEmailValid = validator.validate(email);
 
   if (!isEmailValid)
     return next(new customError("Please enter a valid email 📩", 400));
+
+  const user = findOne({ email });
+  if (user)
+    return next(
+      new customError(`user with email: ${email} already exist`, 409)
+    );
 
   const userInfo = userModel({ email, password });
 
@@ -69,13 +95,18 @@ const signUp = asyncHandler(async (req, res, next) => {
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
 
-  return res.status(201).json({ success: true, data: result });
+  return res.status(201).json({
+    statusCode: 201,
+    success: true,
+    message: "successfully registered the user",
+    data: result,
+  });
 });
 
 /******************************************************
  * @signIn
  * @route /api/v1/auth/signin
- * @description  authenticate the user using jwt with given credentials , if user is authenticated return user object with jwtToken in cookie
+ * @description  authenticate the user using jwt with given credentials, if user is authenticated return user object with jwtToken in cookie
  * @body email , password
  * @returns user object and jwtToken in cookie
  ******************************************************/
@@ -115,7 +146,12 @@ const signIn = asyncHandler(async (req, res, next) => {
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
 
-  res.status(200).json({ success: true, data: user });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "successfully singIn",
+    data: user,
+  });
 });
 
 /******************************************************
@@ -169,8 +205,10 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     }
 
     return res.status(200).json({
+      statusCode: 200,
       success: true,
       message: "Further instructions sent on you email:" + email,
+      data: null,
     });
   });
 });
@@ -187,6 +225,22 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
   const { password, confirmPassword } = req.body;
 
+  if (!password || !confirmPassword) {
+    return next(
+      new customError("password and confirmPassword are required", 400)
+    );
+  }
+
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
+  if (!passwordRegex.test(password)) {
+    return next(
+      new customError(
+        "password must be 6 to 60 characters in length and contain at-least one capital letter, one symbol and one number",
+        400
+      )
+    );
+  }
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(token)
@@ -225,8 +279,10 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
   res.status(200).json({
+    statusCode: 200,
     success: true,
     message: "Successfully updated the password",
+    data: null,
   });
 });
 
@@ -245,7 +301,37 @@ const signOut = asyncHandler(async (req, res, next) => {
     sameSite: "Lax",
   });
 
-  res.status(200).json({ success: true, message: "Logged out successfully" });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "Logged out successfully",
+    data: null,
+  });
+});
+
+/******************************************************
+ * @getUser
+ * @route /api/v1/auth/user
+ * @description get user by id
+ * @params userId
+ * @returns user object
+ ******************************************************/
+const getUser = asyncHandler(async (req, res, next) => {
+  const userID = req.user.id;
+
+  // get user from database using user id
+  const user = await userModel.findById(userId);
+
+  // if user is null return error message
+  if (!user) {
+    return next(new CustomError("User Not found", 400));
+  }
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "User detail the give Id fetched successfully",
+    data: user,
+  });
 });
 
 module.exports = {
@@ -255,4 +341,5 @@ module.exports = {
   resetPassword,
   userExist,
   signOut,
+  getUser,
 };
