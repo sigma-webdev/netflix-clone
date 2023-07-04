@@ -140,6 +140,8 @@ const signIn = asyncHandler(async (req, res, next) => {
       )
     );
 
+  user.password = undefined;
+
   // get the jwt token form userSchema methods
   const jwtToken = user.generateJwtToken();
 
@@ -317,7 +319,7 @@ const signOut = asyncHandler(async (req, res, next) => {
  * @returns user object
  ******************************************************/
 const getUser = asyncHandler(async (req, res, next) => {
-  const userID = req.user.id;
+  const userId = req.user.id;
 
   // get user from database using user id
   const user = await userModel.findById(userId);
@@ -329,7 +331,7 @@ const getUser = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     statusCode: 200,
     success: true,
-    message: "User detail the give Id fetched successfully",
+    message: "logged in user details",
     data: user,
   });
 });

@@ -151,6 +151,11 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
 
   // Update the user subscription status to active (This will be created before this)
   user.subscription.status = "active";
+  user.subscription.startDate = new Date(Date.now());
+  user.subscription.expiryDate = new Date(
+    Date.now() + 1000 * 60 * 60 * 24 * 30
+  ); // 30 days
+
   user.plan = plan.toUpperCase();
 
   // Save the user in the DB with any changes
