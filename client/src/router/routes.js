@@ -22,12 +22,14 @@ import SignInHelp from "../pages/SignIn/SignInHelp.jsx";
 import ResetPassword from "../pages/SignIn/ResetPassword.jsx";
 import NotRequireAuth from "../helpers/auth/NotRequireAuth.jsx";
 import RequireAuth from "../helpers/auth/RequireAuth.jsx";
+import NotFound from "../pages/NotFound.jsx";
 
 const router = createBrowserRouter([
   // for open routes
   {
     path: "/",
     element: <Home />,
+    errorElement: <NotFound />,
   },
   {
     path: "/logout",
