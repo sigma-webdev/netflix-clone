@@ -27,7 +27,7 @@ const AdminContentView = () => {
 
 
   useEffect(() => {
-    dispatch(fetchContentById({ contentId: params.contentId, userId:'64789b082f388ccff2e33eaa' }));
+    dispatch(fetchContentById({ contentId: params.contentId}));
   }, []);
 
 
@@ -145,7 +145,7 @@ const AdminContentView = () => {
     }
   };
 
-
+console.log(contentData)
   const uploadContent = () => {
     fileInputRef.current.click();
   };
@@ -229,9 +229,9 @@ const AdminContentView = () => {
                 >
                   Add
                 </button>
-                {castArr.length > 0 && (
+                {contentData.cast.length > 0 && (
                 <div className="flex flex-wrap">
-                  {castArr.map((castname) => (
+                  {contentData.cast.map((castname) => (
                     <div className="relative m-2  rounded  bg-blue-200">
                       <div
                         onClick={() => handleRemoveCast(castname)}
@@ -353,7 +353,7 @@ const AdminContentView = () => {
         <h2 className="text-white">Content</h2>
         {isLoading ? (
           <h2 className="text-white">Loading..</h2>
-        ) : ( contentData ? (
+        ) : ( Object.keys(contentData).length !== 0 ? (
           <>
             <div className="flex w-full gap-4 px-4">
               {/* <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded text-white'>Edit</button> */}
@@ -435,7 +435,7 @@ const AdminContentView = () => {
                     <video
                       width="520"
                       height="440"
-                      src={contentData.trailer[0].trailerUrl}
+                      src={contentData.trailer[0]?.trailerUrl}
                       controls
                     ></video>
                     <div>
@@ -452,7 +452,7 @@ const AdminContentView = () => {
                     <video
                       width="520"
                       height="440"
-                      src={contentData.content[0].contentURL}
+                      src={contentData.content[0]?.contentURL}
                       controls
                     ></video>
                     <div>
@@ -469,7 +469,7 @@ const AdminContentView = () => {
             </div>
           </>
         ) : (
-          <h2 className="text-white">Loading..</h2>
+          <h2 className="text-white">no data found</h2>
         ))}
       </div>
     </>

@@ -5,6 +5,7 @@ import { convertResponseToContentObject } from "../helpers/constants";
 const initialState = {
   currentContent: null,
   allContent: [],
+  searchContent: [],
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
@@ -31,7 +32,6 @@ export const fetchContent = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -41,15 +41,12 @@ export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
   async ({ contentId, userId }, { rejectWithValue }) => {
     try {
-      console.log(contentId,'///', userId)
       const response = await axiosInstance.get(`/contents/${contentId}`);
       const data = response.data.data;
-      console.log(data,'///fasdfas')
       const contentObject = convertResponseToContentObject(data, userId);
 
       return contentObject;
     } catch (error) {
-      console.log(error,'/error')
       return rejectWithValue(error.response.data);
     }
   }
@@ -57,15 +54,22 @@ export const fetchContentById = createAsyncThunk(
 
 export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
-  async ({pageNo, searchText, userId }, { rejectWithValue }) => {
+  async ({ searchText, userId }, { rejectWithValue }) => {
     try {
-      const url = searchText ? `/contents?search=${searchText}` :`/contents?page=${pageNo}&limit=1`
-      const response = await axiosInstance.get(url);
+      const url = `/contents?search=${searchText}`;
+      let contentsObject;
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
-        return convertResponseToContentObject(item, userId);
-      });
+      if (!searchText) {
+        return [];
+      } else {
+        const response = await axiosInstance.get(url);
+
+        const data = response.data.data.contents;
+        contentsObject = data.map((item) => {
+          return convertResponseToContentObject(item, userId);
+        });
+      }
+
       return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -169,62 +173,6 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
   }
 );
 
-export const addNewContent = createAsyncThunk(
-  "content/addNewContent",
-  async (newContent, { rejectWithValue }) => {
-    console.log("reached", newContent);
-    try {
-      const response = await axiosInstance.post(`/contents`, newContent);
-      const data = response.data.data;
-
-      return data;
-    } catch (error){
-    console.log(error)
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const updateContentById = createAsyncThunk(
-  "content/updateContentById",
-  async ({ id, sentFormData }, { rejectWithValue }) => {
-    let progress = 0;
-    console.log("called updar", sentFormData, "//////", id);
-    try {
-      const response = await axiosInstance.put(
-        `/contents/${id}`,
-        sentFormData,
-        {
-          onUploadProgress: (progressEvent) => {
-            progress = Math.round(
-              (progressEvent.loaded / progressEvent.total) * 100
-            );
-          },
-        }
-      );
-      const data = response.data.data;
-
-      return { ...data, progress };
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const deleteContentById = createAsyncThunk(
-  "content/deleteContentById",
-  async (contentId, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.delete(`/contents/${contentId}`);
-      const data = response.data.contentData;
-
-      return { data, contentId };
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
 export const likeContent = createAsyncThunk(
   "content/likeContent",
   async ({ contentId, userId }, { rejectWithValue }) => {
@@ -313,11 +261,11 @@ export const contentSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchContentBySearch.fulfilled, (state, action) => {
-        state.filteredContent = action.payload;
+        state.searchContent = action.payload;
         state.loading = false;
       })
       .addCase(fetchContentBySearch.rejected, (state) => {
-        state.filteredContent = [];
+        state.searchContent = [];
         state.loading = false;
       })
 
@@ -379,53 +327,6 @@ export const contentSlice = createSlice({
       .addCase(fetchContentByCountryOrigin.rejected, (state) => {
         state.contentByCountryOrigin = [];
         state.countryOriginContentLoading = false;
-      })
-
-      // add new content
-      .addCase(addNewContent.pending, (state) => {
-        state.contentLoading = true;
-      })
-      .addCase(addNewContent.fulfilled, (state, action) => {
-        state.allContent = [...state.allContent, action.payload];
-        state.contentLoading = false;
-      })
-      .addCase(addNewContent.rejected, (state) => {
-        state.currentContent = null;
-        state.contentLoading = false;
-      })
-
-      // delete content by id
-      .addCase(deleteContentById.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(deleteContentById.fulfilled, (state, action) => {
-        const deletedContentId = action.payload.contentId;
-        const filteredContent = state.allContent.filter(
-          (item) => item._id !== deletedContentId
-        );
-        state.allContent = filteredContent;
-        state.loading = false;
-      })
-      .addCase(deleteContentById.rejected, (state) => {
-        state.allContent = [];
-        state.loading = false;
-      })
-
-      // update content by id
-      .addCase(updateContentById.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(updateContentById.fulfilled, (state, action) => {
-        const updatedContent = action.payload;
-        const newAllContent = state.allContent.map((content) =>
-          content._id === updatedContent._id ? updatedContent : content
-        );
-        state.allContent = newAllContent;
-        state.loading = false;
-      })
-      .addCase(updateContentById.rejected, (state) => {
-        state.allContent = [];
-        state.loading = false;
       })
 
       //like content
