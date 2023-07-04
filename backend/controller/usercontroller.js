@@ -73,7 +73,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
     };
   }
 
-  result.totalPages = Math.floor(totalUsers / LIMIT);
+  result.totalPages = Math.ceil(totalUsers / LIMIT);
   result.users = await userModel
     .find(query)
     .skip(startIndex)
@@ -191,7 +191,7 @@ const getWatchHistoryContents = asyncHandler(async (req, res, next) => {
       limit: LIMIT,
     };
   }
-  result.totalPages = Math.floor(totalWatchContent / LIMIT);
+  result.totalPages = Math.ceil(totalWatchContent / LIMIT);
 
   const user = await userModel.findById(userId).populate([
     {
@@ -321,7 +321,7 @@ const getWatchListContent = asyncHandler(async (req, res, next) => {
     };
   }
 
-  result.totalPages = Math.floor(totalWatchListContent / LIMIT);
+  result.totalPages = Math.ceil(totalWatchListContent / LIMIT);
 
   const user = await userModel.findById(userId).populate([
     {
