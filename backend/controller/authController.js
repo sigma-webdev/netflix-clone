@@ -58,9 +58,7 @@ const signUp = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(
-      new customError("All fields are required. email , password", 400)
-    );
+    return next(new customError("Email and Password are required.", 400));
   }
 
   const passwordRegex =
@@ -83,7 +81,7 @@ const signUp = asyncHandler(async (req, res, next) => {
   const user = findOne({ email });
   if (user)
     return next(
-      new customError(`user with email: ${email} already exist`, 400)
+      new customError(`user with email: ${email} already exist`, 409)
     );
 
   const userInfo = userModel({ email, password });
@@ -98,7 +96,7 @@ const signUp = asyncHandler(async (req, res, next) => {
   res.cookie("token", jwtToken, cookieOptions);
 
   return res.status(201).json({
-    statusCode: 200,
+    statusCode: 201,
     success: true,
     message: "successfully registered the user",
     data: result,
@@ -311,6 +309,31 @@ const signOut = asyncHandler(async (req, res, next) => {
   });
 });
 
+/******************************************************
+ * @getUser
+ * @route /api/v1/auth/user
+ * @description get user by id
+ * @params userId
+ * @returns user object
+ ******************************************************/
+const getUser = asyncHandler(async (req, res, next) => {
+  const userID = req.user.id;
+
+  // get user from database using user id
+  const user = await userModel.findById(userId);
+
+  // if user is null return error message
+  if (!user) {
+    return next(new CustomError("User Not found", 400));
+  }
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "User detail the give Id fetched successfully",
+    data: user,
+  });
+});
+
 module.exports = {
   signUp,
   signIn,
@@ -318,4 +341,5 @@ module.exports = {
   resetPassword,
   userExist,
   signOut,
+  getUser,
 };

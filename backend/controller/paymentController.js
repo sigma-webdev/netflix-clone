@@ -80,8 +80,8 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   // Saving the user object
   await user.save();
 
-  res.status(200).json({
-    statusCode: 200,
+  res.status(201).json({
+    statusCode: 201,
     success: true,
     message: "Successfully created Subscription",
     data: { subscription_id: subscription.id },
@@ -200,7 +200,7 @@ const createPlan = asyncHandler(async (req, res, next) => {
       new CustomError(
         planResponse.error.description ||
           "Error occurred during creating subscription plan",
-        400
+        500
       )
     );
   }
@@ -215,8 +215,8 @@ const createPlan = asyncHandler(async (req, res, next) => {
 
   const result = await planInfo.save();
 
-  return res.status(200).json({
-    statusCode: 200,
+  return res.status(201).json({
+    statusCode: 201,
     success: true,
     message: "Successfully created plan",
     data: result,
@@ -284,7 +284,7 @@ const deletePlan = asyncHandler(async (req, res, next) => {
     statusCode: 200,
     success: true,
     message: "Successfully deleted the plan",
-    data: result,
+    data: null,
   });
 });
 
