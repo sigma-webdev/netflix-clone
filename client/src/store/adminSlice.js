@@ -32,7 +32,7 @@ export const fetchContentById = createAsyncThunk(
     "content/fetchContentById",
     async ({ contentId }, { rejectWithValue }) => {
       try {
-        console.log(contentId,'///')
+        console.log(contentId,'///gsdfg')
         const response = await axiosInstance.get(`/contents/${contentId}`);
         const data = response.data.data;
         console.log(data,'///fasdfas')
