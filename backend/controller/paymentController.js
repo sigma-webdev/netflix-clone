@@ -63,7 +63,8 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   // Saving the user object
   await user.save();
 
-  res.status(200).json({
+  res.status(201).json({
+    statusCode: 201,
     success: true,
     subscription_id: subscription.id,
     // TODO: Add a message?
@@ -140,8 +141,13 @@ const createPlan = asyncHandler(async (req, res, next) => {
   });
 
   if (planResponse.error) {
-    // FIXME: What if there is no error.description? Provide a custom message as well for double sure
-    return next(new CustomError(planResponse.error.description, 400));
+    return next(
+      new CustomError(
+        planResponse.error.description ||
+          "Error occurred during creating subscription plan",
+        500
+      )
+    );
   }
 
   const planInfo = SubscriptionPlanModel({
@@ -154,7 +160,12 @@ const createPlan = asyncHandler(async (req, res, next) => {
 
   const result = await planInfo.save();
 
-  return res.status(200).json({ success: true, data: result });
+  return res.status(201).json({
+    statusCode: 201,
+    success: true,
+    message: "Successfully created plan",
+    data: result,
+  });
 });
 
 const updatePlan = asyncHandler(async (req, res, next) => {
@@ -192,7 +203,12 @@ const deletePlan = asyncHandler(async (req, res, next) => {
 
   // FIXME: We should check if the result is a success or not. Maybe invalid ID was provided by frontend or it does not exist in our DB
 
-  return res.status(200).json({ success: true, data: result });
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "Successfully deleted the plan",
+    data: null,
+  });
 });
 
 const getPlans = asyncHandler(async (req, res, next) => {

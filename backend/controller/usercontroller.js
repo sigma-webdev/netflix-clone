@@ -4,12 +4,11 @@ const CustomError = require("../utils/customError.js");
 
 /******************************************************
  * @getUser
- * @route /api/v1/auth/users/:userId
+ * @route /api/v1/users/:userId
  * @description get the specific user
  * @params userId
  * @returns object with isUserExist boolean value
  ******************************************************/
-
 const getUser = asyncHandler(async (req, res, next) => {
   const { userId } = req.params;
 
@@ -18,7 +17,7 @@ const getUser = asyncHandler(async (req, res, next) => {
 
   // if user is null return error message
   if (!user) {
-    return next(new CustomError("User Not found", 400));
+    return next(new CustomError("User Not found", 404));
   }
   return res.status(200).json({
     statusCode: 200,
@@ -30,7 +29,7 @@ const getUser = asyncHandler(async (req, res, next) => {
 
 /******************************************************
  * @getUsers
- * @route /api/v1/auth/users
+ * @route /api/v1/users
  * @description get user base on query
  * @query page , limit , plan , subscription ,search
  * @returns array of user objects
@@ -84,7 +83,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
     status: 200,
     success: true,
     message:
-      result.users.length > 0 ? "Fetch users successfully" : "Users not found",
+      result.users.length > 0 ? "Fetch users successfully" : "No user found",
     data: result,
   });
 });

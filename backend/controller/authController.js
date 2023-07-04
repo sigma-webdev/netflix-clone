@@ -54,11 +54,32 @@ const userExist = asyncHandler(async (req, res, next) => {
 const signUp = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return next(new customError("Email and Password are required.", 400));
+  }
+
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
+  if (!passwordRegex.test(password)) {
+    return next(
+      new customError(
+        "password must be 6 to 60 characters in length and contain at-least one capital letter, one symbol and one number",
+        400
+      )
+    );
+  }
+
   // check if the email is valid or not using email-validator npm package
   const isEmailValid = validator.validate(email);
 
   if (!isEmailValid)
     return next(new customError("Please enter a valid email 📩", 400));
+
+  const user = findOne({ email });
+  if (user)
+    return next(
+      new customError(`user with email: ${email} already exist`, 409)
+    );
 
   const userInfo = userModel({ email, password });
 
@@ -72,7 +93,7 @@ const signUp = asyncHandler(async (req, res, next) => {
   res.cookie("token", jwtToken, cookieOptions);
 
   return res.status(201).json({
-    status: 200,
+    statusCode: 201,
     success: true,
     message: "successfully registered the user",
     data: result,
@@ -269,6 +290,31 @@ const signOut = asyncHandler(async (req, res, next) => {
   });
 });
 
+/******************************************************
+ * @getUser
+ * @route /api/v1/auth/user
+ * @description get user by id
+ * @params userId
+ * @returns user object
+ ******************************************************/
+const getUser = asyncHandler(async (req, res, next) => {
+  const userID = req.user.id;
+
+  // get user from database using user id
+  const user = await userModel.findById(userId);
+
+  // if user is null return error message
+  if (!user) {
+    return next(new CustomError("User Not found", 400));
+  }
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "User detail the give Id fetched successfully",
+    data: user,
+  });
+});
+
 module.exports = {
   signUp,
   signIn,
@@ -276,4 +322,5 @@ module.exports = {
   resetPassword,
   userExist,
   signOut,
+  getUser,
 };
