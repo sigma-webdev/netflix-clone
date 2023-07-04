@@ -29,6 +29,7 @@ const episodeSchema = new Schema(
     episodeNumber: {
       type: Number,
       required: [true, "Episode Number should be provide"],
+      episodeVideo: String,
     },
   },
   { timestamps: true }

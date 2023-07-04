@@ -26,6 +26,7 @@ const contentSchema = new Schema(
       enum: ["Movie", "Series"],
       required: true,
     },
+
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
