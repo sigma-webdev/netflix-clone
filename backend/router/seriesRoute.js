@@ -11,7 +11,7 @@ const {
 // authentication and authorizations route
 const jwtAuth = require("../middleware/jwtAuth");
 const authorizeRoles = require("../middleware/authorizeRoles");
-const checkUserSubscription = require("../middleware/ckeckUserSubscribtion");
+const checkUserSubscription = require("../middleware/checkUserSubscription");
 
 const seriesRoute = express.Router();
 
