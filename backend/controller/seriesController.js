@@ -165,13 +165,20 @@ const httpDeleteSeries = asyncHandler(async (req, res, next) => {
   // TODO: to delete seasons and episode as well
   const { thumbnail, trailer } = seriesData;
   // perform delete in cloudinary
-  if (seriesData) {
-    if (trailer[0].trailerId) {
-      cloudinaryFileDelete(trailer[0].trailerId, next);
+  if (seriesData !== 0) {
+    if (trailer.length > 0) {
+      trailer.map((trailerObj) => {
+        if (trailerObj?.trailerId) {
+          cloudinaryFileDelete(trailerObj.trailerId, next);
+        }
+      });
     }
 
-    if (thumbnail[0].thumbnailID) {
-      cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
+    if (thumbnail.length > 0) {
+      thumbnail.map((thumbnailObj) => {
+        if (thumbnailObj?.thumbnailID)
+          cloudinaryFileDelete(thumbnailObj.thumbnailID, next, "image");
+      });
     }
   }
 
@@ -205,21 +212,21 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
 
   if (files) {
     // check for pre-existing trailer
-    if (
-      files.trailer &&
-      seriesData.trailer.length > 0 &&
-      seriesData.trailer[0]?.trailerId
-    ) {
-      cloudinaryFileDelete(seriesData.trailer[0]?.trailerId, next);
+    if (files.trailer && contentData?.trailer.length > 0) {
+      contentData?.trailer.map((trailerObj) => {
+        if (trailerObj?.trailerId) {
+          cloudinaryFileDelete(trailerObj.trailerId, next);
+        }
+      });
     }
 
     // check for pre-existing thumbnail
-    if (
-      files.thumbnail &&
-      seriesData.thumbnail.length > 0 &&
-      seriesData.thumbnail[0]?.thumbnailID
-    ) {
-      cloudinaryFileDelete(seriesData.thumbnail[0]?.thumbnailID, next, "image");
+    if (files.thumbnail && contentData?.thumbnail.length > 0) {
+      contentData?.thumbnail.map((thumbObj) => {
+        if (thumbObj.thumbnailID) {
+          cloudinaryFileDelete(thumbObj.thumbnailID, next, "image");
+        }
+      });
     }
 
     seriesFiles = await cloudinaryFileUpload(files, next);
@@ -228,7 +235,7 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
   const updatedData = await seriesModel
     .findByIdAndUpdate(
       seriesId,
-      { ...body, ...seriesFiles },
+      { $set: { ...body, ...seriesFiles } },
       {
         new: true,
         runValidators: true,
@@ -236,18 +243,18 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
     )
     .catch((error) => {
       // DELETE File passing particularId
-      if (seriesFiles.trailer) {
-        cloudinaryFileDelete(seriesFiles.trailer[0].trailerId, next);
-      }
-
-      if (seriesFiles.thumbnail) {
-        cloudinaryFileDelete(
-          seriesFiles.thumbnail[0].thumbnailID,
-          next,
-          "image"
+      if (contentFiles.trailer) {
+        contentData?.trailer.map((trailerObj) =>
+          cloudinaryFileDelete(trailerObj.trailerId, next)
         );
       }
-      return next(new CustomError(`File not able to save!- ${error}`, 404));
+
+      if (contentFiles.thumbnail) {
+        contentData?.thumbnail.map((thumbObj) =>
+          cloudinaryFileDelete(thumbObj.thumbnailID, next, "image")
+        );
+      }
+      return next(new CustomError(`File not able to save!- ${error}`, 500));
     });
 
   if (!updatedData) {
@@ -263,7 +270,7 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpUpdateSeries
+ * @seriesLikeAndDislikes
  * @route http://localhost:8081/api/v1/series/:id/like
  * @description  delete series controller
  * @parameters { seriesId, userId }

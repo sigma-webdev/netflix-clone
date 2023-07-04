@@ -19,7 +19,12 @@ const seriesRoute = express.Router();
 seriesRoute
   .route("/")
   .post(jwtAuth, authorizeRoles("ADMIN"), httpCreateSeries)
-  .get(jwtAuth, authorizeRoles("USER"), checkUserSubscription, httpGetSeries);
+  .get(
+    jwtAuth,
+    authorizeRoles("ADMIN", "USER"),
+    checkUserSubscription,
+    httpGetSeries
+  );
 
 seriesRoute
   .route("/:seriesId")
