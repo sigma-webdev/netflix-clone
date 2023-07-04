@@ -8,9 +8,14 @@ const initialState = {
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
+  mostLikedContent: [],
+  contentByCountryOrigin: {},
   loading: false,
   trendingContentLoading: false,
   latestContentLoading: false,
+  mostLikedContentLoading: false,
+  countryOriginContentLoading: false,
+  likeDisLikeLoading: false,
 };
 
 export const fetchContent = createAsyncThunk(
@@ -120,6 +125,44 @@ export const fetchContentByLatest = createAsyncThunk(
       });
 
       return contentsObject;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByMostLiked = createAsyncThunk(
+  "content/fetchContentByMostLiked",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/contents?mostLikes=true");
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByCountryOrigin = createAsyncThunk(
+  "content/fetchContentByCountryOrigin",
+  async ({ countryOrigin, userId }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/contents?originCountry=${countryOrigin}`
+      );
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return { countryOrigin, contentsObject };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -252,9 +295,7 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
-
       //fetch content by contentType
-
       .addCase(fetchContentByContentType.pending, (state) => {
         state.loading = true;
       })
@@ -306,8 +347,41 @@ export const contentSlice = createSlice({
         state.latestContentLoading = false;
       })
 
-      // add new content
+      //fetch content by most liked
+      .addCase(fetchContentByMostLiked.pending, (state) => {
+        state.mostLikedContentLoading = true;
+      })
+      .addCase(fetchContentByMostLiked.fulfilled, (state, action) => {
+        state.mostLikedContent = action.payload;
+        state.mostLikedContentLoading = false;
+      })
+      .addCase(fetchContentByMostLiked.rejected, (state) => {
+        state.mostLikedContent = [];
+        state.mostLikedContentLoading = false;
+      })
 
+      //fetch content by country origin
+      .addCase(fetchContentByCountryOrigin.pending, (state) => {
+        state.countryOriginContentLoading = true;
+      })
+      .addCase(fetchContentByCountryOrigin.fulfilled, (state, action) => {
+        const countryOrigin = action.payload.countryOrigin;
+        const currentContent = state.contentByCountryOrigin;
+
+        const updatedContent = {
+          ...currentContent,
+          [countryOrigin]: action.payload.contentsObject,
+        };
+
+        state.contentByCountryOrigin = updatedContent;
+        state.countryOriginContentLoading = false;
+      })
+      .addCase(fetchContentByCountryOrigin.rejected, (state) => {
+        state.contentByCountryOrigin = [];
+        state.countryOriginContentLoading = false;
+      })
+
+      // add new content
       .addCase(addNewContent.pending, (state) => {
         state.contentLoading = true;
       })
@@ -356,39 +430,90 @@ export const contentSlice = createSlice({
 
       //like content
       .addCase(likeContent.pending, (state) => {
-        state.loading = true;
+        state.likeDisLikeLoading = true;
       })
       .addCase(likeContent.fulfilled, (state, action) => {
         const likedContentId = action.payload.contenId;
         const likedContent = action.payload.contentObject;
-        const newAllContent = state.filteredContent.map((content) =>
+
+        const newFilteredContent = state.filteredContent.map((content) =>
           content.contentId === likedContentId ? likedContent : content
         );
 
-        state.filteredContent = newAllContent;
-        state.loading = false;
+        const newLatestContent = state.latestContent.map((content) =>
+          content.contentId === likedContentId ? likedContent : content
+        );
+
+        const newtrendingContent = state.trendingContent.map((content) =>
+          content.contentId === likedContentId ? likedContent : content
+        );
+
+        const newMostLikedContent = state.mostLikedContent.map((content) =>
+          content.contentId === likedContentId ? likedContent : content
+        );
+
+        const newContentByCountryOrigin = {};
+        Object.keys(state.contentByCountryOrigin).map((countryOrigin) => {
+          newContentByCountryOrigin[countryOrigin] =
+            state.contentByCountryOrigin[countryOrigin].map((content) =>
+              content.contentId === likedContentId ? likedContent : content
+            );
+        });
+
+        state.filteredContent = newFilteredContent;
+        state.latestContent = newLatestContent;
+        state.trendingContent = newtrendingContent;
+        state.mostLikedContent = newMostLikedContent;
+        state.contentByCountryOrigin = newContentByCountryOrigin;
+        state.likeDisLikeLoading = false;
       })
       .addCase(likeContent.rejected, (state) => {
-        state.loading = false;
+        state.likeDisLikeLoading = false;
       })
 
       //dislike content
       .addCase(dislikeContent.pending, (state) => {
-        state.loading = true;
+        state.likeDisLikeLoading = true;
       })
       .addCase(dislikeContent.fulfilled, (state, action) => {
         const dislikedContentId = action.payload.contenId;
         const dislikedContent = action.payload.contentObject;
 
-        const newAllContent = state.filteredContent.map((content) =>
+        const newFilteredContent = state.filteredContent.map((content) =>
           content.contentId === dislikedContentId ? dislikedContent : content
         );
 
-        state.filteredContent = newAllContent;
-        state.loading = false;
+        const newLatestContent = state.latestContent.map((content) =>
+          content.contentId === dislikedContentId ? dislikedContent : content
+        );
+
+        const newtrendingContent = state.trendingContent.map((content) =>
+          content.contentId === dislikedContentId ? dislikedContent : content
+        );
+
+        const newMostLikedContent = state.mostLikedContent.map((content) =>
+          content.contentId === dislikedContentId ? dislikedContent : content
+        );
+
+        const newContentByCountryOrigin = {};
+        Object.keys(state.contentByCountryOrigin).map((countryOrigin) => {
+          newContentByCountryOrigin[countryOrigin] =
+            state.contentByCountryOrigin[countryOrigin].map((content) =>
+              content.contentId === dislikedContentId
+                ? dislikedContent
+                : content
+            );
+        });
+
+        state.filteredContent = newFilteredContent;
+        state.latestContent = newLatestContent;
+        state.trendingContent = newtrendingContent;
+        state.mostLikedContent = newMostLikedContent;
+        state.contentByCountryOrigin = newContentByCountryOrigin;
+        state.likeDisLikeLoading = false;
       })
       .addCase(dislikeContent.rejected, (state) => {
-        state.loading = false;
+        state.likeDisLikeLoading = false;
       });
   },
 });
