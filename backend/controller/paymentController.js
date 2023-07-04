@@ -8,12 +8,19 @@ const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 const SubscriptionPlanModel = require("../model/subscriptionPlanSchema.js");
 
-// TODO: Add jsdoc for the controllers as added for other controllers
+/******************************************************
+ * @createSubscription
+ * @method POST
+ * @route /api/v1/payment/subscribe
+ * @description create razorPay subscription base on plan
+ * @body planName
+ * @returns subscription ID
+ ******************************************************/
 
 const createSubscription = asyncHandler(async (req, res, next) => {
   // Extracting ID from request obj
   const { id } = req.user;
-  const { planName } = req.body;
+  const planName = req.body.planName || "";
 
   const {
     RAZORPAY_STANDARD_PLAN,
@@ -33,7 +40,9 @@ const createSubscription = asyncHandler(async (req, res, next) => {
       ? RAZORPAY_MOBILE_PLAN
       : null;
 
-  // FIXME: Add a check to make sure planID is never null
+  if (!planID) {
+    return next(new CustomError("Please pass valid planName", 400));
+  }
 
   // Finding the user based on the ID
   const user = await userModel.findById(id);
@@ -47,35 +56,65 @@ const createSubscription = asyncHandler(async (req, res, next) => {
     return next(new customError("Admin cannot purchase a subscription", 400));
   }
 
-  // FIXME: Below task is async, wrap it in trycatch to handle any potential errors
   // Creating a subscription using razorpay that we imported from the config/rasorpayConfig.js
-  const subscription = await razorpay.subscriptions.create({
-    plan_id: planID, // The unique plan ID
-    customer_notify: 1, // 1 means razorpay will handle notifying the customer, 0 means we will not notify the customer
-    total_count: 1, // 1 means it will charge only one month sub.
-  });
+  try {
+    const subscription = await razorpay.subscriptions.create({
+      plan_id: "planID", // The unique plan ID
+      customer_notify: 1, // 1 means razorpay will handle notifying the customer, 0 means we will not notify the customer
+      total_count: 1, // 1 means it will charge only one month sub.
+    });
 
-  // FIXME: Make sure subscription did not return any result and then save the details in DB
-  // Adding the ID and the status to the user account
-  user.subscription.id = subscription.id;
-  user.subscription.status = subscription.status;
+    // Adding the ID and the status to the user account
+    user.subscription.id = subscription.id;
+    user.subscription.status = subscription.status;
+  } catch (error) {
+    return next(
+      new customError(
+        error.error.description ||
+          "Error during creating RazorPay subscription",
+        400
+      )
+    );
+  }
 
   // Saving the user object
   await user.save();
 
   res.status(200).json({
+    statusCode: 200,
     success: true,
-    subscription_id: subscription.id,
-    // TODO: Add a message?
+    message: "Successfully created Subscription",
+    data: { subscription_id: subscription.id },
   });
 });
 
+/******************************************************
+ * @getRazorpayApiKey
+ * @method POST
+ * @route /api/v1/payment/rasorpaykey
+ * @description send razorPay api key
+ * @returns Razorpay Api Key
+ ******************************************************/
+
 const getRazorpayApiKey = asyncHandler(async (req, res, next) => {
   res.status(200).json({
+    statusCode: 200,
     success: true,
-    key: process.env.RAZORPAY_KEY_ID,
+    message: "RazorPay API key",
+    data: {
+      key: process.env.RAZORPAY_KEY_ID,
+    },
   });
 });
+
+/******************************************************
+ * @verifySubscription
+ * @method GET
+ * @route /api/v1/payment/verify-subscription
+ * @description  verify user subscription
+ * @body razorpayPaymentId, razorpaySubscriptionId, razorpaySignature, plan
+ * @returns "Payment verified successfully" message
+ ******************************************************/
 
 const verifySubscription = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
@@ -118,15 +157,32 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
   await user.save();
 
   res.status(200).json({
+    statusCode: 200,
     success: true,
     message: "Payment verified successfully",
+    data: null,
   });
 });
+
+/******************************************************
+ * @createPlan
+ * @method POST
+ * @route /api/v1/payment/plan
+ * @description  verify user subscription
+ * @body razorpayPaymentId, razorpaySubscriptionId, razorpaySignature, plan
+ * @returns "Payment verified successfully" message
+ ******************************************************/
 
 const createPlan = asyncHandler(async (req, res, next) => {
   const { planName, amount, description, active } = req.body;
 
-  // FIXME: No validation for the inputs...
+  if (!planName || !amount || !description || !active) {
+    return next(
+      new CustomError(
+        "All fields are required. planName, amount, description, active"
+      )
+    );
+  }
 
   const planResponse = await razorpay.plans.create({
     period: "monthly",
@@ -140,8 +196,13 @@ const createPlan = asyncHandler(async (req, res, next) => {
   });
 
   if (planResponse.error) {
-    // FIXME: What if there is no error.description? Provide a custom message as well for double sure
-    return next(new CustomError(planResponse.error.description, 400));
+    return next(
+      new CustomError(
+        planResponse.error.description ||
+          "Error occurred during creating subscription plan",
+        400
+      )
+    );
   }
 
   const planInfo = SubscriptionPlanModel({
@@ -154,8 +215,22 @@ const createPlan = asyncHandler(async (req, res, next) => {
 
   const result = await planInfo.save();
 
-  return res.status(200).json({ success: true, data: result });
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "Successfully created plan",
+    data: result,
+  });
 });
+
+/******************************************************
+ * @updatePlan
+ * @method PATCH
+ * @route /api/v1/payment/plan
+ * @description  update active status of the plan
+ * @params planDocumentId
+ * @returns updated plan object
+ ******************************************************/
 
 const updatePlan = asyncHandler(async (req, res, next) => {
   const { planDocumentId } = req.params;
@@ -182,23 +257,55 @@ const updatePlan = asyncHandler(async (req, res, next) => {
     { new: true }
   );
 
-  return res.status(200).json({ success: true, data: result });
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "Successfully Updated the active status",
+    data: result,
+  });
 });
+
+/******************************************************
+ * @updatePlan
+ * @method DELETE
+ * @route /api/v1/payment/plan
+ * @description  delete the plan using planDocumentId
+ * @params planDocumentId
+ * @returns deleted plan object
+ ******************************************************/
 
 const deletePlan = asyncHandler(async (req, res, next) => {
   const { planDocumentId } = req.params;
 
   const result = await SubscriptionPlanModel.findByIdAndDelete(planDocumentId);
+  if (!result) return next(new customError("resource not found", 404));
 
-  // FIXME: We should check if the result is a success or not. Maybe invalid ID was provided by frontend or it does not exist in our DB
-
-  return res.status(200).json({ success: true, data: result });
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "Successfully deleted the plan",
+    data: result,
+  });
 });
+
+/******************************************************
+ * @getPlans
+ * @method GET
+ * @route /api/v1/payment/plan
+ * @description  get all plan
+ * @params planDocumentId
+ * @returns array of plan objects
+ ******************************************************/
 
 const getPlans = asyncHandler(async (req, res, next) => {
   const result = await SubscriptionPlanModel.find();
 
-  return res.status(200).json({ success: true, data: result });
+  return res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: "Successfully fetch all plans",
+    data: result,
+  });
 });
 
 module.exports = {

@@ -7,28 +7,24 @@ const CustomError = require("../utils/customError.js");
 async function checkUserSubscription(req, res, next) {
   const { id, role } = req.user;
 
-  if (role !== "ADMIN") {
-    const user = await userModel.findById(id, {
-      "subscription.status": 1,
-    });
+  try {
+    if (role !== "ADMIN") {
+      const user = await userModel.findById(id, {
+        "subscription.status": 1,
+      });
 
-    const subscriptionStatus = user?.subscription?.status;
-
-    if (!subscriptionStatus) {
-      return next(
-        new CustomError("You are not authorized to perform this action.", 403)
-      );
-    }
-
-    if (user.subscription && subscriptionStatus !== "active") {
-      return next(
-        new CustomError("Please subscribe to access this route.", 403)
-      );
+      if (user.subscription && user.subscription.status !== "active") {
+        return next(
+          new CustomError("Please subscribe to access this route.", 403)
+        );
+      } else {
+        next();
+      }
     } else {
       next();
     }
-  } else {
-    next();
+  } catch (error) {
+    return next(error);
   }
 }
 module.exports = checkUserSubscription;
