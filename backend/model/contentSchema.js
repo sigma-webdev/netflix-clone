@@ -116,6 +116,12 @@ const contentSchema = new Schema(
       contentDuration: { type: Object },
     },
 
+    contentSeries: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Season",
+      },
+    ],
     display: {
       type: Boolean,
       default: false,
@@ -129,16 +135,13 @@ const contentSchema = new Schema(
       default: 0,
     },
   },
-
   { timestamps: true }
 );
-
 contentSchema.index("name");
 
 contentSchema.pre("save", function (next) {
   this.likesCount = this.likes.length;
   this.disLikesCount = this.dislikes.length;
-
   return next();
 });
 

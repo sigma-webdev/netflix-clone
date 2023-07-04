@@ -70,6 +70,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
       );
       details.content.contentDuration = contentLength;
     }
+    details.contentSeries = undefined;
   }
 
   // checking for missing fields
@@ -101,6 +102,9 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   const contentDetails = new Content(details);
 
   const contentData = await contentDetails.save();
+  contentData.contentType === "Movie"
+    ? (contentData.contentSeries = undefined)
+    : (contentData.content = undefined);
 
   // check for contentData
   if (!contentData) {
