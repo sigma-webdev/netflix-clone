@@ -24,9 +24,8 @@ const httpCreateSeason = asyncHandler(async (req, res, next) => {
   // handle season duplicate number
   let seasonPresent = false;
 
-  for (const i of seasons) {
-    if (i.seasonNumber === seasonNumber) {
-      console.log("true and throw error");
+  for (const season of seasons) {
+    if (season.seasonNumber === seasonNumber) {
       seasonPresent = true;
       return next(new CustomError("Season Value already exist!", 400));
     }

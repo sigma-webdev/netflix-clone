@@ -212,8 +212,8 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
 
   if (files) {
     // check for pre-existing trailer
-    if (files.trailer && contentData?.trailer.length > 0) {
-      contentData?.trailer.map((trailerObj) => {
+    if (files.trailer && seriesData?.trailer.length > 0) {
+      seriesData?.trailer.map((trailerObj) => {
         if (trailerObj?.trailerId) {
           cloudinaryFileDelete(trailerObj.trailerId, next);
         }
@@ -221,8 +221,8 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
     }
 
     // check for pre-existing thumbnail
-    if (files.thumbnail && contentData?.thumbnail.length > 0) {
-      contentData?.thumbnail.map((thumbObj) => {
+    if (files.thumbnail && seriesData?.thumbnail.length > 0) {
+      seriesData?.thumbnail.map((thumbObj) => {
         if (thumbObj.thumbnailID) {
           cloudinaryFileDelete(thumbObj.thumbnailID, next, "image");
         }
@@ -244,13 +244,13 @@ const httpUpdateSeries = asyncHandler(async (req, res, next) => {
     .catch((error) => {
       // DELETE File passing particularId
       if (contentFiles.trailer) {
-        contentData?.trailer.map((trailerObj) =>
+        seriesData?.trailer.map((trailerObj) =>
           cloudinaryFileDelete(trailerObj.trailerId, next)
         );
       }
 
       if (contentFiles.thumbnail) {
-        contentData?.thumbnail.map((thumbObj) =>
+        seriesData?.thumbnail.map((thumbObj) =>
           cloudinaryFileDelete(thumbObj.thumbnailID, next, "image")
         );
       }
