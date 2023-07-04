@@ -432,11 +432,36 @@ export const contentSlice = createSlice({
       .addCase(likeContent.fulfilled, (state, action) => {
         const likedContentId = action.payload.contenId;
         const likedContent = action.payload.contentObject;
+
         const newFilteredContent = state.filteredContent.map((content) =>
           content.contentId === likedContentId ? likedContent : content
         );
 
+        const newLatestContent = state.latestContent.map((content) =>
+          content.contentId === likedContentId ? likedContent : content
+        );
+
+        const newtrendingContent = state.trendingContent.map((content) =>
+          content.contentId === likedContentId ? likedContent : content
+        );
+
+        const newMostLikedContent = state.mostLikedContent.map((content) =>
+          content.contentId === likedContentId ? likedContent : content
+        );
+
+        const newContentByCountryOrigin = {};
+        Object.keys(state.contentByCountryOrigin).map((countryOrigin) => {
+          newContentByCountryOrigin[countryOrigin] =
+            state.contentByCountryOrigin[countryOrigin].map((content) =>
+              content.contentId === likedContentId ? likedContent : content
+            );
+        });
+
         state.filteredContent = newFilteredContent;
+        state.latestContent = newLatestContent;
+        state.trendingContent = newtrendingContent;
+        state.mostLikedContent = newMostLikedContent;
+        state.contentByCountryOrigin = newContentByCountryOrigin;
         state.likeDisLikeLoading = false;
       })
       .addCase(likeContent.rejected, (state) => {
@@ -451,11 +476,37 @@ export const contentSlice = createSlice({
         const dislikedContentId = action.payload.contenId;
         const dislikedContent = action.payload.contentObject;
 
-        const newAllContent = state.filteredContent.map((content) =>
+        const newFilteredContent = state.filteredContent.map((content) =>
           content.contentId === dislikedContentId ? dislikedContent : content
         );
 
-        state.filteredContent = newAllContent;
+        const newLatestContent = state.latestContent.map((content) =>
+          content.contentId === dislikedContentId ? dislikedContent : content
+        );
+
+        const newtrendingContent = state.trendingContent.map((content) =>
+          content.contentId === dislikedContentId ? dislikedContent : content
+        );
+
+        const newMostLikedContent = state.mostLikedContent.map((content) =>
+          content.contentId === dislikedContentId ? dislikedContent : content
+        );
+
+        const newContentByCountryOrigin = {};
+        Object.keys(state.contentByCountryOrigin).map((countryOrigin) => {
+          newContentByCountryOrigin[countryOrigin] =
+            state.contentByCountryOrigin[countryOrigin].map((content) =>
+              content.contentId === dislikedContentId
+                ? dislikedContent
+                : content
+            );
+        });
+
+        state.filteredContent = newFilteredContent;
+        state.latestContent = newLatestContent;
+        state.trendingContent = newtrendingContent;
+        state.mostLikedContent = newMostLikedContent;
+        state.contentByCountryOrigin = newContentByCountryOrigin;
         state.likeDisLikeLoading = false;
       })
       .addCase(dislikeContent.rejected, (state) => {

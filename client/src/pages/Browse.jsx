@@ -58,6 +58,12 @@ const Browse = () => {
         countryOrigin: "USA",
       })
     );
+    dispatch(
+      fetchContentByCountryOrigin({
+        userId: "64789b082f388ccff2e33eaa",
+        countryOrigin: "India",
+      })
+    );
   }, [dispatch]);
 
   return (
@@ -301,6 +307,51 @@ const Browse = () => {
                           />
                         );
                       })}
+                    </Crousal>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* browse content by country origin India*/}
+        <div className="bg-netflix-blue text-white">
+          <div className="px-4 md:px-8">
+            {countryOriginContentLoading ? (
+              <RowContentShimmer />
+            ) : (
+              contentByCountryOrigin &&
+              Object.keys(contentByCountryOrigin).find(
+                (item) => item === "India"
+              ) &&
+              contentByCountryOrigin["India"].length !== 0 && (
+                <>
+                  <h3>India</h3>
+                  <div className="space-y-5">
+                    <Crousal>
+                      {Array.from(contentByCountryOrigin["India"]).map(
+                        (item) => {
+                          return (
+                            <PreviewCard
+                              key={item.contentId}
+                              name={item.name}
+                              thumbnailUrl={item.thumbnailUrl}
+                              trailerUrl={item.trailerUrl}
+                              geners={item.genres}
+                              contentId={item.contentId}
+                              rating={item.rating}
+                              description={item.description}
+                              cast={item.cast}
+                              director={item.director}
+                              isLiked={item.isLiked}
+                              isDisliked={item.isDisliked}
+                              releaseYear={item.releaseYear}
+                              contentDuration={item.contentDuration}
+                            />
+                          );
+                        }
+                      )}
                     </Crousal>
                   </div>
                 </>
