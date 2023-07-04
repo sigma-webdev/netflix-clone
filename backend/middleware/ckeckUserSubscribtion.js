@@ -12,7 +12,14 @@ async function checkUserSubscription(req, res, next) {
       "subscription.status": 1,
     });
 
-    const subscriptionStatus = user.subscription.status;
+    const subscriptionStatus = user?.subscription?.status;
+
+    if (!subscriptionStatus) {
+      return next(
+        new CustomError("You are not authorized to perform this action.", 403)
+      );
+    }
+
     if (user.subscription && subscriptionStatus !== "active") {
       return next(
         new CustomError("Please subscribe to access this route.", 403)

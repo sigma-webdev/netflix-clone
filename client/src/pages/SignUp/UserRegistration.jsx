@@ -5,7 +5,7 @@ import validator from "email-validator";
 import toast from "react-hot-toast";
 import { SIGN_UP } from "../../store/authSlice.js";
 import { BiLoader } from "react-icons/bi";
-import SignUpLayout from "./SignUpLayout.js";
+import SignUpLayout from "./SignUpLayout.jsx";
 
 const UserRegistration = () => {
   const navigate = useNavigate();

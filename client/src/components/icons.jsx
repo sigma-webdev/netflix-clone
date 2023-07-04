@@ -244,14 +244,14 @@ export const formLoader = () => {
 };
 export const LikeIcon = ({ isLiked }) => {
   return (
-    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-white">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth="1.5"
-        stroke="currentColor"
-        className="h-4 w-4"
+        stroke="white"
+        className="h-4 w-4 md:h-5 md:w-5"
       >
         <path
           strokeLinecap="round"
@@ -266,14 +266,14 @@ export const LikeIcon = ({ isLiked }) => {
 
 export const DisLikeIcon = ({ isDisliked }) => {
   return (
-    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-white">
+    <div className="box-border flex h-[35px] w-[35px] items-center justify-center rounded-full border-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth="1.5"
-        stroke="currentColor"
-        className="h-4 w-4"
+        stroke="white"
+        className="h-4 w-4 md:h-5 md:w-5"
       >
         <path
           strokeLinecap="round"

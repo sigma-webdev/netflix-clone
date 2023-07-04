@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //components
-import Layout from "../components/layout/Layout";
+import Layout from "../../components/layout/Layout";
 // packages
 import { Link, useNavigate } from "react-router-dom";
 // thunk
-import { SIGN_IN } from "../store/authSlice.js";
+import { SIGN_IN } from "../../store/authSlice.js";
 // svg / icon
-import { Loading } from "../components/icons.jsx";
+import { Loading } from "../../components/icons.jsx";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [signInError, setSignInError] = useState({ error: false, message: "" });
-  const signInLoading = useSelector((state) => state.auth.signInLoading);
+  const signInLoading = useSelector((state) => state.auth.loading);
 
   async function handleSignIn(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const response = await dispatch(SIGN_IN(formData));
-    if (!response.payload.success) {
+    if (!response?.payload?.success) {
       return setSignInError({
         error: true,
         message: response.payload.message,
@@ -29,9 +29,9 @@ const SignIn = () => {
   }
 
   return (
-    <Layout bgcolor="bg-[#00081D]" padding="p-12">
-      <div className="flex  h-screen w-full items-center justify-center bg-netflix-home bg-cover bg-no-repeat">
-        <div className="h-fit rounded-lg bg-black bg-opacity-90 px-16 py-12">
+    <Layout bgcolor="bg-[#00081D]" padding="py-20">
+      <div className="flex h-screen w-full items-center justify-center bg-netflix-home bg-cover bg-no-repeat">
+        <div className="my-60 h-fit rounded-lg bg-black bg-opacity-90 px-16 py-12">
           <div className="text-3xl text-white">Sign In</div>
           {signInError.error ? (
             <div className="mt-4 max-w-[300px] rounded-lg bg-[#e87c03] p-3">
@@ -40,7 +40,7 @@ const SignIn = () => {
           ) : null}
 
           <form
-            className="mb-24 flex flex-col"
+            className="mb-10 flex flex-col"
             onSubmit={(e) => handleSignIn(e)}
           >
             <div className="group relative z-0 my-6 w-full ">
@@ -50,13 +50,13 @@ const SignIn = () => {
                 id="floating_email"
                 className="peer block w-[300px] appearance-none rounded bg-[#333333] px-4 pb-2 pt-4 text-white focus:outline-none focus:ring-0 dark:text-white"
                 required
-                placeholder=" "
+                placeholder=""
               />
               <label
                 htmlFor="floating_email"
                 className="peer-focus:text-small absolute top-5 z-10 origin-[0] -translate-y-6 scale-75 transform px-4 text-sm text-[#717171] duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100  peer-focus:left-0 peer-focus:-translate-y-4 peer-focus:scale-75 dark:text-gray-400"
               >
-                Email or phone number
+                Email
               </label>
             </div>
             <div className="group relative z-0 mb-6 w-full">

@@ -5,9 +5,6 @@ const initialState = {
   isLoggedIn: false,
   userData: {},
   loading: false,
-  forgotPasswordLoading: false,
-  resetPasswordLoading: false,
-  isUserExistLoading: false,
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
@@ -74,7 +71,7 @@ export const FORGOT_PASSWORD = createAsyncThunk(
   "/auth/forgotpassword",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("/auth/forgotpassword", data);
+      const response = await axiosInstance.post("/auth/forgot-password", data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -87,7 +84,7 @@ export const RESET_PASSWORD = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        `/auth/resetpassword/${data.resetPasswordToken}`,
+        `/auth/reset-password/${data.token}`,
         data.formData
       );
       return response.data;
@@ -111,7 +108,7 @@ const authSlice = createSlice({
         state.user = action.payload.data;
         state.isLoggedIn = true;
         state.loading = false;
-        toast.success(action?.payload?.message);
+        toast.success("Logged in successfully");
       })
       .addCase(SIGN_IN.rejected, (state, action) => {
         state.loading = false;
@@ -125,9 +122,8 @@ const authSlice = createSlice({
       .addCase(SIGN_UP.fulfilled, (state, action) => {
         state.user = action.payload.data;
         state.isLoggedIn = true;
-        state.signUpLoading = false;
         localStorage.removeItem("netflixCloneEmail");
-        toast.success("successfully signup");
+        toast.success("Account created successfully");
       })
       .addCase(SIGN_UP.rejected, (state, action) => {
         state.loading = false;
@@ -155,9 +151,11 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
         state.userData = {};
         state.loading = false;
+        localStorage.clear();
       })
       .addCase(SIGN_OUT.rejected, (state) => {
         state.loading = false;
+        toast.error("Failed to log out");
       })
 
       // forgotPassword
@@ -169,7 +167,7 @@ const authSlice = createSlice({
       })
       .addCase(FORGOT_PASSWORD.rejected, (state, action) => {
         state.loading = false;
-        toast.error(action.payload.message);
+        toast.error(action?.payload?.message);
       })
 
       // reset Password
