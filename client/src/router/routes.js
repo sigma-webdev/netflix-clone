@@ -109,24 +109,26 @@ const router = createBrowserRouter([
       {
         path: "/admin",
         element: <Admin />,
+        children: [
+          {
+            path: "/admin/dashboard",
+            element: <AdminDashboard />,
+          },
+          {
+            path: "/admin/manageusers",
+            element: <AdminManageUsers />,
+          },
+          {
+            path: "/admin/managecontents",
+            element: <AdminManageContents />,
+          },
+          {
+            path: "/admin/managecontents/:contentId",
+            element: <AdminContentView />,
+            children: [],
+          },
+        ],
       },
-      {
-        path: "/admin/dashboard",
-        element: <AdminDashboard />,
-      },
-      {
-        path: "/admin/manageusers",
-        element: <AdminManageUsers />,
-      },
-      {
-        path: "/admin/managecontents",
-        element: <AdminManageContents />,
-      },
-      {
-        path: "/admin/managecontents/:contentId",
-        element: <AdminContentView />,
-        children: [],
-      }
     ],
   },
 
