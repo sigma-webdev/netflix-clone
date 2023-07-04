@@ -9,12 +9,12 @@ import {
   fetchContentById,
   deleteContentById,
   updateContentById,
-} from "../../store/contentSlice";
+} from "../../store/adminSlice";
 
 const AdminContentView = () => {
   const dispatch = useDispatch();
-  const contentData = useSelector((state) => state.content.currentContent);
-  const isLoading = useSelector((state) => state.content.loading);
+  const contentData = useSelector((state) => state.admin.currentContent);
+  const isLoading = useSelector((state) => state.admin.isLoading);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
@@ -25,20 +25,21 @@ const AdminContentView = () => {
   console.log(params.contentId);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     dispatch(fetchContentById({ contentId: params.contentId, userId:'64789b082f388ccff2e33eaa' }));
-    setCastArr()
   }, []);
+
+
   useEffect(()=>{
     setEditedContentData(contentData);
-    setCastArr([...contentData.cast])
-  }, [contentData])
+  }, [contentData]);
   
 
   const handleDelete = () => {
     console.log("delete this");
     // redirect('/admin/managecontents/')
-    dispatch(deleteContentById(contentData.contentId));
+    dispatch(deleteContentById(params.contentId));
     navigate("/admin/managecontents");
     //   redirect('/admin/managecontents')
   };
@@ -46,7 +47,7 @@ const AdminContentView = () => {
     setCastArr([...castArr, editedContentData.cast]);
     setEditedContentData({
       ...editedContentData,
-      cast: "",
+      cast: [],
     });
   };
   const handleRemoveCast = (castname) => {
@@ -382,7 +383,7 @@ const AdminContentView = () => {
                   <BsCloudUpload className="absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] text-8xl opacity-0 transition group-hover:opacity-100" />
                   <img
                     className="h-[450px] w-full transition hover:bg-black group-hover:opacity-40"
-                    src={contentData.thumbnailUrl}
+                    src={contentData.thumbnail[0].thumbnailUrl}
                     alt="thubmnail"
                   />
                 </div>
@@ -434,7 +435,7 @@ const AdminContentView = () => {
                     <video
                       width="520"
                       height="440"
-                      src={contentData.trailerUrl}
+                      src={contentData.trailer[0].trailerUrl}
                       controls
                     ></video>
                     <div>
@@ -451,7 +452,7 @@ const AdminContentView = () => {
                     <video
                       width="520"
                       height="440"
-                      src={contentData.contentURL}
+                      src={contentData.content[0].contentURL}
                       controls
                     ></video>
                     <div>

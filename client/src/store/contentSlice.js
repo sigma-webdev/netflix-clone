@@ -59,7 +59,7 @@ export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
   async ({pageNo, searchText, userId }, { rejectWithValue }) => {
     try {
-      const url = searchText ? `/contents?search=${searchText}` :`/contents?page=${pageNo}&limit=200`
+      const url = searchText ? `/contents?search=${searchText}` :`/contents?page=${pageNo}&limit=1`
       const response = await axiosInstance.get(url);
 
       const data = response.data.data.contents;
