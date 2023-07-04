@@ -13,6 +13,7 @@ import AdminDashboard from "../components/admin/AdminDashboard.jsx";
 import AdminManageUsers from "../components/admin/AdminManageUsers.jsx";
 import AdminManageContents from "../components/admin/AdminManageContents.jsx";
 import TestSignIn from "../pages/temp/signin.jsx";
+import AdminContentView from "../components/admin/AdminContentView.jsx";
 import SignIn from "../pages/SignIn/SignIn.jsx";
 import UserExistLogin from "../pages/SignIn/UserExistLogin.jsx";
 import Logout from "../pages/SignIn/Logout.jsx";
@@ -121,6 +122,11 @@ const router = createBrowserRouter([
         path: "/admin/managecontents",
         element: <AdminManageContents />,
       },
+      {
+        path: "/admin/managecontents/:contentId",
+        element: <AdminContentView />,
+        children: [],
+      }
     ],
   },
 
