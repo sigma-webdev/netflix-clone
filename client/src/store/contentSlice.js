@@ -61,12 +61,19 @@ export const fetchContentBySearch = createAsyncThunk(
   async ({ searchText, userId }, { rejectWithValue }) => {
     try {
       const url = `/contents?search=${searchText}`;
-      const response = await axiosInstance.get(url);
+      let contentsObject;
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
-        return convertResponseToContentObject(item, userId);
-      });
+      if (!searchText) {
+        return [];
+      } else {
+        const response = await axiosInstance.get(url);
+
+        const data = response.data.data.contents;
+        contentsObject = data.map((item) => {
+          return convertResponseToContentObject(item, userId);
+        });
+      }
+
       return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
