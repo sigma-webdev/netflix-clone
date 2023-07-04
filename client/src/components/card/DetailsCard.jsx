@@ -16,8 +16,8 @@ const DetailsCard = ({
   cast,
   director,
   handleClose,
-  like,
-  dislike,
+  isLiked,
+  isDisliked,
   releaseYear,
   contentDuration,
 }) => {
@@ -49,7 +49,7 @@ const DetailsCard = ({
     <div className=" tranistion relative mx-auto w-[90%] overflow-hidden rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
       <div className="relative">
         {/* preview video*/}
-        <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[50px] lg:h-[100px]"></div>
+        <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[100px] lg:h-[150px]"></div>
         <div className="w-full">
           <video
             ref={videoRef}
@@ -68,7 +68,7 @@ const DetailsCard = ({
         </div>
 
         {/* hero text */}
-        <div className="absolute bottom-8 left-6 flex cursor-pointer items-center gap-2 md:bottom-10 md:left-12">
+        <div className="absolute bottom-6 left-6 flex cursor-pointer items-center gap-2 md:bottom-8 md:left-12">
           <div
             className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg "
             onClick={playPauseMedia}
@@ -77,10 +77,10 @@ const DetailsCard = ({
             Play
           </div>
           <div onClick={likeContentHanlder} className="cursor-pointer">
-            <LikeIcon isLiked={like.isLiked} />
+            <LikeIcon isLiked={isLiked} />
           </div>
           <div onClick={dislikeContentHanlder} className="cursor-pointer">
-            <DisLikeIcon isDisliked={dislike.isDisliked} />
+            <DisLikeIcon isDisliked={isDisliked} />
           </div>
         </div>
       </div>
