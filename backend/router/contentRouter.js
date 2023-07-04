@@ -10,7 +10,7 @@ const {
 } = require("../controller/contentController");
 const jwtAuth = require("../middleware/jwtAuth");
 const authorizeRoles = require("../middleware/authorizeRoles");
-const checkUserSubscription = require("../middleware/checkUserSubscription.js");
+const checkUserSubscription = require("../middleware/checkUserSubscription");
 
 const contentRoute = express.Router();
 // like & dislike routes --
