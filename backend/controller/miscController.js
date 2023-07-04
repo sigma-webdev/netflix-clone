@@ -18,12 +18,9 @@ const getUsersStatistics = asyncHandler(async (req, res, next) => {
   data.usersCountWithActiveSubscription = usersWithActiveSubscription.length;
 
   for (let user of users) {
-    data[user.plan] = 0;
     for (let plan of plans) {
       if (user.plan === plan) {
-        data[plan] = data[plan] + 1;
-      } else {
-        data[plan] += 0;
+        data[plan] = isNaN(data[plan]) ? 1 : data[plan] + 1;
       }
     }
   }
