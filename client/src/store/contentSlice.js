@@ -5,6 +5,7 @@ import { convertResponseToContentObject } from "../helpers/constants";
 const initialState = {
   currentContent: null,
   allContent: [],
+  searchContent: [],
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
@@ -41,15 +42,15 @@ export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
   async ({ contentId, userId }, { rejectWithValue }) => {
     try {
-      console.log(contentId,'///', userId)
+      console.log(contentId, "///", userId);
       const response = await axiosInstance.get(`/contents/${contentId}`);
       const data = response.data.data;
-      console.log(data,'///fasdfas')
+      console.log(data, "///fasdfas");
       const contentObject = convertResponseToContentObject(data, userId);
 
       return contentObject;
     } catch (error) {
-      console.log(error,'/error')
+      console.log(error, "/error");
       return rejectWithValue(error.response.data);
     }
   }
@@ -57,9 +58,9 @@ export const fetchContentById = createAsyncThunk(
 
 export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
-  async ({pageNo, searchText, userId }, { rejectWithValue }) => {
+  async ({ searchText, userId }, { rejectWithValue }) => {
     try {
-      const url = searchText ? `/contents?search=${searchText}` :`/contents?page=${pageNo}&limit=1`
+      const url = `/contents?search=${searchText}`;
       const response = await axiosInstance.get(url);
 
       const data = response.data.data.contents;
@@ -178,8 +179,8 @@ export const addNewContent = createAsyncThunk(
       const data = response.data.data;
 
       return data;
-    } catch (error){
-    console.log(error)
+    } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -313,11 +314,11 @@ export const contentSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchContentBySearch.fulfilled, (state, action) => {
-        state.filteredContent = action.payload;
+        state.searchContent = action.payload;
         state.loading = false;
       })
       .addCase(fetchContentBySearch.rejected, (state) => {
-        state.filteredContent = [];
+        state.searchContent = [];
         state.loading = false;
       })
 

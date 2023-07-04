@@ -2,7 +2,7 @@ import { GlobeIcon } from "../icons";
 
 const Footer = () => {
   return (
-    <footer className="space-y-10 bg-netflix-blue p-10 text-slate-400 md:p-28 ">
+    <footer className="h-screen space-y-10 bg-netflix-blue p-10 text-slate-400 md:p-28">
       <ul className="grid-rows-16 sm:grid-rows-8 mx-auto grid max-w-[80vw] grid-flow-row grid-cols-1 gap-y-4 underline sm:grid-flow-row sm:grid-cols-2 md:grid-flow-col md:grid-cols-4 md:grid-rows-4">
         <li>
           <a href="/">FAQ</a>
