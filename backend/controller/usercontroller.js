@@ -49,6 +49,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
   if (subscribed && subscribed === "true") {
     query["subscribe.status"] = active;
   }
+
   if (subscribed) {
     query["subscribe.status"] = "active";
   }
@@ -73,6 +74,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
     };
   }
 
+  result.totalPages = Math.floor(totalUsers / LIMIT);
   result.users = await userModel
     .find(query)
     .skip(startIndex)
@@ -190,6 +192,7 @@ const getWatchHistoryContents = asyncHandler(async (req, res, next) => {
       limit: LIMIT,
     };
   }
+  result.totalPages = Math.floor(totalWatchContent / LIMIT);
 
   const user = await userModel.findById(userId).populate([
     {
@@ -318,6 +321,8 @@ const getWatchListContent = asyncHandler(async (req, res, next) => {
       limit: LIMIT,
     };
   }
+
+  result.totalPages = Math.floor(totalWatchListContent / LIMIT);
 
   const user = await userModel.findById(userId).populate([
     {
