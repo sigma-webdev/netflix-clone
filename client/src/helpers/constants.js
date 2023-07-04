@@ -36,14 +36,8 @@ export const convertResponseToContentObject = (data, userId) => {
     contentUrl: data.content[0].contentURL,
     genres: data.genres,
     rating: data.rating,
-    like: {
-      isLiked: isLiked,
-      isLikeLoading: false,
-    },
-    dislike: {
-      isDisliked: isDisliked,
-      isDisLikeLoading: false,
-    },
+    isLiked: isLiked,
+    isDisliked: isDisliked,
     contentDuration: getFormatedDuration(data.content[0].contentDuration),
     releaseYear: new Date(data.releaseDate).getFullYear(),
   };
