@@ -24,6 +24,7 @@ export const getAllUsers = createAsyncThunk(
 export const getUserById = createAsyncThunk(
   "users/getUserById",
   async (userId, { rejectWithValue }) => {
+    console.log(userId,"in");
     try {
       let response = await axiosInstance.get(`/users/${userId}`);
       return response.data;
@@ -39,7 +40,7 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //
+      // all user
       .addCase(getAllUsers.pending, (state) => {
         state.loading = true;
       })
@@ -50,7 +51,20 @@ export const userSlice = createSlice({
       .addCase(getAllUsers.rejected, (state) => {
         state.allUsers = [];
         state.loading = false;
-      });
+      })
+
+      // get user by id
+      .addCase(getUserById.pending, (state)=> {
+        state.loading = true;
+      })
+      .addCase(getUserById.fulfilled, (state, action)=>{
+        state.userById = action.payload
+        state.loading = false
+      })
+      .addCase(getUserById.rejected, (state) =>{
+        state.userById = {}
+        state.loading = false
+      })
   },
 });
 
