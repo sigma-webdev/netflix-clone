@@ -106,7 +106,7 @@ const authSlice = createSlice({
       })
       .addCase(SIGN_IN.fulfilled, (state, action) => {
         console.log(action?.payload?.data);
-        state.user = action.payload.data;
+        state.userData = action?.payload?.data;
         state.isLoggedIn = true;
         state.loading = false;
         toast.success("Logged in successfully");
@@ -121,7 +121,7 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(SIGN_UP.fulfilled, (state, action) => {
-        state.user = action.payload.data;
+        state.userData = action?.payload?.data;
         state.isLoggedIn = true;
         localStorage.removeItem("netflixCloneEmail");
         toast.success("Account created successfully");
@@ -183,15 +183,17 @@ const authSlice = createSlice({
         state.loading = false;
         toast.error(action.payload.message);
       })
+
+      // is user exist
       .addCase(IS_USER_EXIST.pending, (state) => {
-        state.isUserExistLoading = true;
+        state.loading = true;
       })
       .addCase(IS_USER_EXIST.fulfilled, (state, action) => {
-        state.isUserExistLoading = false;
+        state.loading = false;
         localStorage.setItem("netflixCloneEmail", action.payload.data.email);
       })
       .addCase(IS_USER_EXIST.rejected, (state) => {
-        state.isUserExistLoading = false;
+        state.loading = false;
       });
   },
 });
