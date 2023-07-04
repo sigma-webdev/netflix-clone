@@ -47,6 +47,8 @@ const userSchema = new mongoose.Schema(
     subscription: {
       id: String,
       status: String,
+      startDate: Date,
+      expiryDate: Date,
     },
     role: {
       type: String,
