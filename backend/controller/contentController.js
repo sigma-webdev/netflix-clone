@@ -178,8 +178,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   // pagination
   const totalContents = await Content.find(query).countDocuments();
 
-  console.log("total Content count", totalContents);
-
   const result = {};
 
   if (endIndex < totalContents) {
@@ -203,7 +201,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     query["display"] = true;
   }
 
-  console.log("result ---------", result);
   // find all content and search all content
   result.contents = await Content.find(query)
     .skip(startIndex)
@@ -214,7 +211,6 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     next(new CustomError("Content not able Fetch"));
   }
 
-  console.log("result ---------", result.contents);
   return res.status(200).json({
     success: true,
     data: result,
@@ -293,7 +289,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
     }
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Content deleted successfully",
     data: contentData,
