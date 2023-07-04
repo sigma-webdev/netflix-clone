@@ -33,6 +33,7 @@ const AdminManageContents = () => {
   const [creatorArr, setCreatorArr] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1) 
+  const limit = 5;
 
   const dispatch = useDispatch();
 
@@ -462,7 +463,7 @@ console.log(isContentLoading)
                         (index + 1) % 2 === 0 ? "bg-[#342e2b]" : "bg-[#2e2f3a]"
                       }
                     >
-                      <td className="px-4 py-3">{index + 1}</td>
+                      <td className="px-4 py-3">{(page - 1) * limit + index + 1}</td>
                       <td className="flex items-center gap-4 px-4 py-3">
                         <img
                           className="h-16 w-32 rounded-xl object-center"
