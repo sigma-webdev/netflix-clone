@@ -5,7 +5,8 @@ import { Outlet } from "react-router-dom";
 
 const Admin = () => {
   return (
-    <div className="flex flex-wrap">
+    
+    <div className="flex  ">
       <AdminNav />
       <Outlet/>
     </div>
