@@ -150,6 +150,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   // content Movies or Series
   if (contentType) {
+    // TODO: to be regex to be consistent
     query["contentType"] = new RegExp(contentType, "i");
   }
 
