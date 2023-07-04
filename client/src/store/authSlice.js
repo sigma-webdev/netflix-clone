@@ -190,7 +190,7 @@ const authSlice = createSlice({
       })
       .addCase(IS_USER_EXIST.fulfilled, (state, action) => {
         state.loading = false;
-        localStorage.setItem("netflixCloneEmail", action.payload.data.email);
+        localStorage.setItem("netflixCloneEmail", action?.payload?.data?.email);
       })
       .addCase(IS_USER_EXIST.rejected, (state) => {
         state.loading = false;
