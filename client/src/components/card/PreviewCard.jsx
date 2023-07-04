@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
 import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
@@ -16,11 +16,14 @@ const PreviewCard = ({
   trailerUrl,
   geners,
   rating,
-  like,
-  dislike,
+  isLiked,
+  isDisliked,
   releaseYear,
   contentDuration,
 }) => {
+  const likeDisLikeLoading = useSelector(
+    (state) => state.content.likeDisLikeLoading
+  );
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
 
@@ -30,7 +33,7 @@ const PreviewCard = ({
     if (!isOpenDetails) {
       window.document.body.style.overflow = "hidden";
     } else {
-      window.document.body.style.overflow = "intial";
+      window.document.body.style.overflow = "initial";
     }
   };
 
@@ -43,7 +46,7 @@ const PreviewCard = ({
   };
 
   return (
-    <div className="tranistion group my-8 w-48 scale-100 rounded drop-shadow-lg duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
+    <div className="group my-8 w-48 scale-100 rounded drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
       {/* preview video*/}
       <div className="w-48 md:w-64">
         <video
@@ -63,12 +66,20 @@ const PreviewCard = ({
                 <PlayIcon />
               </Link>
             </div>
-            <div onClick={likeContentHanlder} className="cursor-pointer">
-              <LikeIcon isLiked={like.isLiked} />
-            </div>
-            <div onClick={dislikeContentHanlder} className="cursor-pointer">
-              <DisLikeIcon isDisliked={dislike.isDisliked} />
-            </div>
+            <button
+              onClick={likeContentHanlder}
+              className="cursor-pointer"
+              disabled={likeDisLikeLoading}
+            >
+              <LikeIcon isLiked={isLiked} />
+            </button>
+            <button
+              onClick={dislikeContentHanlder}
+              className="cursor-pointer"
+              disabled={likeDisLikeLoading}
+            >
+              <DisLikeIcon isDisliked={isDisliked} />
+            </button>
           </div>
           <div onClick={openCloseDetails} className="cursor-pointer">
             <DownArrowIcon />
@@ -103,8 +114,8 @@ const PreviewCard = ({
               handleClose={openCloseDetails}
               releaseYear={releaseYear}
               contentDuration={contentDuration}
-              like={like}
-              dislike={dislike}
+              isLiked={isLiked}
+              isDisliked={isDisliked}
             />
           </div>,
           document.getElementById("content-details")

@@ -6,6 +6,7 @@ import {
   addNewContent,
   fetchContent,
   fetchContentById,
+  fetchContentBySearch,
 } from "../../store/contentSlice";
 import { Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -21,7 +22,7 @@ const AdminManageContents = () => {
   const [newContentData, setNewContentData] = useState({
     name: "",
     description: "",
-    categories: "",
+    contentType: "",
     genres: [],
     director: "",
     rating: "",
@@ -33,19 +34,20 @@ const AdminManageContents = () => {
   const [castArr, setCastArr] = useState([]);
   const [creatorArr, setCreatorArr] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1) 
 
   const dispatch = useDispatch();
 
-  const content = useSelector((state) => state.content.allContent);
-  console.log(content, "/dasd");
+  const allContents = useSelector((state) => state.content.filteredContent);
+  console.log(allContents, "/dasd");
   const [searchTerm, setSearchTerm] = useState("");
   const isContentLoading = useSelector((state) => state.content.loading);
   // console.log(content)
 
   useEffect(() => {
-    dispatch(fetchContent());
+    dispatch(fetchContentBySearch({pageNo: page}));
     // setContentData(content)
-  }, [dispatch]);
+  }, [page]);
 
   // useEffect(() => {
 
@@ -99,6 +101,12 @@ const AdminManageContents = () => {
     let newCast = castArr.filter((item) => item !== castname);
     setCastArr(newCast);
   };
+  const getSearch = (e) => {
+    e.preventDefault()
+    dispatch(fetchContentBySearch({pageNo:page , userId: '64789b082f388ccff2e33eaa', searchText: searchTerm }));
+    setSearchTerm("")
+
+  }
 
   // const handleFileChange = (event) => {
   //     const file = event.target.files[0];
@@ -109,14 +117,32 @@ const AdminManageContents = () => {
   //     }));
   // };
 
-  const handleSearch = (e) => {
-    console.log(e.target.value);
-    setSearchTerm(e.target.value);
-  };
 
-  const filteredData = content.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredData = content.filter((item) =>
+  //   item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  
+  // );
+
+  const nextPage = () => {
+    if(allContents?.data?.next === undefined){
+      return
+    }else{
+      setPage((next)=>(next+1))
+
+    }
+
+  }
+  const prevPage = () =>{
+    if(allContents?.data?.previous === undefined){
+      return;
+    
+    }else {
+      setPage((pre)=>pre-1)
+ 
+    }
+  }
+  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e);
@@ -137,7 +163,7 @@ const AdminManageContents = () => {
     setNewContentData({
       name: "",
       description: "",
-      categories: "",
+      contentType: "",
       genres: [],
       director: "",
       rating: "",
@@ -158,7 +184,7 @@ const AdminManageContents = () => {
     setNewContentData({
       name: "",
       description: "",
-      categories: "",
+      contentType: "",
       genres: [],
       director: "",
       rating: "",
@@ -178,7 +204,7 @@ const AdminManageContents = () => {
               onClick={handleToggleClose}
               className="absolute right-3 top-2 cursor-pointer text-3xl"
             >
-              X
+              &times;
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col gap-2">
               <label htmlFor="name">Movie Name:</label>
@@ -254,32 +280,32 @@ const AdminManageContents = () => {
                 </div>
               )}
 
-              <label htmlFor="categories"> Categories:</label>
+              <label htmlFor="contentType"> Content Type:</label>
 
               <div className="ml-4  flex items-center">
-                <label className="">Movies</label>
+                <label className="">Movie</label>
                 <input
                   className="ml-1 mr-4 mt-1"
                   type="radio"
-                  name="categories"
+                  name="contentType"
                   required
                   onChange={handleInputChange}
-                  value="Movies"
-                  checked={newContentData.categories === "Movies"}
+                  value="Movie"
+                  checked={newContentData.contentType === "Movie"}
                 />
                 <label className="">Series</label>
                 <input
                   className="ml-1 mt-1"
                   type="radio"
-                  name="categories"
+                  name="contentType"
                   required
                   onChange={handleInputChange}
                   value="Series"
-                  checked={newContentData.categories === "Series"}
+                  checked={newContentData.contentType === "Series"}
                 />
               </div>
 
-                            <label htmlFor="creator"> Director:</label>
+              <label htmlFor="creator"> Director:</label>
               <input
                 className="rounded border bg-transparent p-2"
                 type="text"
@@ -332,7 +358,7 @@ const AdminManageContents = () => {
                             <input className='bg-transparent border p-2 rounded' type="file" required name="content" accept="video/*" onChange={handleFileChange} /> */}
 
 
-<button
+              <button
                 type="submit"
                 disabled={isLoading}
                 className="flex items-center justify-center gap-4 rounded bg-[#E50914] py-2 text-white hover:bg-[#d4252e]"
@@ -365,7 +391,7 @@ const AdminManageContents = () => {
         </div>
       )}
       {isContentLoading ? (
-        <div className="absolute flex h-screen w-screen items-center justify-center bg-black bg-opacity-80">
+        <div className="absolute right-0 flex h-screen w-10/12 items-center justify-center bg-opacity-80">
           <div className="text-center">
             <div role="status">
               <svg
@@ -389,45 +415,56 @@ const AdminManageContents = () => {
           </div>
         </div>
       ) : (
-        <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-[#181818fd] px-4 py-4">
-          <h2 className="text-white">Manage Contents</h2>
-          <div className="flex w-full justify-between">
-            <div className="relative w-[30%] text-white">
-              <input
-                className="w-full rounded-lg border bg-transparent py-1 pl-4"
-                placeholder="Search content..."
-                type="text"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-              <BiSearchAlt2 className="absolute right-1 top-2" />
-            </div>
+        <div className="flex max-h-[100vh] w-10/12 flex-col items-center overflow-y-scroll  px-4 py-4">
+          <div className="flex justify-between w-5/6 mx-auto">
+            <h3 className="text-white bg-[#E50914] px-3 rounded-t-md">Manage Contents</h3>
+            <div className="flex gap-2">
             <button
               onClick={() => toggleModal(true)}
-              className="cursor-pointer rounded bg-[#E50914] px-3 py-1 text-white hover:bg-[#d4252e]"
+              className="cursor-pointer bg-[#E50914] px-3 py-1 text-white hover:bg-[#d4252e]  border-b-2 rounded-lg border-white"
             >
               Add Content
             </button>
+              {/* <div className=""> */}
+              <form onSubmit={getSearch} className="flex justify-between border-2 border-[#E50914] items-center  bg-white">
+                <input
+                  className=" px-2 outline-none w-full"
+                  placeholder="Search content..."
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button>
+
+              <BiSearchAlt2 className="text-4xl" />
+                </button>
+              </form>
+            {/* </div> */}
+            
+            
+            </div>
           </div>
-          {filteredData.length > 0 ? (
-            <table className="w-5/6 table-auto overflow-scroll border border-gray-300 text-gray-200">
+
+          {allContents.length !== 0 ? (
+            <>
+            <table className="w-5/6 table-auto overflow-scroll text-gray-200">
               <thead className="text-left">
-                <tr>
+                <tr className="bg-[#E50914]">
                   <th className="px-4 py-2">S. No</th>
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">Categories</th>
+                  <th className="px-4 py-2 text-center">Name</th>
+                  <th className="px-4 py-2">Content Type</th>
                   <th className="px-4 py-2">Genres</th>
                   <th className="px-4 py-2">Status</th>
                   <th className="px-4 py-2 text-center">Action</th>
                 </tr>
               </thead>
               <tbody className=" border-opacity-0">
-                {filteredData.map((content, index) => {
+                {allContents.map((content, index) => {
                   return (
                     <tr
                       key={index}
                       className={
-                        (index + 1) % 2 === 0 ? "bg-[#2b2c34]" : "bg-[#2e2f3a]"
+                        (index + 1) % 2 === 0 ? "bg-[#342e2b]" : "bg-[#2e2f3a]"
                       }
                     >
                       <td className="px-4 py-3">{index + 1}</td>
@@ -439,7 +476,7 @@ const AdminManageContents = () => {
                         />
                         {content.name}
                       </td>
-                      <td className="px-4 py-3">{content.categories}</td>
+                      <td className="px-4 py-3">{content.contentType}</td>
                       <td className="px-4 py-3">{content.genres}</td>
                       <td className="px-4 py-3">{content.genres}</td>
                       <td className="px-4 py-2">
@@ -454,8 +491,16 @@ const AdminManageContents = () => {
                 })}
               </tbody>
             </table>
+            <div className="flex justify-between w-10/12 my-5 mx-auto">
+            <button className={allContents?.data?.previous === undefined ? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-2"} onClick={prevPage}>Previous Page</button>
+            <div className=" px-[10px] border-2 border-[#e509144d] text-[#E50914] text-xl font-bold rounded-full ">
+             {page}
+            </div>
+            <button onClick={nextPage} className={allContents?.data?.next === undefined? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-4"}>Next Page</button>
+          </div>
+          </>
           ) : (
-            <h2 className="text-center text-white">No Data Found</h2>
+            <h2 className="text-center">No Data Found</h2>
           )}
         </div>
       )}

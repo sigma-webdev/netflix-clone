@@ -22,10 +22,10 @@ const SignIn = () => {
     if (!response?.payload?.success) {
       return setSignInError({
         error: true,
-        message: response.payload.message,
+        message: response?.payload?.message,
       });
     }
-    return navigate("/");
+    return navigate("/browse");
   }
 
   return (

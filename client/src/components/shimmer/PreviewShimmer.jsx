@@ -2,10 +2,10 @@ const PreviewShimmer = () => {
   return (
     <div
       role="status"
-      className="flex h-full w-full animate-pulse items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700"
+      className="flex h-full w-full animate-pulse items-center justify-center rounded-lg bg-gray-400"
     >
       <svg
-        className="h-12 w-12 text-gray-200 dark:text-gray-600"
+        className="h-12 w-12 text-gray-200"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
         fill="currentColor"
