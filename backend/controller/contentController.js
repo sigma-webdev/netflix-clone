@@ -269,7 +269,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   }
 
   const { thumbnail, trailer, content } = contentData;
-  if (contentData) {
+  if (contentData.length !== 0) {
     if (content?.contentID) {
       cloudinaryFileDelete(content?.contentID, next);
     }
