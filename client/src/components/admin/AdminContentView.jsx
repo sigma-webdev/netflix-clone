@@ -22,13 +22,18 @@ const AdminContentView = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [editedContentData, setEditedContentData] = useState({});
   const params = useParams();
-  console.log(params.id);
+  console.log(params.contentId);
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchContentById({ contentId: params.id }));
-    setEditedContentData(contentData);
+    dispatch(fetchContentById({ contentId: params.contentId, userId:'64789b082f388ccff2e33eaa' }));
+    setCastArr()
   }, []);
+  useEffect(()=>{
+    setEditedContentData(contentData);
+    setCastArr([...contentData.cast])
+  }, [contentData])
+  
 
   const handleDelete = () => {
     console.log("delete this");
@@ -60,7 +65,7 @@ const AdminContentView = () => {
     const {
       name,
       description,
-      categories,
+      contentType,
       genres,
       creator,
       rating,
@@ -78,8 +83,8 @@ const AdminContentView = () => {
     if (description && description !== contentData.description) {
       sentFormData.append("description", description);
     }
-    if (categories && categories !== contentData.categories) {
-      sentFormData.append("categories", categories);
+    if (contentType && contentType !== contentData.contentType) {
+      sentFormData.append("contentType", contentType);
     }
     if (genres && genres !== contentData.genres) {
       sentFormData.append("genres", genres);
@@ -115,12 +120,7 @@ const AdminContentView = () => {
   const toggleModal = (val) => {
     setIsOpen(val);
   };
-  // const handleChange =(e)=>{
-  //   const { name, value } = e.target;
-  //   setEditedContentData(prev=>{
-  //     return {...prev, [name]: value }
-  //   })
-  // }
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     // const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
@@ -140,15 +140,10 @@ const AdminContentView = () => {
       sentFormData.append(name, file);
       dispatch(updateContentById({ id: params.id, sentFormData }));
       setIsUploading(false);
-      // dispatch(fetchContentById(params._id))
+    
     }
-
-    // console.log(file)
-    // setEditedContentData(prevDetails => ({
-    //   ...prevDetails,
-    //   [event.target.name]: file
-    // }));
   };
+
 
   const uploadContent = () => {
     fileInputRef.current.click();
@@ -157,14 +152,11 @@ const AdminContentView = () => {
   const handleSelectedFile = (event) => {
     console.log("handle select callled");
     const file = event.target.files[0];
-    console.log(file);
-    // const sentFormData = new FormData();
+    console.log(file); // console
     const sentFormData = new FormData();
     sentFormData.append("thumbnail", file);
     console.log(sentFormData, "////");
-    // updateContentById(params.id, formData, (progress) => {
-    //   setUploadProgress(progress)
-    // });
+  
 
     dispatch(updateContentById({ id: params.id, sentFormData }));
   };
@@ -173,12 +165,12 @@ const AdminContentView = () => {
     <>
       {isOpen && (
         <div className="absolute z-50 flex h-full w-full items-center justify-center border bg-cyan-600 bg-opacity-60">
-          <div className="no-scrollbar relative  max-h-[80%]  w-96 overflow-y-scroll rounded-lg bg-gray-50 px-4 py-12">
+          <div className="no-scrollbar relative  max-h-[80%] w-[700px] overflow-y-scroll rounded-lg bg-gray-50 px-4 py-12">
             <div
               onClick={() => toggleModal(false)}
               className="absolute right-3 top-2 cursor-pointer text-3xl"
             >
-              X
+              &times;
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col gap-2">
               <label htmlFor="name">Movie Name:</label>
@@ -230,14 +222,13 @@ const AdminContentView = () => {
                   value={editedContentData.cast}
                   onChange={handleInputChange}
                 />
-                <div
+                <button
                   onClick={handleArrayChange}
                   className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
                 >
                   Add
-                </div>
-              </div>
-              {castArr.length > 0 && (
+                </button>
+                {castArr.length > 0 && (
                 <div className="flex flex-wrap">
                   {castArr.map((castname) => (
                     <div className="relative m-2  rounded  bg-blue-200">
@@ -252,29 +243,30 @@ const AdminContentView = () => {
                   ))}
                 </div>
               )}
+              </div>
 
-              <label htmlFor="categories"> Categories:</label>
+              <label htmlFor="categories"> Content Type:</label>
 
               <div className="ml-4  flex items-center">
                 <label className="">Movies</label>
                 <input
                   className="ml-1 mr-4 mt-1"
                   type="radio"
-                  name="categories"
+                  name="contentType"
                   required
                   onChange={handleInputChange}
-                  value="Movies"
-                  checked={editedContentData.categories === "Movies"}
+                  value="Movie"
+                  checked={editedContentData.contentType === "Movie"}
                 />
                 <label className="">Series</label>
                 <input
                   className="ml-1 mt-1"
                   type="radio"
-                  name="categories"
+                  name="contentType"
                   required
                   onChange={handleInputChange}
                   value="Series"
-                  checked={editedContentData.categories === "Series"}
+                  checked={editedContentData.contentType === "Series"}
                 />
               </div>
 
@@ -353,69 +345,14 @@ const AdminContentView = () => {
                 )}
               </button>
             </form>
-            {/* <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
-              <label htmlFor="name">Movie Name:</label>
-              <input className='bg-transparent border p-2 rounded' type="text" required name="name" value={editedContentData.name} onChange={handleInputChange} />
-              <label htmlFor="genres">Genres:</label>
-              <input className='bg-transparent border p-2 rounded' type="text" required name="genres" value={editedContentData.genres} onChange={handleInputChange} />
-              <label htmlFor="text">Description:</label>
-              <input className='bg-transparent border p-2 rounded' type="text" required name="description" value={editedContentData.description} onChange={handleInputChange} />
-              <label htmlFor="cast">Cast:</label>
-              <input className='bg-transparent border p-2 rounded' type="text" required name="cast" value={editedContentData.cast} onChange={handleInputChange} />
-              <label htmlFor="categories">  Categories:</label>
-              <label className=''>
-                Movies
-                <input className='' type="radio" name="categories" required onChange={handleInputChange} value="Movies" checked={editedContentData.categories === 'Movies'} />
-
-              </label>
-              <label>
-                TV shows
-                <input className='' type="radio" name="categories" required onChange={handleInputChange} value="Series" checked={editedContentData.categories === 'Series'} />
-
-              </label>
-
-              <label htmlFor="creator">  Director:</label>
-              <input className='bg-transparent border p-2 rounded' type="text" name="director" value={editedContentData.director} onChange={handleInputChange} />
-              <label htmlFor="rating">  Rating:</label>
-              <input className='bg-transparent border p-2 rounded' type="text" name="rating" value={editedContentData.rating} onChange={handleInputChange} />
-              <label htmlFor="language">  Language:</label>
-              <input className='bg-transparent border p-2 rounded' type="text" name="language" value={editedContentData.language} onChange={handleInputChange} />
-
-
-              <button type='submit' disabled={isLoading} className='bg-green-600 hover:bg-greean-700 text-white rounded py-2 flex items-center gap-4 justify-center'>Add Content {isLoading && <div role="status">
-                <svg aria-hidden="true" className="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                </svg>
-                <span className="sr-only">Loading...</span>
-              </div>} 
-              </button>
-
-            </form> */}
           </div>
         </div>
       )}
       <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-slate-800 py-4">
         <h2 className="text-white">Content</h2>
-
-        {/* <table className='text-white'>
-      <tbody>
-        {Object.entries(contentData).map(([key, value]) => {
-          if (key === 'thumbnail' || key === 'content' || key === 'trailer' || key === '_id' || key === 'likes' || key === 'episodes' || key === 'createdAt' || key === '__v' || key === 'updatedAt') {
-            return null; // Skip rendering this row
-          }
-          return (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{value}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table> */}
         {isLoading ? (
           <h2 className="text-white">Loading..</h2>
-        ) : contentData ? (
+        ) : ( contentData ? (
           <>
             <div className="flex w-full gap-4 px-4">
               {/* <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded text-white'>Edit</button> */}
@@ -446,7 +383,7 @@ const AdminContentView = () => {
                   <img
                     className="h-[450px] w-full transition hover:bg-black group-hover:opacity-40"
                     src={contentData.thumbnailUrl}
-                    alt=""
+                    alt="thubmnail"
                   />
                 </div>
                 <div
@@ -477,17 +414,15 @@ const AdminContentView = () => {
                   <div className="my-4 flex gap-4">
                     <h4 className="w-32 text-gray-400">Cast:</h4>
                     <div>
-                      {contentData.cast.map((item) => (
-                        <h3 className="text-white">{item}</h3>
-                      ))}
+                      {/* {contentData.cast.map((item, index) => (
+                        <h3 key={index} className="text-white">{item}</h3>
+                      ))} */}
                     </div>
                   </div>
-                  {/* <div className='flex gap-4 my-4'>
+                  <div className='flex gap-4 my-4'>
               <h4 className='text-gray-400 w-32'>Language:</h4>
               <h3 className=''>{contentData.language}</h3>
-              
-              
-            </div> */}
+            </div>
                 </div>
                 <div>
                   <div className="my-4 flex gap-4">
@@ -529,20 +464,12 @@ const AdminContentView = () => {
                     </div>
                   </div>
                 </div>
-                {/* <div className='flex gap-4 my-4'>
-              <h4 className='text-gray-400 w-32'>Genres:</h4>
-              <h3 className=''>{contentData.genres}</h3>
-            </div> */}
-                {/* <div className='flex gap-4 my-4'>
-              <h4 className='text-gray-400 w-32'>Categories:</h4>
-              <h3 className=''>{contentData.categories}</h3>
-            </div> */}
               </form>
             </div>
           </>
         ) : (
           <h2 className="text-white">Loading..</h2>
-        )}
+        ))}
       </div>
     </>
   );
