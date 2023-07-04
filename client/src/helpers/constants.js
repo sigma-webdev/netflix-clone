@@ -39,6 +39,8 @@ export const convertResponseToContentObject = (data, userId) => {
     isLiked: isLiked,
     isDisliked: isDisliked,
     contentDuration: getFormatedDuration(data.content[0].contentDuration),
-    releaseYear: new Date(data.releaseDate).getFullYear(),
+    releaseYear: new Date(data.content[0].releaseDate).getFullYear(),
+    contentType: data.contentType,
+    language: data.language,
   };
 };

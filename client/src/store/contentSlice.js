@@ -3,8 +3,8 @@ import axiosInstance from "../helpers/axiosInstance";
 import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
-  currentContent: null,
   allContent: [],
+  currentContent: {},
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
@@ -41,12 +41,15 @@ export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
   async ({ contentId, userId }, { rejectWithValue }) => {
     try {
+      console.log(contentId, "///", userId);
       const response = await axiosInstance.get(`/contents/${contentId}`);
       const data = response.data.data;
+      console.log(data, "///fasdfas");
       const contentObject = convertResponseToContentObject(data, userId);
 
       return contentObject;
     } catch (error) {
+      console.log(error, "/error");
       return rejectWithValue(error.response.data);
     }
   }
@@ -54,11 +57,12 @@ export const fetchContentById = createAsyncThunk(
 
 export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
-  async ({ searchText, userId }, { rejectWithValue }) => {
+  async ({ pageNo, searchText, userId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(
-        `/contents?search=${searchText}`
-      );
+      const url = searchText
+        ? `/contents?search=${searchText}`
+        : `/contents?page=${pageNo}&limit=200`;
+      const response = await axiosInstance.get(url);
 
       const data = response.data.data.contents;
       const contentsObject = data.map((item) => {
@@ -177,6 +181,7 @@ export const addNewContent = createAsyncThunk(
 
       return data;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
