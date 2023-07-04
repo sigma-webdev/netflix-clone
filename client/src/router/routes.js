@@ -22,6 +22,7 @@ import ResetPassword from "../pages/SignIn/ResetPassword.jsx";
 import NotRequireAuth from "../helpers/auth/NotRequireAuth.jsx";
 import RequireAuth from "../helpers/auth/RequireAuth.jsx";
 import AdminContentView from "../components/admin/AdminContentView.jsx";
+import AdminContentView from "../components/admin/AdminContentView.jsx";
 
 const router = createBrowserRouter([
   // for open routes
