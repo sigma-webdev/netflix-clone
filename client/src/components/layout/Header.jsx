@@ -19,9 +19,10 @@ import {
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.currentUser);
-  const IS_LOGGED_IN = useSelector((state) => state.auth.isLoggedIn);
-  const IS_LOADING = useSelector((state) => state.auth.loading);
+  const user = useSelector((state) => state?.auth?.userData);
+  console.log(user);
+  const IS_LOGGED_IN = useSelector((state) => state?.auth?.isLoggedIn);
+  const IS_LOADING = useSelector((state) => state?.auth?.loading);
   const [searchText, setSearchText] = useState("");
   const headerRef = useRef(null);
 
@@ -170,6 +171,12 @@ const Header = () => {
 
                   <div>Mangesh Thakare</div>
                 </li>
+                <hr className="my-4" />
+                {IS_LOGGED_IN && user?.role === "ADMIN" && (
+                  <Link to={"/admin"}>
+                    <li>Admin Dashboard</li>
+                  </Link>
+                )}
                 <hr className="my-4" />
                 <li
                   className="flex cursor-pointer items-center gap-4"
