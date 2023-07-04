@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-// TODO more required field movie likes and array of episode series
 const contentSchema = new Schema(
   {
     name: {
@@ -90,9 +89,6 @@ const contentSchema = new Schema(
       {
         thumbnailUrl: {
           type: String,
-
-          default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686918939/thumbnails/qu0ovdxpjqs0fv5d1eho.webp",
         },
         thumbnailID: {
           type: String,
@@ -104,32 +100,22 @@ const contentSchema = new Schema(
       {
         trailerUrl: {
           type: String,
-
-          default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
-          // required: [true, "trailer video link must be provided"],
         },
         trailerId: { type: String },
       },
     ],
 
-    content: [
-      {
-        contentURL: {
-          type: String,
-
-          default:
-            "https://res.cloudinary.com/ddvlwqjuy/image/upload/v1686919379/thumbnails/rx0rjj3e6knwkp3l9o9j.png",
-
-          // required: [true, "Content video link must be provided"],
-        },
-        contentID: {
-          type: String,
-          // required: [true, "content ID must be provided"],
-        },
-        contentDuration: { type: Object },
+    content: {
+      contentURL: {
+        type: String,
       },
-    ],
+      contentID: {
+        type: String,
+        // required: [true, "content ID must be provided"],
+      },
+      contentDuration: { type: Object },
+    },
+
     display: {
       type: Boolean,
       default: false,
