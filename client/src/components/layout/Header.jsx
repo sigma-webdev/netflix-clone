@@ -51,13 +51,13 @@ const Header = () => {
   }
 
   const handleSearch = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
 
-    dispatch(
-      fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
-    );
+    if (searchText) {
+      dispatch(
+        fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
+      );
+    }
   };
 
   const handleCategory = (contentType) => {
