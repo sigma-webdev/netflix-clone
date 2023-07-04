@@ -78,7 +78,7 @@ const signUp = asyncHandler(async (req, res, next) => {
   if (!isEmailValid)
     return next(new customError("Please enter a valid email 📩", 400));
 
-  const user = findOne({ email });
+  const user = await userModel.findOne({ email: email });
   if (user)
     return next(
       new customError(`user with email: ${email} already exist`, 409)

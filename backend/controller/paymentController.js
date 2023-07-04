@@ -59,7 +59,7 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   // Creating a subscription using razorpay that we imported from the config/rasorpayConfig.js
   try {
     const subscription = await razorpay.subscriptions.create({
-      plan_id: "planID", // The unique plan ID
+      plan_id: planID, // The unique plan ID
       customer_notify: 1, // 1 means razorpay will handle notifying the customer, 0 means we will not notify the customer
       total_count: 1, // 1 means it will charge only one month sub.
     });
@@ -84,7 +84,7 @@ const createSubscription = asyncHandler(async (req, res, next) => {
     statusCode: 201,
     success: true,
     message: "Successfully created Subscription",
-    data: { subscription_id: subscription.id },
+    data: { subscription_id: user.subscription.id },
   });
 });
 
