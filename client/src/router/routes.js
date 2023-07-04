@@ -19,75 +19,96 @@ import Logout from "../pages/SignIn/Logout.jsx";
 import ForgotPassword from "../pages/SignIn/ForgetPassword.jsx";
 import SignInHelp from "../pages/SignIn/SignInHelp.jsx";
 import ResetPassword from "../pages/SignIn/ResetPassword.jsx";
+import NotRequireAuth from "../components/auth/NotRequireAuth.jsx";
+import RequireAuth from "../components/auth/RequireAuth.jsx";
 
 const router = createBrowserRouter([
+  // for open routes
   {
     path: "/",
     element: <Home />,
   },
   {
-    path: "/signup",
-    element: <SignUp />,
-    children: [],
-  },
-  {
-    path: "/signup/registration",
-    element: <UserRegistration />,
-  },
-  {
-    path: "/signup/checkplan",
-    element: <CheckPlan />,
-  },
-  {
-    path: "/signup/planform",
-    element: <PlanForm />,
-  },
-  {
-    path: "/signup/paymentSuccess",
-    element: <PaymentSuccess />,
-  },
-  {
-    path: "/signup/paymentfail",
-    element: <PaymentFail />,
-  },
-  {
-    path: "/signin",
-    element: <SignIn />,
-  },
-  {
-    path: "/signin/:email",
-    element: <UserExistLogin />,
-  },
-  {
     path: "/logout",
     element: <Logout />,
   },
+
+  // for routes that do not require auth
   {
-    path: "/password/forget",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "/password/forget/:email",
-    element: <SignInHelp />,
-  },
-  {
-    path: "/reset-password/:token",
-    element: <ResetPassword />,
-  },
-  {
-    path: "/browse",
-    element: <Browse />,
-    children: [],
-  },
-  {
-    path: "/watch/:contentId",
-    element: <Watch />,
-    children: [],
-  },
-  {
-    path: "/admin",
-    element: <Admin />,
+    element: <NotRequireAuth />,
     children: [
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      {
+        path: "/signup/registration",
+        element: <UserRegistration />,
+      },
+      {
+        path: "/signup/checkplan",
+        element: <CheckPlan />,
+      },
+      {
+        path: "/signup/planform",
+        element: <PlanForm />,
+      },
+      {
+        path: "/signup/paymentSuccess",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/signup/paymentfail",
+        element: <PaymentFail />,
+      },
+      {
+        path: "/signin",
+        element: <SignIn />,
+      },
+      {
+        path: "/signin/:email",
+        element: <UserExistLogin />,
+      },
+      {
+        path: "/password/forget",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "/password/forget/:email",
+        element: <SignInHelp />,
+      },
+      {
+        path: "/reset-password/:token",
+        element: <ResetPassword />,
+      },
+    ],
+  },
+
+  // for routes which are for admin and normal user both
+  {
+    element: <RequireAuth allowedRoles={["ADMIN", "USER"]} />,
+    children: [
+      {
+        path: "/browse",
+        element: <Browse />,
+        children: [],
+      },
+      {
+        path: "/watch/:contentId",
+        element: <Watch />,
+        children: [],
+      },
+    ],
+  },
+
+  // for routes which are for admin user
+  {
+    element: <RequireAuth allowedRoles={["ADMIN"]} />,
+    children: [
+      {
+        path: "/admin",
+        element: <Admin />,
+      },
       {
         path: "/admin/dashboard",
         element: <AdminDashboard />,
@@ -102,6 +123,8 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  // for test route
   {
     path: "/test/signin",
     element: <TestSignIn />,
