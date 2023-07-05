@@ -85,6 +85,7 @@ const httpCreateSeason = asyncHandler(async (req, res, next) => {
  * @return { Object } season object
  ********************/
 const httpGetSeasons = asyncHandler(async (req, res, next) => {
+  const { contentId } = req.params;
   const seasons = await Content.find();
   console.log(seasons, "///////seasons//");
 
