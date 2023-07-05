@@ -5,7 +5,7 @@ const initialState = {
   moviesCount: 0,
   seriesCount: 0,
   usersData: {},
-  salesStats: 0
+  salesStats: 0,
 };
 
 export const getMoviesData = createAsyncThunk(
@@ -13,7 +13,7 @@ export const getMoviesData = createAsyncThunk(
   async () => {
     try {
       const response = await axiosInstance.get("/admin/movies-stats");
-      return response;
+      return response.data;
     } catch (error) {
       //   return rejectWithValue(error);
     }
@@ -25,8 +25,7 @@ export const getSeriesData = createAsyncThunk(
   async () => {
     try {
       const response = await axiosInstance.get("/admin/series-stats");
-      console.log(response, "ppp");
-      return response;
+      return response.data;
     } catch (error) {
       //   return rejectWithValue(error);
     }
@@ -38,8 +37,21 @@ export const getUsersData = createAsyncThunk(
   async () => {
     try {
       const response = await axiosInstance.get("/admin/users-stats");
-     
-      return response;
+
+      return response.data;
+    } catch (error) {
+      //   return rejectWithValue(error);
+    }
+  }
+);
+
+export const getSalesStats = createAsyncThunk(
+  "/dashboard/get/sales",
+  async () => {
+    try {
+      const response = await axiosInstance.get("/admin/sales-stats");
+      console.log(response)
+      return response.data;
     } catch (error) {
       //   return rejectWithValue(error);
     }
@@ -84,6 +96,19 @@ export const dashboardSlice = createSlice({
         state.loading = false;
       })
       .addCase(getUsersData.rejected, (state) => {
+        state.loading = false;
+      })
+      //for salesStats
+      .addCase(getSalesStats.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSalesStats.fulfilled, (state, action) => {
+      
+        state.salesStats = action?.payload;
+          console.log(state.salesStats, "//////////////////");
+        state.loading = false;
+      })
+      .addCase(getSalesStats.rejected, (state) => {
         state.loading = false;
       });
   },

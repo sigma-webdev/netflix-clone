@@ -12,13 +12,13 @@ const PieChart = () => {
   const data = {
     labels:
       Object.keys(usersData).length &&
-      Object.keys(usersData?.data?.data?.plans),
+      Object.keys(usersData?.data?.plans),
     datasets: [
       {
         label: "Popularity",
         data:
           Object.keys(usersData).length &&
-          Object.values(usersData?.data?.data?.plans),
+          Object.values(usersData?.data?.plans),
         backgroundColor: [
           "#f44336",
           "#9c27b0",
