@@ -5,7 +5,8 @@ import axiosInstance from "../helpers/axiosInstance";
 const initialState ={
     filteredContent: [],
     currentContent:{},
-    isLoading: false
+    isLoading: false,
+    isUploading: false
 }
 
 
@@ -55,7 +56,7 @@ export const fetchContentById = createAsyncThunk(
       try {
         const url = searchText ? `/contents?search=${searchText}` :`/contents?page=${pageNo}&limit=5`
         const response = await axiosInstance.get(url);
-  
+        
         const data = response.data.data;
         console.log(data,'///by search')
     
@@ -86,7 +87,7 @@ export const fetchContentById = createAsyncThunk(
   //  update content by id
   export const updateContentById = createAsyncThunk(
     "content/updateContentById",
-    async ( {id, newData} , { rejectWithValue }) => {
+    async ( {id, newData} , { rejectWithValue, dispatch }) => {
       let progress = 0;
       console.log("called updar", newData, "//////", id);
       try {
@@ -95,11 +96,14 @@ export const fetchContentById = createAsyncThunk(
           newData,
           {
             onUploadProgress: (progressEvent) => {
+              console.log(progressEvent,'//progress event')
               progress = Math.round(
                 (progressEvent.loaded / progressEvent.total) * 100
               );
+              dispatch(updateContentProgress(progress));
             },
           }
+
         );
         const data = response.data.data;
           console.log({ ...data, progress },"//ress")
@@ -111,7 +115,9 @@ export const fetchContentById = createAsyncThunk(
     }
   );
   
-
+  export const updateContentProgress = (progress) => {
+    return { type: "content/updateProgress", payload: progress };
+  };
   // delete content by id
   export const deleteContentById = createAsyncThunk(
     "content/deleteContentById",
@@ -199,6 +205,7 @@ export const adminSlice = createSlice({
       // update content by id
       .addCase(updateContentById.pending, (state) => {
         state.isLoading = true;
+        // state.isUploading=true;
       })
       .addCase(updateContentById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
@@ -211,9 +218,11 @@ export const adminSlice = createSlice({
         //     )
         //   );
         state.isLoading = false;
+        // state.isLoading = false;
       })
       .addCase(updateContentById.rejected, (state) => {
         state.isLoading = false;
+        // state.isUploading = false;
       })
     }
 })

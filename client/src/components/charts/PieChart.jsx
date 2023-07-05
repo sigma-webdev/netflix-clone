@@ -1,23 +1,39 @@
-import React from "react";
-import {  Pie } from "react-chartjs-2";
-import { Chart as ChartJs } from "chart.js/auto";
 
-const data = {
-  labels: ["Plan1", "Plan2", "Plan3", "Plan4"],
-  datasets: [
-    {
-      label: "Popularity",
-      data: [40, 23, 12, 6, 9],
-      backgroundColor: ["#f44336", "#9c27b0", "#03a9f4", "#8bc34a", "#ffc107"],
-      borderColor: "#f44336",
-      borderWidth: 1,
-    },
-  ],
-};
+import { Pie } from "react-chartjs-2";
+
+
+import { useSelector } from "react-redux";
 
 const PieChart = () => {
+
+  const usersData = useSelector((state) => state.dashboard.usersData);
+
+ 
+  const data = {
+    labels:
+      Object.keys(usersData).length &&
+      Object.keys(usersData?.data?.data?.plans),
+    datasets: [
+      {
+        label: "Popularity",
+        data:
+          Object.keys(usersData).length &&
+          Object.values(usersData?.data?.data?.plans),
+        backgroundColor: [
+          "#f44336",
+          "#9c27b0",
+          "#03a9f4",
+          "#8bc34a",
+          "#ffc107",
+        ],
+        borderColor: "#f44336",
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
-    <div className="w-[450px] h-[450px]">
+    <div className="h-[450px] w-[450px]">
       <Pie data={data} />
     </div>
   );

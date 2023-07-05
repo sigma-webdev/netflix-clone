@@ -4,18 +4,18 @@ import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
   currentContent: null,
-  allContent: [],
   searchContent: [],
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
   mostLikedContent: [],
   contentByCountryOrigin: {},
-  loading: false,
+  watchedContent: [],
   trendingContentLoading: false,
   latestContentLoading: false,
   mostLikedContentLoading: false,
   countryOriginContentLoading: false,
+  watchContentLoading: false,
   likeDisLikeLoading: false,
 };
 
@@ -167,6 +167,37 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
       });
 
       return { countryOrigin, contentsObject };
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByWatchHistory = createAsyncThunk(
+  "content/fetchContentByWatch",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/users/watch-history`);
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const addContentToWatchHistory = createAsyncThunk(
+  "content/addContentByWatch",
+  async (contentId, { rejectWithValue }) => {
+    try {
+      await axiosInstance.patch(`/users/watch-history/${contentId}`);
+
+      return contentId;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -325,8 +356,43 @@ export const contentSlice = createSlice({
         state.countryOriginContentLoading = false;
       })
       .addCase(fetchContentByCountryOrigin.rejected, (state) => {
-        state.contentByCountryOrigin = [];
+        state.contentByCountryOrigin = {};
         state.countryOriginContentLoading = false;
+      })
+
+      //fetch watch content
+      .addCase(fetchContentByWatchHistory.pending, (state) => {
+        state.watchContentLoading = true;
+      })
+      .addCase(fetchContentByWatchHistory.fulfilled, (state, action) => {
+        state.watchedContent = action.payload;
+        state.watchContentLoading = false;
+      })
+      .addCase(fetchContentByWatchHistory.rejected, (state) => {
+        state.watchedContent = [];
+        state.watchContentLoading = false;
+      })
+
+      //add watch content
+      .addCase(addContentToWatchHistory.pending, (state) => {
+        state.watchContentLoading = true;
+      })
+      .addCase(addContentToWatchHistory.fulfilled, (state, action) => {
+        const watchContentId = action.payload;
+
+        const watchContent = state.watchedContent.find(
+          (item) => item.contentId === watchContentId
+        );
+
+        if (!watchContent) {
+          state.watchedContent.push(watchContent);
+        }
+
+        state.watchedContent = state.watchContentLoading = false;
+      })
+      .addCase(addContentToWatchHistory.rejected, (state) => {
+        state.watchedContent = [];
+        state.watchContentLoading = false;
       })
 
       //like content
