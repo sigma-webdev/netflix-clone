@@ -5,8 +5,8 @@ import authReducer from "./authSlice.js";
 import razorpayReducer from "./razorpaySlice";
 import adminSlice from "./adminSlice";
 import adminPlansSlice from "./adminPlansSlice";
-
 import dashboardSlice from "./dashboardSlice";
+
 export const store = configureStore({
   reducer: {
     admin: adminSlice,
