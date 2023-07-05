@@ -102,7 +102,7 @@ const getSeasons = asyncHandler(async (req, res, next) => {
 
 /********************
  * @getSeasonsById
- * @route http://localhost:8081/api/v1/contents/season/seasonId
+ * @route http://localhost:8081/api/v1/contents/seasons/seasonId
  * @description  controller to read single seasons with id
  * @parameters {request body object}
  * @return { Object } season object
@@ -130,17 +130,16 @@ const getSeasonsById = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpDeleteSeasons
- * @route http://localhost:8081/api/v1/seasons/seasonId
+ * @deleteSeason
+ * @route http://localhost:8081/api/v1/contents/seasons/seasonId
  * @description  controller to delete single seasons with id
  * @parameters {season id}
  * @return { Object } season object
  ********************/
-const httpDeleteSeason = asyncHandler(async (req, res, next) => {
+const deleteSeason = asyncHandler(async (req, res, next) => {
   const { seasonId } = req.params;
 
   const seasons = await seasonModel.findByIdAndDelete(seasonId);
-  console.log("seasons --------", seasons);
 
   if (!seasons) {
     return next(new CustomError("Season Not found", 400));
@@ -155,7 +154,7 @@ const httpDeleteSeason = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpUpdateSeason
+ * @updateSeason
  * @route http://localhost:8081/api/v1/contents/seasons/seasonId
  * @description  controller to update single seasons with id
  * @parameters {season id}
@@ -212,6 +211,6 @@ module.exports = {
   createSeason,
   getSeasons,
   getSeasonsById,
-  httpDeleteSeason,
+  deleteSeason,
   updateSeason,
 };

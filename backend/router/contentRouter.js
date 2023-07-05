@@ -16,6 +16,7 @@ const {
   getSeasons,
   getSeasonsById,
   updateSeason,
+  deleteSeason,
 } = require("../controller/seasonController");
 
 const contentRoute = express.Router();
@@ -73,6 +74,7 @@ contentRoute
     checkUserSubscription,
     getSeasonsById
   )
-  .put(jwtAuth, authorizeRoles("ADMIN"), updateSeason);
+  .put(jwtAuth, authorizeRoles("ADMIN"), updateSeason)
+  .delete(jwtAuth, authorizeRoles("ADMIN"), deleteSeason);
 
 module.exports = contentRoute;
