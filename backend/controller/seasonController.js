@@ -4,13 +4,13 @@ const seasonModel = require("../model/seasonSchema");
 const CustomError = require("../utils/customError");
 
 /********************
- * @httpPostContent
+ * @createSeason
  * @route http://localhost:8081/api/v1/contents/contentId
  * @description  controller to create the season
  * @parameters {request body object}
  * @return { Object } season object
  ********************/
-const httpCreateSeason = asyncHandler(async (req, res, next) => {
+const createSeason = asyncHandler(async (req, res, next) => {
   // get required field from body
   const { seasonNumber, seasonSummary } = req.body;
 
@@ -78,20 +78,19 @@ const httpCreateSeason = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpGetSeasons
- * @route http://localhost:8081/api/v1/contents/contentId/season
+ * @getSeasons
+ * @route http://localhost:8081/api/v1/contents/seriesId/seasons/
  * @description  controller to read all the seasons
  * @parameters {request body object}
  * @return { Object } season object
  ********************/
-const httpGetSeasons = asyncHandler(async (req, res, next) => {
-  const { contentId } = req.params;
-  const seasons = await Content.find();
-  console.log(seasons, "///////seasons//");
-
-  if (!seasons) {
-    return next(new CustomError("Seasons data not able to fetch!", 500));
-  }
+const getSeasons = asyncHandler(async (req, res, next) => {
+  const { seriesId } = req.params;
+  const seasons = await Content.findById(seriesId).populate([
+    {
+      path: "contentSeries",
+    },
+  ]);
 
   return res.status(200).json({
     statusCode: 200,
@@ -198,8 +197,8 @@ const httpUpdateSeason = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = {
-  httpCreateSeason,
-  httpGetSeasons,
+  createSeason,
+  getSeasons,
   httpGetSeasonById,
   httpDeleteSeason,
   httpUpdateSeason,

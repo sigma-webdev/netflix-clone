@@ -1,5 +1,5 @@
 const CustomError = require("../utils/customError.js");
-const Content = require("../model/contentSchema.js");
+const contentModel = require("../model/contentSchema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const getContentLength = require("../utils/getVideoLength.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
@@ -99,7 +99,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   }
 
   // create mongoose
-  const contentDetails = new Content(details);
+  const contentDetails = new contentModel(details);
 
   const contentData = await contentDetails.save();
   contentData.contentType === "Movie"
@@ -181,7 +181,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   }
 
   // pagination
-  const totalContents = await Content.find(query).countDocuments();
+  const totalContents = await contentModel.find(query).countDocuments();
 
   const result = {};
 
@@ -207,7 +207,8 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   }
 
   // find all content and search all content
-  result.contents = await Content.find(query)
+  result.contents = await contentModel
+    .find(query)
     .skip(startIndex)
     .limit(LIMIT)
     .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
@@ -233,7 +234,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 const httpGetContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
-  const contentData = await Content.findById(contentId);
+  const contentData = await contentModel.findById(contentId);
 
   if (!contentData) {
     return next(
@@ -313,7 +314,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   const { body, files } = req;
 
   // check for the availability of content
-  const contentData = await Content.findById(contentId);
+  const contentData = await contentModel.findById(contentId);
 
   if (!contentData) {
     return next(
@@ -359,31 +360,33 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     }
   }
 
-  const updatedData = await Content.findByIdAndUpdate(
-    contentId,
-    { $set: { ...body, ...contentFiles } },
-    {
-      new: true,
-      runValidators: true,
-    }
-  ).catch((error) => {
-    // DELETE File passing particularId
-    if (contentFiles.trailer) {
-      contentData?.trailer.map((trailerObj) =>
-        cloudinaryFileDelete(trailerObj.trailerId, next)
-      );
-    }
-    if (contentFiles.content) {
-      cloudinaryFileDelete(contentFiles.content?.contentID, next);
-    }
-    if (contentFiles.thumbnail) {
-      contentData?.thumbnail.map((thumbObj) =>
-        cloudinaryFileDelete(thumbObj.thumbnailID, next, "image")
-      );
-    }
+  const updatedData = await contentModel
+    .findByIdAndUpdate(
+      contentId,
+      { $set: { ...body, ...contentFiles } },
+      {
+        new: true,
+        runValidators: true,
+      }
+    )
+    .catch((error) => {
+      // DELETE File passing particularId
+      if (contentFiles.trailer) {
+        contentData?.trailer.map((trailerObj) =>
+          cloudinaryFileDelete(trailerObj.trailerId, next)
+        );
+      }
+      if (contentFiles.content) {
+        cloudinaryFileDelete(contentFiles.content?.contentID, next);
+      }
+      if (contentFiles.thumbnail) {
+        contentData?.thumbnail.map((thumbObj) =>
+          cloudinaryFileDelete(thumbObj.thumbnailID, next, "image")
+        );
+      }
 
-    return next(new CustomError(`File not able to save!- ${error}`, 500));
-  });
+      return next(new CustomError(`File not able to save!- ${error}`, 500));
+    });
 
   if (!updatedData) {
     return next(
@@ -410,7 +413,7 @@ const contentLikes = asyncHandler(async (req, res, next) => {
   const { contentId, action } = req.params;
   const { id: userId } = req.user;
 
-  const content = await Content.findById(contentId);
+  const content = await contentModel.findById(contentId);
 
   if (!content) {
     return next(new CustomError("Content is not available", 404));

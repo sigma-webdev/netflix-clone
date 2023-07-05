@@ -11,10 +11,7 @@ const {
 const jwtAuth = require("../middleware/jwtAuth");
 const authorizeRoles = require("../middleware/authorizeRoles");
 const checkUserSubscription = require("../middleware/checkUserSubscription");
-const {
-  httpCreateSeason,
-  httpGetSeasons,
-} = require("../controller/seasonController");
+const { createSeason, getSeasons } = require("../controller/seasonController");
 
 const contentRoute = express.Router();
 // like & dislike routes --
@@ -52,12 +49,12 @@ contentRoute
 
 // season routes ----
 contentRoute
-  .route("/:contentId/seasons")
-  .post(jwtAuth, authorizeRoles("ADMIN"), httpCreateSeason)
+  .route("/:seriesId/seasons")
+  .post(jwtAuth, authorizeRoles("ADMIN"), createSeason)
   .get(
     jwtAuth,
     authorizeRoles("ADMIN", "USER"),
     checkUserSubscription,
-    httpGetSeasons
+    getSeasons
   );
 module.exports = contentRoute;
