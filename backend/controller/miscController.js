@@ -9,7 +9,9 @@ const plans = ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"];
 const getUsersStatistics = asyncHandler(async (req, res, next) => {
   const users = await userModel.find({}).lean();
 
-  const data = {};
+  const data = {
+    plans: {},
+  };
 
   data.usersCount = users.length;
 
@@ -23,7 +25,7 @@ const getUsersStatistics = asyncHandler(async (req, res, next) => {
   for (let user of users) {
     for (let plan of plans) {
       if (user.plan === plan) {
-        data[plan] = isNaN(data[plan]) ? 1 : data[plan] + 1;
+        data.plans[plan] = isNaN(data.plans[plan]) ? 1 : data.plans[plan] + 1;
       }
     }
   }
