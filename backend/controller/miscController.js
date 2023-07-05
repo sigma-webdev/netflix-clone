@@ -6,6 +6,13 @@ const razorpay = require("../config/razorpayConfig.js");
 
 const plans = ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"];
 
+/**
+ * @GET_USER_STATS
+ * @DESCRIPTION Returns Object with usersCount, usersCountWithActiveSubscription, usersCountAccordingToPlanPurchased
+ * @METHOD GET
+ * @ROUTE /api/v1/admin/users-stats
+ * @ACCESS ADMIN ONLY
+ */
 const getUsersStatistics = asyncHandler(async (req, res, next) => {
   const users = await userModel.find({}).lean();
 
@@ -36,6 +43,13 @@ const getUsersStatistics = asyncHandler(async (req, res, next) => {
   });
 });
 
+/**
+ * @GET_MOVIE_STATS
+ * @DESCRIPTION Returns Object with moviesCount
+ * @METHOD GET
+ * @ROUTE /api/v1/admin/movies-stats
+ * @ACCESS ADMIN ONLY
+ */
 const getMoviesStatistics = asyncHandler(async (req, res, next) => {
   const moviesCount = await contentModel
     .find({ contentType: "Movie" })
@@ -52,6 +66,13 @@ const getMoviesStatistics = asyncHandler(async (req, res, next) => {
   });
 });
 
+/**
+ * @GET_USER_STATS
+ * @DESCRIPTION Returns Object with seriesCount
+ * @METHOD GET
+ * @ROUTE /api/v1/admin/series-stats
+ * @ACCESS ADMIN ONLY
+ */
 const getSeriesStatistics = asyncHandler(async (req, res, next) => {
   const seriesCount = await contentModel
     .find({ contentType: "Series" })
@@ -68,6 +89,14 @@ const getSeriesStatistics = asyncHandler(async (req, res, next) => {
   });
 });
 
+/**
+ * @GET_USER_STATS
+ * @DESCRIPTION Returns Object with seriesCount
+ * @QUERY startDate, endDate (Should be in format, YYYY-MM-DD)
+ * @METHOD GET
+ * @ROUTE /api/v1/admin/series-stats
+ * @ACCESS ADMIN ONLY
+ */
 const getPaymentStatistics = asyncHandler(async (req, res, next) => {
   // Calculate the start and end dates for the desired month
   const currentDate = new Date();
@@ -103,14 +132,6 @@ const getPaymentStatistics = asyncHandler(async (req, res, next) => {
     message: "Successfully fetched the subscriptions",
     data: result,
   });
-  // } catch (error) {
-  //   return next(
-  //     new CustomError(
-  //       error.description || "Something went wrong, please try again later.",
-  //       500
-  //     )
-  //   );
-  // }
 });
 
 module.exports = {
