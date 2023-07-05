@@ -12,6 +12,8 @@ const initialState ={
 
 
 
+
+// fetch all content
 export const fetchAllContent = createAsyncThunk(
     "content/fetchContent",
     async ({ rejectWithValue }) => {
@@ -27,7 +29,7 @@ export const fetchAllContent = createAsyncThunk(
     }
   );
   
-
+// fetch content by id
 export const fetchContentById = createAsyncThunk(
     "content/fetchContentById",
     async ({ contentId }, { rejectWithValue }) => {
@@ -46,6 +48,7 @@ export const fetchContentById = createAsyncThunk(
     }
   );
   
+  // fetch content by search text
   export const fetchContentBySearch = createAsyncThunk(
     "content/fetchContentBySearch",
     async ({pageNo, searchText }, { rejectWithValue }) => {
@@ -63,6 +66,7 @@ export const fetchContentById = createAsyncThunk(
     }
   );
 
+  //  add new content 
   export const addNewContent = createAsyncThunk(
     "content/addNewContent",
     async (newContent, { rejectWithValue }) => {
@@ -79,15 +83,16 @@ export const fetchContentById = createAsyncThunk(
     }
   );
   
+  //  update content by id
   export const updateContentById = createAsyncThunk(
     "content/updateContentById",
-    async ({ id, sentFormData }, { rejectWithValue }) => {
+    async ( {id, newData} , { rejectWithValue }) => {
       let progress = 0;
-      console.log("called updar", sentFormData, "//////", id);
+      console.log("called updar", newData, "//////", id);
       try {
         const response = await axiosInstance.put(
           `/contents/${id}`,
-          sentFormData,
+          newData,
           {
             onUploadProgress: (progressEvent) => {
               progress = Math.round(
@@ -97,14 +102,17 @@ export const fetchContentById = createAsyncThunk(
           }
         );
         const data = response.data.data;
-  
+          console.log({ ...data, progress },"//ress")
         return { ...data, progress };
       } catch (error) {
-        return rejectWithValue(error.response.data);
+        console.log(error,'errorrrr//')
+        return rejectWithValue(error.response);
       }
     }
   );
   
+
+  // delete content by id
   export const deleteContentById = createAsyncThunk(
     "content/deleteContentById",
     async (contentId, { rejectWithValue }) => {
@@ -190,19 +198,22 @@ export const adminSlice = createSlice({
 
       // update content by id
       .addCase(updateContentById.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
       })
       .addCase(updateContentById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
-        const newAllContent = state.allContent.map((content) =>
-          content._id === updatedContent._id ? updatedContent : content
-        );
-        state.allContent = newAllContent;
-        state.loading = false;
+        state.currentContent = updatedContent;
+
+        //have to fix filtered content state
+
+        // state.filteredContent = state.filteredContent.map((content) => (
+        //     content._id === updatedContent._id ? updatedContent : content 
+        //     )
+        //   );
+        state.isLoading = false;
       })
       .addCase(updateContentById.rejected, (state) => {
-        state.allContent = [];
-        state.loading = false;
+        state.isLoading = false;
       })
     }
 })
