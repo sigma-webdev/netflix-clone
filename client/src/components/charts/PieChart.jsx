@@ -1,17 +1,24 @@
-import React from "react";
+
 import { Pie } from "react-chartjs-2";
+
 
 import { useSelector } from "react-redux";
 
 const PieChart = () => {
+
   const usersData = useSelector((state) => state.dashboard.usersData);
 
+ 
   const data = {
-    labels: Object.keys(usersData?.data?.data?.plans),
+    labels:
+      Object.keys(usersData).length &&
+      Object.keys(usersData?.data?.data?.plans),
     datasets: [
       {
         label: "Popularity",
-        data: Object.values(usersData?.data?.data?.plans),
+        data:
+          Object.keys(usersData).length &&
+          Object.values(usersData?.data?.data?.plans),
         backgroundColor: [
           "#f44336",
           "#9c27b0",
