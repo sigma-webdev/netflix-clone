@@ -3,7 +3,8 @@ import contentReducer from "./contentSlice";
 import userReducer from "./userSlice";
 import authReducer from "./authSlice.js";
 import razorpayReducer from "./razorpaySlice";
-import  adminSlice  from "./adminSlice";
+import adminSlice from "./adminSlice";
+import adminPlansSlice from "./adminPlansSlice";
 
 import dashboardSlice from "./dashboardSlice";
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     user: userReducer,
     auth: authReducer,
     razorpay: razorpayReducer,
-    dashboard: dashboardSlice
-  }
+    plans: adminPlansSlice,
+    dashboard: dashboardSlice,
+  },
 });
