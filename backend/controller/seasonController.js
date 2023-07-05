@@ -1,5 +1,5 @@
 const asyncHandler = require("../middleware/asyncHandler");
-const Content = require("../model/contentSchema");
+const contentModel = require("../model/contentSchema");
 const seasonModel = require("../model/seasonSchema");
 const CustomError = require("../utils/customError");
 
@@ -15,13 +15,16 @@ const createSeason = asyncHandler(async (req, res, next) => {
   const { seasonNumber, seasonSummary } = req.body;
 
   // make sure series is available
-  const { contentId } = req.params;
+  const { seriesId } = req.params;
 
-  const seriesData = await Content.findById(contentId);
+  const seriesData = await contentModel.findById(seriesId);
 
   if (!seriesData) {
     return next(
-      new CustomError("Data not available for the provided data", 404)
+      new CustomError(
+        "Data not available for the provided data, for the provided Id",
+        404
+      )
     );
   }
 
@@ -86,7 +89,7 @@ const createSeason = asyncHandler(async (req, res, next) => {
  ********************/
 const getSeasons = asyncHandler(async (req, res, next) => {
   const { seriesId } = req.params;
-  const seasons = await Content.findById(seriesId).populate([
+  const seasons = await contentModel.findById(seriesId).populate([
     {
       path: "contentSeries",
     },
@@ -177,7 +180,6 @@ const updateSeason = asyncHandler(async (req, res, next) => {
   let seasonPresent = false;
 
   for (const season of seasonData) {
-    console.log("season-------", season);
     if (season.seasonNumber === seasonNumber) {
       seasonPresent = true;
       return next(new CustomError("Season number already exist!", 400));
