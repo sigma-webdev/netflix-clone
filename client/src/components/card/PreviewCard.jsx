@@ -2,7 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { dislikeContent, likeContent } from "../../store/contentSlice";
+import {
+  addContentByWatch,
+  dislikeContent,
+  likeContent,
+} from "../../store/contentSlice";
 import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
 
@@ -47,6 +51,7 @@ const PreviewCard = ({
   };
 
   const handlePlay = (contentId) => {
+    dispatch(addContentByWatch(contentId));
     navigate(`/watch/${contentId}`);
   };
 

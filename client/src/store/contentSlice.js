@@ -4,7 +4,6 @@ import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
   currentContent: null,
-  allContent: [],
   searchContent: [],
   filteredContent: [],
   trendingContent: [],
@@ -12,7 +11,6 @@ const initialState = {
   mostLikedContent: [],
   contentByCountryOrigin: {},
   watchedContent: [],
-  loading: false,
   trendingContentLoading: false,
   latestContentLoading: false,
   mostLikedContentLoading: false,
@@ -193,6 +191,19 @@ export const fetchContentByWatch = createAsyncThunk(
   }
 );
 
+export const addContentByWatch = createAsyncThunk(
+  "content/addContentByWatch",
+  async (contentId, { rejectWithValue }) => {
+    try {
+      await axiosInstance.patch(`/users/watch-history/${contentId}`);
+
+      return contentId;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const likeContent = createAsyncThunk(
   "content/likeContent",
   async ({ contentId, userId }, { rejectWithValue }) => {
@@ -358,6 +369,28 @@ export const contentSlice = createSlice({
         state.watchContentLoading = false;
       })
       .addCase(fetchContentByWatch.rejected, (state) => {
+        state.watchedContent = [];
+        state.watchContentLoading = false;
+      })
+
+      //add watch content
+      .addCase(addContentByWatch.pending, (state) => {
+        state.watchContentLoading = true;
+      })
+      .addCase(addContentByWatch.fulfilled, (state, action) => {
+        const watchContentId = action.payload;
+
+        const watchContent = state.watchedContent.find(
+          (item) => item.contentId === watchContentId
+        );
+
+        if (!watchContent) {
+          state.watchedContent.push(watchContent);
+        }
+
+        state.watchedContent = state.watchContentLoading = false;
+      })
+      .addCase(addContentByWatch.rejected, (state) => {
         state.watchedContent = [];
         state.watchContentLoading = false;
       })
