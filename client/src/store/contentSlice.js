@@ -427,11 +427,16 @@ export const contentSlice = createSlice({
             );
         });
 
+        const newWatchedContent = state.watchedContent.map((content) =>
+          content.contentId === likedContentId ? likedContent : content
+        );
+
         state.filteredContent = newFilteredContent;
         state.latestContent = newLatestContent;
         state.trendingContent = newtrendingContent;
         state.mostLikedContent = newMostLikedContent;
         state.contentByCountryOrigin = newContentByCountryOrigin;
+        state.watchedContent = newWatchedContent;
         state.likeDisLikeLoading = false;
       })
       .addCase(likeContent.rejected, (state) => {
@@ -472,11 +477,16 @@ export const contentSlice = createSlice({
             );
         });
 
+        const newWatchedContent = state.watchedContent.map((content) =>
+          content.contentId === dislikedContentId ? dislikedContent : content
+        );
+
         state.filteredContent = newFilteredContent;
         state.latestContent = newLatestContent;
         state.trendingContent = newtrendingContent;
         state.mostLikedContent = newMostLikedContent;
         state.contentByCountryOrigin = newContentByCountryOrigin;
+        state.watchedContent = newWatchedContent;
         state.likeDisLikeLoading = false;
       })
       .addCase(dislikeContent.rejected, (state) => {
