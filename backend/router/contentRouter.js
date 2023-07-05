@@ -18,6 +18,10 @@ const {
   updateSeason,
   deleteSeason,
 } = require("../controller/seasonController");
+const {
+  createEpisode,
+  getEpisode,
+} = require("../controller/episodeController");
 
 const contentRoute = express.Router();
 // like & dislike routes --
@@ -76,5 +80,20 @@ contentRoute
   )
   .put(jwtAuth, authorizeRoles("ADMIN"), updateSeason)
   .delete(jwtAuth, authorizeRoles("ADMIN"), deleteSeason);
+
+//////// create/add episode ////////////
+contentRoute
+  .route("/:seriesId/:seasonId/episodes")
+  .post(jwtAuth, authorizeRoles("ADMIN"), createEpisode);
+
+// get episodes
+contentRoute
+  .route("/:seasonId/episodes")
+  .get(
+    jwtAuth,
+    authorizeRoles("ADMIN", "USER"),
+    checkUserSubscription,
+    getEpisode
+  );
 
 module.exports = contentRoute;

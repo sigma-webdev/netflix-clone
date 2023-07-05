@@ -18,18 +18,27 @@ const episodeSchema = new Schema(
       {
         episodePublicId: {
           type: String,
-          required: [true, "Episode Public Id is required!"],
         },
         episodeSecureUrl: {
           type: String,
-          required: [true, "Episode Secure Url is required"],
         },
       },
     ],
     episodeNumber: {
       type: Number,
       required: [true, "Episode Number should be provide"],
-      episodeVideo: String,
+      unique: [true, "episodeNumber should be unique"],
+    },
+    episodeVideo: {
+      episodeVideoPublicId: {
+        type: String,
+      },
+      episodeVideoPublicUrl: {
+        type: String,
+      },
+      duration: {
+        type: Object,
+      },
     },
   },
   { timestamps: true }
