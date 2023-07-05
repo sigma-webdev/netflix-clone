@@ -94,7 +94,7 @@ const getSeriesStatistics = asyncHandler(async (req, res, next) => {
  * @DESCRIPTION Returns Object with seriesCount
  * @QUERY startDate, endDate (Should be in format, YYYY-MM-DD)
  * @METHOD GET
- * @ROUTE /api/v1/admin/series-stats
+ * @ROUTE /api/v1/admin/sales-stats
  * @ACCESS ADMIN ONLY
  */
 const getPaymentStatistics = asyncHandler(async (req, res, next) => {
