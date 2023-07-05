@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +26,7 @@ const PreviewCard = ({
   );
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
@@ -45,6 +46,10 @@ const PreviewCard = ({
     dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
   };
 
+  const handlePlay = (contentId) => {
+    navigate(`/watch/${contentId}`);
+  };
+
   return (
     <div className="group w-48 scale-100 rounded drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
       {/* preview video*/}
@@ -62,9 +67,9 @@ const PreviewCard = ({
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
-              <Link to={`/watch/${contentId}`}>
+              <button onClick={() => handlePlay(contentId)}>
                 <PlayIcon />
-              </Link>
+              </button>
             </div>
             <button
               onClick={likeContentHanlder}
