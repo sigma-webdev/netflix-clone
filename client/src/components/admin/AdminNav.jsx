@@ -1,5 +1,10 @@
 import React from "react";
-import { HiHome, HiUserGroup, HiServer } from "react-icons/hi";
+import {
+  HiHome,
+  HiUserGroup,
+  HiServer,
+  HiPresentationChartLine,
+} from "react-icons/hi";
 import { Link, NavLink } from "react-router-dom";
 import netflixLogo from "../../assets/netflix_logo.png";
 
@@ -52,6 +57,20 @@ const AdminNav = () => {
             >
               <HiServer />
               <p className="ml-2">Manage Contents</p>
+            </li>
+          )}
+        </NavLink>
+        <NavLink to="/admin/manageplans">
+          {({ isActive }) => (
+            <li
+              className={
+                isActive
+                  ? "flex cursor-pointer items-center border-white bg-[#E50914] px-2 py-4 font-bold  text-white"
+                  : " flex cursor-pointer items-center px-2 py-4 hover:bg-[#e509143b]"
+              }
+            >
+              <HiPresentationChartLine />
+              <p className="ml-2">Manage Plans</p>
             </li>
           )}
         </NavLink>
