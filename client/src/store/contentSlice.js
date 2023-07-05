@@ -11,11 +11,13 @@ const initialState = {
   latestContent: [],
   mostLikedContent: [],
   contentByCountryOrigin: {},
+  watchedContent: [],
   loading: false,
   trendingContentLoading: false,
   latestContentLoading: false,
   mostLikedContentLoading: false,
   countryOriginContentLoading: false,
+  watchContentLoading: false,
   likeDisLikeLoading: false,
 };
 
@@ -167,6 +169,24 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
       });
 
       return { countryOrigin, contentsObject };
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchContentByWatch = createAsyncThunk(
+  "content/fetchContentByWatch",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/users/watch-history`);
+
+      const data = response.data.data.contents;
+      const contentsObject = data.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentsObject;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -325,8 +345,21 @@ export const contentSlice = createSlice({
         state.countryOriginContentLoading = false;
       })
       .addCase(fetchContentByCountryOrigin.rejected, (state) => {
-        state.contentByCountryOrigin = [];
+        state.contentByCountryOrigin = {};
         state.countryOriginContentLoading = false;
+      })
+
+      //fetch watch content
+      .addCase(fetchContentByWatch.pending, (state) => {
+        state.watchContentLoading = true;
+      })
+      .addCase(fetchContentByWatch.fulfilled, (state, action) => {
+        state.watchedContent = action.payload;
+        state.watchContentLoading = false;
+      })
+      .addCase(fetchContentByWatch.rejected, (state) => {
+        state.watchedContent = [];
+        state.watchContentLoading = false;
       })
 
       //like content

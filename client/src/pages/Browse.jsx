@@ -13,6 +13,7 @@ import {
   fetchContentByLatest,
   fetchContentByMostLiked,
   fetchContentByTrending,
+  fetchContentByWatch,
 } from "../store/contentSlice";
 import { RiPlayMiniFill } from "react-icons/ri";
 import PreviewCard from "../components/card/PreviewCard";
@@ -31,6 +32,7 @@ const Browse = () => {
   const contentByCountryOrigin = useSelector(
     (state) => state.content.contentByCountryOrigin
   );
+  const watchedContent = useSelector((state) => state.content.watchedContent);
 
   const loading = useSelector((state) => state.content.loading);
   const trendingContentLoading = useSelector(
@@ -44,6 +46,9 @@ const Browse = () => {
   );
   const countryOriginContentLoading = useSelector(
     (state) => state.content.countryOriginContentLoading
+  );
+  const watchContentLoading = useSelector(
+    (state) => state.content.watchContentLoading
   );
 
   const dispatch = useDispatch();
@@ -65,7 +70,10 @@ const Browse = () => {
         countryOrigin: "India",
       })
     );
+    dispatch(fetchContentByWatch("64789b082f388ccff2e33eaa"));
   }, [dispatch]);
+
+  console.log(watchedContent);
 
   return (
     <Layout isLogin={true}>
@@ -150,19 +158,19 @@ const Browse = () => {
             )}
           </div>
 
-          {/* browse filtered content */}
+          {/* browse watch content */}
           <div className="bg-netflix-blue pt-4 text-white">
             <div className="px-4 md:px-8">
-              {loading ? (
+              {watchContentLoading ? (
                 <RowContentShimmer />
               ) : (
-                content &&
-                content.length !== 0 && (
+                watchedContent &&
+                watchedContent.length !== 0 && (
                   <>
-                    <h3 className="py-4">All</h3>
+                    <h3 className="py-4">Continue Watching</h3>
                     <div className="space-y-5">
                       <Crousal>
-                        {Array.from(content).map((item) => {
+                        {Array.from(watchedContent).map((item) => {
                           return (
                             <PreviewCard
                               key={item.contentId}
