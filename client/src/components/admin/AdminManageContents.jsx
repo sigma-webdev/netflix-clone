@@ -449,8 +449,8 @@ console.log(isContentLoading)
                   <th className="px-4 py-2">S. No</th>
                   <th className="px-4 py-2 text-center">Name</th>
                   <th className="px-4 py-2">Content Type</th>
-                  <th className="px-4 py-2">Genres</th>
-                  <th className="px-4 py-2">Status</th>
+                  <th className="px-4 py-2">Language</th>
+                  <th className="px-4 py-2">Origin</th>
                   <th className="px-4 py-2 text-center">Action</th>
                 </tr>
               </thead>
@@ -473,8 +473,8 @@ console.log(isContentLoading)
                         {content.name}
                       </td>
                       <td className="px-4 py-3">{content.contentType}</td>
-                      <td className="px-4 py-3">{content.genres}</td>
-                      <td className="px-4 py-3">{content.genres}</td>
+                      <td className="px-4 py-3">{content.language}</td>
+                      <td className="px-4 py-3">{content.originCountry}</td>
                       <td className="px-4 py-2">
                         <Link to={`${content._id}`}>
                           <div className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]">
