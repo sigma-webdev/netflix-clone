@@ -142,4 +142,33 @@ const getEpisode = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { createEpisode, getEpisode };
+/********************
+ * @episodeGetById
+ * @route http://localhost:8081/api/v1/contents/episode/episodeId
+ * @description  controller to get a specific episode
+ * @parameters {request body object}
+ * @return { ObjectId } episodeId
+ ********************/
+const episodeGetById = asyncHandler(async (req, res, next) => {
+  const { episodeId } = req.params;
+
+  const episode = await episodeModel.findById(episodeId);
+
+  if (!episode) {
+    return next(
+      new CustomError(
+        "Episode data not able to fetch! for the given season Id",
+        400
+      )
+    );
+  }
+
+  return res.status(200).json({
+    statusCode: 200,
+    message: "Episode fetch successfully",
+    success: true,
+    data: episode,
+  });
+});
+
+module.exports = { createEpisode, getEpisode, episodeGetById };
