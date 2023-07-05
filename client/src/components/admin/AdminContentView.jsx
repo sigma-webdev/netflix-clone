@@ -17,7 +17,8 @@ const AdminContentView = () => {
   const isLoading = useSelector((state) => state.admin.isLoading);
   const [isUploading, setIsUploading] = useState(false);
   const [castInput,setCastInput] = useState('')
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const progress = useSelector(state=> state.admin.currentContent.progress)  || 0
+  // const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [editedContentData, setEditedContentData] = useState({});
@@ -29,7 +30,11 @@ const AdminContentView = () => {
   useEffect(() => {
     dispatch(fetchContentById({ contentId: params.contentId}));
   }, []);
+  useEffect(()=>{
 
+    console.log(progress)
+
+  },[progress])
 
   useEffect(()=>{
     setEditedContentData(contentData);
@@ -155,19 +160,7 @@ const AdminContentView = () => {
 
   }
 
-  const handleFileChange = (event, name) => {
-    console.log(event.target.files[0], "//////fsd");
-    console.log(name, "////name");
-    setIsUploading(true);
-    const file = event.target.files[0];
-    if (!isUploading) {
-      const sentFormData = new FormData();
-      sentFormData.append(name, file);
-      dispatch(updateContentById({ id: params.id, sentFormData }));
-      setIsUploading(false);
-    
-    }
-  };
+
 
 console.log(contentData,'cont data')
 console.log(editedContentData,'edited data/////')
@@ -175,19 +168,19 @@ const uploadContent = () => {
     fileInputRef.current.click();
   };
 
-  const handleSelectedFile = (event) => {
+  const handleFileChange = (event, name) => {
     console.log("handle select callled");
     const file = event.target.files[0];
     console.log(file); // console
     const sentFormData = new FormData();
-    sentFormData.append("thumbnail", file);
+    sentFormData.append(name, file);
     console.log(sentFormData, "////");
   
 
-    dispatch(updateContentById({ id: params.id, sentFormData }));
+    dispatch(updateContentById({ id: params.contentId, newData:sentFormData }));
   };
   // console.log(contentData.releaseDate)
-
+// console.log(contentData.progress)
   return (
     <>
       {isOpen && (
@@ -393,18 +386,22 @@ const uploadContent = () => {
             <div className="w-full px-4 ">
               {/* <CircularProgressbar value={uploadProgress} text={`${uploadProgress}%`} />; */}
               <form>
+                
                 <div
                   onClick={uploadContent}
                   title="upload thumbnial"
                   className="group relative cursor-pointer"
                 >
+                  <div className="w-[100px] h-[100px] absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%]">
+                    {/* <CircularProgressbar value={progress} maxValue={1} text={`${progress}%`} /> */}
+                  </div>
                   <input
                     ref={fileInputRef}
                     type="file"
                     name="thumbnail"
                     accept="image/*"
                     className="hidden"
-                    onChange={handleSelectedFile}
+                    onChange={(e)=> handleFileChange(e, 'thumbnail')}
                   />
                   <BsCloudUpload className="absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] text-8xl opacity-0 transition group-hover:opacity-100" />
                   <img
@@ -476,7 +473,7 @@ const uploadContent = () => {
                         type="file"
                         disabled={isLoading}
                         onChange={(e) => handleFileChange(e, "trailer")}
-                        className="h-fit cursor-pointer rounded bg-[#E50914] px-3 py-1 hover:bg-[#d4252e]"
+                        className="h-fit cursor-pointer rounded "
                       />
                     </div>
                   </div>
