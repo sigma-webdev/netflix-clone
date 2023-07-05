@@ -13,7 +13,7 @@ import {
   fetchContentByLatest,
   fetchContentByMostLiked,
   fetchContentByTrending,
-  fetchContentByWatch,
+  fetchContentByWatchHistory,
 } from "../store/contentSlice";
 import { RiPlayMiniFill } from "react-icons/ri";
 import PreviewCard from "../components/card/PreviewCard";
@@ -70,7 +70,7 @@ const Browse = () => {
         countryOrigin: "India",
       })
     );
-    dispatch(fetchContentByWatch("64789b082f388ccff2e33eaa"));
+    dispatch(fetchContentByWatchHistory("64789b082f388ccff2e33eaa"));
   }, [dispatch]);
 
   return (

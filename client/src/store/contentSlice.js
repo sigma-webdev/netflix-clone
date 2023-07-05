@@ -173,7 +173,7 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
   }
 );
 
-export const fetchContentByWatch = createAsyncThunk(
+export const fetchContentByWatchHistory = createAsyncThunk(
   "content/fetchContentByWatch",
   async (userId, { rejectWithValue }) => {
     try {
@@ -191,7 +191,7 @@ export const fetchContentByWatch = createAsyncThunk(
   }
 );
 
-export const addContentByWatch = createAsyncThunk(
+export const addContentToWatchHistory = createAsyncThunk(
   "content/addContentByWatch",
   async (contentId, { rejectWithValue }) => {
     try {
@@ -361,23 +361,23 @@ export const contentSlice = createSlice({
       })
 
       //fetch watch content
-      .addCase(fetchContentByWatch.pending, (state) => {
+      .addCase(fetchContentByWatchHistory.pending, (state) => {
         state.watchContentLoading = true;
       })
-      .addCase(fetchContentByWatch.fulfilled, (state, action) => {
+      .addCase(fetchContentByWatchHistory.fulfilled, (state, action) => {
         state.watchedContent = action.payload;
         state.watchContentLoading = false;
       })
-      .addCase(fetchContentByWatch.rejected, (state) => {
+      .addCase(fetchContentByWatchHistory.rejected, (state) => {
         state.watchedContent = [];
         state.watchContentLoading = false;
       })
 
       //add watch content
-      .addCase(addContentByWatch.pending, (state) => {
+      .addCase(addContentToWatchHistory.pending, (state) => {
         state.watchContentLoading = true;
       })
-      .addCase(addContentByWatch.fulfilled, (state, action) => {
+      .addCase(addContentToWatchHistory.fulfilled, (state, action) => {
         const watchContentId = action.payload;
 
         const watchContent = state.watchedContent.find(
@@ -390,7 +390,7 @@ export const contentSlice = createSlice({
 
         state.watchedContent = state.watchContentLoading = false;
       })
-      .addCase(addContentByWatch.rejected, (state) => {
+      .addCase(addContentToWatchHistory.rejected, (state) => {
         state.watchedContent = [];
         state.watchContentLoading = false;
       })

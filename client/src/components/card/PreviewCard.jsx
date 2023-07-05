@@ -1,9 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addContentByWatch,
+  addContentToWatchHistory,
   dislikeContent,
   likeContent,
 } from "../../store/contentSlice";
@@ -51,7 +51,7 @@ const PreviewCard = ({
   };
 
   const handlePlay = (contentId) => {
-    dispatch(addContentByWatch(contentId));
+    dispatch(addContentToWatchHistory(contentId));
     navigate(`/watch/${contentId}`);
   };
 
