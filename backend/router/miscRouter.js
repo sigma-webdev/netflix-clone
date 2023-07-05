@@ -5,6 +5,7 @@ const {
   getUsersStatistics,
   getMoviesStatistics,
   getSeriesStatistics,
+  getPaymentStatistics,
 } = require("../controller/miscController.js");
 const authorizeRoles = require("../middleware/authorizeRoles");
 
@@ -27,6 +28,12 @@ miscRoute.get(
   jwtAuth,
   authorizeRoles("ADMIN"),
   getSeriesStatistics
+);
+miscRoute.get(
+  "/admin/sales-stats",
+  jwtAuth,
+  authorizeRoles("ADMIN"),
+  getPaymentStatistics
 );
 
 module.exports = miscRoute;
