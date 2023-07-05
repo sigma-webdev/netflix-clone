@@ -1,41 +1,93 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import axiosInstance from "../helpers/axiosInstance";
 const initialState = {
   loading: false,
-  moviesData: [],
-  seriesData: [],
-  userData: [],
+  moviesCount: 0,
+  seriesCount: 0,
+  usersData: {},
+  salesStats: 0
 };
 
-export const getMoviesData= createAsyncThunk('/dashboard/get/movies', async()=>{
+export const getMoviesData = createAsyncThunk(
+  "/dashboard/get/movies",
+  async () => {
     try {
-        const response = await axiosInstance.get("/admin/movies-stats");
-        return response.data;
+      const response = await axiosInstance.get("/admin/movies-stats");
+      return response;
     } catch (error) {
-        return rejectWithValue(error.response.data);
+      //   return rejectWithValue(error);
     }
-})
+  }
+);
 
+export const getSeriesData = createAsyncThunk(
+  "/dashboard/get/series",
+  async () => {
+    try {
+      const response = await axiosInstance.get("/admin/series-stats");
+      console.log(response, "ppp");
+      return response;
+    } catch (error) {
+      //   return rejectWithValue(error);
+    }
+  }
+);
 
+export const getUsersData = createAsyncThunk(
+  "/dashboard/get/users",
+  async () => {
+    try {
+      const response = await axiosInstance.get("/admin/users-stats");
+     
+      return response;
+    } catch (error) {
+      //   return rejectWithValue(error);
+    }
+  }
+);
 
-const adminSlice = createSlice({
-  name: "admin",
+export const dashboardSlice = createSlice({
+  name: "dashboard",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getMoviesData.pending,(state)=>{
-         state.loading= true
-    })
-    .addCase(getMoviesData.fulfilled,(state,action)=>{
-        console.log(action?.payload?.data)
-        state.moviesData= action?.payload?.data
-        state.loading= false
-    })
-    .addCase(getMoviesData.rejected,(state)=>{
-        state.loading= false
-    })
+    builder
+      //for moviesCount
+      .addCase(getMoviesData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getMoviesData.fulfilled, (state, action) => {
+        state.moviesCount = action?.payload;
+        state.loading = false;
+      })
+      .addCase(getMoviesData.rejected, (state) => {
+        state.loading = false;
+      })
+      //for seriesCount
+      .addCase(getSeriesData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSeriesData.fulfilled, (state, action) => {
+        state.seriesCount = action?.payload;
+        state.loading = false;
+      })
+      .addCase(getSeriesData.rejected, (state) => {
+        state.loading = false;
+      })
+
+      //for usersCount
+      .addCase(getUsersData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUsersData.fulfilled, (state, action) => {
+        state.usersData = action?.payload;
+        state.loading = false;
+      })
+      .addCase(getUsersData.rejected, (state) => {
+        state.loading = false;
+      });
   },
 });
 
-export const {} = adminSlice.actions
-export default adminSlice.reducer
+// export const {} = adminSlice.actions;
+export default dashboardSlice.reducer;
