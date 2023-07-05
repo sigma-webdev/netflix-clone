@@ -73,12 +73,11 @@ const Browse = () => {
     dispatch(fetchContentByWatch("64789b082f388ccff2e33eaa"));
   }, [dispatch]);
 
-  console.log(watchedContent);
-
   return (
     <Layout isLogin={true}>
       <div id="content-details" className="relative"></div>
       {searchContent && searchContent.length !== 0 ? (
+        // search content
         <div className="bg-netflix-blue pt-32 text-white">
           <div className="px-4 md:px-8">
             {loading ? (
