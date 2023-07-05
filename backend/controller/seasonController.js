@@ -101,19 +101,24 @@ const getSeasons = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpGetSeasonsById
- * @route http://localhost:8081/api/v1/seasons/seasonId
+ * @getSeasonsById
+ * @route http://localhost:8081/api/v1/contents/season/seasonId
  * @description  controller to read single seasons with id
  * @parameters {request body object}
  * @return { Object } season object
  ********************/
-const httpGetSeasonById = asyncHandler(async (req, res, next) => {
+const getSeasonsById = asyncHandler(async (req, res, next) => {
   const { seasonId } = req.params;
 
   const seasons = await seasonModel.findById(seasonId);
 
   if (!seasons) {
-    return next(new CustomError("Seasons data not able to fetch!", 400));
+    return next(
+      new CustomError(
+        "Seasons data not able to fetch! for the given season Id",
+        400
+      )
+    );
   }
 
   return res.status(200).json({
@@ -151,25 +156,32 @@ const httpDeleteSeason = asyncHandler(async (req, res, next) => {
 
 /********************
  * @httpUpdateSeason
- * @route http://localhost:8081/api/v1/seasons/seasonId
+ * @route http://localhost:8081/api/v1/contents/seasons/seasonId
  * @description  controller to update single seasons with id
  * @parameters {season id}
  * @return { Object } season object
  ********************/
-const httpUpdateSeason = asyncHandler(async (req, res, next) => {
+const updateSeason = asyncHandler(async (req, res, next) => {
   const { seasonId } = req.params;
   const { seasonNumber, seasonSummary } = req.body;
 
   // read season and check for duplicate season number
   const seasonData = await seasonModel.find();
 
+  if (!seasonData) {
+    return next(
+      new CustomError("Not able to fetch data for the given Season Id", 404)
+    );
+  }
+
   // handle season duplicate number
   let seasonPresent = false;
 
-  for (const i of seasonData) {
-    if (i.seasonNumber === seasonNumber) {
+  for (const season of seasonData) {
+    console.log("season-------", season);
+    if (season.seasonNumber === seasonNumber) {
       seasonPresent = true;
-      return next(new CustomError("Season Value already exist!", 400));
+      return next(new CustomError("Season number already exist!", 400));
     }
   }
 
@@ -179,8 +191,8 @@ const httpUpdateSeason = asyncHandler(async (req, res, next) => {
   if (!seasonPresent) {
     seasons = await seasonModel.findByIdAndUpdate(
       seasonId,
-      { seasonNumber: seasonNumber, seasonSummary: seasonSummary },
-      { new: true, runValidators: true }
+      { $set: { seasonNumber: seasonNumber, seasonSummary: seasonSummary } },
+      { new: true }
     );
   }
 
@@ -199,7 +211,7 @@ const httpUpdateSeason = asyncHandler(async (req, res, next) => {
 module.exports = {
   createSeason,
   getSeasons,
-  httpGetSeasonById,
+  getSeasonsById,
   httpDeleteSeason,
-  httpUpdateSeason,
+  updateSeason,
 };
