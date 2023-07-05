@@ -18,7 +18,7 @@ const DashboardCard = () => {
     dispatch(getUsersData());
   }, [dispatch]);
 
-  console.log(usersData?.data?.data, "//////////////////////");
+  
 
   return (
     <div className=" h-fit">
