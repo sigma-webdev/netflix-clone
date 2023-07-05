@@ -61,9 +61,6 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/users", userRouter);
 
-// season route
-app.use("/api/v1/seasons", seasonRouter);
-
 // errorhandler
 app.use(errorHandler);
 
