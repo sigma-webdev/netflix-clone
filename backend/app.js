@@ -14,6 +14,7 @@ const authRouter = require("./router/authRouter.js");
 const paymentRouter = require("./router/paymentRouter.js");
 const contentRoute = require("./router/contentRouter");
 const userRouter = require("./router/userRouter.js");
+const miscRoute = require("./router/miscRouter.js");
 
 // database connection
 require("./config/databaseConnection");
@@ -45,6 +46,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/contents", contentRoute);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1", miscRoute);
 
 app.get("/health-check", (req, res) => {
   return res.status(200).json({

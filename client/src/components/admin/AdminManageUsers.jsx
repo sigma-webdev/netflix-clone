@@ -173,7 +173,7 @@ const AdminManageUsers = () => {
               Previous Page
             </button>
             <div className=" rounded-full border-2 border-red-400 px-[10px] text-xl font-bold text-red-600 ">
-              {page}
+              Page {page} of {allUsers?.data?.totalPages}
             </div>
             <button
               onClick={nextPage}
