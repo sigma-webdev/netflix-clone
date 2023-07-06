@@ -5,7 +5,7 @@ import { BiSearchAlt2 } from "react-icons/bi";
 import {
   addNewContent,
   fetchContentBySearch,
-} from "../../store/adminSlice";
+} from "../../store/adminManageContentSlice";
 // import { Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
 // import AdminContentView from "./AdminContentView";
@@ -216,7 +216,7 @@ console.log(isContentLoading)
               <select
                 className="rounded border bg-transparent p-2"
                 name="genres"
-                value={newContentData.genres}
+                value={newContentData.genres[0]}
                 onChange={handleInputChange}
               >
                 <option value="">Select an option</option>
@@ -320,14 +320,21 @@ console.log(isContentLoading)
                 onChange={handleInputChange}
               />
               <label htmlFor="language"> Language:</label>
-              <input
+              <select
                 className="rounded border bg-transparent p-2"
-                type="text"
-                required
                 name="language"
                 value={newContentData.language}
                 onChange={handleInputChange}
-              />
+              >
+                <option value="">Select an option</option>
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Korean">Korean</option>
+                <option value="Japan">Japanese</option>
+                <option value="Tamil">Tamil</option>
+                <option value="Spanish">Spanish</option>
+                <option value="German">German</option>
+              </select>
               <label htmlFor="releaseDate"> Release Date:</label>
               <input
                 className="rounded border bg-transparent p-2"
@@ -337,22 +344,21 @@ console.log(isContentLoading)
                 value={newContentData.releaseDate}
                 onChange={handleInputChange}
               />
-              <label htmlFor="releaseDate"> Origin Country</label>
-              <input
+              <label htmlFor="originCountry"> Origin Country</label>
+              <select
                 className="rounded border bg-transparent p-2"
-                type="text"
-                required
                 name="originCountry"
                 value={newContentData.originCountry}
                 onChange={handleInputChange}
-              />
-              {/* <label htmlFor="thumbnail">  Thumbnail:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" required name="thumbnail" accept="image/*" onChange={handleFileChange} />
-                            <label htmlFor="trailer">  Trailer:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" required name="trailer" accept="video/*" onChange={handleFileChange} />
-                            <label htmlFor="content">  Content:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" required name="content" accept="video/*" onChange={handleFileChange} /> */}
-
+              >
+                <option value="">Select an option</option>
+                <option value="India">India</option>
+                <option value="USA">USA</option>
+                <option value="Korea">Korea</option>
+                <option value="Japan">Japan</option>
+                <option value="German">German</option>
+                <option value="Spain">Spain</option>
+              </select>
 
               <button
                 type="submit"
