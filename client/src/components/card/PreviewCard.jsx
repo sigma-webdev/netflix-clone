@@ -43,6 +43,7 @@ const PreviewCard = ({
     } else {
       media.pause();
       setIsVideoPlaying(false);
+      media.load();
     }
   }
 
@@ -69,15 +70,11 @@ const PreviewCard = ({
     navigate(`/watch/${contentId}`);
   };
 
-  const handleAutoPlay = () => {
-    playPauseMedia();
-  };
-
   return (
     <div
       className="group w-48 scale-100 rounded drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64"
-      onMouseEnter={handleAutoPlay}
-      onMouseOut={handleAutoPlay}
+      onMouseLeave={() => playPauseMedia()}
+      onMouseEnter={() => playPauseMedia()}
     >
       {/* preview video*/}
       <div className="w-48 md:w-64">
@@ -87,6 +84,7 @@ const PreviewCard = ({
           poster={thumbnailUrl}
           src={trailerUrl}
           loop
+          muted
         ></video>
       </div>
 
