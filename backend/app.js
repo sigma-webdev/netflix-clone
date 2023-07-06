@@ -17,7 +17,7 @@ const userRouter = require("./router/user.router.js");
 const miscRoute = require("./router/misc.router.js");
 
 // database connection
-require("./config/databaseConnection");
+require("./config/database.config.js");
 
 app.use(
   cors({

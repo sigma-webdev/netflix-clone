@@ -1,6 +1,6 @@
-const asyncHandler = require("../middleware/asyncHandler");
-const contentModel = require("../model/content.schema");
-const userModel = require("../model/user.schema");
+const asyncHandler = require("../middleware/asyncHandler.js");
+const contentModel = require("../model/content.schema.js");
+const userModel = require("../model/user.schema.js");
 
 const plans = ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"];
 

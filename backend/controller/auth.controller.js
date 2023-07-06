@@ -5,9 +5,9 @@ const bcrypt = require("bcrypt");
 
 const asyncHandler = require("../middleware/asyncHandler.js");
 const userModel = require("../model/user.schema.js");
-const customError = require("../utils/customError.js");
+const CustomError = require("../utils/customError.js");
 const cookieOptions = require("../utils/cookieOption.js");
-const transporter = require("../config/emailConfig.js");
+const transporter = require("../config/email.config.js");
 
 /******************************************************
  * @userExist
@@ -16,6 +16,7 @@ const transporter = require("../config/emailConfig.js");
  * @body email
  * @returns object with isUserExist boolean value
  ******************************************************/
+
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
 
@@ -23,7 +24,7 @@ const userExist = asyncHandler(async (req, res, next) => {
   const isEmailValid = validator.validate(email);
 
   if (!isEmailValid)
-    return next(new customError("Please enter a valid email 📩", 400));
+    return next(new CustomError("Please enter a valid email 📩", 400));
 
   // If email is valid and user with this emailID is present in database
   // return return isUserExist true or false if not present
@@ -58,14 +59,14 @@ const signUp = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new customError("Email and Password are required.", 400));
+    return next(new CustomError("Email and Password are required.", 400));
   }
 
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
   if (!passwordRegex.test(password)) {
     return next(
-      new customError(
+      new CustomError(
         "password must be 6 to 60 characters in length and contain at-least one capital letter, one symbol and one number",
         400
       )
@@ -76,12 +77,12 @@ const signUp = asyncHandler(async (req, res, next) => {
   const isEmailValid = validator.validate(email);
 
   if (!isEmailValid)
-    return next(new customError("Please enter a valid email 📩", 400));
+    return next(new CustomError("Please enter a valid email 📩", 400));
 
   const user = await userModel.findOne({ email: email });
   if (user)
     return next(
-      new customError(`user with email: ${email} already exist`, 409)
+      new CustomError(`user with email: ${email} already exist`, 409)
     );
 
   const userInfo = userModel({ email, password });
@@ -115,14 +116,14 @@ const signIn = asyncHandler(async (req, res, next) => {
   const isEmailValid = validator.validate(email);
 
   if (!isEmailValid)
-    return next(new customError("Please enter a valid email 📩", 400));
+    return next(new CustomError("Please enter a valid email 📩", 400));
 
   // check user exist or not if not return error message
   const user = await userModel.findOne({ email }).select("+password");
 
   if (!user)
     return next(
-      new customError(
+      new CustomError(
         "Sorry we can't find you account with this email address please try again or create a new account",
         404
       )
@@ -133,7 +134,7 @@ const signIn = asyncHandler(async (req, res, next) => {
 
   if (!isPasswordCorrect)
     return next(
-      new customError(
+      new CustomError(
         "Incorrect password. Please try again or reset password",
         400
       )
@@ -166,7 +167,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
 
   // if email is missing form body return error message
-  if (!email) return next(new customError("Email is required", 400));
+  if (!email) return next(new CustomError("Email is required", 400));
 
   // get the user from database using email
   const user = await userModel.findOne({ email });
@@ -174,7 +175,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   // if user is not present in database return error message
   if (!user) {
     return next(
-      new customError("No account found for this email address.", 404)
+      new CustomError("No account found for this email address.", 404)
     );
   }
 
@@ -228,7 +229,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
   if (!password || !confirmPassword) {
     return next(
-      new customError("password and confirmPassword are required", 400)
+      new CustomError("password and confirmPassword are required", 400)
     );
   }
 
@@ -236,7 +237,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
     /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
   if (!passwordRegex.test(password)) {
     return next(
-      new customError(
+      new CustomError(
         "password must be 6 to 60 characters in length and contain at-least one capital letter, one symbol and one number",
         400
       )
@@ -250,14 +251,14 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   // check both password and confirmPassword are present in body , if not send error message
   if (!password || !confirmPassword) {
     return next(
-      new customError("Both Password and confirm Password are Required", 400)
+      new CustomError("Both Password and confirm Password are Required", 400)
     );
   }
 
   // check the password and confirmPassword are same or not, if different return error message
   if (password !== confirmPassword) {
     return next(
-      new customError("Password and confirm password do not match", 400)
+      new CustomError("Password and confirm password do not match", 400)
     );
   }
 
@@ -269,7 +270,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
   if (!user) {
     return next(
-      new customError("Forgot password token is invalid or expired", 400)
+      new CustomError("Forgot password token is invalid or expired", 400)
     );
   }
 
