@@ -7,7 +7,7 @@ const {
   deletePlan,
   updatePlan,
   getPlans,
-} = require("../controller/paymentController");
+} = require("../controller/payment.controller.js");
 const jwtAuth = require("../middleware/jwtAuth.js");
 const authorizeRoles = require("../middleware/authorizeRoles.js");
 

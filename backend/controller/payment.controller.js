@@ -1,12 +1,12 @@
 const crypto = require("crypto");
 
 const customError = require("../utils/customError.js");
-const userModel = require("../model/userSchema.js");
+const userModel = require("../model/user.schema.js");
 const razorpay = require("../config/razorpayConfig.js");
-const paymentModel = require("../model/paymentSchema.js");
+const paymentModel = require("../model/payment.schema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
-const SubscriptionPlanModel = require("../model/subscriptionPlanSchema.js");
+const SubscriptionPlanModel = require("../model/subscriptionPlan.schema.js");
 
 /******************************************************
  * @createSubscription

@@ -4,7 +4,7 @@ const validator = require("email-validator");
 const bcrypt = require("bcrypt");
 
 const asyncHandler = require("../middleware/asyncHandler.js");
-const userModel = require("../model/userSchema.js");
+const userModel = require("../model/user.schema.js");
 const customError = require("../utils/customError.js");
 const cookieOptions = require("../utils/cookieOption.js");
 const transporter = require("../config/emailConfig.js");
@@ -91,15 +91,14 @@ const signUp = asyncHandler(async (req, res, next) => {
 
   // get the jwt token form userSchema methods
   const jwtToken = result.generateJwtToken();
-
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
-
   return res.status(201).json({
     statusCode: 201,
     success: true,
     message: "successfully registered the user",
     data: result,
+    token: jwtToken,
   });
 });
 
@@ -144,7 +143,6 @@ const signIn = asyncHandler(async (req, res, next) => {
 
   // get the jwt token form userSchema methods
   const jwtToken = user.generateJwtToken();
-
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
 
@@ -153,6 +151,7 @@ const signIn = asyncHandler(async (req, res, next) => {
     success: true,
     message: "successfully singIn",
     data: user,
+    token: jwtToken,
   });
 });
 
@@ -300,7 +299,8 @@ const signOut = asyncHandler(async (req, res, next) => {
     httpOnly: true,
     maxAge: new Date().now, //  current date
     path: "/",
-    sameSite: "Lax",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    secure: process.env.NODE_ENV === "production" ? true : false,
   });
 
   res.status(200).json({

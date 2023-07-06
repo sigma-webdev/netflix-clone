@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const jwtAuth = require("../middleware/jwtAuth.js");
 const checkUserSubscription = require("../middleware/checkUserSubscription.js");
+
 const {
   getUser,
   getUsers,
@@ -11,7 +12,7 @@ const {
   getWatchListContent,
   removeContentFromWatchList,
   addContentToWatchList,
-} = require("../controller/userController.js");
+} = require("../controller/user.controller.js");
 const authorizeRoles = require("../middleware/authorizeRoles.js");
 
 userRouter

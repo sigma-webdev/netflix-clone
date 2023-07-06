@@ -5,7 +5,7 @@ const {
   getUsersStatistics,
   getMoviesStatistics,
   getSeriesStatistics,
-} = require("../controller/miscController.js");
+} = require("../controller/misc.controller.js");
 const authorizeRoles = require("../middleware/authorizeRoles");
 
 const miscRoute = express.Router();

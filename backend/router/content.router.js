@@ -7,7 +7,7 @@ const {
   httpDeleteById,
   httpUpdateById,
   contentLikes,
-} = require("../controller/contentController");
+} = require("../controller/content.controller.js");
 const jwtAuth = require("../middleware/jwtAuth");
 const authorizeRoles = require("../middleware/authorizeRoles");
 const checkUserSubscription = require("../middleware/checkUserSubscription");
