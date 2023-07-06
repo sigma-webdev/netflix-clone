@@ -4,13 +4,15 @@ import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
   currentContent: null,
-  searchContent: [],
+  searchContent: null,
   filteredContent: [],
   trendingContent: [],
   latestContent: [],
   mostLikedContent: [],
   contentByCountryOrigin: {},
   watchedContent: [],
+  loading: false,
+  searchLoading: false,
   trendingContentLoading: false,
   latestContentLoading: false,
   mostLikedContentLoading: false,
@@ -61,7 +63,7 @@ export const fetchContentBySearch = createAsyncThunk(
       let contentsObject;
 
       if (!searchText) {
-        return [];
+        return null;
       } else {
         const response = await axiosInstance.get(url);
         const data = response.data.data.contents;
@@ -289,15 +291,15 @@ export const contentSlice = createSlice({
 
       //fetch content by search
       .addCase(fetchContentBySearch.pending, (state) => {
-        state.loading = true;
+        state.searchLoading = true;
       })
       .addCase(fetchContentBySearch.fulfilled, (state, action) => {
         state.searchContent = action.payload;
-        state.loading = false;
+        state.searchLoading = false;
       })
       .addCase(fetchContentBySearch.rejected, (state) => {
-        state.searchContent = [];
-        state.loading = false;
+        state.searchContent = null;
+        state.searchLoading = false;
       })
 
       //fetch content by trending

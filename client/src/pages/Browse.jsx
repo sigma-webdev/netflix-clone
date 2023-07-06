@@ -50,6 +50,7 @@ const Browse = () => {
   const watchContentLoading = useSelector(
     (state) => state.content.watchContentLoading
   );
+  const searchLoading = useSelector((state) => state.content.searchLoading);
 
   const dispatch = useDispatch();
 
@@ -77,45 +78,45 @@ const Browse = () => {
     <Layout isLogin={true}>
       <div id="content-details" className="relative"></div>
       <div id="browse-content">
-        {searchContent && searchContent.length !== 0 ? (
-          // search content
+        {searchContent && (
           <div className="bg-netflix-blue pt-32 text-white">
             <div className="px-4 md:px-8">
-              {loading ? (
+              {searchLoading ? (
                 <RowContentShimmer />
+              ) : searchContent && searchContent.length !== 0 ? (
+                <>
+                  <h3 className="py-4">Search results</h3>
+                  <div className="flex flex-wrap gap-4">
+                    {Array.from(searchContent).map((item) => {
+                      return (
+                        <PreviewCard
+                          key={item.contentId}
+                          name={item.name}
+                          thumbnailUrl={item.thumbnailUrl}
+                          trailerUrl={item.trailerUrl}
+                          geners={item.genres}
+                          contentId={item.contentId}
+                          rating={item.rating}
+                          description={item.description}
+                          cast={item.cast}
+                          director={item.director}
+                          isLiked={item.isLiked}
+                          isDisliked={item.isDisliked}
+                          releaseYear={item.releaseYear}
+                          contentDuration={item.contentDuration}
+                        />
+                      );
+                    })}
+                  </div>
+                </>
               ) : (
-                searchContent &&
-                searchContent.length !== 0 && (
-                  <>
-                    <h3 className="py-4">Search results</h3>
-                    <div className="flex flex-wrap gap-4">
-                      {Array.from(searchContent).map((item) => {
-                        return (
-                          <PreviewCard
-                            key={item.contentId}
-                            name={item.name}
-                            thumbnailUrl={item.thumbnailUrl}
-                            trailerUrl={item.trailerUrl}
-                            geners={item.genres}
-                            contentId={item.contentId}
-                            rating={item.rating}
-                            description={item.description}
-                            cast={item.cast}
-                            director={item.director}
-                            isLiked={item.isLiked}
-                            isDisliked={item.isDisliked}
-                            releaseYear={item.releaseYear}
-                            contentDuration={item.contentDuration}
-                          />
-                        );
-                      })}
-                    </div>
-                  </>
-                )
+                <h2>No Data Found</h2>
               )}
             </div>
           </div>
-        ) : (
+        )}
+
+        {!searchContent && (
           <div>
             {/* hero container */}
             <div className="relative">
