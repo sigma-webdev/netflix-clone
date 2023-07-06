@@ -15,10 +15,12 @@ const AdminContentView = () => {
   const dispatch = useDispatch();
   const contentData = useSelector((state) => state.admin.currentContent);
   const isLoading = useSelector((state) => state.admin.isLoading);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  // const [isUploading, setIsUploading] = useState(false);
+  const [castInput,setCastInput] = useState('')
+  const progress = useSelector(state=> state.admin.currentContent.progress)  || 0
+  const isUploading = useSelector(state=> state.admin.isUploading)
+  // const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
-  const [castArr, setCastArr] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editedContentData, setEditedContentData] = useState({});
   const params = useParams();
@@ -29,7 +31,11 @@ const AdminContentView = () => {
   useEffect(() => {
     dispatch(fetchContentById({ contentId: params.contentId}));
   }, []);
+  useEffect(()=>{
 
+    console.log(progress)
+
+  },[progress])
 
   useEffect(()=>{
     setEditedContentData(contentData);
@@ -43,17 +49,19 @@ const AdminContentView = () => {
     navigate("/admin/managecontents");
     //   redirect('/admin/managecontents')
   };
-  const handleArrayChange = () => {
-    setCastArr([...castArr, editedContentData.cast]);
-    setEditedContentData({
-      ...editedContentData,
-      cast: [],
-    });
-  };
+
+
   const handleRemoveCast = (castname) => {
-    let newCast = castArr.filter((item) => item !== castname);
-    setCastArr(newCast);
+    console.log(castname,'///castname')
+    const indexOfCastToBeRemoved = editedContentData.cast.indexOf(castname)
+    console.log(indexOfCastToBeRemoved)
+    const newCast = editedContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
+    console.log(newCast)
+    setEditedContentData({...editedContentData, cast: newCast})
+    console.log(editedContentData,'//edittweeer')
   };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLoading) {
@@ -62,60 +70,71 @@ const AdminContentView = () => {
       );
       return;
     }
-    // setIsLoading(true)
-    const {
-      name,
-      description,
-      contentType,
-      genres,
-      creator,
-      rating,
-      language,
-      trailer,
-      content,
-      cast,
-      thumbnail,
-      episodes,
-    } = editedContentData;
-    const sentFormData = new FormData();
-    if (name && name !== contentData.name) {
-      sentFormData.append("name", name);
+    if(editedContentData.cast.length === 0){
+      console.log('cast cannot be empty field')
+      return;
     }
-    if (description && description !== contentData.description) {
-      sentFormData.append("description", description);
-    }
-    if (contentType && contentType !== contentData.contentType) {
-      sentFormData.append("contentType", contentType);
-    }
-    if (genres && genres !== contentData.genres) {
-      sentFormData.append("genres", genres);
-    }
-    if (creator && creator !== contentData.creator) {
-      sentFormData.append("creator", creator);
-    }
-    if (rating && rating !== contentData.rating) {
-      sentFormData.append("rating", rating);
-    }
-    if (language && language !== contentData.language) {
-      sentFormData.append("language", language);
-    }
-    if (trailer && trailer !== contentData.trailer) {
-      sentFormData.append("trailer", trailer);
-    }
-    if (content && content !== contentData.content) {
-      sentFormData.append("content", content);
-    }
-    // if (cast && cast !== castArr) {
-    //   sentFormData.append("cast", castArr);
-    // }
-    if (thumbnail && thumbnail !== contentData.thumbnail) {
-      sentFormData.append("thumbnail", thumbnail);
-    }
-    if (episodes && episodes !== contentData.episodes) {
-      sentFormData.append("episodes", episodes);
-    }
+    console.log(editedContentData, '///new data to be updated')
+    dispatch(updateContentById({id:params.contentId, newData:editedContentData}))
+    // dispatch(fetchContentById(params._id))
+    toggleModal(false)
 
-    dispatch(updateContentById(params.id, { ...sentFormData, castArr }));
+
+    
+
+  //   const {
+  //     name,
+  //     description,
+  //     contentType,
+  //     genres,
+  //     creator,
+  //     rating,
+  //     language,
+  //     trailer,
+  //     content,
+  //     cast,
+  //     thumbnail,
+  //     episodes,
+  //   } = editedContentData;
+  //   const sentFormData = new FormData();
+  //   if (name && name !== contentData.name) {
+  //     sentFormData.append("name", name);
+  //   }
+  //   if (description && description !== contentData.description) {
+  //     sentFormData.append("description", description);
+  //   }
+  //   if (contentType && contentType !== contentData.contentType) {
+  //     sentFormData.append("contentType", contentType);
+  //   }
+  //   if (genres && genres !== contentData.genres) {
+  //     sentFormData.append("genres", genres);
+  //   }
+  //   if (creator && creator !== contentData.creator) {
+  //     sentFormData.append("creator", creator);
+  //   }
+  //   if (rating && rating !== contentData.rating) {
+  //     sentFormData.append("rating", rating);
+  //   }
+  //   if (language && language !== contentData.language) {
+  //     sentFormData.append("language", language);
+  //   }
+  //   if (trailer && trailer !== contentData.trailer) {
+  //     sentFormData.append("trailer", trailer);
+  //   }
+  //   if (content && content !== contentData.content) {
+  //     sentFormData.append("content", content);
+  //   }
+  //   if (cast && cast.toString() !== contentData.cast.toString()) {
+  //     sentFormData.append("cast", cast);
+  //   }
+  //   if (thumbnail && thumbnail !== contentData.thumbnail) {
+  //     sentFormData.append("thumbnail", thumbnail);
+  //   }
+  //   if (episodes && episodes !== contentData.episodes) {
+  //     sentFormData.append("episodes", episodes);
+  //   }
+
+  //   dispatch(updateContentById(params.id, { ...sentFormData }));
   };
 
   const toggleModal = (val) => {
@@ -125,47 +144,51 @@ const AdminContentView = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     // const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
-    setEditedContentData((prevDetails) => ({
-      ...prevDetails,
-      [name]: value,
-    }));
-  };
-
-  const handleFileChange = (event, name) => {
-    console.log(event.target.files[0], "//////fsd");
-    console.log(name, "////name");
-    setIsUploading(true);
-    const file = event.target.files[0];
-    if (!isUploading) {
-      const sentFormData = new FormData();
-      sentFormData.append(name, file);
-      dispatch(updateContentById({ id: params.id, sentFormData }));
-      setIsUploading(false);
-    
+    if(name === "cast"){
+      setCastInput(value)
+      
+      // const newCastArr = [...editedContentData.cast, value]
+      // setEditedContentData({...setEditedContentData, [name]:newCastArr})
+    }else{
+      setEditedContentData({...editedContentData, [name]:value})
     }
-  };
+};
 
-console.log(contentData)
-  const uploadContent = () => {
+  const handleAddCast =()=>{
+    const newCastArr = [...editedContentData.cast, castInput]
+    setEditedContentData({...editedContentData, cast: newCastArr})
+    setCastInput('')
+
+  }
+
+
+
+console.log(contentData,'cont data')
+console.log(editedContentData,'edited data/////')
+const uploadContent = () => {
     fileInputRef.current.click();
   };
 
-  const handleSelectedFile = (event) => {
+  const handleFileChange = (event, name) => {
     console.log("handle select callled");
+    // if(name === "trailer" || name === "content" || name === "thumbnail" ){
+    //   setIsUploading(true);
+    // }
     const file = event.target.files[0];
     console.log(file); // console
     const sentFormData = new FormData();
-    sentFormData.append("thumbnail", file);
+    sentFormData.append(name, file);
     console.log(sentFormData, "////");
   
 
-    dispatch(updateContentById({ id: params.id, sentFormData }));
+    dispatch(updateContentById({ id: params.contentId, newData:sentFormData }));
   };
-
+  // console.log(contentData.releaseDate)
+// console.log(contentData.progress)
   return (
     <>
       {isOpen && (
-        <div className="absolute z-50 flex h-full w-full items-center justify-center border bg-cyan-600 bg-opacity-60">
+        <div className="absolute z-50 flex h-full w-full items-center justify-center border bg-cyan-100 bg-opacity-60">
           <div className="no-scrollbar relative  max-h-[80%] w-[700px] overflow-y-scroll rounded-lg bg-gray-50 px-4 py-12">
             <div
               onClick={() => toggleModal(false)}
@@ -190,7 +213,6 @@ console.log(contentData)
                 value={editedContentData.genres}
                 onChange={handleInputChange}
               >
-                <option value="">Select an option</option>
                 <option value="Action">Action</option>
                 <option value="Anime">Anime</option>
                 <option value="Children & Family">Children & Family</option>
@@ -220,36 +242,37 @@ console.log(contentData)
                   className="mr-4 w-[88%] rounded border bg-transparent p-2"
                   type="text"
                   name="cast"
-                  value={editedContentData.cast}
+                  value={castInput}
                   onChange={handleInputChange}
                 />
-                <button
-                  onClick={handleArrayChange}
+                <div
+                onClick={handleAddCast}
+                 // onClick
                   className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
                 >
                   Add
-                </button>
-                {contentData.cast.length > 0 && (
+                </div>
+                {editedContentData.cast.length > 0 && (
                 <div className="flex flex-wrap">
-                  {contentData.cast.map((castname) => (
+                  {editedContentData.cast.map((castname) => (
                     <div className="relative m-2  rounded  bg-blue-200">
                       <div
                         onClick={() => handleRemoveCast(castname)}
                         className="absolute -top-1 right-1 cursor-pointer"
                       >
-                        x
+                        &times;
                       </div>
                       <p className=" w-fit px-3 py-2">{castname}</p>
                     </div>
                   ))}
                 </div>
-              )}
+              )} 
               </div>
 
               <label htmlFor="categories"> Content Type:</label>
 
               <div className="ml-4  flex items-center">
-                <label className="">Movies</label>
+                <label className="">Movie</label>
                 <input
                   className="ml-1 mr-4 mt-1"
                   type="radio"
@@ -304,10 +327,10 @@ console.log(contentData)
                 type="date"
                 required
                 name="releaseDate"
-                value={editedContentData.releaseDate}
+                value={editedContentData.releaseDate.substring(0, 10)}
                 onChange={handleInputChange}
               />
-              <label htmlFor="releaseDate"> Origin Country</label>
+              <label htmlFor="originCountry"> Origin Country</label>
               <input
                 className="rounded border bg-transparent p-2"
                 type="text"
@@ -322,7 +345,7 @@ console.log(contentData)
                 disabled={isLoading}
                 className="flex items-center justify-center gap-4 rounded bg-[#E50914] py-2 text-white hover:bg-[#d4252e]"
               >
-                Add Content{" "}
+                Update Content Details
                 {isLoading && (
                   <div role="status">
                     <svg
@@ -349,10 +372,10 @@ console.log(contentData)
           </div>
         </div>
       )}
-      <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-slate-800 py-4">
-        <h2 className="text-white">Content</h2>
+      <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-gray-100 py-4">
+        {/* <h2 className="">Content</h2> */}
         {isLoading ? (
-          <h2 className="text-white">Loading..</h2>
+          <h2 className="">Loading..</h2>
         ) : ( Object.keys(contentData).length !== 0 ? (
           <>
             <div className="flex w-full gap-4 px-4">
@@ -364,21 +387,24 @@ console.log(contentData)
                 Delete
               </button>
             </div>
-            <div className="w-full px-4 text-white ">
-              {/* <CircularProgressbar value={uploadProgress} text={`${uploadProgress}%`} />; */}
+            <div className="w-full px-4 ">
               <form>
+                
                 <div
                   onClick={uploadContent}
                   title="upload thumbnial"
                   className="group relative cursor-pointer"
                 >
+                  <div className="w-[100px] h-[100px] absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%]">
+                    {isUploading && <CircularProgressbar value={progress} maxValue={1} text={`${progress}%`} />}
+                  </div>
                   <input
                     ref={fileInputRef}
                     type="file"
                     name="thumbnail"
                     accept="image/*"
                     className="hidden"
-                    onChange={handleSelectedFile}
+                    onChange={(e)=> handleFileChange(e, 'thumbnail')}
                   />
                   <BsCloudUpload className="absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] text-8xl opacity-0 transition group-hover:opacity-100" />
                   <img
@@ -395,13 +421,15 @@ console.log(contentData)
                 </div>
 
                 <div className="flex gap-2">
-                  <h3 className="text-gray-300">{contentData.rating}</h3>
-                  <h3>/</h3>
+                  <h3 className="text-gray-400">{contentData.rating}</h3>
+                  <span className="text-2xl text-gray-400">/</span>
+                  <h3 className="text-gray-400">{contentData.originCountry}</h3>
+                  <span className="text-2xl text-gray-400">/</span>
                   <h3 className="">{contentData.language}</h3>
-                  <h3>/</h3>
-                  <h3 className="">{contentData.genres}</h3>
-                  <h3>/</h3>
-                  <h3 className="">{contentData.categories}</h3>
+                  <spa className="text-2xl text-gray-400">/</spa>
+                  <h3 className="">{contentData.genres[0]}</h3>
+                  <span className="text-2xl text-gray-400">/</span>
+                  <h3 className="">{contentData.contentType}</h3>
                 </div>
                 <div>
                   <div className="my-4 flex gap-4">
@@ -410,26 +438,31 @@ console.log(contentData)
                   </div>
                   <div className="my-4 flex gap-4">
                     <h4 className="w-32 text-gray-400">Description:</h4>
-                    <h3 className="">{contentData.description}</h3>
+                    <h3 className="pl-5">{contentData.description}</h3>
                   </div>
                   <div className="my-4 flex gap-4">
                     <h4 className="w-32 text-gray-400">Cast:</h4>
                     <div>
-                      {/* {contentData.cast.map((item, index) => (
-                        <h3 key={index} className="text-white">{item}</h3>
-                      ))} */}
+                      {contentData.cast.map((item, index) => (
+                        <h3 key={index} className="">{item}</h3>
+                      ))}
                     </div>
                   </div>
                   <div className='flex gap-4 my-4'>
               <h4 className='text-gray-400 w-32'>Language:</h4>
               <h3 className=''>{contentData.language}</h3>
             </div>
+           
                 </div>
                 <div>
                   <div className="my-4 flex gap-4">
                     <h4 className="w-32 text-gray-400">Director:</h4>
-                    <h3 className="text-white">{contentData.director}</h3>
+                    <h3 className="">{contentData.director}</h3>
                   </div>
+                  <div className='flex gap-4 my-4'>
+              <h4 className='text-gray-400 w-32'>Release Date:</h4>
+              <h3 className=''>{contentData.releaseDate.substring(0,10)}</h3>
+            </div>
                   <div className="my-4 flex gap-4">
                     <h4 className="w-32 text-gray-400">Trailer:</h4>
                     <video
@@ -443,7 +476,7 @@ console.log(contentData)
                         type="file"
                         disabled={isLoading}
                         onChange={(e) => handleFileChange(e, "trailer")}
-                        className="h-fit cursor-pointer rounded bg-[#E50914] px-3 py-1 hover:bg-[#d4252e]"
+                        className="h-fit cursor-pointer rounded"
                       />
                     </div>
                   </div>
@@ -460,7 +493,7 @@ console.log(contentData)
                         type="file"
                         disabled={isLoading}
                         onChange={(e) => handleFileChange(e, "content")}
-                        className="h-fit cursor-pointer rounded bg-[#E50914] px-3 py-1 hover:bg-[#d4252e]"
+                        className="h-fit cursor-pointer rounded"
                       />
                     </div>
                   </div>

@@ -47,12 +47,10 @@ const cloudinaryFileUpload = async (files, next) => {
           }
         );
 
-        filesDetails["content"] = [
-          {
-            contentURL: contentTemp.secure_url,
-            contentID: contentTemp.public_id,
-          },
-        ];
+        filesDetails["content"] = {
+          contentURL: contentTemp.secure_url,
+          contentID: contentTemp.public_id,
+        };
       }
     }
 

@@ -10,10 +10,7 @@ const cloudinaryFileDelete = async (publicId, next, fileType = "video") => {
       (error, result) => {
         if (error) {
           return next(
-            new CustomError(
-              `Error in updating/deleting  the File ${error}`,
-              400
-            )
+            new CustomError("Error in updating/deleting  the File ", 400)
           );
         } else {
           // TODO: send the success result

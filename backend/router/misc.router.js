@@ -28,5 +28,11 @@ miscRoute.get(
   authorizeRoles("ADMIN"),
   getSeriesStatistics
 );
+miscRoute.get(
+  "/admin/sales-stats",
+  jwtAuth,
+  authorizeRoles("ADMIN"),
+  getPaymentStatistics
+);
 
 module.exports = miscRoute;
