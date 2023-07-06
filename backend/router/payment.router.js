@@ -24,7 +24,7 @@ paymentRouter
 paymentRouter
   .route("/plan")
   .post(jwtAuth, authorizeRoles("ADMIN"), createPlan)
-  .get(jwtAuth, authorizeRoles("ADMIN"), getPlans);
+  .get(jwtAuth, getPlans);
 
 paymentRouter
   .route("/plan/:planDocumentId")

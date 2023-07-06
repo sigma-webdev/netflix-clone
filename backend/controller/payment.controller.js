@@ -226,8 +226,6 @@ const updatePlan = asyncHandler(async (req, res, next) => {
 
   let active = req.body.active;
 
-  if (!active) return next(new CustomError("Active field is required"));
-
   if (active === true || active === "true") {
     active = true;
   } else if (active === false || active === "false") {
@@ -287,7 +285,18 @@ const deletePlan = asyncHandler(async (req, res, next) => {
  ******************************************************/
 
 const getPlans = asyncHandler(async (req, res, next) => {
-  const result = await subscriptionPlanModel.find();
+  const userRole = req.user.role;
+  const { active } = req.query;
+  const query = {};
+
+  if (userRole === "ADMIN") {
+    query["active"] = active;
+  } else {
+    query["active"] = true;
+  }
+
+  console.log(query);
+  const result = await subscriptionPlanModel.find(query);
 
   return res.status(200).json({
     statusCode: 200,
