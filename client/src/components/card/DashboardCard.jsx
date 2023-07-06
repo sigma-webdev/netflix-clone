@@ -20,7 +20,7 @@ const DashboardCard = () => {
     dispatch(getUsersData());
    
   }, [dispatch]);
-  console.log(getMoviesData,"ppppppppppppppppppp")
+ 
 
   return (
     <div className=" h-fit">
