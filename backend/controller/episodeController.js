@@ -25,21 +25,16 @@ const createEpisode = asyncHandler(async (req, res, next) => {
     title,
     summary,
     episodeNumber,
-    episodeThumbnail: [
+    thumbnail: [
       {
-        episodeSecureUrl:
+        thumbnailUrl:
           "https://res.cloudinary.com/dp3qsxfn5/image/upload/v1687258494/default_thumbnail_mi4zwc.webp",
       },
     ],
   };
 
   // checking for missing fields
-  const requiredFields = [
-    "title",
-    "summary",
-    "episodeNumber",
-    "episodeThumbnail",
-  ];
+  const requiredFields = ["title", "summary", "episodeNumber", "thumbnail"];
   const missingRequiredFields = requiredFields.filter(
     (field) => !episodeDetails[field]
   );
@@ -174,10 +169,10 @@ const updateEpisode = asyncHandler(async (req, res, next) => {
   // check files and delete the previous file and upload
   if (files) {
     // delete thumbnails
-    if (files.episodeThumbnail && episodeData?.episodeThumbnail.length > 0) {
-      episodeData?.episodeThumbnail.map((thumbObj) => {
-        if (thumbObj.episodeVideoPublicId) {
-          cloudinaryFileDelete(thumbObj.episodePublicId, next, "image");
+    if (files.thumbnail) {
+      episodeData.thumbnail.map((thumbObj) => {
+        if (thumbObj.thumbnailID) {
+          cloudinaryFileDelete(thumbObj.thumbnailID, next, "image");
         }
       });
     }
@@ -241,4 +236,34 @@ const updateEpisode = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { createEpisode, getEpisode, episodeGetById, updateEpisode };
+/********************
+ * @updateEpisode
+ * @route http://localhost:8081/api/v1/contents/episode/episodeId
+ * @description  controller to delete a specific episode
+ * @parameters {request id}
+ * @return { ObjectId } episodeId
+ ********************/
+const deleteEpisode = asyncHandler(async (req, res, next) => {
+  const { episodeId } = req.params;
+
+  const episodeDetails = await episodeModel.findByIdAndDelete(episodeId);
+
+  if (!episodeDetails) {
+    return next(new CustomError("Episode Not found for the given Id", 400));
+  }
+
+  return res.status(200).json({
+    statusCode: 200,
+    message: "Episode deleted Successfully",
+    success: true,
+    data: episodeDetails,
+  });
+});
+
+module.exports = {
+  createEpisode,
+  getEpisode,
+  episodeGetById,
+  updateEpisode,
+  deleteEpisode,
+};

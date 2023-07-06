@@ -14,12 +14,12 @@ const episodeSchema = new Schema(
       minLength: [10, "Episode description must be at least 10 characters"],
       maxLength: [100, "Episode description must be less than 100 characters"],
     },
-    episodeThumbnail: [
+    thumbnail: [
       {
-        episodePublicId: {
+        thumbnailID: {
           type: String,
         },
-        episodeSecureUrl: {
+        thumbnailUrl: {
           type: String,
         },
       },

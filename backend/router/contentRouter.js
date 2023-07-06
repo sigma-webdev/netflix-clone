@@ -23,6 +23,7 @@ const {
   getEpisode,
   episodeGetById,
   updateEpisode,
+  deleteEpisode,
 } = require("../controller/episodeController");
 
 const contentRoute = express.Router();
@@ -107,8 +108,7 @@ contentRoute
     checkUserSubscription,
     episodeGetById
   )
-  .put(jwtAuth, authorizeRoles("ADMIN"), updateEpisode);
-
-// TODO: delete episode route
+  .put(jwtAuth, authorizeRoles("ADMIN"), updateEpisode)
+  .delete(jwtAuth, authorizeRoles("ADMIN"), deleteEpisode);
 
 module.exports = contentRoute;
