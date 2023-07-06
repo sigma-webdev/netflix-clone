@@ -1,18 +1,19 @@
-
+import { useEffect } from "react";
+import "chart.js/auto";
 import { Pie } from "react-chartjs-2";
-
-
-import { useSelector } from "react-redux";
+import { getUsersData } from "../../store/dashboardSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 const PieChart = () => {
-
   const usersData = useSelector((state) => state.dashboard.usersData);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUsersData());
+  }, [dispatch]);
 
- 
   const data = {
     labels:
-      Object.keys(usersData).length &&
-      Object.keys(usersData?.data?.plans),
+      Object.keys(usersData).length && Object.keys(usersData?.data?.plans),
     datasets: [
       {
         label: "Popularity",

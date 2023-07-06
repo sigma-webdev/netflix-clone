@@ -45,18 +45,7 @@ export const getUsersData = createAsyncThunk(
   }
 );
 
-export const getSalesStats = createAsyncThunk(
-  "/dashboard/get/sales",
-  async () => {
-    try {
-      const response = await axiosInstance.get("/admin/sales-stats");
-      console.log(response)
-      return response.data;
-    } catch (error) {
-      //   return rejectWithValue(error);
-    }
-  }
-);
+
 
 export const dashboardSlice = createSlice({
   name: "dashboard",
@@ -93,24 +82,13 @@ export const dashboardSlice = createSlice({
       })
       .addCase(getUsersData.fulfilled, (state, action) => {
         state.usersData = action?.payload;
+
         state.loading = false;
       })
       .addCase(getUsersData.rejected, (state) => {
         state.loading = false;
       })
-      //for salesStats
-      .addCase(getSalesStats.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getSalesStats.fulfilled, (state, action) => {
-      
-        state.salesStats = action?.payload;
-          console.log(state.salesStats, "//////////////////");
-        state.loading = false;
-      })
-      .addCase(getSalesStats.rejected, (state) => {
-        state.loading = false;
-      });
+     
   },
 });
 
