@@ -1,8 +1,6 @@
-const asyncHandler = require("../middleware/asyncHandler");
-const contentModel = require("../model/contentSchema");
-const userModel = require("../model/userSchema");
-const CustomError = require("../utils/customError");
-const razorpay = require("../config/razorpayConfig.js");
+const asyncHandler = require("../middleware/asyncHandler.js");
+const contentModel = require("../model/content.schema.js");
+const userModel = require("../model/user.schema.js");
 
 const plans = ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"];
 

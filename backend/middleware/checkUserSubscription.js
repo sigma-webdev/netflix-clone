@@ -1,4 +1,4 @@
-const userModel = require("../model/userSchema.js");
+const userModel = require("../model/user.schema.js");
 const CustomError = require("../utils/customError.js");
 
 // This middleware will check if user has active subscription or not, if not return error message

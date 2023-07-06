@@ -10,14 +10,14 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 // routes
-const authRouter = require("./router/authRouter.js");
-const paymentRouter = require("./router/paymentRouter.js");
-const contentRoute = require("./router/contentRouter");
-const userRouter = require("./router/userRouter.js");
-const miscRoute = require("./router/miscRouter.js");
+const authRouter = require("./router/auth.router.js");
+const paymentRouter = require("./router/payment.router.js");
+const contentRoute = require("./router/content.router");
+const userRouter = require("./router/user.router.js");
+const miscRoute = require("./router/misc.router.js");
 
 // database connection
-require("./config/databaseConnection");
+require("./config/database.config.js");
 
 app.use(
   cors({

@@ -1,6 +1,6 @@
 const { getVideoDurationInSeconds } = require("get-video-duration");
 
-const CustomError = require("./customError");
+const CustomError = require("./customError.js");
 
 function formatDuration(durationInSec) {
   const seconds = Math.round(durationInSec);

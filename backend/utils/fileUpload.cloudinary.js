@@ -1,5 +1,5 @@
-const cloudinary = require("../config/cloudinaryConfig");
-const CustomError = require("./customError");
+const cloudinary = require("../config/cloudinary.config.js");
+const CustomError = require("./customError.js");
 
 const cloudinaryFileUpload = async (files, next) => {
   // cloudinary folder name
