@@ -1,12 +1,11 @@
 const crypto = require("crypto");
 
-const customError = require("../utils/customError.js");
-const userModel = require("../model/userSchema.js");
-const razorpay = require("../config/razorpayConfig.js");
-const paymentModel = require("../model/paymentSchema.js");
+const userModel = require("../model/user.schema.js");
+const razorpay = require("../config/razorpay.config.js");
+const paymentModel = require("../model/payment.schema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
-const SubscriptionPlanModel = require("../model/subscriptionPlanSchema.js");
+const SubscriptionPlanModel = require("../model/subscriptionPlan.schema.js");
 
 /******************************************************
  * @createSubscription
@@ -48,12 +47,12 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   const user = await userModel.findById(id);
 
   if (!user) {
-    return next(new customError("Unauthorized, please login"));
+    return next(new CustomError("Unauthorized, please login"));
   }
 
   // Checking the user role
   if (user.role === "ADMIN") {
-    return next(new customError("Admin cannot purchase a subscription", 400));
+    return next(new CustomError("Admin cannot purchase a subscription", 400));
   }
 
   // Creating a subscription using razorpay that we imported from the config/rasorpayConfig.js
@@ -69,7 +68,7 @@ const createSubscription = asyncHandler(async (req, res, next) => {
     user.subscription.status = subscription.status;
   } catch (error) {
     return next(
-      new customError(
+      new CustomError(
         error.error.description ||
           "Error during creating RazorPay subscription",
         400
@@ -283,7 +282,7 @@ const deletePlan = asyncHandler(async (req, res, next) => {
   const { planDocumentId } = req.params;
 
   const result = await SubscriptionPlanModel.findByIdAndDelete(planDocumentId);
-  if (!result) return next(new customError("resource not found", 404));
+  if (!result) return next(new CustomError("resource not found", 404));
 
   return res.status(200).json({
     statusCode: 200,

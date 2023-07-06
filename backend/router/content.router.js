@@ -7,10 +7,10 @@ const {
   httpDeleteById,
   httpUpdateById,
   contentLikes,
-} = require("../controller/contentController");
-const jwtAuth = require("../middleware/jwtAuth");
-const authorizeRoles = require("../middleware/authorizeRoles");
-const checkUserSubscription = require("../middleware/checkUserSubscription");
+} = require("../controller/content.controller.js");
+const jwtAuth = require("../middleware/jwtAuth.js");
+const authorizeRoles = require("../middleware/authorizeRoles.js");
+const checkUserSubscription = require("../middleware/checkUserSubscription.js");
 
 const contentRoute = express.Router();
 // like & dislike routes --

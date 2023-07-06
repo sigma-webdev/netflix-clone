@@ -1,5 +1,5 @@
-const cloudinary = require("../config/cloudinaryConfig");
-const CustomError = require("./customError");
+const cloudinary = require("../config/cloudinary.config.js");
+const CustomError = require("./customError.js");
 
 // Cloudinary delete
 const cloudinaryFileDelete = async (publicId, next, fileType = "video") => {
