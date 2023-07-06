@@ -13,7 +13,7 @@ const authorizeRoles = require("../middleware/authorizeRoles.js");
 
 const paymentRouter = express.Router();
 
-paymentRouter.route("/subscribe").post(jwtAuth, createSubscription);
+paymentRouter.route("/subscribe/:planId").post(jwtAuth, createSubscription);
 
 paymentRouter.route("/rasorpaykey").get(jwtAuth, getRazorpayApiKey);
 
@@ -24,7 +24,7 @@ paymentRouter
 paymentRouter
   .route("/plan")
   .post(jwtAuth, authorizeRoles("ADMIN"), createPlan)
-  .get(jwtAuth, authorizeRoles("ADMIN"), getPlans);
+  .get(jwtAuth, getPlans);
 
 paymentRouter
   .route("/plan/:planDocumentId")

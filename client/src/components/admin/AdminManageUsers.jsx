@@ -120,7 +120,7 @@ const AdminManageUsers = () => {
           <table className="mx-auto w-5/6 table-auto overflow-scroll  text-gray-200">
             <thead className="text-left">
               <tr className="bg-red-600 text-white">
-                <th className="px-4 py-2">S. No</th>
+                <th className="px-4 py-2">Sr. No.</th>
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2 text-center">Action</th>
