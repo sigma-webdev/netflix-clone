@@ -1,6 +1,6 @@
 const asyncHandler = require("../middleware/asyncHandler");
-const contentModel = require("../model/contentSchema");
-const seasonModel = require("../model/seasonSchema");
+const contentModel = require("../model/content.schema");
+const seasonModel = require("../model/season.schema");
 const CustomError = require("../utils/customError");
 
 /********************
@@ -17,8 +17,12 @@ const createSeason = asyncHandler(async (req, res, next) => {
   // make sure series is available
   const { seriesId } = req.params;
 
-  const seriesData = await contentModel.findById(seriesId);
+  const seriesData = await contentModel
+    .findById(seriesId)
+    .populate([{ path: "contentSeries" }]);
 
+  const { contentSeries } = seriesData;
+  // make sure series is data is present
   if (!seriesData) {
     return next(
       new CustomError(
@@ -33,51 +37,53 @@ const createSeason = asyncHandler(async (req, res, next) => {
     const message = seasonNumber ? "seasonSummary" : "seasonNumber";
     return next(new CustomError(`Missing Field - ${message}`, 400));
   }
+
   // read season and check for duplicate season number
-  const seasons = await seasonModel.find();
+  // check for series duplicates and add--
+  if (contentSeries.length > 0) {
+    contentSeries.forEach((season) => {
+      if (season.seasonNumber == seasonNumber) {
+        return next(
+          new CustomError(
+            " Season already Exist!, Enter alternate Season Number",
+            400
+          )
+        );
+      }
+    });
+  }
 
   // handle season duplicate number
-  let seasonPresent = false;
-  for (const season of seasons) {
-    if (season.seasonNumber === seasonNumber) {
-      seasonPresent = true;
-      return next(new CustomError("Season Value already exist!", 400));
-    }
-  }
   let seasonField = {
     seasonNumber,
     seasonSummary,
   };
 
-  if (!seasonPresent) {
-    const seasonDetails = seasonModel(seasonField);
+  const seasonDetails = seasonModel(seasonField);
 
-    const seasonData = await seasonDetails.save();
-    // check for season data
-    if (!seasonData) {
-      return next(
-        new CustomError(
-          "season fail to save to database! Please try again",
-          400
-        )
-      );
-    }
+  let seasonData = await seasonDetails.save();
 
-    ////// add the season to series //////
-    if (!seriesData.contentSeries.includes(seasonData._id)) {
-      seriesData.contentSeries.push(seasonData._id);
-      await seriesData.save();
-    } else {
-      return next(new CustomError("Season already present!", 400));
-    }
-
-    return res.status(201).json({
-      statusCode: 201,
-      success: true,
-      message: "season created",
-      data: seasonData,
-    });
+  // check for season data
+  if (!seasonData) {
+    return next(
+      new CustomError("season fail to save to database! Please try again", 400)
+    );
   }
+
+  ////// add the season to series //////
+  if (!seriesData.contentSeries.includes(seasonData._id)) {
+    seriesData.contentSeries.push(seasonData._id);
+    await seriesData.save();
+  } else {
+    return next(new CustomError("Season already present!", 400));
+  }
+
+  return res.status(201).json({
+    statusCode: 201,
+    success: true,
+    message: "season created",
+    data: seasonData,
+  });
 });
 
 /********************

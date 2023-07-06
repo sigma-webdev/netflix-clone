@@ -1,8 +1,8 @@
 const asyncHandler = require("../middleware/asyncHandler");
-const contentModel = require("../model/contentSchema");
+const contentModel = require("../model/content.schema");
 
-const episodeModel = require("../model/episodeSchema");
-const seasonModel = require("../model/seasonSchema");
+const episodeModel = require("../model/episode.schema");
+const seasonModel = require("../model/season.schema");
 const CustomError = require("../utils/customError");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary");
@@ -62,6 +62,10 @@ const createEpisode = asyncHandler(async (req, res, next) => {
 
   // create episode mongoose object
   const episodeObject = new episodeModel(episodeDetails);
+
+  // check to make sure that episodeNumber is unique before save
+  const episodes = await episodeModel.find();
+
   const episodeData = await episodeObject.save();
 
   if (!episodeData) {

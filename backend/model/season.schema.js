@@ -6,7 +6,6 @@ const seasonSchema = new Schema(
     seasonNumber: {
       type: Number,
       required: [true, "Season name is Required"],
-      unique: true,
     },
     seasonSummary: {
       type: String,
