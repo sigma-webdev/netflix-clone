@@ -4,6 +4,7 @@ const contentModel = require("../model/contentSchema");
 const episodeModel = require("../model/episodeSchema");
 const seasonModel = require("../model/seasonSchema");
 const CustomError = require("../utils/customError");
+const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary");
 const getContentLength = require("../utils/getVideoLength");
 
@@ -31,30 +32,6 @@ const createEpisode = asyncHandler(async (req, res, next) => {
       },
     ],
   };
-
-  //   // upload and add file
-  //   let episodeFiles;
-  //   if (req.files) {
-  //     console.log(req.files, "/////////req.files>>>>>>>>>");
-  //     episodeFiles = await cloudinaryFileUpload(req.files, next);
-  //   }
-
-  //   if (episodeFiles.thumbnail) {
-  //     episodeDetails.thumbnail = episodeFiles.thumbnail;
-  //   }
-
-  //   if (episodeFiles.episodeVideo) {
-  //     episodeDetails.episodeVideo = episodeFiles.episodeVideo;
-
-  //     // get content length
-  //     episodeDetails.episodeVideo.duration = await getContentLength(
-  //       episodeFiles.episodeVideo?.episodeVideoPublicUrl,
-  //       next
-  //     );
-  //   }
-
-  //   console.log("episodeDetails -----------", episodeDetails);
-  //// check for required field
 
   // checking for missing fields
   const requiredFields = [
@@ -171,4 +148,97 @@ const episodeGetById = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { createEpisode, getEpisode, episodeGetById };
+/********************
+ * @updateEpisode
+ * @route http://localhost:8081/api/v1/contents/episode/episodeId
+ * @description  controller to update a specific episode
+ * @parameters {request body object}
+ * @return { ObjectId } episodeId
+ ********************/
+const updateEpisode = asyncHandler(async (req, res, next) => {
+  const { episodeId } = req.params;
+
+  const { body, files } = req;
+
+  // make sure the episode data is present
+  const episodeData = await episodeModel.findById(episodeId);
+
+  if (!episodeData) {
+    return next(
+      new CustomError("Not able to fetch data for the given Episode Id", 404)
+    );
+  }
+
+  // temp files storing
+  let episodeFiles;
+  // check files and delete the previous file and upload
+  if (files) {
+    // delete thumbnails
+    if (files.episodeThumbnail && episodeData?.episodeThumbnail.length > 0) {
+      episodeData?.episodeThumbnail.map((thumbObj) => {
+        if (thumbObj.episodeVideoPublicId) {
+          cloudinaryFileDelete(thumbObj.episodePublicId, next, "image");
+        }
+      });
+    }
+    // delete episode video
+    if (files.episodeVideo && episodeData.episodeVideo?.episodeVideoPublicId) {
+      cloudinaryFileDelete(
+        episodeData.episodeVideo?.episodeVideoPublicId,
+        next
+      );
+    }
+    // after delete upload
+    episodeFiles = await cloudinaryFileUpload(req.files, next);
+  }
+
+  if (episodeFiles.episodeVideo?.episodeVideoPublicId) {
+    // get content length
+    episodeFiles.episodeVideo.duration = await getContentLength(
+      episodeFiles.episodeVideo?.episodeVideoPublicUrl,
+      next
+    );
+  }
+  // saving files ---
+  const updatedEpisodeData = await episodeModel
+    .findByIdAndUpdate(
+      episodeId,
+      {
+        $set: { ...body, ...episodeFiles },
+      },
+      { new: true }
+    )
+    // if fail to save - delete the uploaded cloudinary files
+    .catch((error) => {
+      // DELETE File passing particularId
+      if (episodeFiles.episodeVideo?.episodeVideoPublicId) {
+        cloudinaryFileDelete(
+          episodeFiles.episodeVideo?.episodeVideoPublicId,
+          next
+        );
+      }
+      if (episodeFiles.episodeThumbnail) {
+        episodeThumbnail?.episodeThumbnail.map((thumbObj) =>
+          cloudinaryFileDelete(thumbObj.episodePublicId, next, "image")
+        );
+      }
+
+      return next(new CustomError(`File not able to save!- ${error}`, 500));
+    });
+
+  if (!updatedEpisodeData) {
+    return next(
+      new CustomError(
+        "Episode fail to save/update to database! Please try again",
+        400
+      )
+    );
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Episode added/updated successfully",
+    data: updatedEpisodeData,
+  });
+});
+
+module.exports = { createEpisode, getEpisode, episodeGetById, updateEpisode };
