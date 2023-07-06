@@ -9,7 +9,6 @@ const AdminManageUsers = () => {
   const allUsers = useSelector((state) => state.user.allUsers);
   const isDataLoading = useSelector((state) => state.user.loading);
   const getUser = useSelector((state) => state.user.userById);
-  console.log(getUser, "abcd");
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [searchText, setSearchText] = useState("");
@@ -46,13 +45,11 @@ const AdminManageUsers = () => {
 
   const userById = (id) => {
     toggleModal(true);
-    console.log(id);
     dispatch(getUserById(id));
   };
 
   return (
     <>
-      {/* <AdminPageLoader/> */}
       {isOpen && (
         <div className="absolute flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
           <div className="relative w-96 rounded-lg bg-white px-4 py-12">
