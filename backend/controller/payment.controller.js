@@ -5,6 +5,7 @@ const razorpay = require("../config/razorpay.config.js");
 const paymentModel = require("../model/payment.schema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
+const subscriptionPlanModel = require("../model/subscriptionPlan.schema.js");
 const SubscriptionPlanModel = require("../model/subscriptionPlan.schema.js");
 
 /******************************************************
@@ -20,6 +21,11 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   // Extracting ID from request obj
   const { id } = req.user;
   const planName = req.body.planName || "";
+
+  const subscriptionPlans = subscriptionPlanModel.find(
+    { active: true },
+    { planId: 1 }
+  );
 
   const {
     RAZORPAY_STANDARD_PLAN,
