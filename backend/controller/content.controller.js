@@ -1,5 +1,5 @@
 const CustomError = require("../utils/customError.js");
-const Content = require("../model/contentSchema.js");
+const Content = require("../model/content.schema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const getContentLength = require("../utils/getVideoLength.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
@@ -57,20 +57,18 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   };
 
   if (details.contentType === "Movie") {
-    details["content"] = [
-      {
-        contentURL:
-          "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
-      },
-    ];
+    details.content = {
+      contentURL:
+        "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
+    };
 
     // get content video length
-    if (details.content[0].contentURL) {
+    if (details.content?.contentURL) {
       const contentLength = await getContentLength(
-        details.content[0]?.contentURL,
+        details.content?.contentURL,
         next
       );
-      details.content[0].contentDuration = contentLength;
+      details.content.contentDuration = contentLength;
     }
   }
 
@@ -100,7 +98,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   }
 
   // create mongoose
-  const contentDetails = Content(details);
+  const contentDetails = new Content(details);
 
   const contentData = await contentDetails.save();
 
@@ -113,6 +111,7 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
+    message: "Content Created successfully",
     data: contentData,
   });
 });
@@ -206,17 +205,20 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
-    // TODO: test fail, reverted back.
     .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
+
+  if (!result.contents) {
+    next(new CustomError("Content not able Fetch"));
+  }
 
   return res.status(200).json({
     success: true,
     data: result,
+    message: "Content Fetched successfully",
   });
 });
 
 /********************
- *
  * @httpGetContentById
  * @route http://localhost:8081/api/v1/content/id
  * @description  controller to create the content
@@ -267,24 +269,27 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
   }
 
   const { thumbnail, trailer, content } = contentData;
-
-  // FIXME: Fix this as discussed (MANG)
-  // perform delete in cloudinary
-  if (contentData) {
-    if (content[0].contentID) {
-      cloudinaryFileDelete(content[0].contentID, next);
+  if (contentData.length !== 0) {
+    if (content?.contentID) {
+      cloudinaryFileDelete(content?.contentID, next);
     }
 
-    if (trailer[0].trailerId) {
-      cloudinaryFileDelete(trailer[0].trailerId, next);
+    if (trailer.length > 0) {
+      trailer.map((trailerObj) => {
+        if (trailerObj?.trailerId)
+          cloudinaryFileDelete(trailerObj.trailerId, next);
+      });
     }
 
-    if (thumbnail[0].thumbnailID) {
-      cloudinaryFileDelete(thumbnail[0].thumbnailID, next, "image");
+    if (thumbnail.length > 0) {
+      thumbnail.map((thumbnailObj) => {
+        if (thumbnailObj?.thumbnailID)
+          cloudinaryFileDelete(thumbnailObj.thumbnailID, next, "image");
+      });
     }
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Content deleted successfully",
     data: contentData,
@@ -314,43 +319,35 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   // files temporary storage
   let contentFiles;
 
-  // FIXME: Fix the below [0] as discussed
   if (files) {
-    // delete pre-existing file
-    if (
-      files.content &&
-      contentData.content.length > 0 &&
-      contentData.content[0]?.contentID
-    ) {
-      cloudinaryFileDelete(contentData.content[0]?.contentID, next);
+    // delete pre-existing content
+    if (files.content && contentData.content?.contentID) {
+      cloudinaryFileDelete(contentData.content?.contentID, next);
     }
 
-    if (
-      files.trailer &&
-      contentData.trailer.length > 0 &&
-      contentData.trailer[0]?.trailerId
-    ) {
-      cloudinaryFileDelete(contentData.trailer[0]?.trailerId, next);
+    // delete pre-existing trailer
+    if (files.trailer && contentData?.trailer.length > 0) {
+      contentData?.trailer.map((trailerObj) => {
+        if (trailerObj?.trailerId) {
+          cloudinaryFileDelete(trailerObj.trailerId, next);
+        }
+      });
     }
 
-    if (
-      files.thumbnail &&
-      contentData.thumbnail.length > 0 &&
-      contentData.thumbnail[0]?.thumbnailID
-    ) {
-      cloudinaryFileDelete(
-        contentData.thumbnail[0]?.thumbnailID,
-        next,
-        "image"
-      );
+    if (files.thumbnail && contentData?.thumbnail.length > 0) {
+      contentData?.thumbnail.map((thumbObj) => {
+        if (thumbObj.thumbnailID) {
+          cloudinaryFileDelete(thumbObj.thumbnailID, next, "image");
+        }
+      });
     }
 
     contentFiles = await cloudinaryFileUpload(files, next);
 
     if (contentFiles.content) {
-      if (contentFiles.content[0]?.contentID) {
-        contentFiles.content[0].contentDuration = await getContentLength(
-          contentFiles.content[0]?.contentURL,
+      if (contentFiles.content?.contentID) {
+        contentFiles.content.contentDuration = await getContentLength(
+          contentFiles.content?.contentURL,
           next
         );
       }
@@ -359,7 +356,7 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
   const updatedData = await Content.findByIdAndUpdate(
     contentId,
-    { ...body, ...contentFiles }, // TODO: try to use $set here
+    { $set: { ...body, ...contentFiles } },
     {
       new: true,
       runValidators: true,
@@ -367,16 +364,16 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
   ).catch((error) => {
     // DELETE File passing particularId
     if (contentFiles.trailer) {
-      cloudinaryFileDelete(contentFiles.trailer[0].trailerId, next);
+      contentData?.trailer.map((trailerObj) =>
+        cloudinaryFileDelete(trailerObj.trailerId, next)
+      );
     }
     if (contentFiles.content) {
-      cloudinaryFileDelete(contentFiles.content[0].contentID, next);
+      cloudinaryFileDelete(contentFiles.content?.contentID, next);
     }
     if (contentFiles.thumbnail) {
-      cloudinaryFileDelete(
-        contentFiles.thumbnail[0].thumbnailID,
-        next,
-        "image"
+      contentData?.thumbnail.map((thumbObj) =>
+        cloudinaryFileDelete(thumbObj.thumbnailID, next, "image")
       );
     }
 

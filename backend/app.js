@@ -10,13 +10,14 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 // routes
-const authRouter = require("./router/authRouter.js");
-const paymentRouter = require("./router/paymentRouter.js");
-const contentRoute = require("./router/contentRouter");
-const userRouter = require("./router/userRouter.js");
+const authRouter = require("./router/auth.router.js");
+const paymentRouter = require("./router/payment.router.js");
+const contentRoute = require("./router/content.router");
+const userRouter = require("./router/user.router.js");
+const miscRoute = require("./router/misc.router.js");
 
 // database connection
-require("./config/databaseConnection");
+require("./config/database.config.js");
 
 app.use(
   cors({
@@ -45,6 +46,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/contents", contentRoute);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1", miscRoute);
 
 app.get("/health-check", (req, res) => {
   return res.status(200).json({

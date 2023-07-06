@@ -1,4 +1,4 @@
-const userModel = require("../model/userSchema.js");
+const userModel = require("../model/user.schema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
@@ -196,7 +196,6 @@ const getWatchHistoryContents = asyncHandler(async (req, res, next) => {
   const user = await userModel.findById(userId).populate([
     {
       path: "watchHistory",
-      select: "name thumbnail likesCount rating language categories genres",
       options: {
         skip: startIndex,
         limit: LIMIT,
@@ -326,7 +325,6 @@ const getWatchListContent = asyncHandler(async (req, res, next) => {
   const user = await userModel.findById(userId).populate([
     {
       path: "watchList",
-      select: "name thumbnail likesCount rating language categories genres",
       options: {
         skip: startIndex,
         limit: LIMIT,

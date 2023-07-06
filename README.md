@@ -7,7 +7,11 @@ netflix-clone-v.0.0.1
 ### Project Design
 
 1. Front End - React.js
-2. Back End - Express.js
+2. State Management - Redux Tool Kit
+3. Route Management - React Router
+4. Back End - Express.js
+5. Database - MonogoDB
+6. Storage - Cloudinary
 
 ---
 

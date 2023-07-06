@@ -1,23 +1,26 @@
 const JWT = require("jsonwebtoken");
 
 const jwtAuth = (req, res, next) => {
-  const token = (req.cookies && req.cookies.token) || null;
+  const token =
+    (req.cookies && req.cookies.token) ||
+    (req.headers.authorization && req.headers["authorization"].split(" ")[1]) ||
+    null;
 
   if (!token) {
-    return res.status(400).json({
-      statusCode: 400,
+    return res.status(401).json({
+      statusCode: 401,
       success: false,
-      message: "NOT authorized",
+      message: "You are not authorized, please login.",
       data: null,
     });
   }
 
   JWT.verify(token, process.env.JWT_SECRET, function (error, payload) {
     if (error) {
-      return res.status(400).json({
-        statusCode: 400,
+      return res.status(401).json({
+        statusCode: 401,
         success: false,
-        message: error.message,
+        message: "You are not authorized, please login.",
         data: null,
       });
     } else {

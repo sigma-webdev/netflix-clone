@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
 
 const initialState = {
-  isLoggedIn: false,
   allUsers: [],
   userById: {},
   loading: false,
@@ -10,11 +9,13 @@ const initialState = {
 
 export const getAllUsers = createAsyncThunk(
   "/users",
-  async ({pageNo,searchValue}, { rejectWithValue }) => {
+  async ({ pageNo, searchValue }, { rejectWithValue }) => {
     try {
-      const url = searchValue ? `/users?search=${searchValue}` :`/users?page=${pageNo}&limit=10`
-      let response = await axiosInstance.get(url)
-      return response.data
+      const url = searchValue
+        ? `/users?search=${searchValue}`
+        : `/users?page=${pageNo}&limit=10`;
+      let response = await axiosInstance.get(url);
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -24,7 +25,6 @@ export const getAllUsers = createAsyncThunk(
 export const getUserById = createAsyncThunk(
   "users/getUserById",
   async (userId, { rejectWithValue }) => {
-    console.log(userId,"in");
     try {
       let response = await axiosInstance.get(`/users/${userId}`);
       return response.data;
@@ -34,7 +34,7 @@ export const getUserById = createAsyncThunk(
   }
 );
 
-export const userSlice = createSlice({
+const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
@@ -54,17 +54,17 @@ export const userSlice = createSlice({
       })
 
       // get user by id
-      .addCase(getUserById.pending, (state)=> {
+      .addCase(getUserById.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getUserById.fulfilled, (state, action)=>{
-        state.userById = action.payload
-        state.loading = false
+      .addCase(getUserById.fulfilled, (state, action) => {
+        state.userById = action.payload;
+        state.loading = false;
       })
-      .addCase(getUserById.rejected, (state) =>{
-        state.userById = {}
-        state.loading = false
-      })
+      .addCase(getUserById.rejected, (state) => {
+        state.userById = {};
+        state.loading = false;
+      });
   },
 });
 

@@ -9,7 +9,6 @@ const AdminManageUsers = () => {
   const allUsers = useSelector((state) => state.user.allUsers);
   const isDataLoading = useSelector((state) => state.user.loading);
   const getUser = useSelector((state) => state.user.userById);
-  console.log(getUser, "abcd");
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [searchText, setSearchText] = useState("");
@@ -46,13 +45,11 @@ const AdminManageUsers = () => {
 
   const userById = (id) => {
     toggleModal(true);
-    console.log(id);
     dispatch(getUserById(id));
   };
 
   return (
     <>
-      {/* <AdminPageLoader/> */}
       {isOpen && (
         <div className="absolute flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
           <div className="relative w-96 rounded-lg bg-white px-4 py-12">
@@ -123,7 +120,7 @@ const AdminManageUsers = () => {
           <table className="mx-auto w-5/6 table-auto overflow-scroll  text-gray-200">
             <thead className="text-left">
               <tr className="bg-red-600 text-white">
-                <th className="px-4 py-2">S. No</th>
+                <th className="px-4 py-2">Sr. No.</th>
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2 text-center">Action</th>
@@ -173,7 +170,7 @@ const AdminManageUsers = () => {
               Previous Page
             </button>
             <div className=" rounded-full border-2 border-red-400 px-[10px] text-xl font-bold text-red-600 ">
-              {page}
+              Page {page} of {allUsers?.data?.totalPages}
             </div>
             <button
               onClick={nextPage}
