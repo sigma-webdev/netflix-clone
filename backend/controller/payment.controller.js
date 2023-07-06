@@ -164,7 +164,6 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
 
 const createPlan = asyncHandler(async (req, res, next) => {
   const { planName, amount, description, active } = req.body;
-  console.log(req.body);
   if (!planName || !amount || !description) {
     return next(
       new CustomError(
