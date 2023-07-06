@@ -32,6 +32,7 @@ export const fetchContent = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -63,7 +64,6 @@ export const fetchContentBySearch = createAsyncThunk(
         return [];
       } else {
         const response = await axiosInstance.get(url);
-
         const data = response.data.data.contents;
         contentsObject = data.map((item) => {
           return convertResponseToContentObject(item, userId);
