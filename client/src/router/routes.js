@@ -85,7 +85,16 @@ const router = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: "/browse",
+    element: <Browse />,
+    children: [],
+  },
+  {
+    path: "/watch/:contentId",
+    element: <Watch />,
+    children: [],
+  },
   // for routes which are for admin and normal user both
   {
     element: <RequireAuth allowedRoles={["ADMIN", "USER"]} />,

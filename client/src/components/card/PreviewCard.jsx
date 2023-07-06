@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addContentToWatchHistory,
@@ -28,9 +28,23 @@ const PreviewCard = ({
   const likeDisLikeLoading = useSelector(
     (state) => state.content.likeDisLikeLoading
   );
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const videoRef = useRef(null);
+
+  function playPauseMedia() {
+    const media = videoRef.current;
+
+    if (media.paused) {
+      media.play();
+      setIsVideoPlaying(true);
+    } else {
+      media.pause();
+      setIsVideoPlaying(false);
+    }
+  }
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
@@ -55,11 +69,20 @@ const PreviewCard = ({
     navigate(`/watch/${contentId}`);
   };
 
+  const handleAutoPlay = () => {
+    playPauseMedia();
+  };
+
   return (
-    <div className="group w-48 scale-100 rounded drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
+    <div
+      className="group w-48 scale-100 rounded drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64"
+      onMouseEnter={handleAutoPlay}
+      onMouseOut={handleAutoPlay}
+    >
       {/* preview video*/}
       <div className="w-48 md:w-64">
         <video
+          ref={videoRef}
           className="h-28 w-48 rounded-tl rounded-tr object-cover md:h-32 md:w-64"
           poster={thumbnailUrl}
           src={trailerUrl}
@@ -110,7 +133,7 @@ const PreviewCard = ({
 
       {isOpenDetails &&
         createPortal(
-          <div className="fixed top-0 z-50 flex h-full w-full items-center bg-black/60 ">
+          <div className="fixed top-0 z-50 flex h-full w-full items-center overflow-hidden bg-black/60 ">
             <DetailsCard
               contentId={contentId}
               name={name}

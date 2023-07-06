@@ -46,7 +46,7 @@ const DetailsCard = ({
   };
 
   return (
-    <div className=" tranistion relative mx-auto w-[90%] overflow-hidden rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
+    <div className=" tranistion relative mx-auto w-[90%] rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
       <div className="relative">
         {/* preview video*/}
         <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[100px] lg:h-[150px]"></div>

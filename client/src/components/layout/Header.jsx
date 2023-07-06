@@ -20,7 +20,6 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.auth?.userData);
-  console.log(user);
   const IS_LOGGED_IN = useSelector((state) => state?.auth?.isLoggedIn);
   const IS_LOADING = useSelector((state) => state?.auth?.loading);
   const [searchText, setSearchText] = useState("");
