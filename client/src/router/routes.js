@@ -22,6 +22,7 @@ import ResetPassword from "../pages/SignIn/ResetPassword.jsx";
 import NotRequireAuth from "../helpers/auth/NotRequireAuth.jsx";
 import RequireAuth from "../helpers/auth/RequireAuth.jsx";
 import NotFound from "../pages/NotFound.jsx";
+import AdminManagePlans from "../components/admin/AdminManagePlans.jsx";
 
 const router = createBrowserRouter([
   // for open routes
@@ -136,6 +137,10 @@ const router = createBrowserRouter([
             path: "/admin/managecontents/:contentId",
             element: <AdminContentView />,
             children: [],
+          },
+          {
+            path: "/admin/manageplans",
+            element: <AdminManagePlans />,
           },
         ],
       },
