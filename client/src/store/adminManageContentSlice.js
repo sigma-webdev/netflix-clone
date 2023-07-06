@@ -6,7 +6,12 @@ const initialState ={
     filteredContent: [],
     currentContent:{},
     isLoading: false,
-    isUploading: false
+    isDetailsUploading: false,
+    isThumbnailUploading:false,
+    isTrailerUploading:false,
+    isContentUploading:false,
+
+
 }
 
 
@@ -85,39 +90,76 @@ export const fetchContentById = createAsyncThunk(
   );
   
   //  update content by id
-  export const updateContentById = createAsyncThunk(
-    "content/updateContentById",
-    async ( {id, newData} , { rejectWithValue, dispatch }) => {
-      let progress = 0;
-      console.log("called updar", newData, "//////", id);
-      try {
-        const response = await axiosInstance.put(
-          `/contents/${id}`,
-          newData,
-          {
-            onUploadProgress: (progressEvent) => {
-              console.log(progressEvent,'//progress event')
-              progress = Math.round(
-                (progressEvent.loaded / progressEvent.total) * 100
-              );
-              dispatch(updateContentProgress(progress));
-            },
-          }
+  export const updateContentDetailsById = createAsyncThunk(
+    "content/updateContentDetailsById",
+    async ( {id, newData}  , { rejectWithValue, dispatch }) => {
 
-        );
+      // console.log("called updar", newData, "//////", id);
+      try {
+        const response = await axiosInstance.put( `/contents/${id}`, newData);
         const data = response.data.data;
-          console.log({ ...data, progress },"//ress")
-        return { ...data, progress };
+     
+        return data;
       } catch (error) {
         console.log(error,'errorrrr//')
         return rejectWithValue(error.response);
       }
     }
   );
+    //  update content thumbnail by id
+    export const updateContentThumbnailById = createAsyncThunk(
+      "content/updateContentThumbnailById",
+      async ( {id, newData}  , { rejectWithValue, dispatch }) => {
   
-  export const updateContentProgress = (progress) => {
-    return { type: "content/updateProgress", payload: progress };
-  };
+        // console.log("called updar", newData, "//////", id);
+        try {
+          const response = await axiosInstance.put( `/contents/${id}`, newData);
+          const data = response.data.data;
+       
+          return data;
+        } catch (error) {
+          console.log(error,'errorrrr//')
+          return rejectWithValue(error.response);
+        }
+      }
+    );
+  
+  //  update content video by id
+  export const updateContentVideoById = createAsyncThunk(
+    "content/updateContentVideoById",
+    async ( {id, newData}  , { rejectWithValue, dispatch }) => {
+
+      console.log("called updar", newData, "//////", id);
+      try {
+        const response = await axiosInstance.put( `/contents/${id}`, newData);
+        const data = response.data.data;
+        console.log(data)
+        return data;
+      } catch (error) {
+        console.log(error,'errorrrr//')
+        return rejectWithValue(error.response);
+      }
+    }
+  );
+
+   //  update content video by id
+   export const updateContentTrailerById = createAsyncThunk(
+    "content/updateContentTrailerById",
+    async ( {id, newData}  , { rejectWithValue, dispatch }) => {
+
+      console.log("called updar", newData, "//////", id);
+      try {
+        const response = await axiosInstance.put( `/contents/${id}`, newData);
+        const data = response.data.data;
+     
+        return data;
+      } catch (error) {
+        console.log(error,'errorrrr//')
+        return rejectWithValue(error.response);
+      }
+    }
+  );
+
   // delete content by id
   export const deleteContentById = createAsyncThunk(
     "content/deleteContentById",
@@ -187,7 +229,7 @@ export const adminSlice = createSlice({
 
       // delete content by id
       .addCase(deleteContentById.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
       })
       .addCase(deleteContentById.fulfilled, (state, action) => {
         const deletedContentId = action.payload.contentId;
@@ -195,19 +237,19 @@ export const adminSlice = createSlice({
           (item) => item._id !== deletedContentId
         );
         state.allContent = filteredContent;
-        state.loading = false;
+        state.isLoading = false;
       })
       .addCase(deleteContentById.rejected, (state) => {
         state.allContent = [];
-        state.loading = false;
+        state.isLoading = false;
       })
 
-      // update content by id
-      .addCase(updateContentById.pending, (state) => {
-        state.isLoading = true;
-        // state.isUploading=true;
+      // update content by id for details
+      .addCase(updateContentDetailsById.pending, (state) => {
+
+        state.isDetailsUploading=true;
       })
-      .addCase(updateContentById.fulfilled, (state, action) => {
+      .addCase(updateContentDetailsById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
         state.currentContent = updatedContent;
 
@@ -217,14 +259,86 @@ export const adminSlice = createSlice({
         //     content._id === updatedContent._id ? updatedContent : content 
         //     )
         //   );
-        state.isLoading = false;
-        // state.isLoading = false;
+
+        state.isDetailsUploading = false;
       })
-      .addCase(updateContentById.rejected, (state) => {
-        state.isLoading = false;
-        // state.isUploading = false;
+      .addCase(updateContentDetailsById.rejected, (state) => {
+
+        state.isDetailsUploading = false;
+      })
+
+      // update content by id for thumbnail
+      .addCase(updateContentThumbnailById.pending, (state) => {
+
+        state.isThumbnailUploading=true;
+      })
+      .addCase(updateContentThumbnailById.fulfilled, (state, action) => {
+        const updatedContent = action.payload;
+        state.currentContent = updatedContent;
+
+        //have to fix filtered content state
+
+        // state.filteredContent = state.filteredContent.map((content) => (
+        //     content._id === updatedContent._id ? updatedContent : content 
+        //     )
+        //   );
+
+        state.isThumbnailUploading = false;
+      })
+      .addCase(updateContentThumbnailById.rejected, (state) => {
+
+        state.isThumbnailUploading = false;
+      })
+
+
+      // update content video by id 
+      .addCase(updateContentVideoById.pending, (state) => {
+
+        state.isContentUploading=true;
+      })
+      .addCase(updateContentVideoById.fulfilled, (state, action) => {
+        const updatedContent = action.payload;
+        state.currentContent = updatedContent;
+
+        //have to fix filtered content state
+
+        // state.filteredContent = state.filteredContent.map((content) => (
+        //     content._id === updatedContent._id ? updatedContent : content 
+        //     )
+        //   );
+
+        state.isContentUploading = false;
+      })
+      .addCase(updateContentVideoById.rejected, (state) => {
+
+        state.isContentUploading = false;
+      })
+
+
+       // update content trailer by id 
+       .addCase(updateContentTrailerById.pending, (state) => {
+
+        state.isTrailerUploading=true;
+      })
+      .addCase(updateContentTrailerById.fulfilled, (state, action) => {
+        const updatedContent = action.payload;
+        state.currentContent = updatedContent;
+
+        //have to fix filtered content state
+
+        // state.filteredContent = state.filteredContent.map((content) => (
+        //     content._id === updatedContent._id ? updatedContent : content 
+        //     )
+        //   );
+
+        state.isTrailerUploading = false;
+      })
+      .addCase(updateContentTrailerById.rejected, (state) => {
+
+        state.isTrailerUploading = false;
       })
     }
+    
 })
 
 
