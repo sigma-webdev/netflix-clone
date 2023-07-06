@@ -15,9 +15,10 @@ const AdminContentView = () => {
   const dispatch = useDispatch();
   const contentData = useSelector((state) => state.admin.currentContent);
   const isLoading = useSelector((state) => state.admin.isLoading);
-  const [isUploading, setIsUploading] = useState(false);
+  // const [isUploading, setIsUploading] = useState(false);
   const [castInput,setCastInput] = useState('')
   const progress = useSelector(state=> state.admin.currentContent.progress)  || 0
+  const isUploading = useSelector(state=> state.admin.isUploading)
   // const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -170,6 +171,9 @@ const uploadContent = () => {
 
   const handleFileChange = (event, name) => {
     console.log("handle select callled");
+    // if(name === "trailer" || name === "content" || name === "thumbnail" ){
+    //   setIsUploading(true);
+    // }
     const file = event.target.files[0];
     console.log(file); // console
     const sentFormData = new FormData();
@@ -371,7 +375,7 @@ const uploadContent = () => {
       <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-gray-100 py-4">
         {/* <h2 className="">Content</h2> */}
         {isLoading ? (
-          <h2 className="text-white">Loading..</h2>
+          <h2 className="">Loading..</h2>
         ) : ( Object.keys(contentData).length !== 0 ? (
           <>
             <div className="flex w-full gap-4 px-4">
@@ -384,7 +388,6 @@ const uploadContent = () => {
               </button>
             </div>
             <div className="w-full px-4 ">
-              {/* <CircularProgressbar value={uploadProgress} text={`${uploadProgress}%`} />; */}
               <form>
                 
                 <div
@@ -393,7 +396,7 @@ const uploadContent = () => {
                   className="group relative cursor-pointer"
                 >
                   <div className="w-[100px] h-[100px] absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%]">
-                    {/* <CircularProgressbar value={progress} maxValue={1} text={`${progress}%`} /> */}
+                    {isUploading && <CircularProgressbar value={progress} maxValue={1} text={`${progress}%`} />}
                   </div>
                   <input
                     ref={fileInputRef}
@@ -473,7 +476,7 @@ const uploadContent = () => {
                         type="file"
                         disabled={isLoading}
                         onChange={(e) => handleFileChange(e, "trailer")}
-                        className="h-fit cursor-pointer rounded "
+                        className="h-fit cursor-pointer rounded"
                       />
                     </div>
                   </div>
@@ -490,7 +493,7 @@ const uploadContent = () => {
                         type="file"
                         disabled={isLoading}
                         onChange={(e) => handleFileChange(e, "content")}
-                        className="h-fit cursor-pointer rounded bg-[#E50914] px-3 py-1 hover:bg-[#d4252e]"
+                        className="h-fit cursor-pointer rounded"
                       />
                     </div>
                   </div>
