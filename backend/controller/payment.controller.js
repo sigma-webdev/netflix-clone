@@ -286,7 +286,7 @@ const getPlans = asyncHandler(async (req, res, next) => {
   const { active } = req.query;
   const query = {};
 
-  if (userRole === "ADMIN") {
+  if (userRole === "ADMIN" && active) {
     query["active"] = active;
   } else {
     query["active"] = true;
