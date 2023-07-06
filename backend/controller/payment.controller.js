@@ -6,7 +6,6 @@ const paymentModel = require("../model/payment.schema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 const subscriptionPlanModel = require("../model/subscriptionPlan.schema.js");
-const SubscriptionPlanModel = require("../model/subscriptionPlan.schema.js");
 
 /******************************************************
  * @createSubscription
@@ -20,41 +19,21 @@ const SubscriptionPlanModel = require("../model/subscriptionPlan.schema.js");
 const createSubscription = asyncHandler(async (req, res, next) => {
   // Extracting ID from request obj
   const { id } = req.user;
-  const planName = req.body.planName || "";
+  const { planId } = req.params;
 
-  const subscriptionPlans = subscriptionPlanModel.find(
-    { active: true },
+  const isPlanExist = await subscriptionPlanModel.findOne(
+    {
+      planId: planId,
+    },
     { planId: 1 }
   );
 
-  const {
-    RAZORPAY_STANDARD_PLAN,
-    RAZORPAY_BASIC_PLAN,
-    RAZORPAY_PREMIUM_PLAN,
-    RAZORPAY_MOBILE_PLAN,
-  } = process.env;
-
-  const planID =
-    planName.toUpperCase() === "STANDARD"
-      ? RAZORPAY_STANDARD_PLAN
-      : null || planName.toUpperCase() === "BASIC"
-      ? RAZORPAY_BASIC_PLAN
-      : null || planName.toUpperCase() === "PREMIUM"
-      ? RAZORPAY_PREMIUM_PLAN
-      : null || planName.toUpperCase() === "MOBILE"
-      ? RAZORPAY_MOBILE_PLAN
-      : null;
-
-  if (!planID) {
-    return next(new CustomError("Please pass valid planName", 400));
+  if (!isPlanExist) {
+    return next(new CustomError("Please send valid planId", 400));
   }
 
   // Finding the user based on the ID
   const user = await userModel.findById(id);
-
-  if (!user) {
-    return next(new CustomError("Unauthorized, please login"));
-  }
 
   // Checking the user role
   if (user.role === "ADMIN") {
@@ -64,7 +43,7 @@ const createSubscription = asyncHandler(async (req, res, next) => {
   // Creating a subscription using razorpay that we imported from the config/rasorpayConfig.js
   try {
     const subscription = await razorpay.subscriptions.create({
-      plan_id: planID, // The unique plan ID
+      plan_id: planId, // The unique plan ID
       customer_notify: 1, // 1 means razorpay will handle notifying the customer, 0 means we will not notify the customer
       total_count: 1, // 1 means it will charge only one month sub.
     });
@@ -148,11 +127,11 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
 
   // If they match create payment and store it in the DB
 
-  await paymentModel.create({
-    razorpayPaymentId,
-    razorpaySubscriptionId,
-    razorpaySignature,
-  });
+  // await paymentModel.create({
+  //   razorpayPaymentId,
+  //   razorpaySubscriptionId,
+  //   razorpaySignature,
+  // });
 
   // Update the user subscription status to active (This will be created before this)
   user.subscription.status = "active";
@@ -185,8 +164,8 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
 
 const createPlan = asyncHandler(async (req, res, next) => {
   const { planName, amount, description, active } = req.body;
-
-  if (!planName || !amount || !description || !active) {
+  console.log(req.body);
+  if (!planName || !amount || !description) {
     return next(
       new CustomError(
         "All fields are required. planName, amount, description, active"
@@ -215,7 +194,7 @@ const createPlan = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const planInfo = SubscriptionPlanModel({
+  const planInfo = subscriptionPlanModel({
     planName: planName.toUpperCase(),
     amount,
     description,
@@ -259,7 +238,7 @@ const updatePlan = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const result = await SubscriptionPlanModel.findByIdAndUpdate(
+  const result = await subscriptionPlanModel.findByIdAndUpdate(
     planDocumentId,
     {
       active,
@@ -287,7 +266,7 @@ const updatePlan = asyncHandler(async (req, res, next) => {
 const deletePlan = asyncHandler(async (req, res, next) => {
   const { planDocumentId } = req.params;
 
-  const result = await SubscriptionPlanModel.findByIdAndDelete(planDocumentId);
+  const result = await subscriptionPlanModel.findByIdAndDelete(planDocumentId);
   if (!result) return next(new CustomError("resource not found", 404));
 
   return res.status(200).json({
@@ -308,7 +287,7 @@ const deletePlan = asyncHandler(async (req, res, next) => {
  ******************************************************/
 
 const getPlans = asyncHandler(async (req, res, next) => {
-  const result = await SubscriptionPlanModel.find();
+  const result = await subscriptionPlanModel.find();
 
   return res.status(200).json({
     statusCode: 200,
