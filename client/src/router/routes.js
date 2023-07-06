@@ -86,7 +86,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-
   // for routes which are for admin and normal user both
   {
     element: <RequireAuth allowedRoles={["ADMIN", "USER"]} />,
