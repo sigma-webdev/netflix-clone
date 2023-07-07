@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { DisLikeIcon, LikeIcon } from "../icons";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RiPlayMiniFill } from "react-icons/ri";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
@@ -21,6 +21,7 @@ const DetailsCard = ({
   releaseYear,
   contentDuration,
 }) => {
+  const userId = useSelector((state) => state.auth.userData._id);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
   const dispatch = useDispatch();
@@ -38,11 +39,11 @@ const DetailsCard = ({
   }
 
   const likeContentHanlder = () => {
-    dispatch(likeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(likeContent({ contentId, userId: userId }));
   };
 
   const dislikeContentHanlder = () => {
-    dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(dislikeContent({ contentId, userId: userId }));
   };
 
   return (

@@ -49,9 +49,7 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
 
-    dispatch(
-      fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
-    );
+    dispatch(fetchContentBySearch({ searchText, userId: user._id }));
   };
 
   return (

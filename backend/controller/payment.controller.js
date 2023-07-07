@@ -288,11 +288,10 @@ const getPlans = asyncHandler(async (req, res, next) => {
 
   if (userRole === "ADMIN" && active) {
     query["active"] = active;
-  } else {
+  } else if (userRole === "USER") {
     query["active"] = true;
   }
 
-  console.log(query);
   const result = await subscriptionPlanModel.find(query);
 
   return res.status(200).json({
