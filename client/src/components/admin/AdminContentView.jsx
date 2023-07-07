@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { BsCloudUpload } from "react-icons/bs";
-// import { CircularProgressbar } from "react-circular-progressbar";
-// import "react-circular-progressbar/dist/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchContentById,
@@ -22,8 +20,6 @@ const AdminContentView = () => {
   const isTrailerUploading = useSelector((state) => state.admin.isTrailerUploading)
   const isContentUploading = useSelector((state) => state.admin.isContentUploading)
   const [castInput, setCastInput] = useState('')
-  // const isUploading = useSelector(state => state.admin.isUploading)
-  // const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [editedContentData, setEditedContentData] = useState({});
@@ -86,18 +82,18 @@ const AdminContentView = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    // const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
     if (name === "cast") {
       setCastInput(value)
-
-      // const newCastArr = [...editedContentData.cast, value]
-      // setEditedContentData({...setEditedContentData, [name]:newCastArr})
     } else {
       setEditedContentData({ ...editedContentData, [name]: value })
     }
   };
 
   const handleAddCast = () => {
+    if(castInput === "" || castInput.length < 2){
+      //add toster
+      return
+    }
     const newCastArr = [...editedContentData.cast, castInput]
     setEditedContentData({ ...editedContentData, cast: newCastArr })
     setCastInput('')
@@ -115,14 +111,10 @@ const AdminContentView = () => {
     }
 
     console.log("handle select callled");
-    // if(name === "trailer" || name === "content" || name === "thumbnail" ){
-    //   setIsUploading(true);
-    // }
     const file = event.target.files[0];
-    console.log(file); // console
     const sentFormData = new FormData();
     sentFormData.append(name, file);
-    // console.log(sentFormData, "////");
+
 
     if (name === "thumbnail") {
       dispatch(updateContentThumbnailById({ id: params.contentId, newData: sentFormData }))
@@ -325,7 +317,6 @@ const AdminContentView = () => {
         </div>
       )}
       <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-gray-100 py-4">
-        {/* <h2 className="">Content</h2> */}
         {isLoading ? (
           <div className=" flex items-center justify-center h-screen" role="status">
             <svg
@@ -349,7 +340,6 @@ const AdminContentView = () => {
         ) : (Object.keys(contentData).length !== 0 ? (
           <>
             <div className="flex w-full gap-4 px-4 py-8">
-              {/* <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded text-white'>Edit</button> */}
               <button
                 onClick={handleDelete}
                 className="cursor-pointer rounded bg-red-500 px-3 py-1 text-white"
@@ -365,9 +355,6 @@ const AdminContentView = () => {
                   title="upload thumbnial"
                   className="group relative cursor-pointer"
                 >
-                  {/* <div className="w-[100px] h-[100px] absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%]">
-                    {isUploading && <CircularProgressbar value={progress} maxValue={1} text={`${progress}%`} />}
-                  </div> */}
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -385,7 +372,7 @@ const AdminContentView = () => {
                     : (<div className=" absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] " role="status">
                       <svg
                         aria-hidden="true"
-                        className="mr-2 h-12 w-12 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                        className="mr-2 h-14 w-14 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                         viewBox="0 0 100 101"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -499,7 +486,7 @@ const AdminContentView = () => {
                       (<div className="" role="status">
                         <svg
                           aria-hidden="true"
-                          className="mr-2 h-12 w-12 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                          className="mr-2 h-10 w-10 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                           viewBox="0 0 100 101"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -521,7 +508,7 @@ const AdminContentView = () => {
                 <div className="my-4 flex gap-4">
                   <h4 className="w-32 text-gray-400">Content:</h4>
                   {
-                    isContentUploading ?
+                    !isContentUploading ?
 
                       (
                         <>
@@ -539,11 +526,11 @@ const AdminContentView = () => {
                             />
                           </div>
                         </>)
-                      :
-                      (<div className="" role="status">
+                      : (
+                        <div >      
                         <svg
                           aria-hidden="true"
-                          className="mr-2 h-12 w-12 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                          className=" h-10 w-10 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                           viewBox="0 0 100 101"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -557,9 +544,13 @@ const AdminContentView = () => {
                             fill="currentFill"
                           />
                         </svg>
+                            
                         <span className="text-blue-600">Please wait... content video is uploading!</span>
-                        <span className="sr-only">Loading...</span>
-                      </div>)}
+                   
+                        </div>
+                        
+                         )
+                    }
                 </div>
 
 
