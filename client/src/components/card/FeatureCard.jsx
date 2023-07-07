@@ -4,9 +4,6 @@ const FeatureCard = ({
   aboutFeature,
   currentIndex,
 }) => {
-  console.log(featureHeading);
-  console.log(featureImage);
-
   return (
     <article
       className={`flex-col ${
