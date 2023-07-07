@@ -332,6 +332,7 @@ const getWatchListContent = asyncHandler(async (req, res, next) => {
     },
   ]);
 
+  
   result.contents = user.watchList;
   res.status(200).json({
     statusCode: 200,
