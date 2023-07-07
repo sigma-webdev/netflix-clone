@@ -25,6 +25,7 @@ const contentSchema = new Schema(
       enum: ["Movie", "Series"],
       required: true,
     },
+
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -115,6 +116,12 @@ const contentSchema = new Schema(
       contentDuration: { type: Object },
     },
 
+    contentSeries: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Season",
+      },
+    ],
     display: {
       type: Boolean,
       default: false,
@@ -127,17 +134,18 @@ const contentSchema = new Schema(
       type: Number,
       default: 0,
     },
+    archive: {
+      type: Boolean,
+      default: false,
+    },
   },
-
   { timestamps: true }
 );
-
 contentSchema.index("name");
 
 contentSchema.pre("save", function (next) {
   this.likesCount = this.likes.length;
   this.disLikesCount = this.dislikes.length;
-
   return next();
 });
 
