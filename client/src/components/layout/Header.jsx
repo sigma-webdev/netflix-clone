@@ -11,10 +11,7 @@ import { SIGN_OUT } from "../../store/authSlice.js";
 import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
 import { FaSignOutAlt } from "react-icons/fa";
-import {
-  fetchContentByContentType,
-  fetchContentBySearch,
-} from "../../store/contentSlice";
+import { fetchContentBySearch } from "../../store/contentSlice";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -57,15 +54,6 @@ const Header = () => {
     );
   };
 
-  const handleCategory = (contentType) => {
-    dispatch(
-      fetchContentByContentType({
-        contentType,
-        userId: "64789b082f388ccff2e33eaa",
-      })
-    );
-  };
-
   return (
     <header
       ref={headerRef}
@@ -84,23 +72,8 @@ const Header = () => {
           <div className="flex items-center">
             <nav>
               <ul className="hidden gap-4 md:flex ">
-                <li
-                  className="cursor-pointer"
-                  onClick={() => handleCategory("")}
-                >
-                  Home
-                </li>
-                <li
-                  className="cursor-pointer"
-                  onClick={() => handleCategory("Movies")}
-                >
-                  Movies
-                </li>
-                <li
-                  className="cursor-pointer"
-                  onClick={() => handleCategory("Series")}
-                >
-                  Series
+                <li className="cursor-pointer">
+                  <Link to="/browse">Movies & Series</Link>
                 </li>
               </ul>
             </nav>

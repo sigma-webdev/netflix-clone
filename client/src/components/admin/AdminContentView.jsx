@@ -1,25 +1,25 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// import { getContentDetailsById, deleteContentById, updateContentById } from '../../ApiUtils';
 import { BsCloudUpload } from "react-icons/bs";
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchContentById,
   deleteContentById,
-  updateContentById,
-} from "../../store/adminSlice";
+  updateContentThumbnailById,
+  updateContentDetailsById,
+  updateContentVideoById,
+  updateContentTrailerById
+} from "../../store/adminManageContentSlice";
 
 const AdminContentView = () => {
   const dispatch = useDispatch();
   const contentData = useSelector((state) => state.admin.currentContent);
   const isLoading = useSelector((state) => state.admin.isLoading);
-  // const [isUploading, setIsUploading] = useState(false);
-  const [castInput,setCastInput] = useState('')
-  const progress = useSelector(state=> state.admin.currentContent.progress)  || 0
-  const isUploading = useSelector(state=> state.admin.isUploading)
-  // const [uploadProgress, setUploadProgress] = useState(0);
+  const isThumbnailUploading = useSelector((state) => state.admin.isThumbnailUploading)
+  const isDetailsUploading = useSelector((state) => state.admin.isDetailsUploading)
+  const isTrailerUploading = useSelector((state) => state.admin.isTrailerUploading)
+  const isContentUploading = useSelector((state) => state.admin.isContentUploading)
+  const [castInput, setCastInput] = useState('')
   const fileInputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [editedContentData, setEditedContentData] = useState({});
@@ -27,20 +27,15 @@ const AdminContentView = () => {
   console.log(params.contentId);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    dispatch(fetchContentById({ contentId: params.contentId }));
+  }, []);
+
 
   useEffect(() => {
-    dispatch(fetchContentById({ contentId: params.contentId}));
-  }, []);
-  useEffect(()=>{
-
-    console.log(progress)
-
-  },[progress])
-
-  useEffect(()=>{
     setEditedContentData(contentData);
   }, [contentData]);
-  
+
 
   const handleDelete = () => {
     console.log("delete this");
@@ -52,13 +47,13 @@ const AdminContentView = () => {
 
 
   const handleRemoveCast = (castname) => {
-    console.log(castname,'///castname')
+    console.log(castname, '///castname')
     const indexOfCastToBeRemoved = editedContentData.cast.indexOf(castname)
     console.log(indexOfCastToBeRemoved)
     const newCast = editedContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
     console.log(newCast)
-    setEditedContentData({...editedContentData, cast: newCast})
-    console.log(editedContentData,'//edittweeer')
+    setEditedContentData({ ...editedContentData, cast: newCast })
+    console.log(editedContentData, '//edittweeer')
   };
 
 
@@ -70,71 +65,15 @@ const AdminContentView = () => {
       );
       return;
     }
-    if(editedContentData.cast.length === 0){
+
+    if (editedContentData.cast.length === 0) {
       console.log('cast cannot be empty field')
       return;
     }
     console.log(editedContentData, '///new data to be updated')
-    dispatch(updateContentById({id:params.contentId, newData:editedContentData}))
-    // dispatch(fetchContentById(params._id))
+
+    dispatch(updateContentDetailsById({ id: params.contentId, newData: editedContentData }))
     toggleModal(false)
-
-
-    
-
-  //   const {
-  //     name,
-  //     description,
-  //     contentType,
-  //     genres,
-  //     creator,
-  //     rating,
-  //     language,
-  //     trailer,
-  //     content,
-  //     cast,
-  //     thumbnail,
-  //     episodes,
-  //   } = editedContentData;
-  //   const sentFormData = new FormData();
-  //   if (name && name !== contentData.name) {
-  //     sentFormData.append("name", name);
-  //   }
-  //   if (description && description !== contentData.description) {
-  //     sentFormData.append("description", description);
-  //   }
-  //   if (contentType && contentType !== contentData.contentType) {
-  //     sentFormData.append("contentType", contentType);
-  //   }
-  //   if (genres && genres !== contentData.genres) {
-  //     sentFormData.append("genres", genres);
-  //   }
-  //   if (creator && creator !== contentData.creator) {
-  //     sentFormData.append("creator", creator);
-  //   }
-  //   if (rating && rating !== contentData.rating) {
-  //     sentFormData.append("rating", rating);
-  //   }
-  //   if (language && language !== contentData.language) {
-  //     sentFormData.append("language", language);
-  //   }
-  //   if (trailer && trailer !== contentData.trailer) {
-  //     sentFormData.append("trailer", trailer);
-  //   }
-  //   if (content && content !== contentData.content) {
-  //     sentFormData.append("content", content);
-  //   }
-  //   if (cast && cast.toString() !== contentData.cast.toString()) {
-  //     sentFormData.append("cast", cast);
-  //   }
-  //   if (thumbnail && thumbnail !== contentData.thumbnail) {
-  //     sentFormData.append("thumbnail", thumbnail);
-  //   }
-  //   if (episodes && episodes !== contentData.episodes) {
-  //     sentFormData.append("episodes", episodes);
-  //   }
-
-  //   dispatch(updateContentById(params.id, { ...sentFormData }));
   };
 
   const toggleModal = (val) => {
@@ -143,48 +82,53 @@ const AdminContentView = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    // const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
-    if(name === "cast"){
+    if (name === "cast") {
       setCastInput(value)
-      
-      // const newCastArr = [...editedContentData.cast, value]
-      // setEditedContentData({...setEditedContentData, [name]:newCastArr})
-    }else{
-      setEditedContentData({...editedContentData, [name]:value})
+    } else {
+      setEditedContentData({ ...editedContentData, [name]: value })
     }
-};
+  };
 
-  const handleAddCast =()=>{
+  const handleAddCast = () => {
+    if(castInput === "" || castInput.length < 2){
+      //add toster
+      return
+    }
     const newCastArr = [...editedContentData.cast, castInput]
-    setEditedContentData({...editedContentData, cast: newCastArr})
+    setEditedContentData({ ...editedContentData, cast: newCastArr })
     setCastInput('')
 
   }
 
-
-
-console.log(contentData,'cont data')
-console.log(editedContentData,'edited data/////')
-const uploadContent = () => {
+  const uploadContent = () => {
     fileInputRef.current.click();
   };
 
   const handleFileChange = (event, name) => {
+    if (isThumbnailUploading || isContentUploading || isTrailerUploading || isDetailsUploading) {
+      // add toster
+      return;
+    }
+
     console.log("handle select callled");
-    // if(name === "trailer" || name === "content" || name === "thumbnail" ){
-    //   setIsUploading(true);
-    // }
     const file = event.target.files[0];
-    console.log(file); // console
     const sentFormData = new FormData();
     sentFormData.append(name, file);
-    console.log(sentFormData, "////");
-  
 
-    dispatch(updateContentById({ id: params.contentId, newData:sentFormData }));
+
+    if (name === "thumbnail") {
+      dispatch(updateContentThumbnailById({ id: params.contentId, newData: sentFormData }))
+    }
+    if (name === "content") {
+      dispatch(updateContentVideoById({ id: params.contentId, newData: sentFormData }))
+    }
+    if (name === "trailer") {
+      dispatch(updateContentTrailerById({ id: params.contentId, newData: sentFormData }))
+    }
+
   };
-  // console.log(contentData.releaseDate)
-// console.log(contentData.progress)
+
+
   return (
     <>
       {isOpen && (
@@ -246,27 +190,27 @@ const uploadContent = () => {
                   onChange={handleInputChange}
                 />
                 <div
-                onClick={handleAddCast}
-                 // onClick
+                  onClick={handleAddCast}
+                  // onClick
                   className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
                 >
                   Add
                 </div>
                 {editedContentData.cast.length > 0 && (
-                <div className="flex flex-wrap">
-                  {editedContentData.cast.map((castname) => (
-                    <div className="relative m-2  rounded  bg-blue-200">
-                      <div
-                        onClick={() => handleRemoveCast(castname)}
-                        className="absolute -top-1 right-1 cursor-pointer"
-                      >
-                        &times;
+                  <div className="flex flex-wrap">
+                    {editedContentData.cast.map((castname) => (
+                      <div className="relative m-2  rounded  bg-blue-200">
+                        <div
+                          onClick={() => handleRemoveCast(castname)}
+                          className="absolute -top-1 right-1 cursor-pointer"
+                        >
+                          &times;
+                        </div>
+                        <p className=" w-fit px-3 py-2">{castname}</p>
                       </div>
-                      <p className=" w-fit px-3 py-2">{castname}</p>
-                    </div>
-                  ))}
-                </div>
-              )} 
+                    ))}
+                  </div>
+                )}
               </div>
 
               <label htmlFor="categories"> Content Type:</label>
@@ -373,13 +317,29 @@ const uploadContent = () => {
         </div>
       )}
       <div className="flex max-h-[100vh] w-10/12 flex-col items-center gap-5 overflow-y-scroll bg-gray-100 py-4">
-        {/* <h2 className="">Content</h2> */}
         {isLoading ? (
-          <h2 className="">Loading..</h2>
-        ) : ( Object.keys(contentData).length !== 0 ? (
+          <div className=" flex items-center justify-center h-screen" role="status">
+            <svg
+              aria-hidden="true"
+              className="mr-2 h-12 w-12 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+              viewBox="0 0 100 101"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor"
+              />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill"
+              />
+            </svg>
+            <span className="sr-only">Loading...</span>
+          </div>
+        ) : (Object.keys(contentData).length !== 0 ? (
           <>
-            <div className="flex w-full gap-4 px-4">
-              {/* <button onClick={() => toggleModal(true)} className='px-3 py-1 bg-green-500 cursor-pointer rounded text-white'>Edit</button> */}
+            <div className="flex w-full gap-4 px-4 py-8">
               <button
                 onClick={handleDelete}
                 className="cursor-pointer rounded bg-red-500 px-3 py-1 text-white"
@@ -389,29 +349,45 @@ const uploadContent = () => {
             </div>
             <div className="w-full px-4 ">
               <form>
-                
+
                 <div
                   onClick={uploadContent}
                   title="upload thumbnial"
                   className="group relative cursor-pointer"
                 >
-                  <div className="w-[100px] h-[100px] absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%]">
-                    {isUploading && <CircularProgressbar value={progress} maxValue={1} text={`${progress}%`} />}
-                  </div>
                   <input
                     ref={fileInputRef}
                     type="file"
                     name="thumbnail"
                     accept="image/*"
                     className="hidden"
-                    onChange={(e)=> handleFileChange(e, 'thumbnail')}
+                    onChange={(e) => handleFileChange(e, 'thumbnail')}
                   />
-                  <BsCloudUpload className="absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] text-8xl opacity-0 transition group-hover:opacity-100" />
                   <img
                     className="h-[450px] w-full transition hover:bg-black group-hover:opacity-40"
                     src={contentData.thumbnail[0].thumbnailUrl}
                     alt="thubmnail"
                   />
+                  {!isThumbnailUploading ? <BsCloudUpload className="absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] text-8xl opacity-0 transition group-hover:opacity-100" />
+                    : (<div className=" absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] " role="status">
+                      <svg
+                        aria-hidden="true"
+                        className="mr-2 h-14 w-14 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                        viewBox="0 0 100 101"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                          fill="currentFill"
+                        />
+                      </svg>
+                      <span className="sr-only">Loading...</span>
+                    </div>)}
                 </div>
                 <div
                   onClick={() => toggleModal(true)}
@@ -419,85 +395,166 @@ const uploadContent = () => {
                 >
                   Edit details
                 </div>
+                {!isDetailsUploading ? (
+                  <>
+                    <div className="flex gap-2">
+                      <h3 className="text-gray-400">{contentData.rating}</h3>
+                      <span className="text-2xl text-gray-400">/</span>
+                      <h3 className="text-gray-400">{contentData.originCountry}</h3>
+                      <span className="text-2xl text-gray-400">/</span>
+                      <h3 className="">{contentData.language}</h3>
+                      <span className="text-2xl text-gray-400">/</span>
+                      <h3 className="">{contentData.genres[0]}</h3>
+                      <span className="text-2xl text-gray-400">/</span>
+                      <h3 className="">{contentData.contentType}</h3>
+                    </div>
 
-                <div className="flex gap-2">
-                  <h3 className="text-gray-400">{contentData.rating}</h3>
-                  <span className="text-2xl text-gray-400">/</span>
-                  <h3 className="text-gray-400">{contentData.originCountry}</h3>
-                  <span className="text-2xl text-gray-400">/</span>
-                  <h3 className="">{contentData.language}</h3>
-                  <spa className="text-2xl text-gray-400">/</spa>
-                  <h3 className="">{contentData.genres[0]}</h3>
-                  <span className="text-2xl text-gray-400">/</span>
-                  <h3 className="">{contentData.contentType}</h3>
-                </div>
-                <div>
-                  <div className="my-4 flex gap-4">
-                    <h4 className="w-32 text-gray-400">Movie Name:</h4>
-                    <h2 className="">{contentData.name}</h2>
-                  </div>
-                  <div className="my-4 flex gap-4">
-                    <h4 className="w-32 text-gray-400">Description:</h4>
-                    <h3 className="pl-5">{contentData.description}</h3>
-                  </div>
-                  <div className="my-4 flex gap-4">
-                    <h4 className="w-32 text-gray-400">Cast:</h4>
-                    <div>
-                      {contentData.cast.map((item, index) => (
-                        <h3 key={index} className="">{item}</h3>
-                      ))}
+                    <div className="my-4 flex gap-4">
+                      <h4 className="w-32 text-gray-400">Movie Name:</h4>
+                      <h2 className="">{contentData.name}</h2>
                     </div>
-                  </div>
-                  <div className='flex gap-4 my-4'>
-              <h4 className='text-gray-400 w-32'>Language:</h4>
-              <h3 className=''>{contentData.language}</h3>
-            </div>
-           
-                </div>
-                <div>
-                  <div className="my-4 flex gap-4">
-                    <h4 className="w-32 text-gray-400">Director:</h4>
-                    <h3 className="">{contentData.director}</h3>
-                  </div>
-                  <div className='flex gap-4 my-4'>
-              <h4 className='text-gray-400 w-32'>Release Date:</h4>
-              <h3 className=''>{contentData.releaseDate.substring(0,10)}</h3>
-            </div>
-                  <div className="my-4 flex gap-4">
-                    <h4 className="w-32 text-gray-400">Trailer:</h4>
-                    <video
-                      width="520"
-                      height="440"
-                      src={contentData.trailer[0]?.trailerUrl}
-                      controls
-                    ></video>
-                    <div>
-                      <input
-                        type="file"
-                        disabled={isLoading}
-                        onChange={(e) => handleFileChange(e, "trailer")}
-                        className="h-fit cursor-pointer rounded"
-                      />
+                    <div className="my-4 flex gap-4">
+                      <h4 className="w-32 text-gray-400">Description:</h4>
+                      <h3 className="pl-5">{contentData.description}</h3>
                     </div>
-                  </div>
-                  <div className="my-4 flex gap-4">
-                    <h4 className="w-32 text-gray-400">Content:</h4>
-                    <video
-                      width="520"
-                      height="440"
-                      src={contentData.content[0]?.contentURL}
-                      controls
-                    ></video>
-                    <div>
-                      <input
-                        type="file"
-                        disabled={isLoading}
-                        onChange={(e) => handleFileChange(e, "content")}
-                        className="h-fit cursor-pointer rounded"
-                      />
+                    <div className="my-4 flex gap-4">
+                      <h4 className="w-32 text-gray-400">Cast:</h4>
+                      <div>
+                        {contentData.cast.map((item, index) => (
+                          <h3 key={index} className="">{item}</h3>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                    <div className='flex gap-4 my-4'>
+                      <h4 className='text-gray-400 w-32'>Language:</h4>
+                      <h3 className=''>{contentData.language}</h3>
+                    </div>
+
+
+
+                    <div className="my-4 flex gap-4">
+                      <h4 className="w-32 text-gray-400">Director:</h4>
+                      <h3 className="">{contentData.director}</h3>
+                    </div>
+                    <div className='flex gap-4 my-4'>
+                      <h4 className='text-gray-400 w-32'>Release Date:</h4>
+                      <h3 className=''>{contentData.releaseDate.substring(0, 10)}</h3>
+                    </div>
+                  </>
+                ) : (<div className="mx-auto" role="status">
+                  <svg
+                    aria-hidden="true"
+                    className="mr-2 h-12 w-12 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentFill"
+                    />
+                  </svg>
+                  <span className="text-blue-600">Please wait... Details are uploading!</span>
+                  <span className="sr-only">Loading...</span>
+                </div>)
+                }
+
+                <div className="my-4 flex gap-4">
+                  <h4 className="w-32 text-gray-400">Trailer:</h4>
+                  {
+                    !isTrailerUploading ?
+                      <>
+                        <video
+                          width="520"
+                          height="440"
+                          src={contentData.trailer[0]?.trailerUrl}
+                          controls
+                        ></video>
+                        <div>
+                          <input
+                            type="file"
+                            onChange={(e) => handleFileChange(e, "trailer")}
+                            className="h-fit cursor-pointer rounded"
+                          />
+                        </div>
+                      </>
+                      :
+                      (<div className="" role="status">
+                        <svg
+                          aria-hidden="true"
+                          className="mr-2 h-10 w-10 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                          viewBox="0 0 100 101"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="currentFill"
+                          />
+                        </svg>
+                        <span className="text-blue-600">Please wait... content trailer is uploading!</span>
+                        <span className="sr-only">Loading...</span>
+                      </div>)
+                  }
                 </div>
+                <div className="my-4 flex gap-4">
+                  <h4 className="w-32 text-gray-400">Content:</h4>
+                  {
+                    !isContentUploading ?
+
+                      (
+                        <>
+                          <video
+                            width="520"
+                            height="440"
+                            src={contentData.content.contentURL}
+                            controls
+                          ></video>
+                          <div>
+                            <input
+                              type="file"
+                              onChange={(e) => handleFileChange(e, "content")}
+                              className="h-fit cursor-pointer rounded"
+                            />
+                          </div>
+                        </>)
+                      : (
+                        <div >      
+                        <svg
+                          aria-hidden="true"
+                          className=" h-10 w-10 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                          viewBox="0 0 100 101"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="currentFill"
+                          />
+                        </svg>
+                            
+                        <span className="text-blue-600">Please wait... content video is uploading!</span>
+                   
+                        </div>
+                        
+                         )
+                    }
+                </div>
+
+
+
               </form>
             </div>
           </>
