@@ -10,7 +10,7 @@ import netflixLogo from "../../assets/netflix_logo.png";
 
 const AdminNav = () => {
   return (
-    <div className="h-screen w-2/12 border-r bg-white py-2 text-black ">
+    <div className="h-[100vh] overflow-auto w-2/12 border-r bg-white py-2 text-black ">
       {/* adding the netlfix logo */}
       <div className="flex w-full flex-wrap items-end ">
         <Link to={"/browse"}>
