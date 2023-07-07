@@ -25,6 +25,7 @@ const PreviewCard = ({
   releaseYear,
   contentDuration,
 }) => {
+  const userId = useSelector((state) => state.auth.userData._id);
   const likeDisLikeLoading = useSelector(
     (state) => state.content.likeDisLikeLoading
   );
@@ -58,11 +59,11 @@ const PreviewCard = ({
   };
 
   const likeContentHanlder = () => {
-    dispatch(likeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(likeContent({ contentId, userId: userId }));
   };
 
   const dislikeContentHanlder = () => {
-    dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(dislikeContent({ contentId, userId: userId }));
   };
 
   const handlePlay = (contentId) => {
@@ -72,7 +73,7 @@ const PreviewCard = ({
 
   return (
     <div
-      className="group w-48 scale-100 rounded drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64"
+      className="my-8 w-48 scale-100 rounded bg-netflix-black drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-4 hover:scale-125 hover:opacity-100 md:w-64"
       onMouseLeave={() => playPauseMedia()}
       onMouseEnter={() => playPauseMedia()}
     >
@@ -89,7 +90,7 @@ const PreviewCard = ({
       </div>
 
       {/* preview details */}
-      <div className="hidden space-y-4 p-4 group-hover:block">
+      <div className="space-y-4 p-4">
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
