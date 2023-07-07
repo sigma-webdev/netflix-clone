@@ -3,7 +3,7 @@ import contentReducer from "./contentSlice";
 import userReducer from "./userSlice";
 import authReducer from "./authSlice.js";
 import razorpayReducer from "./razorpaySlice";
-import adminSlice from "./adminSlice";
+import adminSlice from "./adminManageContentSlice";
 import adminPlansSlice from "./adminPlansSlice";
 import dashboardSlice from "./dashboardSlice";
 
