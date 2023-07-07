@@ -100,6 +100,10 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   // create mongoose
   const contentDetails = new Content(details);
 
+  contentDetails.contentType === "Movie"
+    ? (contentDetails.contentSeries = undefined)
+    : (contentDetails.content = undefined);
+
   const contentData = await contentDetails.save();
 
   // check for contentData
@@ -265,6 +269,23 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
 const httpDeleteById = asyncHandler(async (req, res, next) => {
   // extract id
   const { contentId } = req.params;
+
+  // make sure season is empty
+  const contentObject = await Content.findById(contentId);
+  if (!contentObject) {
+    return next(
+      new CustomError("Content with the given id is not available", 404)
+    );
+  }
+
+  if (
+    contentObject.contentType === "Series" &&
+    contentObject.contentSeries.length > 0
+  ) {
+    return next(
+      new CustomError("Fist delete the seasons store in the content", 400)
+    );
+  }
 
   // find content with id
   const contentData = await Content.findByIdAndDelete(contentId);
