@@ -15,7 +15,7 @@ const planSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: false,
-    required: [true, "plane Id is required"],
+    required: [true, "Active Boolean value is required"],
   },
   amount: {
     type: Number,
