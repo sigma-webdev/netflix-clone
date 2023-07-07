@@ -21,7 +21,7 @@ require("./config/database.config.js");
 
 app.use(
   cors({
-    origin: "*",
+    origin: [process.env.CLIENT],
     credentials: true,
   })
 );
