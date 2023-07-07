@@ -1,10 +1,18 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { GET_USER } from "../../store/authSlice";
 
 const RequireAuth = ({ allowedRoles }) => {
   const location = useLocation();
-  const { isLoggedIn, userData } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userData = useSelector((state) => state.auth.userData);
+
+  useEffect(() => {
+    dispatch(GET_USER());
+  }, []);
+
   const plan = userData?.plan;
   const role = userData?.role;
   return isLoggedIn &&
