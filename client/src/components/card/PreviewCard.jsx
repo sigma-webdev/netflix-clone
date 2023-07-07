@@ -25,6 +25,7 @@ const PreviewCard = ({
   releaseYear,
   contentDuration,
 }) => {
+  const userId = useSelector((state) => state.auth.userData._id);
   const likeDisLikeLoading = useSelector(
     (state) => state.content.likeDisLikeLoading
   );
@@ -58,11 +59,11 @@ const PreviewCard = ({
   };
 
   const likeContentHanlder = () => {
-    dispatch(likeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(likeContent({ contentId, userId: userId }));
   };
 
   const dislikeContentHanlder = () => {
-    dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(dislikeContent({ contentId, userId: userId }));
   };
 
   const handlePlay = (contentId) => {

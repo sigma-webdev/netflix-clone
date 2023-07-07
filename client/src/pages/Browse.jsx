@@ -22,6 +22,7 @@ import PreviewShimmer from "../components/shimmer/PreviewShimmer";
 import { Link } from "react-router-dom";
 
 const Browse = () => {
+  const userId = useSelector((state) => state.auth.userData._id);
   const content = useSelector((state) => state.content.filteredContent);
   const searchContent = useSelector((state) => state.content.searchContent);
   const trendingContent = useSelector((state) => state.content.trendingContent);
@@ -55,23 +56,23 @@ const Browse = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchContent("64789b082f388ccff2e33eaa"));
-    dispatch(fetchContentByTrending("64789b082f388ccff2e33eaa"));
-    dispatch(fetchContentByLatest("64789b082f388ccff2e33eaa"));
-    dispatch(fetchContentByMostLiked("64789b082f388ccff2e33eaa"));
+    dispatch(fetchContent(userId));
+    dispatch(fetchContentByTrending(userId));
+    dispatch(fetchContentByLatest(userId));
+    dispatch(fetchContentByMostLiked(userId));
     dispatch(
       fetchContentByCountryOrigin({
-        userId: "64789b082f388ccff2e33eaa",
+        userId: userId,
         countryOrigin: "USA",
       })
     );
     dispatch(
       fetchContentByCountryOrigin({
-        userId: "64789b082f388ccff2e33eaa",
+        userId: userId,
         countryOrigin: "India",
       })
     );
-    dispatch(fetchContentByWatchHistory("64789b082f388ccff2e33eaa"));
+    dispatch(fetchContentByWatchHistory(userId));
   }, [dispatch]);
 
   return (
