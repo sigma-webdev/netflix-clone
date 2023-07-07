@@ -151,10 +151,10 @@ const Browse = () => {
                       <div>Play</div>
                     </div>
                   </Link>
-                  <div className="flex cursor-pointer items-center gap-2  rounded bg-black px-2 py-1 text-sm font-semibold text-white opacity-80 md:px-4 md:text-lg">
+                  {/* <div className="flex cursor-pointer items-center gap-2  rounded bg-black px-2 py-1 text-sm font-semibold text-white opacity-80 md:px-4 md:text-lg">
                     <AiOutlineInfoCircle className="text-md lg:text-2xl" />
                     More Info
-                  </div>
+                  </div> */}
                 </div>
               )}
             </div>

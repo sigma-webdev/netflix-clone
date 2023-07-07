@@ -1,4 +1,4 @@
-netflix-clone-v.0.0.0
+netflix-clone-v.0.0.2
 
 ## Development Instructions
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPlans } from "../../store/adminPlansSlice";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
@@ -8,18 +8,73 @@ const AdminManagePlans = () => {
   const allPlans = useSelector((state) => state.plans.allPlans);
   console.log(allPlans?.data, "ff ");
 
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     dispatch(getAllPlans());
     console.log("in");
   }, [dispatch]);
+
+  const toggleModal = (val) => {
+    setIsOpen(val);
+  };
   return (
     <>
+      {isOpen && (
+        <div className="absolute flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
+          <div className="relative w-96 rounded-lg bg-white px-4 py-12">
+            <div
+              onClick={() => toggleModal(false)}
+              className="absolute right-3 top-2 cursor-pointer text-3xl text-black"
+            >
+              &times;
+            </div>
+            <div className="flex flex-col gap-2 text-black">
+              <div className="flex items-center gap-x-2 border-y-2 py-2 ">
+                <span>Name : </span>
+                <p className="font-semibold">
+                  {/* {getUser?.data?.email?.split("@")[0]} */}
+                </p>
+              </div>
+              <div className="flex items-center gap-x-2 border-y-2 py-2 ">
+                <span>Plan : </span>
+                {/* <p className="font-semibold">{getUser?.data?.plan}</p> */}
+              </div>
+              <div className="flex items-center gap-x-2 border-y-2 py-2 ">
+                <span>Subscription Status : </span>
+                <p className="font-semibold">
+                  {/* {getUser?.data?.subscription?.status} */}
+                </p>
+              </div>
+              <div className="flex items-center gap-x-2 border-y-2 py-2 ">
+                <span>SignUp Date : </span>
+                <p className="font-semibold">
+                  {/* {getUser?.data?.createdAt?.split("T")[0]} */}
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  toggleModal(false);
+                }}
+                className="rounded bg-red-600 py-2 text-white hover:bg-red-700"
+              >
+                Add Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="w-10/12 py-5 ">
         <div className="mx-auto flex w-10/12 justify-between">
           <h3 className="rounded-t-md bg-red-600 px-3 text-white">
             Manage Plans
           </h3>
-          <button className="rounded-xl border-b bg-red-600 px-4 py-2 text-white">
+          <button
+            onClick={() => {
+              toggleModal(true);
+            }}
+            className="rounded-xl border-b bg-red-600 px-4 py-2 text-white"
+          >
             Add Plan
           </button>
         </div>

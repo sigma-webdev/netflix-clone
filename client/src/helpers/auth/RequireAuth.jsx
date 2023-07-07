@@ -1,10 +1,10 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const RequireAuth = ({ allowedRoles }) => {
   const location = useLocation();
-  const { isLoggedIn, userData } = useSelector((state) => state.auth);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userData = useSelector((state) => state.auth.userData);
   const plan = userData?.plan;
   const role = userData?.role;
   return isLoggedIn &&
