@@ -27,6 +27,7 @@ const episodeSchema = new Schema(
     episodeNumber: {
       type: Number,
       required: [true, "Episode Number should be provide"],
+      //TODO: fix me (since i have to be unique only in specific season)
       unique: [true, "episodeNumber should be unique"],
     },
     episodeVideo: {

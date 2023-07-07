@@ -194,11 +194,18 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     };
   }
 
-  // display condition
-  if (req.role === "ADMIN" && display) {
+  // display condition true & false for ADMIN and true only for user
+  if (req.role === "ADMIN") {
     query["display"] = display;
   } else if (req.role === "USER") {
     query["display"] = true;
+  }
+
+  // check for archive  true/false for admin and false for user
+  if (req.role === "ADMIN" && archive) {
+    query["archive"] = archive;
+  } else if (req.role === "USER") {
+    query["archive"] = false;
   }
 
   // find all content and search all content
@@ -250,7 +257,7 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
 
 /********************
  * @httpDeleteById
- * @route http://localhost:8081/api/v1/content/id
+ * @route http://localhost:8081/api/v1/content/:seriesid
  * @description  controller to delete the content
  * @parameters {Object id}
  * @return { Object } content object
@@ -267,7 +274,7 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
       new CustomError("Content with the given ID does not exist.", 404)
     );
   }
-
+  /// cloudinary file delete
   const { thumbnail, trailer, content } = contentData;
   if (contentData.length !== 0) {
     if (content?.contentID) {

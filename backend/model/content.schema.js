@@ -134,6 +134,10 @@ const contentSchema = new Schema(
       type: Number,
       default: 0,
     },
+    archive: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

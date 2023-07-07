@@ -28,6 +28,7 @@ const {
 } = require("../controller/episode.controller.js");
 
 const contentRoute = express.Router();
+
 // like & dislike routes --
 contentRoute
   .route("/:contentId/:action")
@@ -55,6 +56,7 @@ contentRoute
   .get(
     jwtAuth,
     authorizeRoles("ADMIN", "USER"),
+    checkUserSubscription,
     checkUserSubscription,
     httpGetContentById
   )
