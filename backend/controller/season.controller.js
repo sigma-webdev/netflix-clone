@@ -41,16 +41,16 @@ const createSeason = asyncHandler(async (req, res, next) => {
   // read season and check for duplicate season number
   // check for series duplicates and add--
   if (contentSeries.length > 0) {
-    contentSeries.forEach((season) => {
+    for (const season of contentSeries) {
       if (season.seasonNumber == seasonNumber) {
         return next(
           new CustomError(
-            " Season already Exist!, Enter alternate Season Number",
+            "Season already exists! Please enter an alternate season number.",
             400
           )
         );
       }
-    });
+    }
   }
 
   // handle season duplicate number
@@ -60,7 +60,6 @@ const createSeason = asyncHandler(async (req, res, next) => {
   };
 
   const seasonDetails = seasonModel(seasonField);
-
   let seasonData = await seasonDetails.save();
 
   // check for season data
@@ -101,6 +100,15 @@ const getSeasons = asyncHandler(async (req, res, next) => {
     },
   ]);
 
+  if (!seasons) {
+    return next(
+      new CustomError(
+        "Season data not able to fetch for the provided data!",
+        404
+      )
+    );
+  }
+
   return res.status(200).json({
     statusCode: 200,
     message: "Seasons fetch successfully",
@@ -140,15 +148,47 @@ const getSeasonsById = asyncHandler(async (req, res, next) => {
 
 /********************
  * @deleteSeason
- * @route http://localhost:8081/api/v1/contents/seasons/seasonId
+ * @route http://localhost:8081/api/v1/contents/:seriesId/seasons/seasonId
  * @description  controller to delete single seasons with id
  * @parameters {season id}
  * @return { Object } season object
  ********************/
 const deleteSeason = asyncHandler(async (req, res, next) => {
-  const { seasonId } = req.params;
+  const { seasonId, seriesId } = req.params;
 
-  const seasons = await seasonModel.findByIdAndDelete(seasonId);
+  const seriesData = await contentModel.findById(seriesId);
+
+  if (!seriesData) {
+    return next(
+      new CustomError(
+        "Selected Series is not Available for the provided Id",
+        404
+      )
+    );
+  }
+
+  // delete only when  episode  is empty in season episode array
+  const seasonData = await seasonModel.findById(seasonId);
+  let seasons;
+  if (seasonData.episodes.length === 0) {
+    seasons = await seasonModel.findByIdAndDelete(seasonId);
+  } else {
+    return next(
+      new CustomError(
+        "Delete all the Episode contains in the season first",
+        400
+      )
+    );
+  }
+
+  // delete as well from the parent series
+  if (seriesData.contentSeries.includes(seasonData._id)) {
+    seriesData.contentSeries.pop(seasonId);
+
+    await seriesData.save();
+  }
+
+  console.log("seriesData contentSeries Log", seriesData);
 
   if (!seasons) {
     return next(new CustomError("Season Not found", 400));

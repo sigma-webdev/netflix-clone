@@ -75,7 +75,7 @@ contentRoute
     getSeasons
   );
 
-// getSeasonById
+// getSeasonById and update
 contentRoute
   .route("/seasons/:seasonId")
   .get(
@@ -84,7 +84,11 @@ contentRoute
     checkUserSubscription,
     getSeasonsById
   )
-  .put(jwtAuth, authorizeRoles("ADMIN"), updateSeason)
+  .put(jwtAuth, authorizeRoles("ADMIN"), updateSeason);
+
+// delete season
+contentRoute
+  .route("/:seriesId/seasons/:seasonId")
   .delete(jwtAuth, authorizeRoles("ADMIN"), deleteSeason);
 
 //////// create/add episode ////////////
