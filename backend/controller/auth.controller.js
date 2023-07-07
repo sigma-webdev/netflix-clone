@@ -186,7 +186,10 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
   // create the url for reset password which we will send on user email-id
   // this url will help user to reset the password
-  const resetUrl = `${req.headers.referer}reset-password/${resetToken}`;
+
+  const resetUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/reset-password/${resetToken}`;
 
   // create mail content
   const mailOptions = {
