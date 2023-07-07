@@ -108,6 +108,7 @@ const getSeasons = asyncHandler(async (req, res, next) => {
       )
     );
   }
+  console.log("seasons data with contentSeries", seasons);
 
   return res.status(200).json({
     statusCode: 200,
@@ -167,10 +168,19 @@ const deleteSeason = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // delete only when  episode  is empty in season episode array
   const seasonData = await seasonModel.findById(seasonId);
+
+  if (!seasonData) {
+    return next(
+      new CustomError("Selected season with the given Id is not available", 404)
+    );
+  }
+  // make sure episode array in season is empty
+  const { episodes } = seasonData;
   let seasons;
-  if (seasonData.episodes.length === 0) {
+
+  // delete only when  episode  is empty in season episode array
+  if (episodes.length === 0) {
     seasons = await seasonModel.findByIdAndDelete(seasonId);
   } else {
     return next(
@@ -183,12 +193,14 @@ const deleteSeason = asyncHandler(async (req, res, next) => {
 
   // delete as well from the parent series
   if (seriesData.contentSeries.includes(seasonData._id)) {
-    seriesData.contentSeries.pop(seasonId);
+    const seriesIndex = seriesData.contentSeries.indexOf(seasonData._id);
+
+    if (seriesIndex > -1) {
+      seriesData.contentSeries.splice(seriesIndex, 1);
+    }
 
     await seriesData.save();
   }
-
-  console.log("seriesData contentSeries Log", seriesData);
 
   if (!seasons) {
     return next(new CustomError("Season Not found", 400));

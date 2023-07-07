@@ -115,7 +115,11 @@ contentRoute
     checkUserSubscription,
     episodeGetById
   )
-  .put(jwtAuth, authorizeRoles("ADMIN"), updateEpisode)
+  .put(jwtAuth, authorizeRoles("ADMIN"), updateEpisode);
+
+// delete episode
+contentRoute
+  .route("/:seasonId/episodes/:episodeId")
   .delete(jwtAuth, authorizeRoles("ADMIN"), deleteEpisode);
 
 module.exports = contentRoute;

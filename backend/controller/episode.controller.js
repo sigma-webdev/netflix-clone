@@ -53,18 +53,36 @@ const createEpisode = asyncHandler(async (req, res, next) => {
   }
 
   // make sure the selected season is available
-  const seasonDetails = await seasonModel.findById(seasonId);
+  const seasonDetails = await seasonModel.findById(seasonId).populate([
+    {
+      path: "episodes",
+    },
+  ]);
   if (!seasonDetails) {
     return next(
       new CustomError("Season data not available for the given Id", 404)
     );
   }
 
+  // check to make sure that episodeNumber is unique before save
+  const { episodes } = seasonDetails;
+  if (episodes.length > 0) {
+    for (const episode of episodes) {
+      console.log("Episode number ----------", episode);
+      console.log("Episode enter number ----------", episodeNumber);
+      if (episode.episodeNumber == episodeNumber) {
+        return next(
+          new CustomError(
+            "Episode number already exists! Please enter an alternate episode number.",
+            400
+          )
+        );
+      }
+    }
+  }
+
   // create episode mongoose object
   const episodeObject = new episodeModel(episodeDetails);
-
-  // check to make sure that episodeNumber is unique before save
-  const episodes = await episodeModel.find();
 
   const episodeData = await episodeObject.save();
 
@@ -241,16 +259,36 @@ const updateEpisode = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @updateEpisode
- * @route http://localhost:8081/api/v1/contents/episode/episodeId
+ * @deleteEpisode
+ * @route http://localhost:8081/api/v1/contents/:seasonId/episode/:episodeId
  * @description  controller to delete a specific episode
  * @parameters {request id}
  * @return { ObjectId } episodeId
  ********************/
 const deleteEpisode = asyncHandler(async (req, res, next) => {
-  const { episodeId } = req.params;
+  const { seasonId, episodeId } = req.params;
+
+  const seasonData = await seasonModel.findById(seasonId);
+  if (!seasonData) {
+    return next(
+      new CustomError(
+        "Selected season is not Available for the provided Id",
+        404
+      )
+    );
+  }
 
   const episodeDetails = await episodeModel.findByIdAndDelete(episodeId);
+
+  if (seasonData.episodes.includes(episodeId)) {
+    const episodeIndex = seasonData.episodes.indexOf(episodeId);
+
+    if (episodeIndex > -1) {
+      seasonData.episodes.splice(episodeIndex, 1);
+    }
+
+    await seasonData.save();
+  }
 
   if (!episodeDetails) {
     return next(new CustomError("Episode Not found for the given Id", 400));
