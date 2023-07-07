@@ -12,6 +12,7 @@ import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
 import { FaSignOutAlt } from "react-icons/fa";
 import { fetchContentBySearch } from "../../store/contentSlice";
+import { RiAdminFill } from "react-icons/ri";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -65,24 +66,6 @@ const Header = () => {
             <img src={netflixLogo} alt="netflix logo" className="w-full" />
           </Link>
         </div>
-        {/* login  */}
-        {IS_LOGGED_IN ? (
-          <div className="flex items-center">
-            <nav>
-              <ul className="hidden gap-4 md:flex ">
-                <li className="cursor-pointer">
-                  <Link to="/browse">Movies & Series</Link>
-                </li>
-              </ul>
-            </nav>
-            <div className="flex items-center gap-2 md:hidden">
-              <div>Home</div>
-              <div>
-                <Menu></Menu>
-              </div>
-            </div>
-          </div>
-        ) : null}
       </div>
 
       {!IS_LOGGED_IN ? (
@@ -137,12 +120,16 @@ const Header = () => {
                     />
                   </div>
 
-                  <div>Mangesh Thakare</div>
+                  <div>{user.email.split("@")[0]}</div>
                 </li>
                 <hr className="my-4" />
                 {IS_LOGGED_IN && user?.role === "ADMIN" && (
                   <Link to={"/admin"}>
-                    <li>Admin Dashboard</li>
+                    <li className="flex cursor-pointer items-center gap-4">
+                      <IconContext.Provider value={{ size: "25px" }}>
+                        <RiAdminFill /> Admin Dashboard
+                      </IconContext.Provider>
+                    </li>
                   </Link>
                 )}
                 <hr className="my-4" />
