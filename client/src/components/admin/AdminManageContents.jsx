@@ -8,6 +8,7 @@ import {
 } from "../../store/adminManageContentSlice";
 // import { Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
+import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 // import AdminContentView from "./AdminContentView";
 // import { addContent } from '../../ApiUtils';
 // import { useNavigate } from "react-router-dom";
@@ -457,6 +458,7 @@ console.log(isContentLoading)
                   <th className="px-4 py-2">Content Type</th>
                   <th className="px-4 py-2">Language</th>
                   <th className="px-4 py-2">Origin</th>
+                  <th className="px-4 py-2">Display</th>
                   <th className="px-4 py-2 text-center">Action</th>
                 </tr>
               </thead>
@@ -481,6 +483,7 @@ console.log(isContentLoading)
                       <td className="px-4 py-3">{content.contentType}</td>
                       <td className="px-4 py-3">{content.language}</td>
                       <td className="px-4 py-3">{content.originCountry}</td>
+                      <td className="px-4 py-3">{<ToggleSwitch />}</td>
                       <td className="px-4 py-2">
                         <Link to={`${content._id}`}>
                           <div className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]">
