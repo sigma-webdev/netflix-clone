@@ -4,8 +4,11 @@ info:
   description: API documentation for a Simple Netflix clone application
   version: 1.0.0
   contact:
-    name: Your Name
+    name: PW Skills 
     email: your.email@example.com
+    url: https://github.com/your-username/your-repo
+  externalDocs:
+    description: Documentation on GitHub
     url: https://github.com/your-username/your-repo
 
 # TODO: fix or integrate with production url
@@ -42,7 +45,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserSignUpRequest"
+              $ref: "#/components/schemas/signUpLoginRequest"
       responses:
           "201":
             description: Return User object data
@@ -52,15 +55,49 @@ paths:
                   type: object
                   properties:
                     statusCode:
-                    type: number
-                    example: 201
-                  success:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: successfully register the User
-                  $ref: "#/components/schemas/User"
+                      type: number
+                      example: 201
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      default: successfully registered the user
+                    data:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          format: email
+                          example: johndoe@gmail.com
+                        plan:
+                          type: string
+                          example: "plan Name"
+                        watchHistory:
+                          type: array
+                          example: ["movie/series Ids"]
+                        watchList:
+                          type: array
+                          example: ["movie/series Ids"]
+                        role: 
+                          type: string
+                          example: USER
+                        _id:
+                          type: string 
+                          example: 64a3ffef83e36e95ec51e6333
+                        createdAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        updatedAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        __v: 
+                          type: number
+                          example: 0
+                    token:
+                      type: string 
+                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTk4NzFmMTUxZWFlYmVmMTZmZGFmMSIsImVtYWlsIjoibWFtYWFuZ0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY4ODgzMTc3NiwiZXhwIjoxNjg4OTE4MTc2fQ.z9HQvqgnXfQN6GtYzG8H1nVwVXwzU35UDm6XIsJKVRo
+                    
           "400":
             description: Bad user request 
             content:
@@ -76,10 +113,8 @@ paths:
                       default: false
                     message:
                       type: string
-                      example: Email and Password are required
-                    data:
-                      type: object
-                      example: null
+                      example: Email and Password are required || Please enter a valid email 📩 ||  email already exist
+                   
           "500":
             description: Internal server Error
             content:
@@ -95,14 +130,15 @@ paths:
                       default : false
                     message:
                       type: string
-                      default: internal server Error                 
-
+                      default: internal server Error
+                                     
+  # user login 
   /auth/signin:
    post:
     tags:
      - User Authentication
     summary : User signin/login
-    description: User signin or login to the account
+    description: Authenticates a user and generates an access token 
     consumes:
       - application/json
     produces:
@@ -112,14 +148,58 @@ paths:
       content:
         application/json : # Media type
           schema:
-            $ref: "#/components/schemas/UserSignUpRequest"
+            $ref: "#/components/schemas/signUpLoginRequest"
     responses:
-        "200": # status code
-          description: "return user data object"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
+        "200":
+            description: Return User object data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 201
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      default: successfully registered the user
+                    data:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          format: email
+                          example: johndoe@gmail.com
+                        plan:
+                          type: string
+                          example: "plan Name"
+                        watchHistory:
+                          type: array
+                          example: ["movie/series Ids"]
+                        watchList:
+                          type: array
+                          example: ["movie/series Ids"]
+                        role: 
+                          type: string
+                          example: USER
+                        _id:
+                          type: string 
+                          example: 64a3ffef83e36e95ec51e6333
+                        createdAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        updatedAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        __v: 
+                          type: number
+                          example: 0
+                    token:
+                      type: string 
+                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTk4NzFmMTUxZWFlYmVmMTZmZGFmMSIsImVtYWlsIjoibWFtYWFuZ0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY4ODgzMTc3NiwiZXhwIjoxNjg4OTE4MTc2fQ.z9HQvqgnXfQN6GtYzG8H1nVwVXwzU35UDm6XIsJKVRo    
         "400":
           description: Bad Request
           content:
@@ -127,11 +207,31 @@ paths:
               schema:
                 type: object
                 properties:
+                  statusCode: 
+                    type: number
+                    default: 200
                   success:
                     type: boolean
                     default: false
                   message:
-                    type: string                                             
+                    type: string
+                    example: Incorrect Password || user not not found    
+                  data: 
+                    type: object
+                    example: null                                          
+        "404": 
+          description: Can't find account for the provide email address 
+          content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        default : false
+                      message:
+                        type: string 
+                        example: Inter Server Error || Server down    
         "500":
           description: Internal Server Error
           content:
@@ -143,7 +243,8 @@ paths:
                     type: boolean
                     default : false
                   message:
-                    type: string     
+                    type: string 
+                    example: Inter Server Error || Server down    
 
 
 
@@ -167,68 +268,20 @@ components:
 
 # re-usable schema
   schemas:
-    User:
-      type: object
-      properties:
-        # statusCode:
-        #   type: number
-        #   example: 201
-        # success:
-        #   type: boolean
-        #   example: true
-        # message:
-        #   type: string
-        #   example: successfully register the User
-        data:
-          type: object
-          properties:
-            email:
-              type: string
-              format: email
-              example: johndoe@gmail.com
-            plan:
-              type: string
-              example: "plan Name"
-            watchHistory:
-              type: array
-              example: ["movie/series Ids"]
-            watchList:
-              type: array
-              example: ["movie/series Ids"]
-            role: 
-              type: string
-              example: user
-            _id:
-              type: string 
-              example: 64a3ffef83e36e95ec51e6333
-            createdAt:
-              type: date
-              example: 2023-07-04T11:18:07.265+00:00
-            updatedAt:
-              type: date
-              example: 2023-07-04T11:18:07.265+00:00
-            __v: 
-              type: number
-              example: 0
-            token:
-              type: string
-              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTk4NzFmMTUxZWFlYmVmMTZmZGFmMSIsImVtYWlsIjoibWFtYWFuZ0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY4ODgzMTc3NiwiZXhwIjoxNjg4OTE4MTc2fQ.z9HQvqgnXfQN6GtYzG8H1nVwVXwzU35UDm6XIsJKVRo
-        
-      
-
-    UserSignUpRequest:
+    signUpLoginRequest:
       type: object
       properties:
         email:
           type: string
           format: email
-          example: johndoe@gmail.com
         password:
           type: string
-          example: demoPassword@1
+          example: Example@11
       required:
         - email
         - password
+    
+
 
             
     
