@@ -166,47 +166,49 @@ const createPlan = asyncHandler(async (req, res, next) => {
   const { planName, amount, description, active } = req.body;
   if (!planName || !amount || !description) {
     return next(
-      new CustomError("All fields are required. planName, amount, description")
+      new CustomError(
+        "All fields are required. planName, amount, description",
+        400
+      )
     );
   }
 
-  const planResponse = await razorpay.plans.create({
-    period: "monthly",
-    interval: 1,
-    item: {
-      name: planName.toUpperCase(),
-      amount: amount,
-      currency: "INR",
-      description: description,
-    },
-  });
+  try {
+    const planResponse = await razorpay.plans.create({
+      period: "monthly",
+      interval: 1,
+      item: {
+        name: planName.toUpperCase(),
+        amount: amount,
+        currency: "INR",
+        description: description,
+      },
+    });
+    const planInfo = subscriptionPlanModel({
+      planName: planName.toUpperCase(),
+      amount,
+      description,
+      active,
+      planId: planResponse.id,
+    });
 
-  if (planResponse.error) {
+    const result = await planInfo.save();
+
+    return res.status(201).json({
+      statusCode: 201,
+      success: true,
+      message: "Successfully created plan",
+      data: result,
+    });
+  } catch (error) {
     return next(
       new CustomError(
-        planResponse.error.description ||
+        error.error.description ||
           "Error occurred during creating subscription plan",
         500
       )
     );
   }
-
-  const planInfo = subscriptionPlanModel({
-    planName: planName.toUpperCase(),
-    amount,
-    description,
-    active,
-    planId: planResponse.id,
-  });
-
-  const result = await planInfo.save();
-
-  return res.status(201).json({
-    statusCode: 201,
-    success: true,
-    message: "Successfully created plan",
-    data: result,
-  });
 });
 
 /******************************************************
