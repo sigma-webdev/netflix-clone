@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllPlans } from "../../store/adminPlansSlice";
+import { getAllPlans, updatePlanStatus } from "../../store/adminPlansSlice";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 
 const AdminManagePlans = () => {
   const dispatch = useDispatch();
   const allPlans = useSelector((state) => state.plans.allPlans);
+  const updateLoader = useSelector((state) => state.plans.updateLoader);
 
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -87,8 +88,9 @@ const AdminManagePlans = () => {
     }
   };
 
-  const handleToggleStatus = (planId, newStatus) => {
-    dispatch();
+  const handleToggleStatus = (planId, event) => {
+    const active = event.target.checked;
+    dispatch(updatePlanStatus({ id: planId, active: active }));
   };
 
   return (
@@ -213,9 +215,10 @@ const AdminManagePlans = () => {
                     </td>
                     <td className="flex flex-col items-center p-2 ">
                       <ToggleSwitch
+                        loading={updateLoader}
                         isOn={plan.active}
-                        onToggle={(newStatus) =>
-                          handleToggleStatus(plan.id, newStatus)
+                        onToggle={(event) =>
+                          handleToggleStatus(plan._id, event)
                         }
                       />
                       {plan.active ? (
