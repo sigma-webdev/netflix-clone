@@ -201,6 +201,8 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     query["display"] = true;
   }
 
+  // pass total pages
+  result.totalPages = Math.ceil(totalContents / LIMIT);
   // find all content and search all content
   result.contents = await Content.find(query)
     .skip(startIndex)
