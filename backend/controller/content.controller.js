@@ -135,6 +135,7 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     mostLikes,
     trending,
     originCountry,
+    descOrder,
   } = req.query;
 
   const query = {};
@@ -175,6 +176,11 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
     query["originCountry"] = new RegExp(originCountry, "i");
   }
 
+  // descOrder
+  if (descOrder) {
+    sorting["createdAt"] = { createdAt: -1 };
+  }
+
   // pagination
   const totalContents = await Content.find(query).countDocuments();
 
@@ -207,7 +213,12 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
   result.contents = await Content.find(query)
     .skip(startIndex)
     .limit(LIMIT)
-    .sort(sorting.latestContent || sorting.likesCount || sorting.trending);
+    .sort(
+      sorting.latestContent ||
+        sorting.likesCount ||
+        sorting.trending ||
+        sorting.createdAt
+    );
 
   if (!result.contents) {
     next(new CustomError("Content not able Fetch"));
@@ -215,8 +226,8 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-    data: result,
     message: "Content Fetched successfully",
+    data: result,
   });
 });
 
