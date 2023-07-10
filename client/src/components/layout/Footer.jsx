@@ -1,8 +1,8 @@
-import { GlobeIcon } from "../icons";
+import { BsGlobe } from "react-icons/bs";
 
 const Footer = () => {
   return (
-    <footer className="h-screen space-y-10 bg-netflix-blue p-10 text-slate-400 md:p-28">
+    <footer className="h-full space-y-10 bg-netflix-blue p-10 text-slate-400 md:p-28">
       <ul className="grid-rows-16 sm:grid-rows-8 mx-auto grid max-w-[80vw] grid-flow-row grid-cols-1 gap-y-4 underline sm:grid-flow-row sm:grid-cols-2 md:grid-flow-col md:grid-cols-4 md:grid-rows-4">
         <li>
           <a href="/">FAQ</a>
@@ -51,8 +51,8 @@ const Footer = () => {
         </li>
       </ul>
       <div className="mx-auto max-w-[80vw]">
-        <div className="flex h-fit w-fit items-center rounded border-2 border-white bg-black px-3 py-1 text-white ">
-          <GlobeIcon />
+        <div className="flex h-fit w-fit items-center gap-2 rounded border-2 border-white bg-black px-3 py-1 text-white">
+          <BsGlobe />
           <select className="rounded bg-transparent  " defaultValue={"English"}>
             <option value="English">English</option>
             <option value="Hindi">Hindi</option>

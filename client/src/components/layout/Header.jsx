@@ -1,18 +1,16 @@
 import netflixLogo from "./../../assets/netflix_logo.png";
-import { IconContext } from "react-icons/lib";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
-// icons
-import { SearchIcon } from "../icons";
-import { Loading } from "../icons.jsx";
-// THUNK
-import { SIGN_OUT } from "../../store/authSlice.js";
+import { AiOutlineSearch } from "react-icons/ai";
+import { FaSignOutAlt } from "react-icons/fa";
+
 import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
-import { FaSignOutAlt } from "react-icons/fa";
+import { SIGN_OUT } from "../../store/authSlice.js";
 import { fetchContentBySearch } from "../../store/contentSlice";
 import { RiAdminFill } from "react-icons/ri";
+import CircularLoader from "../loader/CircularLoader";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -49,7 +47,6 @@ const Header = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-
     dispatch(fetchContentBySearch({ searchText, userId: user._id }));
   };
 
@@ -78,28 +75,30 @@ const Header = () => {
           className="rounded border-2 border-red-600 bg-red-600 px-3 py-1 text-white"
         >
           {IS_LOADING ? (
-            <Loading />
+            <CircularLoader />
           ) : (
             <>{IS_LOGGED_IN ? "Sign out" : "Sign In"}</>
           )}
         </button>
       ) : (
         <div className="flex h-fit items-center gap-3">
-          <IconContext.Provider value={{ size: "25px" }}>
-            <div className="flex border-2 border-white  text-white">
-              <div className="cursor-pointer" onClick={handleSearch}>
-                <SearchIcon />
-              </div>
-
-              <form onSubmit={handleSearch}>
-                <input
-                  className="h-full w-full bg-black/50 text-white transition ease-in-out focus:outline-none"
-                  onChange={(e) => setSearchText(e.target.value)}
-                  value={searchText}
-                ></input>
-              </form>
+          <div className="flex border-2 border-white  text-white">
+            <div
+              className="flex cursor-pointer items-center gap-2 bg-black/50  px-1 py-1 text-white"
+              onClick={handleSearch}
+            >
+              <AiOutlineSearch className="text-2xl" />
             </div>
-          </IconContext.Provider>
+
+            <form onSubmit={handleSearch}>
+              <input
+                className="h-full w-full bg-black/50 text-white transition ease-in-out focus:outline-none"
+                onChange={(e) => setSearchText(e.target.value)}
+                value={searchText}
+              ></input>
+            </form>
+          </div>
+
           <div className="flex items-center gap-2">
             <div className="w-10 overflow-hidden rounded">
               <img
@@ -120,15 +119,14 @@ const Header = () => {
                     />
                   </div>
 
-                  <div>{user.email.split("@")[0]}</div>
+                  <div>Mangesh Thakare</div>
                 </li>
                 <hr className="my-4" />
                 {IS_LOGGED_IN && user?.role === "ADMIN" && (
                   <Link to={"/admin"}>
                     <li className="flex cursor-pointer items-center gap-4">
-                      <IconContext.Provider value={{ size: "25px" }}>
-                        <RiAdminFill /> Admin Dashboard
-                      </IconContext.Provider>
+                      <RiAdminFill className="text-2xl" />
+                      Admin Dashboard
                     </li>
                   </Link>
                 )}
@@ -137,16 +135,13 @@ const Header = () => {
                   className="flex cursor-pointer items-center gap-4"
                   onClick={() => handleSignInSignOut()}
                 >
-                  <IconContext.Provider value={{ size: "25px" }}>
-                    <FaSignOutAlt /> Sign out of Netflix
-                  </IconContext.Provider>
+                  <FaSignOutAlt className="text-2xl" /> Sign out of Netflix
                 </li>
               </ul>
             </Menu>
           </div>
         </div>
       )}
-      {/*  */}
     </header>
   );
 };

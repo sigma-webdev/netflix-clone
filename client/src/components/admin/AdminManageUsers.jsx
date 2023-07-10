@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers, getUserById } from "../../store/userSlice";
 import { HiSearch } from "react-icons/hi";
-import AdminPageLoader from "../loader/AdminPageLoader";
+import CircularLoader from "../loader/CircularLoader";
 
 const AdminManageUsers = () => {
   const dispatch = useDispatch();
@@ -95,7 +95,7 @@ const AdminManageUsers = () => {
         </div>
       )}
       {isDataLoading ? (
-        <AdminPageLoader />
+        <CircularLoader />
       ) : (
         <div className=" max-h-screen w-10/12 overflow-y-scroll bg-slate-100 py-10">
           <div className="mx-auto flex w-5/6 justify-between">

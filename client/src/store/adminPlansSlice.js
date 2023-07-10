@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   loading: false,
@@ -13,6 +14,28 @@ export const getAllPlans = createAsyncThunk(
     try {
       let response = await axiosInstance.get("/payment/plan/");
       return response?.data;
+    } catch (error) {
+      console.log(error);
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const createPlan = createAsyncThunk(
+  "adminPlans/createPlan",
+  async (
+    { planName, amount, description, active },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      let response = await axiosInstance.post("/payment/plan", {
+        planName,
+        amount,
+        description,
+        active,
+      });
+      dispatch(getAllPlans());
+      return response.data;
     } catch (error) {
       console.log(error);
       rejectWithValue(error.response.data);
@@ -55,17 +78,33 @@ const adminPlansSlice = createSlice({
         state.loading = false;
         state.allPlans = [];
       })
-      //  update plam
+      //  update plan
       .addCase(updatePlanStatus.pending, (state) => {
         state.updateLoader = true;
       })
       .addCase(updatePlanStatus.fulfilled, (state, action) => {
         state.updatePlan = action.payload;
         state.updateLoader = false;
+        toast.success(
+          `Plan ${
+            state?.updatePlan?.data?.active ? "enabled" : "disabled"
+          } successfully`
+        );
       })
       .addCase(updatePlanStatus.rejected, (state) => {
         state.updatePlan = false;
         state.updateLoader = false;
+      })
+      // add plan
+      .addCase(createPlan.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createPlan.fulfilled, (state) => {
+        state.loading = false;
+        toast.success("Plan Added Successfully");
+      })
+      .addCase(createPlan.rejected, (state) => {
+        state.loading = false;
       });
   },
 });
