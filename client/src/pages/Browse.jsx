@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AiOutlineInfoCircle } from "react-icons/ai";
 
 // components
 import Crousal from "../components/crousal/Crousal";
@@ -22,38 +21,24 @@ import PreviewShimmer from "../components/shimmer/PreviewShimmer";
 import { Link } from "react-router-dom";
 
 const Browse = () => {
-  const userId = useSelector((state) => state.auth.userData._id);
-  const content = useSelector((state) => state.content.filteredContent);
-  const searchContent = useSelector((state) => state.content.searchContent);
-  const trendingContent = useSelector((state) => state.content.trendingContent);
-  const latestContent = useSelector((state) => state.content.latestContent);
-  const mostLikedContent = useSelector(
-    (state) => state.content.mostLikedContent
-  );
-  const contentByCountryOrigin = useSelector(
-    (state) => state.content.contentByCountryOrigin
-  );
-  const watchedContent = useSelector((state) => state.content.watchedContent);
-
-  const loading = useSelector((state) => state.content.loading);
-  const trendingContentLoading = useSelector(
-    (state) => state.content.trendingContentLoading
-  );
-  const latestContentLoading = useSelector(
-    (state) => state.content.latestContentLoading
-  );
-  const mostLikedContentLoading = useSelector(
-    (state) => state.content.mostLikedContentLoading
-  );
-  const countryOriginContentLoading = useSelector(
-    (state) => state.content.countryOriginContentLoading
-  );
-  const watchContentLoading = useSelector(
-    (state) => state.content.watchContentLoading
-  );
-  const searchLoading = useSelector((state) => state.content.searchLoading);
-
   const dispatch = useDispatch();
+  const userId = useSelector((state) => state.auth.userData._id);
+  const {
+    filteredContent: content,
+    searchContent,
+    trendingContent,
+    latestContent,
+    mostLikedContent,
+    contentByCountryOrigin,
+    watchedContent,
+    loading,
+    trendingContentLoading,
+    latestContentLoading,
+    mostLikedContentLoading,
+    countryOriginContentLoading,
+    watchContentLoading,
+    searchLoading,
+  } = useSelector((state) => state.content);
 
   useEffect(() => {
     dispatch(fetchContent(userId));
