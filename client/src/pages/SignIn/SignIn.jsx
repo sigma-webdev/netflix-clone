@@ -6,8 +6,7 @@ import Layout from "../../components/layout/Layout";
 import { Link, useNavigate } from "react-router-dom";
 // thunk
 import { SIGN_IN } from "../../store/authSlice.js";
-// svg / icon
-import { Loading } from "../../components/icons.jsx";
+import CircularLoader from "../../components/loader/CircularLoader";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -80,7 +79,7 @@ const SignIn = () => {
               type="submit"
               className="w-[300px] rounded bg-[#e50914] py-2 text-white"
             >
-              {signInLoading ? <Loading /> : "Sign In"}
+              {signInLoading ? <CircularLoader /> : "Sign In"}
             </button>
           </form>
 

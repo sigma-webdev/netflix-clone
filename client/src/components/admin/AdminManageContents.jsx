@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from "react";
-
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { BiSearchAlt2 } from "react-icons/bi";
 import {
   addNewContent,
   fetchContentBySearch,
+  ToggleDisplayContentToUser
 } from "../../store/adminManageContentSlice";
-// import { Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-// import AdminContentView from "./AdminContentView";
-// import { addContent } from '../../ApiUtils';
-// import { useNavigate } from "react-router-dom";
-// import { formLoader } from './icons';
+
 
 const AdminManageContents = () => {
-  // const navigate = useNavigate();
-
-  // const [contentData, setContentData] = useState([])
+ 
   const [newContentData, setNewContentData] = useState({
     name: "",
     description: "",
@@ -26,12 +21,12 @@ const AdminManageContents = () => {
     director: "",
     rating: "",
     language: "",
-    cast: "",
+    cast: [],
     releaseDate: "",
     originCountry: "",
   });
-  const [castArr, setCastArr] = useState([]);
-  const [creatorArr, setCreatorArr] = useState([]);
+  const [castInput, setCastInput] = useState('')
+  
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1) 
   const limit = 5;
@@ -39,26 +34,24 @@ const AdminManageContents = () => {
   const dispatch = useDispatch();
 
   const allContents = useSelector((state) => state.admin.filteredContent);
-  console.log(allContents.contents, "/dasd");
   const [searchTerm, setSearchTerm] = useState("");
   const isContentLoading = useSelector((state) => state.admin.isLoading);
-  // console.log(content)
-console.log(isContentLoading)
+  const isDisplayToggleLoading = useSelector((state) => state.admin.isDisplayToggleLoading);
+
   useEffect(() => {
     dispatch(fetchContentBySearch({pageNo: page}));
-    // setContentData(content)
+
   }, [page]);
 
 
   const [isOpen, setIsOpen] = useState(false);
+
 
   const toggleModal = (val) => {
     setIsOpen(val);
   };
 
   const handleInputChange = (event) => {
-    console.log(event.target.name);
-    console.log(event.target.value, "//////");
     const { name, value } = event.target;
     if (name === "genres") {
       setNewContentData({
@@ -68,17 +61,10 @@ console.log(isContentLoading)
 
       return;
     }
-    // if (name === "cast") {
-    //     const Arr = [...newContentData, value]
-    //     console.log(Arr)
-    //     setNewContentData(prev => ({
-    //         ...prev,
-    //         [name]: Arr
-
-    //     }))
-    //     return;
-    // }
-    // const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+    if (name === "cast") {
+      setCastInput(value)
+      return;
+    }
     setNewContentData((prevDetails) => ({
       ...prevDetails,
       [name]: value,
@@ -87,38 +73,28 @@ console.log(isContentLoading)
 
 
 
-  const handleArrayChange = () => {
-    setCastArr([...castArr, newContentData.cast]);
-    setNewContentData({
-      ...newContentData,
-      cast: "",
-    });
-  };
+  const handleAddCast = () => {
+    if(castInput === "" || castInput.length < 2){
+      toast.error("please enter a valid input");
+      return
+    }
+    const newCastArr = [...newContentData.cast, castInput]
+    setNewContentData({ ...newContentData, cast: newCastArr })
+    setCastInput('')
+
+  }
   const handleRemoveCast = (castname) => {
-    let newCast = castArr.filter((item) => item !== castname);
-    setCastArr(newCast);
+    const indexOfCastToBeRemoved = newContentData.cast.indexOf(castname)
+    const newCast = newContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
+    setNewContentData({ ...newContentData, cast: newCast })
   };
+
   const getSearch = (e) => {
     e.preventDefault()
     dispatch(fetchContentBySearch({searchText: searchTerm }));
     setSearchTerm("")
 
   }
-
-  // const handleFileChange = (event) => {
-  //     const file = event.target.files[0];
-  //     // console.log(file)
-  //     setNewContentData(prevDetails => ({
-  //         ...prevDetails,
-  //         [event.target.name]: file
-  //     }));
-  // };
-
-
-  // const filteredData = content.filter((item) =>
-  //   item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  
-  // );
 
   const nextPage = () => {
     if(allContents.next === undefined){
@@ -142,21 +118,16 @@ console.log(isContentLoading)
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
+    if (newContentData.cast.length === 0) {
+      toast.error("cast field cannot be empty field");
+      return;
+    }
     if (isLoading) {
-      console.log(
-        "please wait till the first submisson got fullfiled or rejected"
-      );
+      toast.error("wait until the current ongoing process end");
       return;
     }
     setIsLoading(true);
-    // const sentFormData = new FormData(e.target);
-    // sentFormData.append("creator", creatorArr);
-    // sentFormData.append("cast", castArr);
-    // console.log(sentFormData)
-    const data = { ...newContentData, cast: castArr };
-    console.log(data);
-    dispatch(addNewContent(data));
+    dispatch(addNewContent(newContentData));
     setNewContentData({
       name: "",
       description: "",
@@ -165,19 +136,16 @@ console.log(isContentLoading)
       director: "",
       rating: "",
       language: "",
-      cast: "",
+      cast: [],
       releaseDate: "",
       originCountry: "",
     });
-    setCastArr([]);
     setIsOpen(false);
     setIsLoading(false);
-    // navigate(contents._id)
-    // console.log(res)
+    
   };
 
   const handleToggleClose = () => {
-    setCastArr([]);
     setNewContentData({
       name: "",
       description: "",
@@ -186,11 +154,17 @@ console.log(isContentLoading)
       director: "",
       rating: "",
       language: "",
-      cast: "",
+      cast: [],
       releaseDate: "",
       originCountry: "",
     });
     toggleModal(false);
+  };
+
+
+  const handleDispalyToggleStatus = (planId, event) => {
+    const active = event.target.checked;
+    dispatch(ToggleDisplayContentToUser({ id: planId, val: active }));
   };
   return (
     <>
@@ -251,19 +225,19 @@ console.log(isContentLoading)
                   className="mr-4 w-[88%] rounded border bg-transparent p-2"
                   type="text"
                   name="cast"
-                  value={newContentData.cast}
+                  value={castInput}
                   onChange={handleInputChange}
                 />
                 <div
-                  onClick={handleArrayChange}
+                  onClick={handleAddCast}
                   className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
                 >
                   Add
                 </div>
               </div>
-              {castArr.length > 0 && (
+              {newContentData.cast.length > 0 && (
                 <div className="flex flex-wrap">
-                  {castArr.map((castname) => (
+                  {newContentData.cast.map((castname) => (
                     <div className="relative m-2  rounded  bg-blue-200">
                       <div
                         onClick={() => handleRemoveCast(castname)}
@@ -428,7 +402,6 @@ console.log(isContentLoading)
             >
               Add Content
             </button>
-              {/* <div className=""> */}
               <form onSubmit={getSearch} className="flex justify-between border-2 border-[#E50914] items-center  bg-white">
                 <input
                   className=" px-2 outline-none w-full"
@@ -442,7 +415,6 @@ console.log(isContentLoading)
               <BiSearchAlt2 className="text-4xl" />
                 </button>
               </form>
-            {/* </div> */}
             
             
             </div>
@@ -483,7 +455,21 @@ console.log(isContentLoading)
                       <td className="px-4 py-3">{content.contentType}</td>
                       <td className="px-4 py-3">{content.language}</td>
                       <td className="px-4 py-3">{content.originCountry}</td>
-                      <td className="px-4 py-3">{<ToggleSwitch />}</td>
+                      <td className="px-4 py-3">
+                        <ToggleSwitch
+                          isOn={content.display} 
+                          onToggle={(event) =>
+                            handleDispalyToggleStatus(content._id, event)
+                          } 
+                          loading={isDisplayToggleLoading} 
+                        />
+                        <br />
+                        {content.display ? (
+                        <span>Shown</span>
+                      ) : (
+                        <span>Hidden</span>
+                      )}
+                        </td>
                       <td className="px-4 py-2">
                         <Link to={`${content._id}`}>
                           <div className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]">
@@ -498,8 +484,8 @@ console.log(isContentLoading)
             </table>
             <div className="flex justify-between w-10/12 my-5 mx-auto">
             <button className={allContents.previous === undefined ? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-2"} onClick={prevPage}>Previous Page</button>
-            <div className=" px-[10px] border-2 border-[#e509144d] text-[#E50914] text-xl font-bold rounded-full ">
-             {page}
+            <div className=" rounded-full border-2 border-red-400 px-[10px] text-xl font-bold text-red-600 ">
+              Page {page} of {allContents.totalPages}
             </div>
             <button onClick={nextPage} className={allContents.next === undefined? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-4"}>Next Page</button>
           </div>
