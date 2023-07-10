@@ -26,11 +26,9 @@ export const fetchAllContent = createAsyncThunk(
     async ({ rejectWithValue }) => {
       try {
         const response = await axiosInstance.get("/contents?contentType=movie");
-        console.log(response)
         const data = response.data.data;  
         return data;
       } catch (error) {
-        console.log(error);
         return rejectWithValue(error.response.data);
       }
     }
@@ -41,15 +39,12 @@ export const fetchContentById = createAsyncThunk(
     "content/fetchContentById",
     async ({ contentId }, { rejectWithValue }) => {
       try {
-        console.log(contentId,'///gsdfg')
         const response = await axiosInstance.get(`/contents/${contentId}`);
         const data = response.data.data;
-        console.log(data,'///fasdfas')
         
   
         return data;
       } catch (error) {
-        console.log(error,'/error')
         return rejectWithValue(error.response.data);
       }
     }
@@ -62,10 +57,8 @@ export const fetchContentById = createAsyncThunk(
       try {
         const url = searchText ? `/contents?search=${searchText}` :`/contents?page=${pageNo}&limit=5`
         const response = await axiosInstance.get(url);
-        console.log(response,'//dsdaf')
         const data = response.data.data;
         localStorage.setItem('filteredContent', JSON.stringify(data))
-        console.log(data,'///by search')
     
         return data;
       } catch (error) {
@@ -78,14 +71,12 @@ export const fetchContentById = createAsyncThunk(
   export const addNewContent = createAsyncThunk(
     "content/addNewContent",
     async (newContent, { rejectWithValue }) => {
-      console.log("reached", newContent);
       try {
         const response = await axiosInstance.post(`/contents`, newContent);
         const data = response.data.data;
   
         return data;
       } catch (error){
-      console.log(error)
         return rejectWithValue(error.response.data);
       }
     }
@@ -96,14 +87,12 @@ export const fetchContentById = createAsyncThunk(
     "content/updateContentDetailsById",
     async ( {id, newData}  , { rejectWithValue, dispatch }) => {
 
-      // console.log("called updar", newData, "//////", id);
       try {
         const response = await axiosInstance.put( `/contents/${id}`, newData);
         const data = response.data.data;
      
         return data;
       } catch (error) {
-        console.log(error,'errorrrr//')
         return rejectWithValue(error.response);
       }
     }
@@ -112,15 +101,11 @@ export const fetchContentById = createAsyncThunk(
   export const ToggleDisplayContentToUser = createAsyncThunk(
     "content/ToggleDisplayContentToUser",
     async ( {id, val}  , { rejectWithValue }) => {
-
-      console.log("called updar", val, "//////", id);
       try {
         const response = await axiosInstance.put( `/contents/${id}`, {display: val});
         const data = response.data.data;
-        console.log(data,'updateddddddddddd')
         return data;
       } catch (error) {
-        console.log(error,'errorrrr//')
         return rejectWithValue(error.response);
       }
     }
@@ -132,14 +117,12 @@ export const fetchContentById = createAsyncThunk(
       "content/updateContentThumbnailById",
       async ( {id, newData}  , { rejectWithValue }) => {
   
-        // console.log("called updar", newData, "//////", id);
         try {
           const response = await axiosInstance.put( `/contents/${id}`, newData);
           const data = response.data.data;
        
           return data;
         } catch (error) {
-          console.log(error,'errorrrr//')
           return rejectWithValue(error.response);
         }
       }
@@ -150,14 +133,11 @@ export const fetchContentById = createAsyncThunk(
     "content/updateContentVideoById",
     async ( {id, newData}  , { rejectWithValue }) => {
 
-      console.log("called updar", newData, "//////", id);
       try {
         const response = await axiosInstance.put( `/contents/${id}`, newData);
         const data = response.data.data;
-        console.log(data)
         return data;
       } catch (error) {
-        console.log(error,'errorrrr//')
         return rejectWithValue(error.response);
       }
     }
@@ -167,15 +147,12 @@ export const fetchContentById = createAsyncThunk(
    export const updateContentTrailerById = createAsyncThunk(
     "content/updateContentTrailerById",
     async ( {id, newData}  , { rejectWithValue }) => {
-
-      console.log("called updar", newData, "//////", id);
       try {
         const response = await axiosInstance.put( `/contents/${id}`, newData);
         const data = response.data.data;
      
         return data;
       } catch (error) {
-        console.log(error,'errorrrr//')
         return rejectWithValue(error.response);
       }
     }
@@ -214,7 +191,6 @@ export const adminSlice = createSlice({
       })
       .addCase(fetchContentBySearch.fulfilled, (state, action) => {
         state.filteredContent = action.payload;
-        console.log(state.filteredContent,'//fasdfsa');
         state.isLoading = false;
       })
       .addCase(fetchContentBySearch.rejected, (state) => {
@@ -276,9 +252,7 @@ export const adminSlice = createSlice({
         state.isDisplyToggleLoading=true;
       })
       .addCase(ToggleDisplayContentToUser.fulfilled, (state, action) => {
-        console.log(state.filteredContent,'toggle')
         const updatedArr = state.filteredContent.contents.map(content=> content._id === action.payload._id ? action.payload : content);
-        console.log(updatedArr,'new arr///')
         state.filteredContent = {...state.filteredContent, contents:updatedArr};
         state.isDisplyToggleLoading = false;
       })
