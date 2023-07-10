@@ -1,5 +1,4 @@
 import netflixLogo from "./../../assets/netflix_logo.png";
-import { IconContext } from "react-icons/lib";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
@@ -64,16 +63,6 @@ const Header = () => {
             <img src={netflixLogo} alt="netflix logo" className="w-full" />
           </Link>
         </div>
-        {/* login  */}
-        {IS_LOGGED_IN ? (
-          <nav className="flex items-center">
-            <ul className="gap-4 md:flex ">
-              <li className="cursor-pointer">
-                <Link to="/browse">Movies</Link>
-              </li>
-            </ul>
-          </nav>
-        ) : null}
       </div>
 
       {!IS_LOGGED_IN ? (
