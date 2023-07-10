@@ -61,7 +61,7 @@ export const fetchContentById = createAsyncThunk(
       try {
         const url = searchText ? `/contents?search=${searchText}` :`/contents?page=${pageNo}&limit=5`
         const response = await axiosInstance.get(url);
-        
+        console.log(response,'//dsdaf')
         const data = response.data.data;
         console.log(data,'///by search')
     

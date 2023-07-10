@@ -26,12 +26,12 @@ const AdminManageContents = () => {
     director: "",
     rating: "",
     language: "",
-    cast: "",
+    cast: [],
     releaseDate: "",
     originCountry: "",
   });
-  const [castArr, setCastArr] = useState([]);
-  const [creatorArr, setCreatorArr] = useState([]);
+  const [castInput, setCastInput] = useState('')
+  // const [castArr, setCastArr] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1) 
   const limit = 5;
@@ -52,8 +52,10 @@ console.log(isContentLoading)
 
   const [isOpen, setIsOpen] = useState(false);
 
+
   const toggleModal = (val) => {
     setIsOpen(val);
+    console.log(allContents)
   };
 
   const handleInputChange = (event) => {
@@ -66,6 +68,10 @@ console.log(isContentLoading)
         genres: [...newContentData.genres, value],
       });
 
+      return;
+    }
+    if (name === "cast") {
+      setCastInput(value)
       return;
     }
     // if (name === "cast") {
@@ -87,17 +93,34 @@ console.log(isContentLoading)
 
 
 
-  const handleArrayChange = () => {
-    setCastArr([...castArr, newContentData.cast]);
-    setNewContentData({
-      ...newContentData,
-      cast: "",
-    });
-  };
+  // const handleArrayChange = () => {
+  //   if(newContentData === "" || newContentData.length < 2){
+  //     //add toster
+  //     return
+  //   }
+  //   setCastArr([...castArr, newContentData.cast]);
+  //   setNewContentData({
+  //     ...newContentData,
+  //     cast: "",
+  //   });
+  // };
+  const handleAddCast = () => {
+    if(castInput === "" || castInput.length < 2){
+      //add toster
+      return
+    }
+    const newCastArr = [...newContentData.cast, castInput]
+    setNewContentData({ ...newContentData, cast: newCastArr })
+    setCastInput('')
+
+  }
   const handleRemoveCast = (castname) => {
-    let newCast = castArr.filter((item) => item !== castname);
-    setCastArr(newCast);
+    const indexOfCastToBeRemoved = newContentData.cast.indexOf(castname)
+    // console.log(indexOfCastToBeRemoved)
+    const newCast = newContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
+    setNewContentData({ ...newContentData, cast: newCast })
   };
+
   const getSearch = (e) => {
     e.preventDefault()
     dispatch(fetchContentBySearch({searchText: searchTerm }));
@@ -143,6 +166,10 @@ console.log(isContentLoading)
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e);
+    if (newContentData.cast.length === 0) {
+      console.log('cast cannot be empty field')
+      return;
+    }
     if (isLoading) {
       console.log(
         "please wait till the first submisson got fullfiled or rejected"
@@ -150,13 +177,7 @@ console.log(isContentLoading)
       return;
     }
     setIsLoading(true);
-    // const sentFormData = new FormData(e.target);
-    // sentFormData.append("creator", creatorArr);
-    // sentFormData.append("cast", castArr);
-    // console.log(sentFormData)
-    const data = { ...newContentData, cast: castArr };
-    console.log(data);
-    dispatch(addNewContent(data));
+    dispatch(addNewContent(newContentData));
     setNewContentData({
       name: "",
       description: "",
@@ -165,11 +186,10 @@ console.log(isContentLoading)
       director: "",
       rating: "",
       language: "",
-      cast: "",
+      cast: [],
       releaseDate: "",
       originCountry: "",
     });
-    setCastArr([]);
     setIsOpen(false);
     setIsLoading(false);
     // navigate(contents._id)
@@ -177,7 +197,6 @@ console.log(isContentLoading)
   };
 
   const handleToggleClose = () => {
-    setCastArr([]);
     setNewContentData({
       name: "",
       description: "",
@@ -186,7 +205,7 @@ console.log(isContentLoading)
       director: "",
       rating: "",
       language: "",
-      cast: "",
+      cast: [],
       releaseDate: "",
       originCountry: "",
     });
@@ -251,19 +270,19 @@ console.log(isContentLoading)
                   className="mr-4 w-[88%] rounded border bg-transparent p-2"
                   type="text"
                   name="cast"
-                  value={newContentData.cast}
+                  value={castInput}
                   onChange={handleInputChange}
                 />
                 <div
-                  onClick={handleArrayChange}
+                  onClick={handleAddCast}
                   className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
                 >
                   Add
                 </div>
               </div>
-              {castArr.length > 0 && (
+              {newContentData.cast.length > 0 && (
                 <div className="flex flex-wrap">
-                  {castArr.map((castname) => (
+                  {newContentData.cast.map((castname) => (
                     <div className="relative m-2  rounded  bg-blue-200">
                       <div
                         onClick={() => handleRemoveCast(castname)}
@@ -498,8 +517,8 @@ console.log(isContentLoading)
             </table>
             <div className="flex justify-between w-10/12 my-5 mx-auto">
             <button className={allContents.previous === undefined ? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-2"} onClick={prevPage}>Previous Page</button>
-            <div className=" px-[10px] border-2 border-[#e509144d] text-[#E50914] text-xl font-bold rounded-full ">
-             {page}
+            <div className=" rounded-full border-2 border-red-400 px-[10px] text-xl font-bold text-red-600 ">
+              Page {page} of {allContents.totalPages}
             </div>
             <button onClick={nextPage} className={allContents.next === undefined? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-4"}>Next Page</button>
           </div>
