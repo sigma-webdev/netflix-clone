@@ -1,4 +1,4 @@
-const userModel = require("../model/userSchema.js");
+const userModel = require("../model/user.schema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
@@ -73,7 +73,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
     };
   }
 
-  result.totalPages = Math.floor(totalUsers / LIMIT);
+  result.totalPages = Math.ceil(totalUsers / LIMIT);
   result.users = await userModel
     .find(query)
     .skip(startIndex)
@@ -90,7 +90,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
 
 /******************************************************
  * @contentWatchHistory
- * @route /api/v1/auth/watchhistory/:contentId
+ * @route /api/v1/auth/watch-history/:contentId
  * @description add the contentId in watchhistory array, if contentId is not present
  * @params contentId
  * @returns watchhistory (array contentIds)
@@ -132,7 +132,7 @@ const addContentToWatchHistory = asyncHandler(async (req, res, next) => {
 /******************************************************
  * @getWatchContent
  * @method delete
- * @route /api/v1/auth/watchhistory
+ * @route /api/v1/auth/watch-history
  * @description get all content present in watchHistory base on contentId (populate)
  * @params contentId
  * @returns array of content object with specific fields
@@ -160,7 +160,7 @@ const removeContentFromWatchHistory = asyncHandler(async (req, res, next) => {
 
 /******************************************************
  * @getWatchHistoryContents
- * @route /api/v1/auth/watchhistory
+ * @route /api/v1/auth/watch-history
  * @description get all content present in watchHistory base on contentId (populate)
  * @params contentId
  * @returns array of content object with specific fields
@@ -191,12 +191,11 @@ const getWatchHistoryContents = asyncHandler(async (req, res, next) => {
       limit: LIMIT,
     };
   }
-  result.totalPages = Math.floor(totalWatchContent / LIMIT);
+  result.totalPages = Math.ceil(totalWatchContent / LIMIT);
 
   const user = await userModel.findById(userId).populate([
     {
       path: "watchHistory",
-      select: "name thumbnail likesCount rating language categories genres",
       options: {
         skip: startIndex,
         limit: LIMIT,
@@ -219,7 +218,7 @@ const getWatchHistoryContents = asyncHandler(async (req, res, next) => {
 /******************************************************
  * @addContentToWatchList
  * @method patch
- * @route /api/v1/auth/watch-history/:contentId
+ * @route /api/v1/auth/watch-list/:contentId
  * @description ref the contentId in watchList arr in the user data
  * @params contentId
  * @returns watch list (array of contentId)
@@ -261,7 +260,7 @@ const addContentToWatchList = asyncHandler(async (req, res, next) => {
 /******************************************************
  * @removeContentFromWatchList
  * @method delete
- * @route /api/v1/auth/watch-history/:contentId
+ * @route /api/v1/auth/watch-list/:contentId
  * @description pull the contentId from watch list
  * @params contentId
  * @returns watch list (array of contentID)
@@ -289,7 +288,7 @@ const removeContentFromWatchList = asyncHandler(async (req, res, next) => {
 
 /******************************************************
  * @getWatchListContent
- * @route /api/v1/auth/watchhistory
+ * @route /api/v1/auth/watch-list
  * @description get all content present in watchHistory base on contentId (populate)
  * @params contentId
  * @returns array of content object with specific fields
@@ -321,12 +320,11 @@ const getWatchListContent = asyncHandler(async (req, res, next) => {
     };
   }
 
-  result.totalPages = Math.floor(totalWatchListContent / LIMIT);
+  result.totalPages = Math.ceil(totalWatchListContent / LIMIT);
 
   const user = await userModel.findById(userId).populate([
     {
       path: "watchList",
-      select: "name thumbnail likesCount rating language categories genres",
       options: {
         skip: startIndex,
         limit: LIMIT,

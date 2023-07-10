@@ -1,4 +1,4 @@
-const CustomError = require("../utils/customError");
+const CustomError = require("../utils/customError.js");
 
 // this middleware will check the user is authorized to use the route or not ,if not return error message.
 // Add this middleware in routes which you want only specific user can access

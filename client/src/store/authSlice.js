@@ -105,7 +105,7 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(SIGN_IN.fulfilled, (state, action) => {
-        console.log(action?.payload?.data);
+        localStorage.setItem("token", action?.payload?.token);
         state.userData = action?.payload?.data;
         state.isLoggedIn = true;
         state.loading = false;
@@ -123,6 +123,7 @@ const authSlice = createSlice({
       .addCase(SIGN_UP.fulfilled, (state, action) => {
         state.userData = action?.payload?.data;
         state.isLoggedIn = true;
+        state.loading = false;
         localStorage.removeItem("netflixCloneEmail");
         toast.success("Account created successfully");
       })
@@ -190,7 +191,7 @@ const authSlice = createSlice({
       })
       .addCase(IS_USER_EXIST.fulfilled, (state, action) => {
         state.loading = false;
-        localStorage.setItem("netflixCloneEmail", action.payload.data.email);
+        localStorage.setItem("netflixCloneEmail", action?.payload?.data?.email);
       })
       .addCase(IS_USER_EXIST.rejected, (state) => {
         state.loading = false;

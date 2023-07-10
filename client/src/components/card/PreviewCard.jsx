@@ -1,8 +1,12 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { dislikeContent, likeContent } from "../../store/contentSlice";
+import {
+  addContentToWatchHistory,
+  dislikeContent,
+  likeContent,
+} from "../../store/contentSlice";
 import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
 
@@ -21,11 +25,28 @@ const PreviewCard = ({
   releaseYear,
   contentDuration,
 }) => {
+  const userId = useSelector((state) => state.auth.userData._id);
   const likeDisLikeLoading = useSelector(
     (state) => state.content.likeDisLikeLoading
   );
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const videoRef = useRef(null);
+
+  function playPauseMedia() {
+    const media = videoRef.current;
+
+    if (media.paused) {
+      media.play();
+      setIsVideoPlaying(true);
+    } else {
+      media.pause();
+      setIsVideoPlaying(false);
+      media.load();
+    }
+  }
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
@@ -38,33 +59,44 @@ const PreviewCard = ({
   };
 
   const likeContentHanlder = () => {
-    dispatch(likeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(likeContent({ contentId, userId: userId }));
   };
 
   const dislikeContentHanlder = () => {
-    dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(dislikeContent({ contentId, userId: userId }));
+  };
+
+  const handlePlay = (contentId) => {
+    dispatch(addContentToWatchHistory(contentId));
+    navigate(`/watch/${contentId}`);
   };
 
   return (
-    <div className="group my-8 w-48 scale-100 rounded drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-10 hover:scale-125 hover:bg-netflix-black hover:opacity-100 md:w-64">
+    <div
+      className="my-8 w-48 scale-100 rounded bg-netflix-black drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-4 hover:scale-125 hover:opacity-100 md:w-64"
+      onMouseLeave={() => playPauseMedia()}
+      onMouseEnter={() => playPauseMedia()}
+    >
       {/* preview video*/}
       <div className="w-48 md:w-64">
         <video
+          ref={videoRef}
           className="h-28 w-48 rounded-tl rounded-tr object-cover md:h-32 md:w-64"
           poster={thumbnailUrl}
           src={trailerUrl}
           loop
+          muted
         ></video>
       </div>
 
       {/* preview details */}
-      <div className="hidden space-y-4 p-4 group-hover:block">
+      <div className="space-y-4 p-4">
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
-              <Link to={`/watch/${contentId}`}>
+              <button onClick={() => handlePlay(contentId)}>
                 <PlayIcon />
-              </Link>
+              </button>
             </div>
             <button
               onClick={likeContentHanlder}
@@ -100,7 +132,7 @@ const PreviewCard = ({
 
       {isOpenDetails &&
         createPortal(
-          <div className="fixed top-0 z-50 flex h-full w-full items-center bg-black/60 ">
+          <div className="fixed top-0 z-50 flex h-full w-full items-center overflow-hidden bg-black/60 ">
             <DetailsCard
               contentId={contentId}
               name={name}

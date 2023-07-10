@@ -12,7 +12,6 @@ import PaymentFail from "../pages/SignUp/PaymentFail.jsx";
 import AdminDashboard from "../components/admin/AdminDashboard.jsx";
 import AdminManageUsers from "../components/admin/AdminManageUsers.jsx";
 import AdminManageContents from "../components/admin/AdminManageContents.jsx";
-import TestSignIn from "../pages/temp/signin.jsx";
 import AdminContentView from "../components/admin/AdminContentView.jsx";
 import SignIn from "../pages/SignIn/SignIn.jsx";
 import UserExistLogin from "../pages/SignIn/UserExistLogin.jsx";
@@ -22,21 +21,24 @@ import SignInHelp from "../pages/SignIn/SignInHelp.jsx";
 import ResetPassword from "../pages/SignIn/ResetPassword.jsx";
 import NotRequireAuth from "../helpers/auth/NotRequireAuth.jsx";
 import RequireAuth from "../helpers/auth/RequireAuth.jsx";
+import NotFound from "../pages/NotFound.jsx";
+import AdminManagePlans from "../components/admin/AdminManagePlans.jsx";
 
 const router = createBrowserRouter([
   // for open routes
   {
-    path: "/",
-    element: <Home />,
-  },
-  {
     path: "/logout",
     element: <Logout />,
+  },
+  {
+    path: "/",
+    element: <Home />,
   },
 
   // for routes that do not require auth
   {
     element: <NotRequireAuth />,
+    errorElement: <NotFound />,
     children: [
       {
         path: "/signup",
@@ -95,7 +97,7 @@ const router = createBrowserRouter([
         children: [],
       },
       {
-        path: "/watch/:contentId",
+        path: "watch/:contentId",
         element: <Watch />,
         children: [],
       },
@@ -127,16 +129,13 @@ const router = createBrowserRouter([
             element: <AdminContentView />,
             children: [],
           },
+          {
+            path: "/admin/manageplans",
+            element: <AdminManagePlans />,
+          },
         ],
       },
     ],
-  },
-
-  // for test route
-  {
-    path: "/test/signin",
-    element: <TestSignIn />,
-    children: [],
   },
 ]);
 

@@ -4,19 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiSearchAlt2 } from "react-icons/bi";
 import {
   addNewContent,
-  fetchContent,
-  fetchContentById,
   fetchContentBySearch,
-} from "../../store/contentSlice";
-import { Routes, Route } from "react-router-dom";
+} from "../../store/adminManageContentSlice";
+// import { Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
-import AdminContentView from "./AdminContentView";
+import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
+// import AdminContentView from "./AdminContentView";
 // import { addContent } from '../../ApiUtils';
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 // import { formLoader } from './icons';
 
 const AdminManageContents = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // const [contentData, setContentData] = useState([])
   const [newContentData, setNewContentData] = useState({
@@ -35,33 +34,28 @@ const AdminManageContents = () => {
   const [creatorArr, setCreatorArr] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1) 
+  const limit = 5;
 
   const dispatch = useDispatch();
 
-  const allContents = useSelector((state) => state.content.filteredContent);
-  console.log(allContents, "/dasd");
+  const allContents = useSelector((state) => state.admin.filteredContent);
+  console.log(allContents.contents, "/dasd");
   const [searchTerm, setSearchTerm] = useState("");
-  const isContentLoading = useSelector((state) => state.content.loading);
+  const isContentLoading = useSelector((state) => state.admin.isLoading);
   // console.log(content)
-
+console.log(isContentLoading)
   useEffect(() => {
     dispatch(fetchContentBySearch({pageNo: page}));
     // setContentData(content)
   }, [page]);
 
-  // useEffect(() => {
-
-  //     setContentData(content)
-  // }, [content])
 
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = (val) => {
     setIsOpen(val);
   };
-  const updateCurrentContent = (id) => {
-    dispatch(fetchContentById(id));
-  };
+
   const handleInputChange = (event) => {
     console.log(event.target.name);
     console.log(event.target.value, "//////");
@@ -90,6 +84,9 @@ const AdminManageContents = () => {
       [name]: value,
     }));
   };
+
+
+
   const handleArrayChange = () => {
     setCastArr([...castArr, newContentData.cast]);
     setNewContentData({
@@ -103,7 +100,7 @@ const AdminManageContents = () => {
   };
   const getSearch = (e) => {
     e.preventDefault()
-    dispatch(fetchContentBySearch({pageNo:page , userId: '64789b082f388ccff2e33eaa', searchText: searchTerm }));
+    dispatch(fetchContentBySearch({searchText: searchTerm }));
     setSearchTerm("")
 
   }
@@ -124,7 +121,7 @@ const AdminManageContents = () => {
   // );
 
   const nextPage = () => {
-    if(allContents?.data?.next === undefined){
+    if(allContents.next === undefined){
       return
     }else{
       setPage((next)=>(next+1))
@@ -133,7 +130,7 @@ const AdminManageContents = () => {
 
   }
   const prevPage = () =>{
-    if(allContents?.data?.previous === undefined){
+    if(allContents.previous === undefined){
       return;
     
     }else {
@@ -220,7 +217,7 @@ const AdminManageContents = () => {
               <select
                 className="rounded border bg-transparent p-2"
                 name="genres"
-                value={newContentData.genres}
+                value={newContentData.genres[0]}
                 onChange={handleInputChange}
               >
                 <option value="">Select an option</option>
@@ -324,14 +321,21 @@ const AdminManageContents = () => {
                 onChange={handleInputChange}
               />
               <label htmlFor="language"> Language:</label>
-              <input
+              <select
                 className="rounded border bg-transparent p-2"
-                type="text"
-                required
                 name="language"
                 value={newContentData.language}
                 onChange={handleInputChange}
-              />
+              >
+                <option value="">Select an option</option>
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Korean">Korean</option>
+                <option value="Japan">Japanese</option>
+                <option value="Tamil">Tamil</option>
+                <option value="Spanish">Spanish</option>
+                <option value="German">German</option>
+              </select>
               <label htmlFor="releaseDate"> Release Date:</label>
               <input
                 className="rounded border bg-transparent p-2"
@@ -341,22 +345,21 @@ const AdminManageContents = () => {
                 value={newContentData.releaseDate}
                 onChange={handleInputChange}
               />
-              <label htmlFor="releaseDate"> Origin Country</label>
-              <input
+              <label htmlFor="originCountry"> Origin Country</label>
+              <select
                 className="rounded border bg-transparent p-2"
-                type="text"
-                required
                 name="originCountry"
                 value={newContentData.originCountry}
                 onChange={handleInputChange}
-              />
-              {/* <label htmlFor="thumbnail">  Thumbnail:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" required name="thumbnail" accept="image/*" onChange={handleFileChange} />
-                            <label htmlFor="trailer">  Trailer:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" required name="trailer" accept="video/*" onChange={handleFileChange} />
-                            <label htmlFor="content">  Content:</label>
-                            <input className='bg-transparent border p-2 rounded' type="file" required name="content" accept="video/*" onChange={handleFileChange} /> */}
-
+              >
+                <option value="">Select an option</option>
+                <option value="India">India</option>
+                <option value="USA">USA</option>
+                <option value="Korea">Korea</option>
+                <option value="Japan">Japan</option>
+                <option value="German">German</option>
+                <option value="Spain">Spain</option>
+              </select>
 
               <button
                 type="submit"
@@ -445,7 +448,7 @@ const AdminManageContents = () => {
             </div>
           </div>
 
-          {allContents.length !== 0 ? (
+          { allContents.contents ? (
             <>
             <table className="w-5/6 table-auto overflow-scroll text-gray-200">
               <thead className="text-left">
@@ -453,13 +456,14 @@ const AdminManageContents = () => {
                   <th className="px-4 py-2">S. No</th>
                   <th className="px-4 py-2 text-center">Name</th>
                   <th className="px-4 py-2">Content Type</th>
-                  <th className="px-4 py-2">Genres</th>
-                  <th className="px-4 py-2">Status</th>
+                  <th className="px-4 py-2">Language</th>
+                  <th className="px-4 py-2">Origin</th>
+                  <th className="px-4 py-2">Display</th>
                   <th className="px-4 py-2 text-center">Action</th>
                 </tr>
               </thead>
               <tbody className=" border-opacity-0">
-                {allContents.map((content, index) => {
+                {allContents.contents.map((content, index) => {
                   return (
                     <tr
                       key={index}
@@ -467,20 +471,21 @@ const AdminManageContents = () => {
                         (index + 1) % 2 === 0 ? "bg-[#342e2b]" : "bg-[#2e2f3a]"
                       }
                     >
-                      <td className="px-4 py-3">{index + 1}</td>
+                      <td className="px-4 py-3">{(page - 1) * limit + index + 1}</td>
                       <td className="flex items-center gap-4 px-4 py-3">
                         <img
                           className="h-16 w-32 rounded-xl object-center"
-                          src={content?.thumbnailUrl}
+                          src={content?.thumbnail[0].thumbnailUrl}
                           alt=""
                         />
                         {content.name}
                       </td>
                       <td className="px-4 py-3">{content.contentType}</td>
-                      <td className="px-4 py-3">{content.genres}</td>
-                      <td className="px-4 py-3">{content.genres}</td>
+                      <td className="px-4 py-3">{content.language}</td>
+                      <td className="px-4 py-3">{content.originCountry}</td>
+                      <td className="px-4 py-3">{<ToggleSwitch />}</td>
                       <td className="px-4 py-2">
-                        <Link to={`${content.contentId}`}>
+                        <Link to={`${content._id}`}>
                           <div className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]">
                             View
                           </div>
@@ -492,11 +497,11 @@ const AdminManageContents = () => {
               </tbody>
             </table>
             <div className="flex justify-between w-10/12 my-5 mx-auto">
-            <button className={allContents?.data?.previous === undefined ? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-2"} onClick={prevPage}>Previous Page</button>
+            <button className={allContents.previous === undefined ? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-2"} onClick={prevPage}>Previous Page</button>
             <div className=" px-[10px] border-2 border-[#e509144d] text-[#E50914] text-xl font-bold rounded-full ">
              {page}
             </div>
-            <button onClick={nextPage} className={allContents?.data?.next === undefined? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-4"}>Next Page</button>
+            <button onClick={nextPage} className={allContents.next === undefined? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-4"}>Next Page</button>
           </div>
           </>
           ) : (

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { DisLikeIcon, LikeIcon } from "../icons";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RiPlayMiniFill } from "react-icons/ri";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
@@ -21,6 +21,7 @@ const DetailsCard = ({
   releaseYear,
   contentDuration,
 }) => {
+  const userId = useSelector((state) => state.auth.userData._id);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
   const dispatch = useDispatch();
@@ -38,15 +39,15 @@ const DetailsCard = ({
   }
 
   const likeContentHanlder = () => {
-    dispatch(likeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(likeContent({ contentId, userId: userId }));
   };
 
   const dislikeContentHanlder = () => {
-    dispatch(dislikeContent({ contentId, userId: "64789b082f388ccff2e33eaa" }));
+    dispatch(dislikeContent({ contentId, userId: userId }));
   };
 
   return (
-    <div className=" tranistion relative mx-auto w-[90%] overflow-hidden rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
+    <div className=" tranistion relative mx-auto w-[90%] rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
       <div className="relative">
         {/* preview video*/}
         <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[100px] lg:h-[150px]"></div>

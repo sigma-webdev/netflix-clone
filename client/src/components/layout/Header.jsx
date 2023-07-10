@@ -11,16 +11,13 @@ import { SIGN_OUT } from "../../store/authSlice.js";
 import Menu from "../menu/Menu";
 import netflixAvatar from "../../assets/netflix-avtar.jpg";
 import { FaSignOutAlt } from "react-icons/fa";
-import {
-  fetchContentByContentType,
-  fetchContentBySearch,
-} from "../../store/contentSlice";
+import { fetchContentBySearch } from "../../store/contentSlice";
+import { RiAdminFill } from "react-icons/ri";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.auth?.userData);
-  console.log(user);
   const IS_LOGGED_IN = useSelector((state) => state?.auth?.isLoggedIn);
   const IS_LOADING = useSelector((state) => state?.auth?.loading);
   const [searchText, setSearchText] = useState("");
@@ -51,22 +48,9 @@ const Header = () => {
   }
 
   const handleSearch = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
 
-    dispatch(
-      fetchContentBySearch({ searchText, userId: "64789b082f388ccff2e33eaa" })
-    );
-  };
-
-  const handleCategory = (contentType) => {
-    dispatch(
-      fetchContentByContentType({
-        contentType,
-        userId: "64789b082f388ccff2e33eaa",
-      })
-    );
+    dispatch(fetchContentBySearch({ searchText, userId: user._id }));
   };
 
   return (
@@ -82,39 +66,6 @@ const Header = () => {
             <img src={netflixLogo} alt="netflix logo" className="w-full" />
           </Link>
         </div>
-        {/* login  */}
-        {IS_LOGGED_IN ? (
-          <div className="flex items-center">
-            <nav>
-              <ul className="hidden gap-4 md:flex ">
-                <li
-                  className="cursor-pointer"
-                  onClick={() => handleCategory("")}
-                >
-                  Home
-                </li>
-                <li
-                  className="cursor-pointer"
-                  onClick={() => handleCategory("Movies")}
-                >
-                  Movies
-                </li>
-                <li
-                  className="cursor-pointer"
-                  onClick={() => handleCategory("Series")}
-                >
-                  Series
-                </li>
-              </ul>
-            </nav>
-            <div className="flex items-center gap-2 md:hidden">
-              <div>Home</div>
-              <div>
-                <Menu></Menu>
-              </div>
-            </div>
-          </div>
-        ) : null}
       </div>
 
       {!IS_LOGGED_IN ? (
@@ -169,12 +120,16 @@ const Header = () => {
                     />
                   </div>
 
-                  <div>Mangesh Thakare</div>
+                  <div>{user.email.split("@")[0]}</div>
                 </li>
                 <hr className="my-4" />
                 {IS_LOGGED_IN && user?.role === "ADMIN" && (
                   <Link to={"/admin"}>
-                    <li>Admin Dashboard</li>
+                    <li className="flex cursor-pointer items-center gap-4">
+                      <IconContext.Provider value={{ size: "25px" }}>
+                        <RiAdminFill /> Admin Dashboard
+                      </IconContext.Provider>
+                    </li>
                   </Link>
                 )}
                 <hr className="my-4" />
@@ -191,6 +146,7 @@ const Header = () => {
           </div>
         </div>
       )}
+      {/*  */}
     </header>
   );
 };

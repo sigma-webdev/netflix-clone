@@ -4,10 +4,10 @@ const validator = require("email-validator");
 const bcrypt = require("bcrypt");
 
 const asyncHandler = require("../middleware/asyncHandler.js");
-const userModel = require("../model/userSchema.js");
-const customError = require("../utils/customError.js");
+const userModel = require("../model/user.schema.js");
+const CustomError = require("../utils/customError.js");
 const cookieOptions = require("../utils/cookieOption.js");
-const transporter = require("../config/emailConfig.js");
+const transporter = require("../config/email.config.js");
 
 /******************************************************
  * @userExist
@@ -16,6 +16,7 @@ const transporter = require("../config/emailConfig.js");
  * @body email
  * @returns object with isUserExist boolean value
  ******************************************************/
+
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
 
@@ -23,7 +24,7 @@ const userExist = asyncHandler(async (req, res, next) => {
   const isEmailValid = validator.validate(email);
 
   if (!isEmailValid)
-    return next(new customError("Please enter a valid email 📩", 400));
+    return next(new CustomError("Please enter a valid email 📩", 400));
 
   // If email is valid and user with this emailID is present in database
   // return return isUserExist true or false if not present
@@ -58,14 +59,14 @@ const signUp = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new customError("Email and Password are required.", 400));
+    return next(new CustomError("Email and Password are required.", 400));
   }
 
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
   if (!passwordRegex.test(password)) {
     return next(
-      new customError(
+      new CustomError(
         "password must be 6 to 60 characters in length and contain at-least one capital letter, one symbol and one number",
         400
       )
@@ -76,12 +77,12 @@ const signUp = asyncHandler(async (req, res, next) => {
   const isEmailValid = validator.validate(email);
 
   if (!isEmailValid)
-    return next(new customError("Please enter a valid email 📩", 400));
+    return next(new CustomError("Please enter a valid email 📩", 400));
 
-  const user = findOne({ email });
+  const user = await userModel.findOne({ email: email });
   if (user)
     return next(
-      new customError(`user with email: ${email} already exist`, 409)
+      new CustomError(`user with email: ${email} already exist`, 409)
     );
 
   const userInfo = userModel({ email, password });
@@ -91,15 +92,14 @@ const signUp = asyncHandler(async (req, res, next) => {
 
   // get the jwt token form userSchema methods
   const jwtToken = result.generateJwtToken();
-
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
-
   return res.status(201).json({
     statusCode: 201,
     success: true,
     message: "successfully registered the user",
     data: result,
+    token: jwtToken,
   });
 });
 
@@ -116,14 +116,14 @@ const signIn = asyncHandler(async (req, res, next) => {
   const isEmailValid = validator.validate(email);
 
   if (!isEmailValid)
-    return next(new customError("Please enter a valid email 📩", 400));
+    return next(new CustomError("Please enter a valid email 📩", 400));
 
   // check user exist or not if not return error message
   const user = await userModel.findOne({ email }).select("+password");
 
   if (!user)
     return next(
-      new customError(
+      new CustomError(
         "Sorry we can't find you account with this email address please try again or create a new account",
         404
       )
@@ -134,15 +134,16 @@ const signIn = asyncHandler(async (req, res, next) => {
 
   if (!isPasswordCorrect)
     return next(
-      new customError(
+      new CustomError(
         "Incorrect password. Please try again or reset password",
         400
       )
     );
 
+  user.password = undefined;
+
   // get the jwt token form userSchema methods
   const jwtToken = user.generateJwtToken();
-
   // return jwtToken in cookie and user object
   res.cookie("token", jwtToken, cookieOptions);
 
@@ -151,6 +152,7 @@ const signIn = asyncHandler(async (req, res, next) => {
     success: true,
     message: "successfully singIn",
     data: user,
+    token: jwtToken,
   });
 });
 
@@ -165,7 +167,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
 
   // if email is missing form body return error message
-  if (!email) return next(new customError("Email is required", 400));
+  if (!email) return next(new CustomError("Email is required", 400));
 
   // get the user from database using email
   const user = await userModel.findOne({ email });
@@ -173,7 +175,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   // if user is not present in database return error message
   if (!user) {
     return next(
-      new customError("No account found for this email address.", 404)
+      new CustomError("No account found for this email address.", 404)
     );
   }
 
@@ -184,7 +186,10 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
   // create the url for reset password which we will send on user email-id
   // this url will help user to reset the password
-  const resetUrl = `${req.headers.referer}reset-password/${resetToken}`;
+
+  const resetUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/reset-password/${resetToken}`;
 
   // create mail content
   const mailOptions = {
@@ -227,7 +232,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
   if (!password || !confirmPassword) {
     return next(
-      new customError("password and confirmPassword are required", 400)
+      new CustomError("password and confirmPassword are required", 400)
     );
   }
 
@@ -235,7 +240,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
     /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
   if (!passwordRegex.test(password)) {
     return next(
-      new customError(
+      new CustomError(
         "password must be 6 to 60 characters in length and contain at-least one capital letter, one symbol and one number",
         400
       )
@@ -249,14 +254,14 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   // check both password and confirmPassword are present in body , if not send error message
   if (!password || !confirmPassword) {
     return next(
-      new customError("Both Password and confirm Password are Required", 400)
+      new CustomError("Both Password and confirm Password are Required", 400)
     );
   }
 
   // check the password and confirmPassword are same or not, if different return error message
   if (password !== confirmPassword) {
     return next(
-      new customError("Password and confirm password do not match", 400)
+      new CustomError("Password and confirm password do not match", 400)
     );
   }
 
@@ -268,7 +273,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
   if (!user) {
     return next(
-      new customError("Forgot password token is invalid or expired", 400)
+      new CustomError("Forgot password token is invalid or expired", 400)
     );
   }
 
@@ -298,7 +303,8 @@ const signOut = asyncHandler(async (req, res, next) => {
     httpOnly: true,
     maxAge: new Date().now, //  current date
     path: "/",
-    sameSite: "Lax",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    secure: process.env.NODE_ENV === "production" ? true : false,
   });
 
   res.status(200).json({
@@ -317,7 +323,7 @@ const signOut = asyncHandler(async (req, res, next) => {
  * @returns user object
  ******************************************************/
 const getUser = asyncHandler(async (req, res, next) => {
-  const userID = req.user.id;
+  const userId = req.user.id;
 
   // get user from database using user id
   const user = await userModel.findById(userId);
@@ -329,7 +335,7 @@ const getUser = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     statusCode: 200,
     success: true,
-    message: "User detail the give Id fetched successfully",
+    message: "logged in user details",
     data: user,
   });
 });
