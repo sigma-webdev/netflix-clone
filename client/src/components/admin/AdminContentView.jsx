@@ -10,6 +10,7 @@ import {
   updateContentVideoById,
   updateContentTrailerById
 } from "../../store/adminManageContentSlice";
+import toast from "react-hot-toast";
 
 const AdminContentView = () => {
   const dispatch = useDispatch();
@@ -24,7 +25,6 @@ const AdminContentView = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [editedContentData, setEditedContentData] = useState({});
   const params = useParams();
-  console.log(params.contentId);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,8 +38,7 @@ const AdminContentView = () => {
 
 
   const handleDelete = () => {
-    console.log("delete this");
-    // redirect('/admin/managecontents/')
+
     dispatch(deleteContentById(params.contentId));
     navigate("/admin/managecontents");
     //   redirect('/admin/managecontents')
@@ -47,30 +46,23 @@ const AdminContentView = () => {
 
 
   const handleRemoveCast = (castname) => {
-    console.log(castname, '///castname')
     const indexOfCastToBeRemoved = editedContentData.cast.indexOf(castname)
-    console.log(indexOfCastToBeRemoved)
     const newCast = editedContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
-    console.log(newCast)
     setEditedContentData({ ...editedContentData, cast: newCast })
-    console.log(editedContentData, '//edittweeer')
   };
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLoading) {
-      console.log(
-        "please wait till the first submisson got fullfiled or rejected"
-      );
+      toast.error("wait until the current ongoing process end");
       return;
     }
 
     if (editedContentData.cast.length === 0) {
-      console.log('cast cannot be empty field')
+      toast.error("cast cannot be empty field❗");
       return;
     }
-    console.log(editedContentData, '///new data to be updated')
 
     dispatch(updateContentDetailsById({ id: params.contentId, newData: editedContentData }))
     toggleModal(false)
@@ -91,7 +83,7 @@ const AdminContentView = () => {
 
   const handleAddCast = () => {
     if(castInput === "" || castInput.length < 2){
-      //add toster
+      toast.error("please enter a valid input");
       return
     }
     const newCastArr = [...editedContentData.cast, castInput]
@@ -106,11 +98,9 @@ const AdminContentView = () => {
 
   const handleFileChange = (event, name) => {
     if (isThumbnailUploading || isContentUploading || isTrailerUploading || isDetailsUploading) {
-      // add toster
+      toast.error("wait until the current uploading data process end");
       return;
     }
-
-    console.log("handle select callled");
     const file = event.target.files[0];
     const sentFormData = new FormData();
     sentFormData.append(name, file);
@@ -191,7 +181,6 @@ const AdminContentView = () => {
                 />
                 <div
                   onClick={handleAddCast}
-                  // onClick
                   className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
                 >
                   Add

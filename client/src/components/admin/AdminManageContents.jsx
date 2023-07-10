@@ -7,18 +7,12 @@ import {
   fetchContentBySearch,
   ToggleDisplayContentToUser
 } from "../../store/adminManageContentSlice";
-// import { Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-// import AdminContentView from "./AdminContentView";
-// import { addContent } from '../../ApiUtils';
-// import { useNavigate } from "react-router-dom";
-// import { formLoader } from './icons';
+
 
 const AdminManageContents = () => {
-  // const navigate = useNavigate();
-
-  // const [contentData, setContentData] = useState([])
+ 
   const [newContentData, setNewContentData] = useState({
     name: "",
     description: "",
@@ -32,7 +26,7 @@ const AdminManageContents = () => {
     originCountry: "",
   });
   const [castInput, setCastInput] = useState('')
-  // const [castArr, setCastArr] = useState([]);
+  
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1) 
   const limit = 5;
@@ -40,15 +34,13 @@ const AdminManageContents = () => {
   const dispatch = useDispatch();
 
   const allContents = useSelector((state) => state.admin.filteredContent);
-  console.log(allContents.contents, "/dasd");
   const [searchTerm, setSearchTerm] = useState("");
   const isContentLoading = useSelector((state) => state.admin.isLoading);
   const isDisplayToggleLoading = useSelector((state) => state.admin.isDisplayToggleLoading);
-  // console.log(content)
-console.log(isContentLoading)
+
   useEffect(() => {
     dispatch(fetchContentBySearch({pageNo: page}));
-    // setContentData(content)
+
   }, [page]);
 
 
@@ -57,12 +49,9 @@ console.log(isContentLoading)
 
   const toggleModal = (val) => {
     setIsOpen(val);
-    console.log(allContents)
   };
 
   const handleInputChange = (event) => {
-    console.log(event.target.name);
-    console.log(event.target.value, "//////");
     const { name, value } = event.target;
     if (name === "genres") {
       setNewContentData({
@@ -76,17 +65,6 @@ console.log(isContentLoading)
       setCastInput(value)
       return;
     }
-    // if (name === "cast") {
-    //     const Arr = [...newContentData, value]
-    //     console.log(Arr)
-    //     setNewContentData(prev => ({
-    //         ...prev,
-    //         [name]: Arr
-
-    //     }))
-    //     return;
-    // }
-    // const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
     setNewContentData((prevDetails) => ({
       ...prevDetails,
       [name]: value,
@@ -95,20 +73,8 @@ console.log(isContentLoading)
 
 
 
-  // const handleArrayChange = () => {
-  //   if(newContentData === "" || newContentData.length < 2){
-  //     //add toster
-  //     return
-  //   }
-  //   setCastArr([...castArr, newContentData.cast]);
-  //   setNewContentData({
-  //     ...newContentData,
-  //     cast: "",
-  //   });
-  // };
   const handleAddCast = () => {
     if(castInput === "" || castInput.length < 2){
-      //add toster
       toast.error("please enter a valid input");
       return
     }
@@ -119,7 +85,6 @@ console.log(isContentLoading)
   }
   const handleRemoveCast = (castname) => {
     const indexOfCastToBeRemoved = newContentData.cast.indexOf(castname)
-    // console.log(indexOfCastToBeRemoved)
     const newCast = newContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
     setNewContentData({ ...newContentData, cast: newCast })
   };
@@ -130,21 +95,6 @@ console.log(isContentLoading)
     setSearchTerm("")
 
   }
-
-  // const handleFileChange = (event) => {
-  //     const file = event.target.files[0];
-  //     // console.log(file)
-  //     setNewContentData(prevDetails => ({
-  //         ...prevDetails,
-  //         [event.target.name]: file
-  //     }));
-  // };
-
-
-  // const filteredData = content.filter((item) =>
-  //   item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  
-  // );
 
   const nextPage = () => {
     if(allContents.next === undefined){
@@ -168,15 +118,12 @@ console.log(isContentLoading)
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
     if (newContentData.cast.length === 0) {
-      console.log('cast cannot be empty field')
+      toast.error("cast field cannot be empty field");
       return;
     }
     if (isLoading) {
-      console.log(
-        "please wait till the first submisson got fullfiled or rejected"
-      );
+      toast.error("wait until the current ongoing process end");
       return;
     }
     setIsLoading(true);
@@ -455,7 +402,6 @@ console.log(isContentLoading)
             >
               Add Content
             </button>
-              {/* <div className=""> */}
               <form onSubmit={getSearch} className="flex justify-between border-2 border-[#E50914] items-center  bg-white">
                 <input
                   className=" px-2 outline-none w-full"
@@ -469,7 +415,6 @@ console.log(isContentLoading)
               <BiSearchAlt2 className="text-4xl" />
                 </button>
               </form>
-            {/* </div> */}
             
             
             </div>
