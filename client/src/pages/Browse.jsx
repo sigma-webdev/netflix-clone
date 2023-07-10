@@ -19,6 +19,7 @@ import PreviewCard from "../components/card/PreviewCard";
 import RowContentShimmer from "../components/shimmer/RowContentShimmer";
 import PreviewShimmer from "../components/shimmer/PreviewShimmer";
 import { Link } from "react-router-dom";
+import ContentRow from "../components/ContentRow";
 
 const Browse = () => {
   const dispatch = useDispatch();
@@ -144,256 +145,56 @@ const Browse = () => {
                 </div>
               )}
             </div>
-
             {/* browse watch content */}
-            <div className="bg-netflix-blue pt-4 text-white">
-              <div className="px-4 md:px-8">
-                {watchContentLoading ? (
-                  <RowContentShimmer />
-                ) : (
-                  watchedContent &&
-                  watchedContent.length !== 0 && (
-                    <>
-                      <h3 className="py-4">Continue Watching</h3>
-                      <div className="space-y-5">
-                        <Crousal>
-                          {Array.from(watchedContent).map((item) => {
-                            return (
-                              <PreviewCard
-                                key={item.contentId}
-                                name={item.name}
-                                thumbnailUrl={item.thumbnailUrl}
-                                trailerUrl={item.trailerUrl}
-                                geners={item.genres}
-                                contentId={item.contentId}
-                                rating={item.rating}
-                                description={item.description}
-                                cast={item.cast}
-                                director={item.director}
-                                isLiked={item.isLiked}
-                                isDisliked={item.isDisliked}
-                                releaseYear={item.releaseYear}
-                                contentDuration={item.contentDuration}
-                              />
-                            );
-                          })}
-                        </Crousal>
-                      </div>
-                    </>
-                  )
-                )}
-              </div>
-            </div>
-
+            <ContentRow
+              heading={"Continue Watching"}
+              loading={watchContentLoading}
+              content={watchedContent}
+            />
             {/* browse trending content */}
-            <div className="bg-netflix-blue text-white">
-              <div className="px-4 md:px-8">
-                {trendingContentLoading ? (
-                  <RowContentShimmer />
-                ) : (
-                  trendingContent &&
-                  trendingContent.length !== 0 && (
-                    <>
-                      <h3 className="py-4">Trending</h3>
-                      <div className="space-y-5">
-                        <Crousal>
-                          {Array.from(trendingContent).map((item) => {
-                            return (
-                              <PreviewCard
-                                key={item.contentId}
-                                name={item.name}
-                                thumbnailUrl={item.thumbnailUrl}
-                                trailerUrl={item.trailerUrl}
-                                geners={item.genres}
-                                contentId={item.contentId}
-                                rating={item.rating}
-                                description={item.description}
-                                cast={item.cast}
-                                director={item.director}
-                                isLiked={item.isLiked}
-                                isDisliked={item.isDisliked}
-                                releaseYear={item.releaseYear}
-                                contentDuration={item.contentDuration}
-                              />
-                            );
-                          })}
-                        </Crousal>
-                      </div>
-                    </>
-                  )
-                )}
-              </div>
-            </div>
-
+            <ContentRow
+              heading={"Trending"}
+              loading={trendingContentLoading}
+              content={trendingContent}
+            />
             {/* browse latest content */}
-            <div className="bg-netflix-blue text-white">
-              <div className="px-4 md:px-8">
-                {latestContentLoading ? (
-                  <RowContentShimmer />
-                ) : (
-                  latestContent &&
-                  latestContent.length !== 0 && (
-                    <>
-                      <h3 className="py-4">Latest</h3>
-                      <div className="space-y-5">
-                        <Crousal>
-                          {Array.from(latestContent).map((item) => {
-                            return (
-                              <PreviewCard
-                                key={item.contentId}
-                                name={item.name}
-                                thumbnailUrl={item.thumbnailUrl}
-                                trailerUrl={item.trailerUrl}
-                                geners={item.genres}
-                                contentId={item.contentId}
-                                rating={item.rating}
-                                description={item.description}
-                                cast={item.cast}
-                                director={item.director}
-                                isLiked={item.isLiked}
-                                isDisliked={item.isDisliked}
-                                releaseYear={item.releaseYear}
-                                contentDuration={item.contentDuration}
-                              />
-                            );
-                          })}
-                        </Crousal>
-                      </div>
-                    </>
-                  )
-                )}
-              </div>
-            </div>
-
+            <ContentRow
+              heading={"Latest"}
+              loading={latestContentLoading}
+              content={latestContent}
+            />
             {/* browse most liked content */}
-            <div className="bg-netflix-blue text-white">
-              <div className="px-4 md:px-8">
-                {mostLikedContentLoading ? (
-                  <RowContentShimmer />
-                ) : (
-                  mostLikedContent &&
-                  mostLikedContent.length !== 0 && (
-                    <>
-                      <h3 className="py-4">Most Liked</h3>
-                      <div className="space-y-5">
-                        <Crousal>
-                          {Array.from(mostLikedContent).map((item) => {
-                            return (
-                              <PreviewCard
-                                key={item.contentId}
-                                name={item.name}
-                                thumbnailUrl={item.thumbnailUrl}
-                                trailerUrl={item.trailerUrl}
-                                geners={item.genres}
-                                contentId={item.contentId}
-                                rating={item.rating}
-                                description={item.description}
-                                cast={item.cast}
-                                director={item.director}
-                                isLiked={item.isLiked}
-                                isDisliked={item.isDisliked}
-                                releaseYear={item.releaseYear}
-                                contentDuration={item.contentDuration}
-                              />
-                            );
-                          })}
-                        </Crousal>
-                      </div>
-                    </>
-                  )
-                )}
-              </div>
-            </div>
+            <ContentRow
+              heading={"Most Liked"}
+              loading={mostLikedContentLoading}
+              content={mostLikedContent}
+            />
 
             {/* browse content by country origin USA*/}
-            <div className="bg-netflix-blue text-white">
-              <div className="px-4 md:px-8">
-                {countryOriginContentLoading ? (
-                  <RowContentShimmer />
-                ) : (
-                  contentByCountryOrigin &&
-                  Object.keys(contentByCountryOrigin).find(
-                    (item) => item === "USA"
-                  ) &&
-                  contentByCountryOrigin["USA"].length !== 0 && (
-                    <>
-                      <h3 className="py-4">USA</h3>
-                      <div className="space-y-5">
-                        <Crousal>
-                          {Array.from(contentByCountryOrigin["USA"]).map(
-                            (item) => {
-                              return (
-                                <PreviewCard
-                                  key={item.contentId}
-                                  name={item.name}
-                                  thumbnailUrl={item.thumbnailUrl}
-                                  trailerUrl={item.trailerUrl}
-                                  geners={item.genres}
-                                  contentId={item.contentId}
-                                  rating={item.rating}
-                                  description={item.description}
-                                  cast={item.cast}
-                                  director={item.director}
-                                  isLiked={item.isLiked}
-                                  isDisliked={item.isDisliked}
-                                  releaseYear={item.releaseYear}
-                                  contentDuration={item.contentDuration}
-                                />
-                              );
-                            }
-                          )}
-                        </Crousal>
-                      </div>
-                    </>
-                  )
-                )}
-              </div>
-            </div>
+            {contentByCountryOrigin &&
+              Object.keys(contentByCountryOrigin).find(
+                (item) => item === "USA"
+              ) &&
+              contentByCountryOrigin["USA"].length !== 0 && (
+                <ContentRow
+                  heading={"USA"}
+                  loading={countryOriginContentLoading}
+                  content={contentByCountryOrigin["USA"]}
+                />
+              )}
 
             {/* browse content by country origin India*/}
-            <div className="bg-netflix-blue text-white">
-              <div className="px-4 md:px-8">
-                {countryOriginContentLoading ? (
-                  <RowContentShimmer />
-                ) : (
-                  contentByCountryOrigin &&
-                  Object.keys(contentByCountryOrigin).find(
-                    (item) => item === "India"
-                  ) &&
-                  contentByCountryOrigin["India"].length !== 0 && (
-                    <>
-                      <h3 className="py-4">India</h3>
-                      <div className="space-y-5">
-                        <Crousal>
-                          {Array.from(contentByCountryOrigin["India"]).map(
-                            (item) => {
-                              return (
-                                <PreviewCard
-                                  key={item.contentId}
-                                  name={item.name}
-                                  thumbnailUrl={item.thumbnailUrl}
-                                  trailerUrl={item.trailerUrl}
-                                  geners={item.genres}
-                                  contentId={item.contentId}
-                                  rating={item.rating}
-                                  description={item.description}
-                                  cast={item.cast}
-                                  director={item.director}
-                                  isLiked={item.isLiked}
-                                  isDisliked={item.isDisliked}
-                                  releaseYear={item.releaseYear}
-                                  contentDuration={item.contentDuration}
-                                />
-                              );
-                            }
-                          )}
-                        </Crousal>
-                      </div>
-                    </>
-                  )
-                )}
-              </div>
-            </div>
+            {contentByCountryOrigin &&
+              Object.keys(contentByCountryOrigin).find(
+                (item) => item === "India"
+              ) &&
+              contentByCountryOrigin["India"].length !== 0 && (
+                <ContentRow
+                  heading={"India"}
+                  loading={countryOriginContentLoading}
+                  content={contentByCountryOrigin["India"]}
+                />
+              )}
           </div>
         )}
       </div>
