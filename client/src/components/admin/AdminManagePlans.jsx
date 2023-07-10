@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllPlans, updatePlanStatus } from "../../store/adminPlansSlice";
+import {
+  createPlan,
+  getAllPlans,
+  updatePlanStatus,
+} from "../../store/adminPlansSlice";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
+import { toast } from "react-hot-toast";
 
 const AdminManagePlans = () => {
   const dispatch = useDispatch();
@@ -77,6 +82,9 @@ const AdminManagePlans = () => {
     e.preventDefault();
     if (validateForm()) {
       console.log("Form Data:", formData);
+      dispatch(createPlan(formData));
+      // toggleModal(false);
+      toast.success("Plan created successfully");
       setFormData({
         planName: "",
         description: "",
