@@ -134,23 +134,142 @@ paths:
                                      
   # user login 
   /auth/signin:
-   post:
-    tags:
-     - User Authentication
-    summary : User signin/login
-    description: Authenticates a user and generates an access token 
-    consumes:
-      - application/json
-    produces:
-      - applications/json
-    requestBody:
-      required: true
-      content:
-        application/json : # Media type
-          schema:
-            $ref: "#/components/schemas/signUpLoginRequest"
-    responses:
-        "200":
+    post:
+      tags:
+      - User Authentication
+      summary : User signin/login
+      description: Authenticates a user and generates an access token 
+      consumes:
+        - application/json
+      produces:
+        - applications/json
+      requestBody:
+        required: true
+        content:
+          application/json : # Media type
+            schema:
+              $ref: "#/components/schemas/signUpLoginRequest"
+      responses:
+          "200":
+              description: Return User object data
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      statusCode:
+                        type: number
+                        example: 201
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        default: successfully registered the user
+                      data:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            format: email
+                            example: johndoe@gmail.com
+                          plan:
+                            type: string
+                            example: "plan Name"
+                          watchHistory:
+                            type: array
+                            example: ["movie/series Ids"]
+                          watchList:
+                            type: array
+                            example: ["movie/series Ids"]
+                          role: 
+                            type: string
+                            example: USER
+                          _id:
+                            type: string 
+                            example: 64a3ffef83e36e95ec51e6333
+                          createdAt:
+                            type: date
+                            example: 2023-07-04T11:18:07.265+00:00
+                          updatedAt:
+                            type: date
+                            example: 2023-07-04T11:18:07.265+00:00
+                          __v: 
+                            type: number
+                            example: 0
+                      token:
+                        type: string 
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTk4NzFmMTUxZWFlYmVmMTZmZGFmMSIsImVtYWlsIjoibWFtYWFuZ0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY4ODgzMTc3NiwiZXhwIjoxNjg4OTE4MTc2fQ.z9HQvqgnXfQN6GtYzG8H1nVwVXwzU35UDm6XIsJKVRo    
+          "400":
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode: 
+                      type: number
+                      default: 200
+                    success:
+                      type: boolean
+                      default: false
+                    message:
+                      type: string
+                      example: Incorrect Password || user not not found    
+                    data: 
+                      type: object
+                      example: null                                          
+          "404": 
+            description: Can't find account for the provide email address 
+            content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        success:
+                          type: boolean
+                          default : false
+                        message:
+                          type: string 
+                          example: Inter Server Error || Server down    
+          "500":
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      default : false
+                    message:
+                      type: string 
+                      example: Inter Server Error || Server down    
+
+
+  # userExist
+  /auth/user-exist:
+    post: 
+      tags: 
+        - User Authentication
+      summary: User signup
+      description: Create a new user account
+      consumes:
+        application/json
+      produces:
+        application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+      responses:
+          "200":
             description: Return User object data
             content:
               application/json:
@@ -159,93 +278,59 @@ paths:
                   properties:
                     statusCode:
                       type: number
-                      example: 201
+                      example: 200
                     success:
                       type: boolean
                       example: true
                     message:
                       type: string
-                      default: successfully registered the user
+                      default: User Exist 
                     data:
                       type: object
                       properties:
+                        isUserExist: 
+                          type: boolean
+                          example: true
                         email:
                           type: string
                           format: email
                           example: johndoe@gmail.com
-                        plan:
-                          type: string
-                          example: "plan Name"
-                        watchHistory:
-                          type: array
-                          example: ["movie/series Ids"]
-                        watchList:
-                          type: array
-                          example: ["movie/series Ids"]
-                        role: 
-                          type: string
-                          example: USER
-                        _id:
-                          type: string 
-                          example: 64a3ffef83e36e95ec51e6333
-                        createdAt:
-                          type: date
-                          example: 2023-07-04T11:18:07.265+00:00
-                        updatedAt:
-                          type: date
-                          example: 2023-07-04T11:18:07.265+00:00
-                        __v: 
-                          type: number
-                          example: 0
-                    token:
-                      type: string 
-                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTk4NzFmMTUxZWFlYmVmMTZmZGFmMSIsImVtYWlsIjoibWFtYWFuZ0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY4ODgzMTc3NiwiZXhwIjoxNjg4OTE4MTc2fQ.z9HQvqgnXfQN6GtYzG8H1nVwVXwzU35UDm6XIsJKVRo    
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode: 
-                    type: number
-                    default: 200
-                  success:
-                    type: boolean
-                    default: false
-                  message:
-                    type: string
-                    example: Incorrect Password || user not not found    
-                  data: 
-                    type: object
-                    example: null                                          
-        "404": 
-          description: Can't find account for the provide email address 
-          content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      success:
-                        type: boolean
-                        default : false
-                      message:
-                        type: string 
-                        example: Inter Server Error || Server down    
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    default : false
-                  message:
-                    type: string 
-                    example: Inter Server Error || Server down    
-
+          "400":
+            description: Bad user request 
+            content:
+              application/json:
+                schema: 
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 400
+                    success: 
+                      type: boolean
+                      default: false
+                    message:
+                      type: string
+                      example: Please enter a valid email
+                    data: 
+                      type: object
+                      example: null
+                   
+          "500":
+            description: Internal server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      default: 500
+                    success:
+                      type: boolean
+                      default : false
+                    message:
+                      type: string
+                      default: internal server Error 
 
 
 #### Components where reusable schemas are store ######
