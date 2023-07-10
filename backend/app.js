@@ -9,6 +9,16 @@ const fileUpLoad = require("express-fileupload");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+// swagger api docs
+const swaggerUi = require("swagger-ui-express");
+const fs = require("fs");
+const YAML = require("yaml");
+
+const file = fs.readFileSync("./swagger.yaml", "utf8");
+const swaggerDocument = YAML.parse(file);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // routes
 const authRouter = require("./router/auth.router.js");
 const paymentRouter = require("./router/payment.router.js");
