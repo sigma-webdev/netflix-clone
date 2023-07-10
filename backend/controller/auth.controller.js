@@ -43,7 +43,7 @@ const userExist = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     statusCode: 200,
     success: true,
-    message: result.isUserExist ? "User exist" : "User does not exist",
+    message: data.isUserExist ? "User exist" : "User does not exist",
     data: data,
   });
 });
