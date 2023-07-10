@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
-import { DisLikeIcon, LikeIcon } from "../icons";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RiPlayMiniFill } from "react-icons/ri";
 import {
   AiFillDislike,
   AiFillLike,

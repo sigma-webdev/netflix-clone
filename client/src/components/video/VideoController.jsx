@@ -2,11 +2,11 @@ import { IconContext } from "react-icons/lib";
 import { MdKeyboardBackspace } from "react-icons/md";
 import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { BsVolumeUp } from "react-icons/bs";
-import { SkipBackward, SkipForward } from "../icons";
 import { TbPlayerSkipForward } from "react-icons/tb";
 import { RiFullscreenFill } from "react-icons/ri";
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { AiOutlineBackward, AiOutlineForward } from "react-icons/ai";
 
 const VideoController = ({ contentURL, thumbnailURL }) => {
   const videoRef = useRef(null);
@@ -132,13 +132,13 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
                 onClick={mediaBackward}
                 className="flex cursor-pointer items-center"
               >
-                <SkipBackward />
+                <AiOutlineBackward />
               </div>
               <div
                 onClick={mediaForward}
                 className="flex cursor-pointer items-center"
               >
-                <SkipForward />
+                <AiOutlineForward />
               </div>
               <div className="flex cursor-pointer items-center">
                 <div onClick={mute}>

@@ -9,11 +9,7 @@ import {
 } from "../../store/contentSlice";
 import DetailsCard from "./DetailsCard";
 import { AiFillDislike, AiFillLike, AiOutlineArrowDown } from "react-icons/ai";
-import {
-  BsArrowDownCircle,
-  BsFillPlayFill,
-  BsPlayCircle,
-} from "react-icons/bs";
+import { BsFillPlayFill } from "react-icons/bs";
 
 const PreviewCard = ({
   contentId,
