@@ -85,6 +85,11 @@ const adminPlansSlice = createSlice({
       .addCase(updatePlanStatus.fulfilled, (state, action) => {
         state.updatePlan = action.payload;
         state.updateLoader = false;
+        toast.success(
+          `Plan ${
+            state?.updatePlan?.data?.active ? "enabled" : "disabled"
+          } successfully`
+        );
       })
       .addCase(updatePlanStatus.rejected, (state) => {
         state.updatePlan = false;
@@ -96,6 +101,7 @@ const adminPlansSlice = createSlice({
       })
       .addCase(createPlan.fulfilled, (state) => {
         state.loading = false;
+        toast.success("Plan Added Successfully");
       })
       .addCase(createPlan.rejected, (state) => {
         state.loading = false;

@@ -83,8 +83,7 @@ const AdminManagePlans = () => {
     if (validateForm()) {
       console.log("Form Data:", formData);
       dispatch(createPlan(formData));
-      // toggleModal(false);
-      toast.success("Plan created successfully");
+      toggleModal(false);
       setFormData({
         planName: "",
         description: "",
@@ -201,6 +200,7 @@ const AdminManagePlans = () => {
             <tr className="bg-red-600  text-white">
               <th className="px-4 py-2">Sr. No.</th>
               <th className="px-4 py-2">Plan Name</th>
+              <th className="px-4 py-2">Plan Price</th>
               <th className="px-4 py-2">Description</th>
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">Action</th>
@@ -218,6 +218,7 @@ const AdminManagePlans = () => {
                   >
                     <td className="text-center">{index + 1}</td>
                     <td className="text-center">{plan.planName}</td>
+                    <td className="text-center">{plan.amount}</td>
                     <td className="px-10 py-2 text-start">
                       {plan.description}
                     </td>
