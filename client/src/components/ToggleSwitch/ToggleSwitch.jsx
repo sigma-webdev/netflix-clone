@@ -1,17 +1,38 @@
-const ToggleSwitch = () => {
+import React, { useRef } from "react";
+
+const ToggleSwitch = ({ isOn, onToggle, loading }) => {
+  const ref = useRef();
+
   return (
-    <>
-      <label className="relative mx-auto inline-flex cursor-pointer items-center">
-        <input
-          type="checkbox"
-          defaultValue
-          className="peer sr-only"
-          defaultChecked
+    <div className="relative mr-2 inline-block w-10 select-none align-middle">
+      <input
+        disabled={loading}
+        ref={ref}
+        type="checkbox"
+        className={`${
+          isOn ? "bg-red-600" : "bg-gray-300"
+        } toggle-checkbox absolute block h-6 w-6 cursor-pointer appearance-none rounded-full`}
+        checked={isOn}
+        onChange={onToggle}
+      />
+      <label
+        htmlFor="toggle"
+        className={`${
+          isOn ? "bg-red-600" : "bg-gray-300"
+        } toggle-label block h-6 cursor-pointer overflow-hidden rounded-full`}
+      >
+        <span
+          onClick={() => {
+            if (ref.current) {
+              ref.current.click();
+            }
+          }}
+          className={`${
+            isOn ? "translate-x-4" : "translate-x-0"
+          } toggle-inner absolute  block h-6 w-6 transform rounded-full bg-white transition-transform duration-300`}
         />
-        <div className="peer  h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-full peer-checked:after:border-white  dark:border-gray-600 dark:bg-gray-700" />
-        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
       </label>
-    </>
+    </div>
   );
 };
 

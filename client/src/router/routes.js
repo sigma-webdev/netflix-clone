@@ -27,18 +27,18 @@ import AdminManagePlans from "../components/admin/AdminManagePlans.jsx";
 const router = createBrowserRouter([
   // for open routes
   {
-    path: "/",
-    element: <Home />,
-    errorElement: <NotFound />,
-  },
-  {
     path: "/logout",
     element: <Logout />,
+  },
+  {
+    path: "/",
+    element: <Home />,
   },
 
   // for routes that do not require auth
   {
     element: <NotRequireAuth />,
+    errorElement: <NotFound />,
     children: [
       {
         path: "/signup",
@@ -86,6 +86,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+
   // for routes which are for admin and normal user both
   {
     element: <RequireAuth allowedRoles={["ADMIN", "USER"]} />,
@@ -96,7 +97,7 @@ const router = createBrowserRouter([
         children: [],
       },
       {
-        path: "/watch/:contentId",
+        path: "watch/:contentId",
         element: <Watch />,
         children: [],
       },
