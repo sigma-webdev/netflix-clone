@@ -7,8 +7,9 @@ import {
   dislikeContent,
   likeContent,
 } from "../../store/contentSlice";
-import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
+import { AiFillDislike, AiFillLike, AiOutlineArrowDown } from "react-icons/ai";
+import { BsFillPlayFill } from "react-icons/bs";
 
 const PreviewCard = ({
   contentId,
@@ -94,28 +95,42 @@ const PreviewCard = ({
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
-              <button onClick={() => handlePlay(contentId)}>
-                <PlayIcon />
+              <button
+                onClick={() => handlePlay(contentId)}
+                className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+              >
+                <BsFillPlayFill className="text-xl" />
               </button>
             </div>
             <button
               onClick={likeContentHanlder}
-              className="cursor-pointer"
+              className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
               disabled={likeDisLikeLoading}
             >
-              <LikeIcon isLiked={isLiked} />
+              <AiFillLike
+                className={`${
+                  isLiked ? "text-green-500" : "text-white hover:text-green-500"
+                } text-xl`}
+              />
             </button>
             <button
               onClick={dislikeContentHanlder}
-              className="cursor-pointer"
+              className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
               disabled={likeDisLikeLoading}
             >
-              <DisLikeIcon isDisliked={isDisliked} />
+              <AiFillDislike
+                className={`${
+                  isDisliked ? "text-red-500" : "text-white hover:text-red-500"
+                } text-xl`}
+              />
             </button>
           </div>
-          <div onClick={openCloseDetails} className="cursor-pointer">
-            <DownArrowIcon />
-          </div>
+          <button
+            onClick={openCloseDetails}
+            className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+          >
+            <AiOutlineArrowDown className="text-xl" />
+          </button>
         </div>
 
         <div className="flex items-center gap-2">
@@ -130,6 +145,7 @@ const PreviewCard = ({
         <div className="text-white">{geners.join(" . ")}</div>
       </div>
 
+      {/* modal for video description */}
       {isOpenDetails &&
         createPortal(
           <div className="fixed top-0 z-50 flex h-full w-full items-center overflow-hidden bg-black/60 ">
