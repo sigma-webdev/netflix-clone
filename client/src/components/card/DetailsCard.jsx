@@ -1,9 +1,12 @@
 import { useRef, useState } from "react";
-import { DisLikeIcon, LikeIcon } from "../icons";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RiPlayMiniFill } from "react-icons/ri";
-import { AiOutlineCloseCircle } from "react-icons/ai";
+import {
+  AiFillDislike,
+  AiFillLike,
+  AiOutlineCloseCircle,
+} from "react-icons/ai";
+import { BsFillPlayFill } from "react-icons/bs";
 
 const DetailsCard = ({
   contentId,
@@ -61,27 +64,42 @@ const DetailsCard = ({
           ></video>
         </div>
 
-        <div
+        {/* modal close button */}
+        <button
           className="absolute right-2 top-2 cursor-pointer"
           onClick={handleClose}
         >
           <AiOutlineCloseCircle className="text-4xl text-white" />
-        </div>
+        </button>
 
         {/* hero text */}
         <div className="absolute bottom-6 left-6 flex cursor-pointer items-center gap-2 md:bottom-8 md:left-12">
-          <div
+          <button
             className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg "
             onClick={playPauseMedia}
           >
-            <RiPlayMiniFill className="text-2xl lg:text-4xl" />
+            <BsFillPlayFill className="text-2xl lg:text-4xl" />
             Play
-          </div>
-          <div onClick={likeContentHanlder} className="cursor-pointer">
-            <LikeIcon isLiked={isLiked} />
-          </div>
-          <div onClick={dislikeContentHanlder} className="cursor-pointer">
-            <DisLikeIcon isDisliked={isDisliked} />
+          </button>
+          <button
+            onClick={likeContentHanlder}
+            className="cursor-pointer rounded-full border-2 border-white p-[0.35rem] "
+          >
+            <AiFillLike
+              className={`${
+                isLiked ? "text-green-500" : "text-white hover:text-green-500"
+              } text-xl`}
+            />
+          </button>
+          <div
+            onClick={dislikeContentHanlder}
+            className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+          >
+            <AiFillDislike
+              className={`${
+                isDisliked ? "text-red-500" : "text-white hover:text-red-500"
+              } text-xl`}
+            />
           </div>
         </div>
       </div>
