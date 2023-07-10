@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { BiSearchAlt2 } from "react-icons/bi";
 import {
   addNewContent,
   fetchContentBySearch,
+  ToggleDisplayContentToUser
 } from "../../store/adminManageContentSlice";
 // import { Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -42,6 +43,7 @@ const AdminManageContents = () => {
   console.log(allContents.contents, "/dasd");
   const [searchTerm, setSearchTerm] = useState("");
   const isContentLoading = useSelector((state) => state.admin.isLoading);
+  const isDisplayToggleLoading = useSelector((state) => state.admin.isDisplayToggleLoading);
   // console.log(content)
 console.log(isContentLoading)
   useEffect(() => {
@@ -107,6 +109,7 @@ console.log(isContentLoading)
   const handleAddCast = () => {
     if(castInput === "" || castInput.length < 2){
       //add toster
+      toast.error("please enter a valid input");
       return
     }
     const newCastArr = [...newContentData.cast, castInput]
@@ -192,8 +195,7 @@ console.log(isContentLoading)
     });
     setIsOpen(false);
     setIsLoading(false);
-    // navigate(contents._id)
-    // console.log(res)
+    
   };
 
   const handleToggleClose = () => {
@@ -210,6 +212,12 @@ console.log(isContentLoading)
       originCountry: "",
     });
     toggleModal(false);
+  };
+
+
+  const handleDispalyToggleStatus = (planId, event) => {
+    const active = event.target.checked;
+    dispatch(ToggleDisplayContentToUser({ id: planId, val: active }));
   };
   return (
     <>
@@ -502,7 +510,21 @@ console.log(isContentLoading)
                       <td className="px-4 py-3">{content.contentType}</td>
                       <td className="px-4 py-3">{content.language}</td>
                       <td className="px-4 py-3">{content.originCountry}</td>
-                      <td className="px-4 py-3">{<ToggleSwitch />}</td>
+                      <td className="px-4 py-3">
+                        <ToggleSwitch
+                          isOn={content.display} 
+                          onToggle={(event) =>
+                            handleDispalyToggleStatus(content._id, event)
+                          } 
+                          loading={isDisplayToggleLoading} 
+                        />
+                        <br />
+                        {content.display ? (
+                        <span>Shown</span>
+                      ) : (
+                        <span>Hidden</span>
+                      )}
+                        </td>
                       <td className="px-4 py-2">
                         <Link to={`${content._id}`}>
                           <div className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]">

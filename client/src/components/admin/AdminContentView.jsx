@@ -154,7 +154,7 @@ const AdminContentView = () => {
               <select
                 className="rounded border bg-transparent p-2"
                 name="genres"
-                value={editedContentData.genres}
+                value={editedContentData.genres[0]}
                 onChange={handleInputChange}
               >
                 <option value="Action">Action</option>
