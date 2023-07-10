@@ -29,6 +29,9 @@ const miscRoute = require("./router/misc.router.js");
 // database connection
 require("./config/database.config.js");
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   cors({
     origin: [process.env.CLIENT],
@@ -39,10 +42,6 @@ app.use(
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 app.use(
   fileUpLoad({
