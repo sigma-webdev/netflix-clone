@@ -1,0 +1,287 @@
+openapi: 3.0.0
+info: 
+  title : Netflix clone API
+  description: API documentation for a Simple Netflix clone application
+  version: 1.0.0
+  contact:
+    # name: PW Skills 
+    # email: your.email@example.com
+    # url: https://github.com/your-username/your-repo
+  externalDocs:
+    description: Documentation on GitHub
+    url: https://github.com/your-username/your-repo
+
+# TODO: fix or integrate with production url
+servers:
+  - url: "{protocol}://localhost:8081/api/{version}"
+    description: "This is the  version of our application "
+ 
+    variables:
+      version:
+        enum:
+          - v1 
+          - v2
+        default: v1
+      protocol:
+        enum:
+          - http
+          - https 
+        default: http
+
+paths:
+  # user signup - 
+  /auth/signup:
+    post: 
+      tags: 
+        - User Authentication
+      summary: User signup
+      description: Create a new user account
+      consumes:
+        application/json
+      produces:
+        application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/signUpLoginRequest"
+      responses:
+          "201":
+            description: Return User object data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 201
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      default: successfully registered the user
+                    data:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          format: email
+                          example: johndoe@gmail.com
+                        plan:
+                          type: string
+                          example: "plan Name"
+                        watchHistory:
+                          type: array
+                          example: ["movie/series Ids"]
+                        watchList:
+                          type: array
+                          example: ["movie/series Ids"]
+                        role: 
+                          type: string
+                          example: USER
+                        _id:
+                          type: string 
+                          example: 64a3ffef83e36e95ec51e6333
+                        createdAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        updatedAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        __v: 
+                          type: number
+                          example: 0
+                    token:
+                      type: string 
+                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTk4NzFmMTUxZWFlYmVmMTZmZGFmMSIsImVtYWlsIjoibWFtYWFuZ0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY4ODgzMTc3NiwiZXhwIjoxNjg4OTE4MTc2fQ.z9HQvqgnXfQN6GtYzG8H1nVwVXwzU35UDm6XIsJKVRo
+                    
+          "400":
+            description: Bad user request 
+            content:
+              application/json:
+                schema: 
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 400
+                    success: 
+                      type: boolean
+                      default: false
+                    message:
+                      type: string
+                      example: Email and Password are required || Please enter a valid email 📩 ||  email already exist
+                   
+          "500":
+            description: Internal server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      default: 500
+                    success:
+                      type: boolean
+                      default : false
+                    message:
+                      type: string
+                      default: internal server Error
+                                     
+  # user login 
+  /auth/signin:
+   post:
+    tags:
+     - User Authentication
+    summary : User signin/login
+    description: Authenticates a user and generates an access token 
+    consumes:
+      - application/json
+    produces:
+      - applications/json
+    requestBody:
+      required: true
+      content:
+        application/json : # Media type
+          schema:
+            $ref: "#/components/schemas/signUpLoginRequest"
+    responses:
+        "200":
+            description: Return User object data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 201
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      default: successfully registered the user
+                    data:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          format: email
+                          example: johndoe@gmail.com
+                        plan:
+                          type: string
+                          example: "plan Name"
+                        watchHistory:
+                          type: array
+                          example: ["movie/series Ids"]
+                        watchList:
+                          type: array
+                          example: ["movie/series Ids"]
+                        role: 
+                          type: string
+                          example: USER
+                        _id:
+                          type: string 
+                          example: 64a3ffef83e36e95ec51e6333
+                        createdAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        updatedAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        __v: 
+                          type: number
+                          example: 0
+                    token:
+                      type: string 
+                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTk4NzFmMTUxZWFlYmVmMTZmZGFmMSIsImVtYWlsIjoibWFtYWFuZ0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY4ODgzMTc3NiwiZXhwIjoxNjg4OTE4MTc2fQ.z9HQvqgnXfQN6GtYzG8H1nVwVXwzU35UDm6XIsJKVRo    
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode: 
+                    type: number
+                    default: 200
+                  success:
+                    type: boolean
+                    default: false
+                  message:
+                    type: string
+                    example: Incorrect Password || user not not found    
+                  data: 
+                    type: object
+                    example: null                                          
+        "404": 
+          description: Can't find account for the provide email address 
+          content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        default : false
+                      message:
+                        type: string 
+                        example: Inter Server Error || Server down    
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default : false
+                  message:
+                    type: string 
+                    example: Inter Server Error || Server down    
+
+
+
+#### Components where reusable schemas are store ######
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http 
+      scheme: basic
+    BearerAuth:
+      type: http
+      scheme: bearer
+    cookieAuth:
+      type: apiKey
+      in: cookie 
+      name: token
+
+  security: 
+    - BasicAuth: []
+    - BearerAuth: []
+
+# re-usable schema
+  schemas:
+    signUpLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          example: Example@11
+      required:
+        - email
+        - password
+    
+
+
+            
+    

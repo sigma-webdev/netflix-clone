@@ -9,6 +9,16 @@ const fileUpLoad = require("express-fileupload");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+// swagger api docs
+const swaggerUi = require("swagger-ui-express");
+const fs = require("fs");
+const YAML = require("yaml");
+
+const file = fs.readFileSync("./swagger.yaml", "utf8");
+const swaggerDocument = YAML.parse(file);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // routes
 const authRouter = require("./router/auth.router.js");
 const paymentRouter = require("./router/payment.router.js");
@@ -19,6 +29,9 @@ const miscRoute = require("./router/misc.router.js");
 // database connection
 require("./config/database.config.js");
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   cors({
     origin: [process.env.CLIENT],
@@ -29,10 +42,6 @@ app.use(
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 app.use(
   fileUpLoad({
