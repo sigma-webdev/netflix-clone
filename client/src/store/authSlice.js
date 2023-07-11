@@ -9,79 +9,79 @@ const initialState = {
 
 export const IS_USER_EXIST = createAsyncThunk(
   "auth/userexist",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
       let response = await axiosInstance.post("auth/user-exist", data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Something went wrong");
     }
   }
 );
 
-export const SIGN_IN = createAsyncThunk(
-  "auth/signin",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.post("/auth/signin", data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+export const SIGN_IN = createAsyncThunk("auth/signin", async (data) => {
+  try {
+    const response = await axiosInstance.post("/auth/signin", data);
+    return response.data;
+  } catch (error) {
+    error?.response?.data?.message
+      ? toast.error(error?.response?.data?.message)
+      : toast.error("Failed to login");
   }
-);
+});
 
-export const SIGN_UP = createAsyncThunk(
-  "auth/signup",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.post("/auth/signup", data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+export const SIGN_UP = createAsyncThunk("auth/signup", async (data) => {
+  try {
+    const response = await axiosInstance.post("/auth/signup", data);
+    return response.data;
+  } catch (error) {
+    error?.response?.data?.message
+      ? toast.error(error?.response?.data?.message)
+      : toast.error("Failed to create account");
   }
-);
+});
 
-export const SIGN_OUT = createAsyncThunk(
-  "/auth/signout",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get("auth/signout");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+export const SIGN_OUT = createAsyncThunk("/auth/signout", async () => {
+  try {
+    const response = await axiosInstance.get("auth/signout");
+    return response.data;
+  } catch (error) {
+    error?.response?.data?.message
+      ? toast.error(error?.response?.data?.message)
+      : toast.error("Failed to logout");
   }
-);
+});
 
-export const GET_USER = createAsyncThunk(
-  "/auth/user",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get("/auth/user");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+export const GET_USER = createAsyncThunk("/auth/user", async () => {
+  try {
+    const response = await axiosInstance.get("/auth/user");
+    return response.data;
+  } catch (error) {
+    error?.response?.data?.message
+      ? toast.error(error?.response?.data?.message)
+      : toast.error("Failed to load data");
   }
-);
+});
 
 export const FORGOT_PASSWORD = createAsyncThunk(
   "/auth/forgotpassword",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
       const response = await axiosInstance.post("/auth/forgot-password", data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to forget password");
     }
   }
 );
 
 export const RESET_PASSWORD = createAsyncThunk(
   `/auth/resetpassword`,
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
       const response = await axiosInstance.post(
         `/auth/reset-password/${data.token}`,
@@ -89,7 +89,9 @@ export const RESET_PASSWORD = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to reset password");
     }
   }
 );
@@ -113,7 +115,6 @@ const authSlice = createSlice({
       })
       .addCase(SIGN_IN.rejected, (state, action) => {
         state.loading = false;
-        toast.error(action.payload.message);
       })
 
       // signUp
@@ -129,7 +130,6 @@ const authSlice = createSlice({
       })
       .addCase(SIGN_UP.rejected, (state, action) => {
         state.loading = false;
-        toast.error(action?.payload?.message);
       })
 
       // get user
@@ -157,7 +157,6 @@ const authSlice = createSlice({
       })
       .addCase(SIGN_OUT.rejected, (state) => {
         state.loading = false;
-        toast.error("Failed to log out");
       })
 
       // forgotPassword
@@ -169,7 +168,6 @@ const authSlice = createSlice({
       })
       .addCase(FORGOT_PASSWORD.rejected, (state, action) => {
         state.loading = false;
-        toast.error(action?.payload?.message);
       })
 
       // reset Password
@@ -182,7 +180,6 @@ const authSlice = createSlice({
       })
       .addCase(RESET_PASSWORD.rejected, (state, action) => {
         state.loading = false;
-        toast.error(action.payload.message);
       })
 
       // is user exist

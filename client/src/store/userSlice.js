@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   allUsers: [],
@@ -9,7 +10,7 @@ const initialState = {
 
 export const getAllUsers = createAsyncThunk(
   "/users",
-  async ({ pageNo, searchValue }, { rejectWithValue }) => {
+  async ({ pageNo, searchValue }) => {
     try {
       const url = searchValue
         ? `/users?search=${searchValue}`
@@ -17,19 +18,23 @@ export const getAllUsers = createAsyncThunk(
       let response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const getUserById = createAsyncThunk(
   "users/getUserById",
-  async (userId, { rejectWithValue }) => {
+  async (userId) => {
     try {
       let response = await axiosInstance.get(`/users/${userId}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
