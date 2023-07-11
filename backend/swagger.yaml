@@ -29,6 +29,7 @@ servers:
         default: http
 
 paths:
+  # ------------- user authentication ----------------------------
   # user signup - 
   /auth/signup:
     post: 
@@ -252,8 +253,8 @@ paths:
     post: 
       tags: 
         - User Authentication
-      summary: User signup
-      description: Create a new user account
+      summary: User exist 
+      description: Check for User exist 
       consumes:
         application/json
       produces:
@@ -331,9 +332,321 @@ paths:
                     message:
                       type: string
                       default: internal server Error 
+  
+  # user Sign Out -
+  /auth/signout:
+    get:
+      tags:
+        - User Authentication
+      summary: User sign Out
+      description: Allow the user to signout from the application
+      responses:
+          "200":
+            description: Return User object data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 200
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      default: "Logged out successfully" 
+                    data:
+                      type: object
+                      default: null
+          "401":
+            description: Unauthorized user request 
+            content:
+              application/json:
+                schema: 
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 401
+                    success: 
+                      type: boolean
+                      default: false
+                    message:
+                      type: string
+                      example: You are not authorized, please login
+                    data: 
+                      type: object
+                      example: null
+                   
+          "500":
+            description: Internal server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      default: 500
+                    success:
+                      type: boolean
+                      default : false
+                    message:
+                      type: string
+                      default: internal server Error 
+  
+  # get User 
+  /auth/user:
+    get: 
+      tags:
+        - User Authentication
+      summary: Get User
+      description: Get user login details 
+      responses:
+          "200":
+            description: Return User object data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 200
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      default: Logged in user details
+                    data: 
+                      type: object
+                      properties:
+                        _id:
+                          type: string 
+                        status: 
+                          type: string
+                    _id: 
+                      type: string 
+                    email: 
+                      type: string
+                      format: email
+                    plan: 
+                      type: string
+                      default: NONE
+                    role:
+                      type: string
+                      default: USER 
+                    createdAt: 
+                      type: string
+                    updatedAt:
+                      type: string
+                    __V: 
+                      type: number
+          "400":
+            description: Bad request
+            content:
+              application/json: 
+                schema:
+                  type: object
+                  properties:
+                    statusCode: 
+                      type: number
+                      example: 400
+                    message: 
+                      type: string
+                      example: User not found
+                    data: 
+                      type: string
+                      example: null
 
+          "500":       
+            description: Internal server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      default: 500
+                    success:
+                      type: boolean
+                      default : false
+                    message:
+                      type: string
+                      default: internal server Error 
+  
+  # forget password
+  /auth/forgot-password:
+    post:
+      tags:
+        - User Authentication
+      summary: User forgot password
+      description: User forgot password route 
+      consumes:
+        application/json
+      produces:
+        application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Password mail send successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 200
+                  success:
+                    type: boolean
+                  message: 
+                    type: string
+                    example: Further instruction sent on your email:user@example.com
+        "400":
+          description: Password reset instruction to your mail 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 400
+                  success:
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Email is required
+        "404":
+          description: Email is not found 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 404
+                  success:
+                    type: boolean
+                  message: 
+                    type: string
+                    example: No account found for this email address
+        "500":
+          description: Internal server error 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 200
+                  success:
+                    type: boolean
+                  message: 
+                    type: string
+                    example: Internal server error 
 
-#### Components where reusable schemas are store ######
+  # reset password with the provided token 
+  /auth/reset-password/{token}:         
+    post:
+      tags:
+        - User Authentication
+      summary: Reset Password 
+      description: Reset User Password with the provided token 
+      parameters:
+        - in: path 
+          name: token
+          description: Token received via email for password reset
+          required: true
+          schema:
+            type: string
+      consumes:
+        application/json
+      produces:
+        application/json
+        
+      requestBody:
+        description: New Password and confirm Password 
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password: 
+                  type: string
+                  format: password
+                confirmPassword: 
+                  type: string
+      responses:
+        "200":
+          description: Password mail send successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 200
+                  success:
+                    type: boolean
+                  message: 
+                    type: string
+                    example: Further instruction sent on your email:user@example.com
+                  data: 
+                    type: object
+                    example: null
+        "400":
+          description: Password reset instruction to your mail 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 400
+                  success:
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Password and confirmPassword are required || token invalid or Expired 
+        "500":
+          description: Internal server error 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 500
+                  success:
+                    type: boolean
+                  message: 
+                    type: string
+                    example: Internal server error 
+
+# --------  Components where reusable schemas are store ------- 
 components:
   securitySchemes:
     BasicAuth:
@@ -365,8 +678,4 @@ components:
       required:
         - email
         - password
-    
-
-
-            
     
