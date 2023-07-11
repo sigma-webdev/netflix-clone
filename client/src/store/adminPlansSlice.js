@@ -60,13 +60,28 @@ export const updatePlanStatus = createAsyncThunk(
   }
 );
 
+export const deletePlan = createAsyncThunk(
+  "adminPlans/deletePlan",
+  async (id, { rejectWithValue, dispatch }) => {
+    console.log(id);
+    try {
+      let response = axiosInstance.delete("/payment/plan/" + id);
+      dispatch(getAllPlans());
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const adminPlansSlice = createSlice({
   name: "Plans",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //
+      // get all plans
       .addCase(getAllPlans.pending, (state) => {
         state.loading = true;
       })
@@ -104,6 +119,17 @@ const adminPlansSlice = createSlice({
         toast.success("Plan Added Successfully");
       })
       .addCase(createPlan.rejected, (state) => {
+        state.loading = false;
+      })
+      // delete plan
+      .addCase(deletePlan.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deletePlan.fulfilled, (state) => {
+        state.loading = false;
+        toast.success("Plan Deleted Successfully");
+      })
+      .addCase(deletePlan.rejected, (state) => {
         state.loading = false;
       });
   },
