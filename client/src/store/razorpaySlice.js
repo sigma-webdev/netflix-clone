@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   razorpaykey: null,
@@ -7,38 +8,41 @@ const initialState = {
   subscriptionId: null,
   createSbuscriptionLoading: false,
   verifySubscriptionLoading: false,
-  isPaymentVerified: false
+  isPaymentVerified: false,
 };
 
 export const GET_RAZORPAY_KEY = createAsyncThunk(
   "payment/razorpaykey",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
       const response = await axiosInstance.get("payment/razorpaykey");
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const CREATE_SUBSCRIPTION = createAsyncThunk(
   "payment/subscribe",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     // data = {planeName : planeName}
     try {
       const response = await axiosInstance.post("payment/subscribe", data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to create subscription");
     }
   }
 );
+
 export const VERIFY_SUBSCRIPTION = createAsyncThunk(
   "payment/verifysubscription",
-  async (data, { rejectWithValue }) => {
-    // data = {planeName : planeName}
-
+  async (data) => {
     try {
       const response = await axiosInstance.post(
         "payment/verifysubscription",
@@ -46,7 +50,9 @@ export const VERIFY_SUBSCRIPTION = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to verify subscription");
     }
   }
 );
@@ -92,8 +98,7 @@ const razoreSlice = createSlice({
       .addCase(VERIFY_SUBSCRIPTION.rejected, (state, action) => {
         state.verifySubscriptionLoading = false;
       });
-  }
+  },
 });
 
-export const {} = razoreSlice.actions;
 export default razoreSlice.reducer;

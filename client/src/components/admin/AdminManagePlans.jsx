@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createPlan,
+  deletePlan,
   getAllPlans,
   updatePlanStatus,
 } from "../../store/adminPlansSlice";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-import { toast } from "react-hot-toast";
+import TableLoading from "../loader/TableLoader";
 
 const AdminManagePlans = () => {
   const dispatch = useDispatch();
   const allPlans = useSelector((state) => state.plans.allPlans);
   const updateLoader = useSelector((state) => state.plans.updateLoader);
+  const loading = useSelector((state) => state.plans.loading);
+  console.log(loading, "state");
 
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -45,6 +48,7 @@ const AdminManagePlans = () => {
     }));
   };
 
+  // form validation for new plan
   const validateForm = () => {
     let isValid = true;
     const newErrors = { ...errors };
@@ -78,6 +82,7 @@ const AdminManagePlans = () => {
     return isValid;
   };
 
+  //  to add new plan
   const handleAddPlan = (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -95,15 +100,20 @@ const AdminManagePlans = () => {
     }
   };
 
+  // to enable/disable plan status
   const handleToggleStatus = (planId, event) => {
     const active = event.target.checked;
     dispatch(updatePlanStatus({ id: planId, active: active }));
   };
 
+  const handleDeletePlan = (id) => {
+    dispatch(deletePlan(id));
+  };
+
   return (
     <>
       {isOpen && (
-        <div className="absolute flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
+        <div className="absolute z-20 flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
           <div className="relative w-96 rounded-lg bg-white px-4 py-12">
             <div
               onClick={() => toggleModal(false)}
@@ -150,7 +160,7 @@ const AdminManagePlans = () => {
                   type="number"
                   id="amount"
                   name="amount"
-                  value={formData.amount}
+                  value={parseInt(formData.amount)}
                   onChange={handleInputChange}
                 />
                 {errors.amount && (
@@ -174,6 +184,7 @@ const AdminManagePlans = () => {
               <button
                 type="submit"
                 className="w-full rounded bg-red-600 py-2 text-white hover:bg-red-700"
+                disabled={loading ? true : false}
               >
                 Add Plan
               </button>
@@ -190,6 +201,7 @@ const AdminManagePlans = () => {
             onClick={() => {
               toggleModal(true);
             }}
+            disabled={loading ? true : false}
             className="rounded-xl border-b bg-red-600 px-4 py-2 text-white"
           >
             Add Plan
@@ -207,7 +219,19 @@ const AdminManagePlans = () => {
             </tr>
           </thead>
           <tbody>
-            {allPlans?.data?.length > 0 &&
+            {loading ? (
+              <TableLoading colLength={6} />
+            ) : allPlans?.data.length === 0 ? (
+              <tr>
+                <td
+                  className="px-2 py-6 text-center text-2xl text-red-500"
+                  colSpan={5}
+                >
+                  No Plans Found
+                </td>
+              </tr>
+            ) : (
+              allPlans?.data?.length > 0 &&
               allPlans?.data?.map((plan, index) => {
                 return (
                   <tr
@@ -218,7 +242,7 @@ const AdminManagePlans = () => {
                   >
                     <td className="text-center">{index + 1}</td>
                     <td className="text-center">{plan.planName}</td>
-                    <td className="text-center">{plan.amount}</td>
+                    <td className="text-center">₹ {plan.amount}</td>
                     <td className="px-10 py-2 text-start">
                       {plan.description}
                     </td>
@@ -237,13 +261,19 @@ const AdminManagePlans = () => {
                       )}
                     </td>
                     <td className="p-2 text-center">
-                      <button className="rounded-lg bg-red-600 px-4 py-2 hover:bg-red-500">
+                      <button
+                        onClick={() => {
+                          handleDeletePlan(plan._id);
+                        }}
+                        className="rounded-lg bg-red-600 px-4 py-2 hover:bg-red-500"
+                      >
                         Delete
                       </button>
                     </td>
                   </tr>
                 );
-              })}
+              })
+            )}
           </tbody>
         </table>
       </div>

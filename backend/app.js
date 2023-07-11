@@ -56,11 +56,20 @@ app.use("/api/v1/contents", contentRoute);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1", miscRoute);
-
 app.get("/health-check", (req, res) => {
   return res.status(200).json({
     success: true,
     data: "Server is running",
+  });
+});
+
+// Default catch all route - 404
+app.all("*", (_req, res) => {
+  res.status(404).json({
+    statusCode: 404,
+    success: false,
+    message: "OOPS!!! 404 Not Found",
+    data: null,
   });
 });
 

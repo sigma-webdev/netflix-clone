@@ -2,10 +2,10 @@ import { RiFullscreenFill } from "react-icons/ri";
 import PreviewShimmer from "./PreviewShimmer";
 import { IconContext } from "react-icons/lib";
 import { TbPlayerSkipForward } from "react-icons/tb";
-import { SkipBackward, SkipForward } from "../icons";
-import { BsFillPauseFill, BsFillPlayFill, BsVolumeUp } from "react-icons/bs";
+import { BsFillPlayFill, BsVolumeUp } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { MdKeyboardBackspace } from "react-icons/md";
+import { AiOutlineBackward, AiOutlineForward } from "react-icons/ai";
 
 const VideoShimmer = () => {
   return (
@@ -28,10 +28,10 @@ const VideoShimmer = () => {
                 <BsFillPlayFill />
               </div>
               <div className="flex cursor-pointer items-center">
-                <SkipBackward />
+                <AiOutlineBackward />
               </div>
               <div className="flex cursor-pointer items-center">
-                <SkipForward />
+                <AiOutlineForward />
               </div>
               <div className="flex cursor-pointer items-center">
                 <div>
