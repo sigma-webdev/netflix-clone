@@ -37,7 +37,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
-  async function handleSignInSignOut() {
+  const handleSignInSignOut=async()=> {
     if (!IS_LOGGED_IN) return navigate("/signin");
     const response = await dispatch(SIGN_OUT());
     if (response?.payload?.success) {
