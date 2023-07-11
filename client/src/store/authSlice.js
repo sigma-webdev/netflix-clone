@@ -137,7 +137,7 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(GET_USER.fulfilled, (state, action) => {
-        state.userData = action.payload.data;
+        state.userData = action?.payload?.data;
         state.isLoggedIn = true;
         state.loading = false;
       })
@@ -154,6 +154,7 @@ const authSlice = createSlice({
         state.userData = {};
         state.loading = false;
         localStorage.clear();
+        toast.success("Logout successfully");
       })
       .addCase(SIGN_OUT.rejected, (state) => {
         state.loading = false;
