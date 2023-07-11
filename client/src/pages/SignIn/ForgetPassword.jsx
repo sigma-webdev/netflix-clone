@@ -6,12 +6,12 @@ import { FORGOT_PASSWORD } from "../../store/authSlice";
 import { AiOutlineLoading } from "react-icons/ai";
 import SignUpLayout from "../SignUp/SignUpLayout";
 
-function ForgotPassword() {
+const ForgotPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const IS_LOADING = useSelector((state) => state.auth.loading);
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // validating the email
     const isEmailValid = validator.validate(e?.target?.email?.value);
@@ -22,7 +22,7 @@ function ForgotPassword() {
     if (response?.payload?.success) {
       navigate(`/password/forget/${e?.target?.email?.value}`);
     }
-  }
+  };
 
   return (
     <SignUpLayout>
@@ -59,6 +59,6 @@ function ForgotPassword() {
       </div>
     </SignUpLayout>
   );
-}
+};
 
 export default ForgotPassword;

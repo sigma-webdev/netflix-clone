@@ -14,7 +14,7 @@ const SignIn = () => {
   const [signInError, setSignInError] = useState({ error: false, message: "" });
   const signInLoading = useSelector((state) => state.auth.loading);
 
-  async function handleSignIn(e) {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const response = await dispatch(SIGN_IN(formData));
@@ -25,7 +25,7 @@ const SignIn = () => {
       });
     }
     return navigate("/browse");
-  }
+  };
 
   return (
     <Layout bgcolor="bg-[#00081D]" padding="py-20">
