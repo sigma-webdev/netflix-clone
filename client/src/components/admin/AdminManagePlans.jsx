@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createPlan,
+  deletePlan,
   getAllPlans,
   updatePlanStatus,
 } from "../../store/adminPlansSlice";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-import { toast } from "react-hot-toast";
 
 const AdminManagePlans = () => {
   const dispatch = useDispatch();
@@ -45,6 +45,7 @@ const AdminManagePlans = () => {
     }));
   };
 
+  // form validation for new plan
   const validateForm = () => {
     let isValid = true;
     const newErrors = { ...errors };
@@ -78,6 +79,7 @@ const AdminManagePlans = () => {
     return isValid;
   };
 
+  //  to add new plan
   const handleAddPlan = (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -95,9 +97,14 @@ const AdminManagePlans = () => {
     }
   };
 
+  // to enable/disable plan status
   const handleToggleStatus = (planId, event) => {
     const active = event.target.checked;
     dispatch(updatePlanStatus({ id: planId, active: active }));
+  };
+
+  const handleDeletePlan = (id) => {
+    dispatch(deletePlan(id));
   };
 
   return (
@@ -150,7 +157,7 @@ const AdminManagePlans = () => {
                   type="number"
                   id="amount"
                   name="amount"
-                  value={formData.amount}
+                  value={parseInt(formData.amount)}
                   onChange={handleInputChange}
                 />
                 {errors.amount && (
@@ -237,7 +244,12 @@ const AdminManagePlans = () => {
                       )}
                     </td>
                     <td className="p-2 text-center">
-                      <button className="rounded-lg bg-red-600 px-4 py-2 hover:bg-red-500">
+                      <button
+                        onClick={() => {
+                          handleDeletePlan(plan._id);
+                        }}
+                        className="rounded-lg bg-red-600 px-4 py-2 hover:bg-red-500"
+                      >
                         Delete
                       </button>
                     </td>

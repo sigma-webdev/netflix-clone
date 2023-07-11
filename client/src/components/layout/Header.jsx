@@ -37,7 +37,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
-  async function handleSignInSignOut() {
+  const handleSignInSignOut=async()=> {
     if (!IS_LOGGED_IN) return navigate("/signin");
     const response = await dispatch(SIGN_OUT());
     if (response?.payload?.success) {
@@ -53,7 +53,7 @@ const Header = () => {
   return (
     <header
       ref={headerRef}
-      className={`z-20 flex h-16 w-full items-center justify-between px-4 text-white transition duration-300 ease-in-out md:h-20 md:px-8 ${
+      className={`z-50 flex h-16 w-full items-center justify-between px-4 text-white transition duration-300 ease-in-out md:h-20 md:px-8 ${
         IS_LOGGED_IN ? "fixed top-0" : "absolute"
       }`}
     >

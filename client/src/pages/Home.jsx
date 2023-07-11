@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import validator from "email-validator";
 import toast from "react-hot-toast";
@@ -27,7 +27,7 @@ const Home = () => {
     setActiveItem(id);
   };
 
-  async function handleIsUserExist(e) {
+  const handleIsUserExist = async (e) => {
     e.preventDefault();
     const isEmailValid = validator.validate(e?.target?.email?.value);
     if (!isEmailValid) return toast.error("please enter valid email 📩");
@@ -37,7 +37,7 @@ const Home = () => {
     } else {
       navigate("/signup");
     }
-  }
+  };
 
   return (
     <Layout>

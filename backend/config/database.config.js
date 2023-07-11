@@ -10,7 +10,10 @@ const connectDatabase = (() => {
     .then((conn) =>
       console.log(`Connected to MongoDB at: ${conn.connection.host}`)
     )
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.log(error);
+      process.exit(1);
+    });
 })();
 
 module.exports = connectDatabase;
