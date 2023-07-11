@@ -5,14 +5,13 @@ import { BiSearchAlt2 } from "react-icons/bi";
 import {
   addNewContent,
   fetchContentBySearch,
-  ToggleDisplayContentToUser
+  ToggleDisplayContentToUser,
 } from "../../store/adminManageContentSlice";
 import { Link } from "react-router-dom";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-
+import TableLoading from "../loader/TableLoader";
 
 const AdminManageContents = () => {
- 
   const [newContentData, setNewContentData] = useState({
     name: "",
     description: "",
@@ -25,10 +24,10 @@ const AdminManageContents = () => {
     releaseDate: "",
     originCountry: "",
   });
-  const [castInput, setCastInput] = useState('')
-  
+  const [castInput, setCastInput] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1) 
+  const [page, setPage] = useState(1);
   const limit = 5;
 
   const dispatch = useDispatch();
@@ -36,16 +35,15 @@ const AdminManageContents = () => {
   const allContents = useSelector((state) => state.admin.filteredContent);
   const [searchTerm, setSearchTerm] = useState("");
   const isContentLoading = useSelector((state) => state.admin.isLoading);
-  const isDisplayToggleLoading = useSelector((state) => state.admin.isDisplayToggleLoading);
+  const isDisplayToggleLoading = useSelector(
+    (state) => state.admin.isDisplayToggleLoading
+  );
 
   useEffect(() => {
-    dispatch(fetchContentBySearch({pageNo: page}));
-
+    dispatch(fetchContentBySearch({ pageNo: page }));
   }, [page]);
 
-
   const [isOpen, setIsOpen] = useState(false);
-
 
   const toggleModal = (val) => {
     setIsOpen(val);
@@ -62,7 +60,7 @@ const AdminManageContents = () => {
       return;
     }
     if (name === "cast") {
-      setCastInput(value)
+      setCastInput(value);
       return;
     }
     setNewContentData((prevDetails) => ({
@@ -71,50 +69,43 @@ const AdminManageContents = () => {
     }));
   };
 
-
-
   const handleAddCast = () => {
-    if(castInput === "" || castInput.length < 2){
+    if (castInput === "" || castInput.length < 2) {
       toast.error("please enter a valid input");
-      return
+      return;
     }
-    const newCastArr = [...newContentData.cast, castInput]
-    setNewContentData({ ...newContentData, cast: newCastArr })
-    setCastInput('')
-
-  }
+    const newCastArr = [...newContentData.cast, castInput];
+    setNewContentData({ ...newContentData, cast: newCastArr });
+    setCastInput("");
+  };
   const handleRemoveCast = (castname) => {
-    const indexOfCastToBeRemoved = newContentData.cast.indexOf(castname)
-    const newCast = newContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
-    setNewContentData({ ...newContentData, cast: newCast })
+    const indexOfCastToBeRemoved = newContentData.cast.indexOf(castname);
+    const newCast = newContentData.cast.filter(
+      (item, index) => index !== indexOfCastToBeRemoved
+    );
+    setNewContentData({ ...newContentData, cast: newCast });
   };
 
   const getSearch = (e) => {
-    e.preventDefault()
-    dispatch(fetchContentBySearch({searchText: searchTerm }));
-    setSearchTerm("")
-
-  }
+    e.preventDefault();
+    dispatch(fetchContentBySearch({ searchText: searchTerm }));
+    setSearchTerm("");
+  };
 
   const nextPage = () => {
-    if(allContents.next === undefined){
-      return
-    }else{
-      setPage((next)=>(next+1))
-
-    }
-
-  }
-  const prevPage = () =>{
-    if(allContents.previous === undefined){
+    if (allContents.next === undefined) {
       return;
-    
-    }else {
-      setPage((pre)=>pre-1)
- 
+    } else {
+      setPage((next) => next + 1);
     }
-  }
-  
+  };
+  const prevPage = () => {
+    if (allContents.previous === undefined) {
+      return;
+    } else {
+      setPage((pre) => pre - 1);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -142,7 +133,6 @@ const AdminManageContents = () => {
     });
     setIsOpen(false);
     setIsLoading(false);
-    
   };
 
   const handleToggleClose = () => {
@@ -160,7 +150,6 @@ const AdminManageContents = () => {
     });
     toggleModal(false);
   };
-
 
   const handleDispalyToggleStatus = (planId, event) => {
     const active = event.target.checked;
@@ -208,7 +197,6 @@ const AdminManageContents = () => {
                 <option value="Sports">Sports</option>
                 <option value="Thrillers">Thrillers</option>
               </select>
-
 
               <label htmlFor="text">Description:</label>
               <input
@@ -367,61 +355,39 @@ const AdminManageContents = () => {
           </div>
         </div>
       )}
-      {isContentLoading ? (
-        <div className="absolute right-0 flex h-screen w-10/12 items-center justify-center bg-opacity-80">
-          <div className="text-center">
-            <div role="status">
-              <svg
-                aria-hidden="true"
-                className="mr-2 inline h-8 w-8 animate-spin fill-blue-600 text-gray-200  dark:text-gray-600"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="currentFill"
-                />
-              </svg>
-              <span className="sr-only">Loading...</span>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="flex max-h-[100vh] w-10/12 flex-col items-center overflow-y-scroll  px-4 py-4">
-          <div className="flex justify-between w-5/6 mx-auto">
-            <h3 className="text-white bg-[#E50914] px-3 rounded-t-md">Manage Contents</h3>
-            <div className="flex gap-2">
+
+      <div className="flex max-h-[100vh] w-10/12 flex-col items-center overflow-y-scroll  px-4 py-4">
+        <div className="mx-auto flex w-5/6 justify-between">
+          <h3 className="rounded-t-md bg-[#E50914] px-3 text-white">
+            Manage Contents
+          </h3>
+          <div className="flex gap-2">
             <button
               onClick={() => toggleModal(true)}
-              className="cursor-pointer bg-[#E50914] px-3 py-1 text-white hover:bg-[#d4252e]  border-b-2 rounded-lg border-white"
+              className="cursor-pointer rounded-lg border-b-2 border-white bg-[#E50914] px-3  py-1 text-white hover:bg-[#d4252e]"
             >
               Add Content
             </button>
-              <form onSubmit={getSearch} className="flex justify-between border-2 border-[#E50914] items-center  bg-white">
-                <input
-                  className=" px-2 outline-none w-full"
-                  placeholder="Search content..."
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button>
-
-              <BiSearchAlt2 className="text-4xl" />
-                </button>
-              </form>
-            
-            
-            </div>
+            <form
+              onSubmit={getSearch}
+              className="flex items-center justify-between border-2 border-[#E50914]  bg-white"
+            >
+              <input
+                className=" w-full px-2 outline-none"
+                placeholder="Search content..."
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button>
+                <BiSearchAlt2 className="text-4xl" />
+              </button>
+            </form>
           </div>
+        </div>
 
-          { allContents.contents ? (
-            <>
+        {allContents.contents ? (
+          <>
             <table className="w-5/6 table-auto overflow-scroll text-gray-200">
               <thead className="text-left">
                 <tr className="bg-[#E50914]">
@@ -435,66 +401,91 @@ const AdminManageContents = () => {
                 </tr>
               </thead>
               <tbody className=" border-opacity-0">
-                {allContents.contents.map((content, index) => {
-                  return (
-                    <tr
-                      key={index}
-                      className={
-                        (index + 1) % 2 === 0 ? "bg-[#342e2b]" : "bg-[#2e2f3a]"
-                      }
-                    >
-                      <td className="px-4 py-3">{(page - 1) * limit + index + 1}</td>
-                      <td className="flex items-center gap-4 px-4 py-3">
-                        <img
-                          className="h-16 w-32 rounded-xl object-center"
-                          src={content?.thumbnail[0].thumbnailUrl}
-                          alt=""
-                        />
-                        {content.name}
-                      </td>
-                      <td className="px-4 py-3">{content.contentType}</td>
-                      <td className="px-4 py-3">{content.language}</td>
-                      <td className="px-4 py-3">{content.originCountry}</td>
-                      <td className="px-4 py-3">
-                        <ToggleSwitch
-                          isOn={content.display} 
-                          onToggle={(event) =>
-                            handleDispalyToggleStatus(content._id, event)
-                          } 
-                          loading={isDisplayToggleLoading} 
-                        />
-                        <br />
-                        {content.display ? (
-                        <span>Shown</span>
-                      ) : (
-                        <span>Hidden</span>
-                      )}
+                {isContentLoading ? (
+                  <TableLoading colLength={7} />
+                ) : (
+                  allContents.contents.map((content, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className={
+                          (index + 1) % 2 === 0
+                            ? "bg-[#342e2b]"
+                            : "bg-[#2e2f3a]"
+                        }
+                      >
+                        <td className="px-4 py-3">
+                          {(page - 1) * limit + index + 1}
                         </td>
-                      <td className="px-4 py-2">
-                        <Link to={`${content._id}`}>
-                          <div className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]">
-                            View
-                          </div>
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        <td className="flex items-center gap-4 px-4 py-3">
+                          <img
+                            className="h-16 w-32 rounded-xl object-center"
+                            src={content?.thumbnail[0].thumbnailUrl}
+                            alt=""
+                          />
+                          {content.name}
+                        </td>
+                        <td className="px-4 py-3">{content.contentType}</td>
+                        <td className="px-4 py-3">{content.language}</td>
+                        <td className="px-4 py-3">{content.originCountry}</td>
+                        <td className="px-4 py-3">
+                          <ToggleSwitch
+                            isOn={content.display}
+                            onToggle={(event) =>
+                              handleDispalyToggleStatus(content._id, event)
+                            }
+                            loading={isDisplayToggleLoading}
+                          />
+                          <br />
+                          {content.display ? (
+                            <span>Shown</span>
+                          ) : (
+                            <span>Hidden</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-2">
+                          <Link to={`${content._id}`}>
+                            <div className="cursor-pointer rounded bg-[#E50914] py-2 text-center font-bold text-white hover:bg-[#d4252e]">
+                              View
+                            </div>
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
-            <div className="flex justify-between w-10/12 my-5 mx-auto">
-            <button className={allContents.previous === undefined ? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-2"} onClick={prevPage}>Previous Page</button>
-            <div className=" rounded-full border-2 border-red-400 px-[10px] text-xl font-bold text-red-600 ">
-              Page {page} of {allContents.totalPages}
+            <div className="mx-auto my-5 flex w-10/12 justify-between">
+              <button
+                className={
+                  allContents.previous === undefined
+                    ? "cursor-not-allowed  bg-[#e5091451]  px-2 py-1 text-white"
+                    : "bg-[#E50914] px-2 py-1  text-white hover:bg-[#d4252e]"
+                }
+                onClick={prevPage}
+              >
+                Previous Page
+              </button>
+              <div className=" rounded-full border-2 border-red-400 px-[10px] text-xl font-bold text-red-600 ">
+                Page {page} of {allContents.totalPages}
+              </div>
+              <button
+                onClick={nextPage}
+                className={
+                  allContents.next === undefined
+                    ? "cursor-not-allowed  bg-[#e5091451]  px-2 py-1 text-white"
+                    : "bg-[#E50914] px-4 py-1  text-white hover:bg-[#d4252e]"
+                }
+              >
+                Next Page
+              </button>
             </div>
-            <button onClick={nextPage} className={allContents.next === undefined? "bg-[#e5091451]  text-white  py-1 px-2 cursor-not-allowed":"bg-[#E50914] hover:bg-[#d4252e] text-white  py-1 px-4"}>Next Page</button>
-          </div>
           </>
-          ) : (
-            <h2 className="text-center">No Data Found</h2>
-          )}
-        </div>
-      )}
+        ) : (
+          <h2 className="text-center">No Data Found</h2>
+        )}
+      </div>
     </>
   );
 };
