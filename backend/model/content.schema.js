@@ -89,7 +89,7 @@ const contentSchema = new Schema(
         thumbnailUrl: {
           type: String,
         },
-        thumbnailID: {
+        thumbnailId: {
           type: String,
           // required: [true, "Thumbnail Id should be provided"],
         },
@@ -104,15 +104,15 @@ const contentSchema = new Schema(
       },
     ],
 
-    content: {
-      contentURL: {
+    contentMovie: {
+      movieUrl: {
         type: String,
       },
-      contentID: {
+      movieId: {
         type: String,
         // required: [true, "content ID must be provided"],
       },
-      contentDuration: { type: Object },
+      movieDuration: { type: Object },
     },
 
     display: {
