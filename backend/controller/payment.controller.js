@@ -179,7 +179,7 @@ const createPlan = asyncHandler(async (req, res, next) => {
       interval: 1,
       item: {
         name: planName.toUpperCase(),
-        amount: amount,
+        amount: amount * 100,
         currency: "INR",
         description: description,
       },
