@@ -12,7 +12,7 @@ const UserRegistration = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState(localStorage.getItem("netflixCloneEmail"));
   const { loading } = useSelector((state) => state.auth);
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isEmailValid = validator.validate(e?.target?.email?.value);
     if (!isEmailValid) return toast.error("please enter valid email 📩");
@@ -21,7 +21,7 @@ const UserRegistration = () => {
     if (response.payload.success) {
       navigate("/signup/checkplan");
     }
-  }
+  };
   return (
     <SignUpLayout>
       <form

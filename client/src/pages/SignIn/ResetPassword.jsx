@@ -6,15 +6,14 @@ import SignUpLayout from "../SignUp/SignUpLayout.jsx";
 import { RxCross2 } from "react-icons/rx";
 import { AiOutlineLoading } from "react-icons/ai";
 
-function ResetPassword() {
+const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error, setError] = useState({ error: false, message: "" });
   const { token } = useParams();
-  console.log(token);
   const loading = useSelector((state) => state.auth.loading);
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const response = await dispatch(RESET_PASSWORD({ token, formData }));
@@ -23,7 +22,7 @@ function ResetPassword() {
     } else {
       setError({ error: true, message: response.payload.message });
     }
-  }
+  };
 
   return (
     <SignUpLayout>
@@ -111,6 +110,6 @@ function ResetPassword() {
       </div>
     </SignUpLayout>
   );
-}
+};
 
 export default ResetPassword;
