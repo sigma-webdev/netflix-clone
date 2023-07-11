@@ -103,12 +103,11 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
   return (
     <div className="relative h-screen bg-netflix-black">
       <div className="absolute z-10 m-auto box-border h-screen w-[98%] opacity-0 transition delay-150 duration-300 ease-out hover:opacity-100">
+        {/* back button */}
         <div className="absolute left-4 top-4">
-          <IconContext.Provider value={{ size: "40px", color: "white" }}>
-            <Link to="/browse">
-              <MdKeyboardBackspace />
-            </Link>
-          </IconContext.Provider>
+          <Link to="/browse">
+            <MdKeyboardBackspace className="text-5xl text-white" />
+          </Link>
         </div>
         <div
           ref={progressBarRef}
@@ -119,54 +118,55 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
             className={`h-full w-[0px] rounded bg-slate-500`}
           ></div>
         </div>
-        <div className="absolute bottom-4 left-4 flex w-full items-center justify-between gap-4">
+
+        <div className="absolute bottom-2 left-4 flex w-full items-center justify-between gap-4">
           <div className="flex gap-4">
-            <IconContext.Provider value={{ size: "40px", color: "white" }}>
-              <div
-                onClick={playPauseMedia}
-                className="flex cursor-pointer items-center"
-              >
-                {!isVideoPlaying ? <BsFillPlayFill /> : <BsFillPauseFill />}
+            <div
+              onClick={playPauseMedia}
+              className="flex cursor-pointer items-center"
+            >
+              {!isVideoPlaying ? (
+                <BsFillPlayFill className="text-5xl text-white" />
+              ) : (
+                <BsFillPauseFill className="text-5xl text-white" />
+              )}
+            </div>
+            <div
+              onClick={mediaBackward}
+              className="flex cursor-pointer items-center"
+            >
+              <AiOutlineBackward className="text-5xl text-white" />
+            </div>
+            <div
+              onClick={mediaForward}
+              className="flex cursor-pointer items-center"
+            >
+              <AiOutlineForward className="text-5xl text-white" />
+            </div>
+            <div className="flex cursor-pointer items-center">
+              <div onClick={mute}>
+                <BsVolumeUp className="text-5xl text-white" />
               </div>
-              <div
-                onClick={mediaBackward}
-                className="flex cursor-pointer items-center"
-              >
-                <AiOutlineBackward />
+              <div>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step=".1"
+                  value={volume}
+                  onChange={volumeHandler}
+                />
               </div>
-              <div
-                onClick={mediaForward}
-                className="flex cursor-pointer items-center"
-              >
-                <AiOutlineForward />
-              </div>
-              <div className="flex cursor-pointer items-center">
-                <div onClick={mute}>
-                  <BsVolumeUp />
-                </div>
-                <div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step=".1"
-                    value={volume}
-                    onChange={volumeHandler}
-                  />
-                </div>
-              </div>
-            </IconContext.Provider>
+            </div>
           </div>
 
           <div className="flex gap-4">
-            <IconContext.Provider value={{ size: "40px", color: "white" }}>
-              <div className="cursor-pointer">
-                <TbPlayerSkipForward />
-              </div>
-              <div className="cursor-pointer" onClick={toggleFullScreen}>
-                <RiFullscreenFill />
-              </div>
-            </IconContext.Provider>
+            <div className="cursor-pointer">
+              <TbPlayerSkipForward className="text-5xl text-white" />
+            </div>
+            <div className="cursor-pointer" onClick={toggleFullScreen}>
+              <RiFullscreenFill className="text-5xl text-white" />
+            </div>
           </div>
         </div>
       </div>
