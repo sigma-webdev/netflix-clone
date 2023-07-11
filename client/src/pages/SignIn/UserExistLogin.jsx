@@ -11,7 +11,7 @@ const UserExistLogin = () => {
   const email = localStorage.getItem("netflixCloneEmail");
   const SIGN_IN_LOADING = useSelector((state) => state.auth.loading);
 
-  async function handleSignIn(e) {
+  const handleSignIn = async (e) => {
     e.preventDefault();
 
     // adding all the input in form
@@ -35,7 +35,7 @@ const UserExistLogin = () => {
     ) {
       navigate("/signup/checkplan");
     } else if (!userData.success) return;
-  }
+  };
 
   return (
     <SignUpLayout>

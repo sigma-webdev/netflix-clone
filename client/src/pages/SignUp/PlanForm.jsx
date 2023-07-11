@@ -38,10 +38,10 @@ const PlanForm = () => {
     razorpay_signature: "",
   };
 
-  async function handlesubmit(e) {
+  const handlesubmit = async (e) => {
     await dispatch(GET_RAZORPAY_KEY());
     await dispatch(CREATE_SUBSCRIPTION({ planName: plan }));
-  }
+  };
 
   function razorpayPaymentModel() {
     const options = {
@@ -87,36 +87,36 @@ const PlanForm = () => {
 
   return (
     <SignUpLayout>
-      <div className=" max-w-[1020px]  m-auto mt-10 mb-28">
+      <div className=" m-auto  mb-28 mt-10 max-w-[1020px]">
         <p className="text-[#333]">
           STEP <span className="font-bold">1</span> OF {""}
           <span className="font-bold">3</span>
         </p>
-        <p className="text-[#333] text-3xl  mb-3 font-bold">
+        <p className="mb-3 text-3xl  font-bold text-[#333]">
           Choose the plan that’s right for you
         </p>
         <ul>
-          <li className="text-lg text-[#333]   font-semibold mb-2 flex gap-2">
+          <li className="mb-2 flex   gap-2 text-lg font-semibold text-[#333]">
             <AiOutlineCheck /> Watch all you want. Ad-free..{" "}
           </li>
-          <li className="text-lg text-[#333] mb-2 flex gap-2 font-semibold">
+          <li className="mb-2 flex gap-2 text-lg font-semibold text-[#333]">
             <AiOutlineCheck /> Everything on Netflix for one low price.
           </li>
-          <li className="text-lg text-[#333] mb-2 flex gap-2 font-semibold">
+          <li className="mb-2 flex gap-2 text-lg font-semibold text-[#333]">
             <AiOutlineCheck /> No ads and no extra fees. Ever.
           </li>
         </ul>
-        <div className="flex gap-4 justify-between my-5 items-center">
+        <div className="my-5 flex items-center justify-between gap-4">
           {/* PREMIUM */}
           <div
-            className="cursor-pointer  shadow-lg h-[262px] rounded-md border-[1px] border-gray-200 "
+            className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg "
             onClick={() => setPlan("PREMIUM")}
           >
             <div
               className={
                 plan === "PREMIUM"
-                  ? "h-[76] px-3  py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600  to-purple-600"
-                  : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
+                  ? "flex h-[76]  gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600 to-purple-600 px-3  py-4"
+                  : "flex h-[76] gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-4"
               }
             >
               {plan === "PREMIUM" ? <AiOutlineCheckCircle /> : null}
@@ -124,8 +124,8 @@ const PlanForm = () => {
                 <p
                   className={
                     plan === "PREMIUM"
-                      ? "font-bold text-xl text-white "
-                      : "font-bold text-xl"
+                      ? "text-xl font-bold text-white "
+                      : "text-xl font-bold"
                   }
                 >
                   Premium <br /> 649/mo.
@@ -145,14 +145,14 @@ const PlanForm = () => {
           {/* PREMIUM END */}
           {/* STANDARD */}
           <div
-            className="cursor-pointer  shadow-lg h-[262px] rounded-md border-[1px] border-gray-200"
+            className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
             onClick={() => setPlan("STANDARD")}
           >
             <div
               className={
                 plan === "STANDARD"
-                  ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#333e9a]  to-[#a838d7]"
-                  : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500"
+                  ? "flex h-[76] gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#333e9a] to-[#a838d7] px-3  py-4"
+                  : "flex h-[76] gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500 px-3 py-4"
               }
             >
               {plan === "STANDARD" ? <AiOutlineCheckCircle /> : null}
@@ -160,8 +160,8 @@ const PlanForm = () => {
                 <p
                   className={
                     plan === "STANDARD"
-                      ? "font-bold text-xl text-white "
-                      : "font-bold text-xl"
+                      ? "text-xl font-bold text-white "
+                      : "text-xl font-bold"
                   }
                 >
                   Standard <br /> 499/mo.
@@ -181,14 +181,14 @@ const PlanForm = () => {
           {/* STANDARD END */}
           {/* BASIC */}
           <div
-            className="cursor-pointer  shadow-lg h-[262px] rounded-md border-[1px] border-gray-200"
+            className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
             onClick={() => setPlan("BASIC")}
           >
             <div
               className={
                 plan === "BASIC"
-                  ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#343e99]  to-[#6a3bdf]"
-                  : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500"
+                  ? "flex h-[76] gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#343e99] to-[#6a3bdf] px-3  py-4"
+                  : "flex h-[76] gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-4"
               }
             >
               {plan === "BASIC" ? <AiOutlineCheckCircle /> : null}
@@ -196,8 +196,8 @@ const PlanForm = () => {
                 <p
                   className={
                     plan === "BASIC"
-                      ? "font-bold text-xl text-white "
-                      : "font-bold text-xl"
+                      ? "text-xl font-bold text-white "
+                      : "text-xl font-bold"
                   }
                 >
                   Basic <br /> 199/mo.
@@ -217,14 +217,14 @@ const PlanForm = () => {
           {/* BASIC END */}
           {/* MOBILE */}
           <div
-            className="cursor-pointer  shadow-lg h-[262px] rounded-md border-[1px] border-gray-200"
+            className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
             onClick={() => setPlan("MOBILE")}
           >
             <div
               className={
                 plan === "MOBILE"
-                  ? "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#31409a]  to-[#256ad6]"
-                  : "h-[76] px-3 py-4 flex gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500"
+                  ? "flex h-[76] gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-[#31409a] to-[#256ad6] px-3  py-4"
+                  : "flex h-[76] gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-blue-500 to-cyan-500 px-3 py-4"
               }
             >
               {plan === "MOBILE" ? <AiOutlineCheckCircle /> : null}
@@ -232,8 +232,8 @@ const PlanForm = () => {
                 <p
                   className={
                     plan === "MOBILE"
-                      ? "font-bold text-xl text-white "
-                      : "font-bold text-xl"
+                      ? "text-xl font-bold text-white "
+                      : "text-xl font-bold"
                   }
                 >
                   Mobile <br /> 149/mo.
@@ -253,12 +253,12 @@ const PlanForm = () => {
           {/* MOBILE END */}
         </div>
 
-        <p className="text-sm text-gray-500 mb-2">
+        <p className="mb-2 text-sm text-gray-500">
           HD (720p), Full HD (1080p), Ultra HD (4K) and HDR availability subject
           to your internet service and device capabilities. Not all content is
           available in all resolutions. See our Terms of Use for more details.
         </p>
-        <p className="text-sm text-gray-500 mb-2">
+        <p className="mb-2 text-sm text-gray-500">
           Only people who live with you may use your account. Watch on 4
           different devices at the same time with Premium, 2 with Standard, and
           1 with Basic and Mobile.
@@ -267,7 +267,7 @@ const PlanForm = () => {
         <div className="flex justify-center">
           <button
             onClick={() => handlesubmit()}
-            className="mt-3  max-w-[440px] bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl flex items-center justify-center"
+            className="mt-3  flex h-16  w-full  max-w-[440px] items-center justify-center rounded-md bg-[#e50914]  text-xl font-semibold text-white hover:bg-[#f6121d]"
           >
             {buttonLoading ? <BiLoader /> : "Next"}
           </button>
