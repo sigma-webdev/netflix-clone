@@ -57,18 +57,18 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
   };
 
   if (details.contentType === "Movie") {
-    details.content = {
-      contentURL:
+    details.contentMovie = {
+      movieUrl:
         "https://res.cloudinary.com/dp3qsxfn5/video/upload/v1687258296/Default_video_ikitm6.mp4",
     };
 
     // get content video length
-    if (details.content?.contentURL) {
+    if (details.contentMovie?.movieUrl) {
       const contentLength = await getContentLength(
-        details.content?.contentURL,
+        details.contentMovie?.movieUrl,
         next
       );
-      details.content.contentDuration = contentLength;
+      details.contentMovie.movieDuration = contentLength;
     }
   }
 
@@ -281,10 +281,10 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const { thumbnail, trailer, content } = contentData;
+  const { thumbnail, trailer, contentMovie } = contentData;
   if (contentData.length !== 0) {
-    if (content?.contentID) {
-      cloudinaryFileDelete(content?.contentID, next);
+    if (contentMovie?.movieId) {
+      cloudinaryFileDelete(contentMovie?.movieId, next);
     }
 
     if (trailer.length > 0) {
@@ -296,8 +296,8 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
 
     if (thumbnail.length > 0) {
       thumbnail.map((thumbnailObj) => {
-        if (thumbnailObj?.thumbnailID)
-          cloudinaryFileDelete(thumbnailObj.thumbnailID, next, "image");
+        if (thumbnailObj?.thumbnailId)
+          cloudinaryFileDelete(thumbnailObj.thumbnailId, next, "image");
       });
     }
   }
@@ -334,8 +334,8 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
   if (files) {
     // delete pre-existing content
-    if (files.content && contentData.content?.contentID) {
-      cloudinaryFileDelete(contentData.content?.contentID, next);
+    if (files.contentMovie && contentData.contentMovie?.movieId) {
+      cloudinaryFileDelete(contentData.contentMovie?.movieId, next);
     }
 
     // delete pre-existing trailer
@@ -349,18 +349,18 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
 
     if (files.thumbnail && contentData?.thumbnail.length > 0) {
       contentData?.thumbnail.map((thumbObj) => {
-        if (thumbObj.thumbnailID) {
-          cloudinaryFileDelete(thumbObj.thumbnailID, next, "image");
+        if (thumbObj.thumbnailId) {
+          cloudinaryFileDelete(thumbObj.thumbnailId, next, "image");
         }
       });
     }
 
     contentFiles = await cloudinaryFileUpload(files, next);
 
-    if (contentFiles.content) {
-      if (contentFiles.content?.contentID) {
-        contentFiles.content.contentDuration = await getContentLength(
-          contentFiles.content?.contentURL,
+    if (contentFiles.contentMovie) {
+      if (contentFiles.contentMovie?.movieId) {
+        contentFiles.contentMovie.movieDuration = await getContentLength(
+          contentFiles.contentMovie?.movieUrl,
           next
         );
       }
@@ -372,7 +372,6 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
     { $set: { ...body, ...contentFiles } },
     {
       new: true,
-      runValidators: true,
     }
   ).catch((error) => {
     // DELETE File passing particularId
@@ -381,12 +380,12 @@ const httpUpdateById = asyncHandler(async (req, res, next) => {
         cloudinaryFileDelete(trailerObj.trailerId, next)
       );
     }
-    if (contentFiles.content) {
-      cloudinaryFileDelete(contentFiles.content?.contentID, next);
+    if (contentFiles.contentMovie) {
+      cloudinaryFileDelete(contentFiles.contentMovie?.movieId, next);
     }
     if (contentFiles.thumbnail) {
       contentData?.thumbnail.map((thumbObj) =>
-        cloudinaryFileDelete(thumbObj.thumbnailID, next, "image")
+        cloudinaryFileDelete(thumbObj.thumbnailId, next, "image")
       );
     }
 
