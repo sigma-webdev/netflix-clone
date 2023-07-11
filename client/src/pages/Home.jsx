@@ -141,6 +141,7 @@ const Home = () => {
             {faqs.map((item) => {
               return (
                 <AccordianItem
+                  accordianData={item}
                   accordianHandler={accordianHandler}
                   isActive={item.id === activeItem ? true : false}
                   question={item.question}
