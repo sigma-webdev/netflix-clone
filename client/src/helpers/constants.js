@@ -33,12 +33,13 @@ export const convertResponseToContentObject = (data, userId) => {
     director: data.director,
     thumbnailUrl: data.thumbnail[0].thumbnailUrl,
     trailerUrl: data.trailer[0].trailerUrl,
-    contentUrl: data.content.contentURL,
+    contentUrl: data.contentMovie.movieUrl,
+    countryOrigin: data.originCountry,
     genres: data.genres,
-    rating: data.rating,
+    rating: data.maturityRating,
     isLiked: isLiked,
     isDisliked: isDisliked,
-    contentDuration: getFormatedDuration(data.content.contentDuration),
+    contentDuration: getFormatedDuration(data.contentMovie.movieDuration),
     releaseYear: new Date(data.releaseDate).getFullYear(),
   };
 };

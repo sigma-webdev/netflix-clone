@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
-import { convertResponseToContentObject } from "../helpers/constants";
 import { toast } from "react-hot-toast";
+import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
   currentContent: null,
@@ -22,11 +22,12 @@ const initialState = {
   likeDisLikeLoading: false,
 };
 
+// fetch all content
 export const fetchContent = createAsyncThunk(
   "content/fetchContent",
   async (userId) => {
     try {
-      const response = await axiosInstance.get("/contents?contentType=movie");
+      const response = await axiosInstance.get("/contents");
 
       const data = response.data.data.contents;
       const contentsObject = data.map((item) => {
@@ -42,6 +43,7 @@ export const fetchContent = createAsyncThunk(
   }
 );
 
+// fetch content by id
 export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
   async ({ contentId, userId }) => {
@@ -59,6 +61,7 @@ export const fetchContentById = createAsyncThunk(
   }
 );
 
+// fetch content by search text
 export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
   async ({ searchText, userId }) => {
@@ -85,29 +88,7 @@ export const fetchContentBySearch = createAsyncThunk(
   }
 );
 
-export const fetchContentByContentType = createAsyncThunk(
-  "content/fetchContentByCategory",
-  async ({ contentType, userId }) => {
-    try {
-      const response = await axiosInstance.get(
-        `/contents?contentType=${contentType}`
-      );
-
-      const data = response.data.data.contents;
-
-      const contentsObject = data.map((item) => {
-        return convertResponseToContentObject(item, userId);
-      });
-
-      return contentsObject;
-    } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
-    }
-  }
-);
-
+// fetch trending content
 export const fetchContentByTrending = createAsyncThunk(
   "content/fetchContentByTrending",
   async (userId) => {
@@ -128,6 +109,7 @@ export const fetchContentByTrending = createAsyncThunk(
   }
 );
 
+// fetch latest content
 export const fetchContentByLatest = createAsyncThunk(
   "content/fetchContentByLatest",
   async (userId) => {
@@ -148,6 +130,7 @@ export const fetchContentByLatest = createAsyncThunk(
   }
 );
 
+// fetch mostLiked content
 export const fetchContentByMostLiked = createAsyncThunk(
   "content/fetchContentByMostLiked",
   async (userId) => {
@@ -168,6 +151,7 @@ export const fetchContentByMostLiked = createAsyncThunk(
   }
 );
 
+// fetch content by country origin
 export const fetchContentByCountryOrigin = createAsyncThunk(
   "content/fetchContentByCountryOrigin",
   async ({ countryOrigin, userId }) => {
@@ -183,6 +167,7 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
 
       return { countryOrigin, contentsObject };
     } catch (error) {
+      console.log(error);
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
         : toast.error("Failed to load data");
@@ -190,6 +175,7 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
   }
 );
 
+// fetch watch history content
 export const fetchContentByWatchHistory = createAsyncThunk(
   "content/fetchContentByWatch",
   async (userId) => {
@@ -210,6 +196,7 @@ export const fetchContentByWatchHistory = createAsyncThunk(
   }
 );
 
+// add content to watch history
 export const addContentToWatchHistory = createAsyncThunk(
   "content/addContentByWatch",
   async (contentId) => {
@@ -225,6 +212,7 @@ export const addContentToWatchHistory = createAsyncThunk(
   }
 );
 
+// like content
 export const likeContent = createAsyncThunk(
   "content/likeContent",
   async ({ contentId, userId }) => {
@@ -245,6 +233,7 @@ export const likeContent = createAsyncThunk(
   }
 );
 
+// dislike content
 export const dislikeContent = createAsyncThunk(
   "content/dislikeContent",
   async ({ contentId, userId }) => {
@@ -266,13 +255,14 @@ export const dislikeContent = createAsyncThunk(
   }
 );
 
+//content slice
 export const contentSlice = createSlice({
   name: "content",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //fetch all content
+      // Store all content
       .addCase(fetchContent.pending, (state) => {
         state.loading = true;
       })
@@ -286,7 +276,7 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
-      //fetch content by id
+      // Store content by id
       .addCase(fetchContentById.pending, (state) => {
         state.loading = true;
       })
@@ -299,20 +289,7 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
-      //fetch content by contentType
-      .addCase(fetchContentByContentType.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchContentByContentType.fulfilled, (state, action) => {
-        state.filteredContent = action.payload;
-        state.loading = false;
-      })
-      .addCase(fetchContentByContentType.rejected, (state) => {
-        state.filteredContent = [];
-        state.loading = false;
-      })
-
-      //fetch content by search
+      // Store search content
       .addCase(fetchContentBySearch.pending, (state) => {
         state.searchLoading = true;
       })
@@ -325,7 +302,7 @@ export const contentSlice = createSlice({
         state.searchLoading = false;
       })
 
-      //fetch content by trending
+      // Store trending content
       .addCase(fetchContentByTrending.pending, (state) => {
         state.trendingContentLoading = true;
       })
@@ -338,7 +315,7 @@ export const contentSlice = createSlice({
         state.trendingContentLoading = false;
       })
 
-      //fetch content by latest
+      // Store latest content
       .addCase(fetchContentByLatest.pending, (state) => {
         state.latestContentLoading = true;
       })
@@ -351,7 +328,7 @@ export const contentSlice = createSlice({
         state.latestContentLoading = false;
       })
 
-      //fetch content by most liked
+      // Store mostliked content
       .addCase(fetchContentByMostLiked.pending, (state) => {
         state.mostLikedContentLoading = true;
       })
@@ -364,7 +341,7 @@ export const contentSlice = createSlice({
         state.mostLikedContentLoading = false;
       })
 
-      //fetch content by country origin
+      // Store country origin content
       .addCase(fetchContentByCountryOrigin.pending, (state) => {
         state.countryOriginContentLoading = true;
       })
@@ -385,7 +362,7 @@ export const contentSlice = createSlice({
         state.countryOriginContentLoading = false;
       })
 
-      //fetch watch content
+      // Store watch history content
       .addCase(fetchContentByWatchHistory.pending, (state) => {
         state.watchContentLoading = true;
       })
@@ -398,7 +375,7 @@ export const contentSlice = createSlice({
         state.watchContentLoading = false;
       })
 
-      //add watch content
+      // Store watch history content
       .addCase(addContentToWatchHistory.pending, (state) => {
         state.watchContentLoading = true;
       })
@@ -420,7 +397,7 @@ export const contentSlice = createSlice({
         state.watchContentLoading = false;
       })
 
-      //like content
+      // Update liked content in store
       .addCase(likeContent.pending, (state) => {
         state.likeDisLikeLoading = true;
       })
@@ -468,7 +445,7 @@ export const contentSlice = createSlice({
         state.likeDisLikeLoading = false;
       })
 
-      //dislike content
+      // Update disliked content in store
       .addCase(dislikeContent.pending, (state) => {
         state.likeDisLikeLoading = true;
       })

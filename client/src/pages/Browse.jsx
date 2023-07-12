@@ -117,6 +117,13 @@ const Browse = () => {
 
             {/* browse watch content */}
             <ContentRow
+              heading={"Watch List"}
+              loading={watchContentLoading}
+              content={watchedContent}
+            />
+
+            {/* browse watch content */}
+            <ContentRow
               heading={"Continue Watching"}
               loading={watchContentLoading}
               content={watchedContent}
