@@ -183,9 +183,9 @@ const VideoController = ({ contentURL, thumbnailURL }) => {
             </div>
 
             {/* fullscreen button */}
-            <div className="cursor-pointer" onClick={fullScreenHandler}>
+            <button className="cursor-pointer" onClick={fullScreenHandler}>
               <RiFullscreenFill className="text-3xl text-white md:text-4xl lg:text-5xl" />
-            </div>
+            </button>
           </div>
         </div>
       </div>
