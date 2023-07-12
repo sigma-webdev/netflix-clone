@@ -14,7 +14,7 @@ const AdminManagePlans = () => {
   const allPlans = useSelector((state) => state.plans.allPlans);
   const updateLoader = useSelector((state) => state.plans.updateLoader);
   const loading = useSelector((state) => state.plans.loading);
-  console.log(loading, "state");
+  console.log(allPlans, "state");
 
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -223,10 +223,7 @@ const AdminManagePlans = () => {
               <TableLoading colLength={6} />
             ) : allPlans?.data.length === 0 ? (
               <tr>
-                <td
-                  className="px-2 py-6 text-center text-2xl text-red-500"
-                  colSpan={5}
-                >
+                <td className="px-2 py-6 text-center text-red-500" colSpan={5}>
                   No Plans Found
                 </td>
               </tr>
@@ -242,7 +239,7 @@ const AdminManagePlans = () => {
                   >
                     <td className="text-center">{index + 1}</td>
                     <td className="text-center">{plan.planName}</td>
-                    <td className="text-center">₹ {plan.amount}</td>
+                    <td className="text-center">{plan.amount}</td>
                     <td className="px-10 py-2 text-start">
                       {plan.description}
                     </td>
