@@ -1,5 +1,5 @@
 const CustomError = require("../utils/customError.js");
-const Content = require("../model/content.schema.js");
+const contentModel = require("../model/content.schema.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const getContentLength = require("../utils/getVideoLength.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
@@ -98,7 +98,7 @@ const createContent = asyncHandler(async (req, res, next) => {
   }
 
   // create mongoose
-  const contentDetails = new Content(details);
+  const contentDetails = new contentModel(details);
 
   const contentData = await contentDetails.save();
 
@@ -182,7 +182,7 @@ const getContent = asyncHandler(async (req, res, next) => {
   }
 
   // pagination
-  const totalContents = await Content.find(query).countDocuments();
+  const totalContents = await contentModel.find(query).countDocuments();
 
   const result = {};
 
@@ -210,7 +210,8 @@ const getContent = asyncHandler(async (req, res, next) => {
   // pass total pages
   result.totalPages = Math.ceil(totalContents / LIMIT);
   // find all content and search all content
-  result.contents = await Content.find(query)
+  result.contents = await contentModel
+    .find(query)
     .skip(startIndex)
     .limit(LIMIT)
     .sort(
@@ -241,7 +242,7 @@ const getContent = asyncHandler(async (req, res, next) => {
 const getContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
-  const contentData = await Content.findById(contentId);
+  const contentData = await contentModel.findById(contentId);
 
   if (!contentData) {
     return next(
@@ -273,7 +274,7 @@ const deleteContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   // find content with id
-  const contentData = await Content.findByIdAndDelete(contentId);
+  const contentData = await contentModel.findByIdAndDelete(contentId);
 
   if (!contentData) {
     return next(
@@ -321,7 +322,7 @@ const updateContentById = asyncHandler(async (req, res, next) => {
   const { body, files } = req;
 
   // check for the availability of content
-  const contentData = await Content.findById(contentId);
+  const contentData = await contentModel.findById(contentId);
 
   if (!contentData) {
     return next(
@@ -367,30 +368,32 @@ const updateContentById = asyncHandler(async (req, res, next) => {
     }
   }
 
-  const updatedData = await Content.findByIdAndUpdate(
-    contentId,
-    { $set: { ...body, ...contentFiles } },
-    {
-      new: true,
-    }
-  ).catch((error) => {
-    // DELETE File passing particularId
-    if (contentFiles.trailer) {
-      contentData?.trailer.map((trailerObj) =>
-        cloudinaryFileDelete(trailerObj.trailerId, next)
-      );
-    }
-    if (contentFiles.contentMovie) {
-      cloudinaryFileDelete(contentFiles.contentMovie?.movieId, next);
-    }
-    if (contentFiles.thumbnail) {
-      contentData?.thumbnail.map((thumbObj) =>
-        cloudinaryFileDelete(thumbObj.thumbnailId, next, "image")
-      );
-    }
+  const updatedData = await contentModel
+    .findByIdAndUpdate(
+      contentId,
+      { $set: { ...body, ...contentFiles } },
+      {
+        new: true,
+      }
+    )
+    .catch((error) => {
+      // DELETE File passing particularId
+      if (contentFiles.trailer) {
+        contentData?.trailer.map((trailerObj) =>
+          cloudinaryFileDelete(trailerObj.trailerId, next)
+        );
+      }
+      if (contentFiles.contentMovie) {
+        cloudinaryFileDelete(contentFiles.contentMovie?.movieId, next);
+      }
+      if (contentFiles.thumbnail) {
+        contentData?.thumbnail.map((thumbObj) =>
+          cloudinaryFileDelete(thumbObj.thumbnailId, next, "image")
+        );
+      }
 
-    return next(new CustomError(`File not able to save!- ${error}`, 500));
-  });
+      return next(new CustomError(`File not able to save!- ${error}`, 500));
+    });
 
   if (!updatedData) {
     return next(
@@ -417,7 +420,7 @@ const contentLikes = asyncHandler(async (req, res, next) => {
   const { contentId, action } = req.params;
   const { id: userId } = req.user;
 
-  const content = await Content.findById(contentId);
+  const content = await contentModel.findById(contentId);
 
   if (!content) {
     return next(new CustomError("Content is not available", 404));

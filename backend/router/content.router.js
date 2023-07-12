@@ -24,6 +24,9 @@ contentRoute
   );
 
 // create and get content
+// making sure the user is authenticated with jwtAuth //middleware function
+// making sure the user is authorize with AuthorizeRoles //middleware function
+
 contentRoute
   .route("/")
   .post(jwtAuth, authorizeRoles("ADMIN"), createContent)
