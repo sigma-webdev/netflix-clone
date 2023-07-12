@@ -8,25 +8,24 @@ const initialState = {
   allPlans: [],
   updatePlan: false,
 };
+
 export const getAllPlans = createAsyncThunk(
   "adminPlans/getAllPlans",
-  async (data, { rejectWithValue }) => {
+  async () => {
     try {
       let response = await axiosInstance.get("/payment/plan/");
       return response?.data;
     } catch (error) {
-      console.log(error);
-      rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const createPlan = createAsyncThunk(
   "adminPlans/createPlan",
-  async (
-    { planName, amount, description, active },
-    { rejectWithValue, dispatch }
-  ) => {
+  async ({ planName, amount, description, active }, { dispatch }) => {
     try {
       let response = await axiosInstance.post("/payment/plan", {
         planName,
@@ -37,15 +36,16 @@ export const createPlan = createAsyncThunk(
       dispatch(getAllPlans());
       return response.data;
     } catch (error) {
-      console.log(error);
-      rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to create plan");
     }
   }
 );
 
 export const updatePlanStatus = createAsyncThunk(
   "adminPlans/updatePlanStatus",
-  async ({ id, active }, { rejectWithValue, dispatch }) => {
+  async ({ id, active }, { dispatch }) => {
     console.log(id, active);
     try {
       let response = await axiosInstance.patch("/payment/plan/" + id, {
@@ -55,22 +55,25 @@ export const updatePlanStatus = createAsyncThunk(
       dispatch(getAllPlans());
       return response.data;
     } catch (error) {
-      rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to update plan status");
     }
   }
 );
 
 export const deletePlan = createAsyncThunk(
   "adminPlans/deletePlan",
-  async (id, { rejectWithValue, dispatch }) => {
+  async (id, { dispatch }) => {
     console.log(id);
     try {
       let response = axiosInstance.delete("/payment/plan/" + id);
       dispatch(getAllPlans());
       return response.data;
     } catch (error) {
-      console.log(error);
-      rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to delete plan");
     }
   }
 );

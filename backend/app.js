@@ -65,7 +65,12 @@ app.get("/health-check", (req, res) => {
 
 // Default catch all route - 404
 app.all("*", (_req, res) => {
-  res.send("OOPS!!! 404 Not Found");
+  res.status(404).json({
+    statusCode: 404,
+    success: false,
+    message: "OOPS!!! 404 Not Found",
+    data: null,
+  });
 });
 
 // errorhandler
