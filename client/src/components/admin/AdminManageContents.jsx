@@ -112,12 +112,21 @@ const AdminManageContents = () => {
   // add new content form submit handler function 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isLoading) {
+      toast.error("wait until the current ongoing process end");
+      return;
+    }
     if (newContentData.cast.length === 0) {
       toast.error("cast field cannot be empty field");
       return;
     }
-    if (isLoading) {
-      toast.error("wait until the current ongoing process end");
+
+    if (newContentData.name.length < 5) {
+      toast.error("please add name with atleast 5 characters");
+      return;
+    }
+    if (newContentData.contentType === "Series") {
+      toast.error("series feature will be coming soon, please add only content type movie");
       return;
     }
     if(newContentData.language === "" || newContentData.genres === "" || newContentData.originCountry === "" || newContentData.maturityRating === ""){

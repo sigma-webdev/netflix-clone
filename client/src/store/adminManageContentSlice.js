@@ -204,16 +204,16 @@ export const adminSlice = createSlice({
 
       // add new content
       .addCase(addNewContent.pending, (state) => {
-        state.contentLoading = true;
+        state.isLoading = true;
       })
       .addCase(addNewContent.fulfilled, (state, action) => {
-        toast.success("content added successfully ✅");
         state.allContent = [...state.allContent, action.payload];
-        state.contentLoading = false;
+        state.isLoading = false;
+        toast.success("content added successfully ✅");
       })
       .addCase(addNewContent.rejected, (state) => {
         state.currentContent = null;
-        state.contentLoading = false;
+        state.isLoading = false;
       })
 
       // delete content by id
