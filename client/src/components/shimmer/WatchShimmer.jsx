@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { MdKeyboardBackspace } from "react-icons/md";
 import { AiOutlineBackward, AiOutlineForward } from "react-icons/ai";
 
-const VideoShimmer = () => {
+const WatchShimmer = () => {
   return (
     <div className="relative h-screen w-full bg-netflix-black">
       {/* video */}
@@ -73,4 +73,4 @@ const VideoShimmer = () => {
   );
 };
 
-export default VideoShimmer;
+export default WatchShimmer;
