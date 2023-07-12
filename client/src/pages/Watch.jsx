@@ -3,7 +3,7 @@ import VideoController from "../components/video/VideoController";
 import { fetchContentById } from "../store/contentSlice";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import VideoShimmer from "../components/shimmer/VideoShimmer";
+import WatchShimmer from "../components/shimmer/WatchShimmer";
 
 const Watch = () => {
   const { contentId } = useParams();
@@ -21,7 +21,7 @@ const Watch = () => {
     <div>
       {LOADING ? (
         <div className="h-screen">
-          <VideoShimmer />
+          <WatchShimmer />
         </div>
       ) : (
         currentContent && (
