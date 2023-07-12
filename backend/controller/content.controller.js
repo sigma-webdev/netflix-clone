@@ -7,13 +7,13 @@ const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
 const likeAndDislike = require("../utils/likeDislike.js");
 
 /********************
- * @httpPostContent
+ * @createContent
  * @route http://localhost:8081/api/v1/content/
  * @description  controller to create the content
  * @parameters {request body object}
  * @return { Object } content object
  ********************/
-const httpPostContent = asyncHandler(async (req, res, next) => {
+const createContent = asyncHandler(async (req, res, next) => {
   // get required field from body
   const {
     name,
@@ -117,13 +117,13 @@ const httpPostContent = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpGetContent
- * @route http://localhost:8081/api/v1/content/
- * @description  controller to create the content
+ * @getContent
+ * @route http://localhost:8081/api/v1/contents/
+ * @description  controller to get all the contents that are store in the database
  * @parameters {string, object, enum, array}
  * @return { Object } content object
  ********************/
-const httpGetContent = asyncHandler(async (req, res, next) => {
+const getContent = asyncHandler(async (req, res, next) => {
   const {
     search,
     contentType,
@@ -232,13 +232,13 @@ const httpGetContent = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpGetContentById
+ * @getContentById
  * @route http://localhost:8081/api/v1/content/id
  * @description  controller to create the content
  * @parameters {Object id}
  * @return { Object } content object
  ********************/
-const httpGetContentById = asyncHandler(async (req, res, next) => {
+const getContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
 
   const contentData = await Content.findById(contentId);
@@ -262,13 +262,13 @@ const httpGetContentById = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpDeleteById
+ * @deleteContentById
  * @route http://localhost:8081/api/v1/content/id
  * @description  controller to delete the content
  * @parameters {Object id}
  * @return { Object } content object
  ********************/
-const httpDeleteById = asyncHandler(async (req, res, next) => {
+const deleteContentById = asyncHandler(async (req, res, next) => {
   // extract id
   const { contentId } = req.params;
 
@@ -310,13 +310,13 @@ const httpDeleteById = asyncHandler(async (req, res, next) => {
 });
 
 /********************
- * @httpUpdateById
+ * @updateContentById
  * @route http://localhost:8081/api/v1/content/id
  * @description  controller to update the content
  * @parameters {Object id}
  * @return { Object } content object
  ********************/
-const httpUpdateById = asyncHandler(async (req, res, next) => {
+const updateContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
   const { body, files } = req;
 
@@ -435,10 +435,10 @@ const contentLikes = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = {
-  httpPostContent,
-  httpGetContent,
-  httpGetContentById,
-  httpDeleteById,
-  httpUpdateById,
+  createContent,
+  getContent,
+  getContentById,
+  deleteContentById,
+  updateContentById,
   contentLikes,
 };
