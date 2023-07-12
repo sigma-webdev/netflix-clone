@@ -58,6 +58,10 @@ const AdminContentView = () => {
       toast.error("wait until the current ongoing process end");
       return;
     }
+    if (editedContentData.contentType === "Series") {
+      toast.error("series feature will be coming soon, please add only content type movie");
+      return;
+    }
 
     if (editedContentData.cast.length === 0) {
       toast.error("cast cannot be empty field❗");
@@ -504,7 +508,7 @@ const AdminContentView = () => {
                           <video
                             width="520"
                             height="440"
-                            src={contentData.content.contentURL}
+                            src={contentData.contentMovie.movieUrl}
                             controls
                           ></video>
                           <div>
