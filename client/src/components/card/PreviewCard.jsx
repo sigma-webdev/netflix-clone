@@ -4,11 +4,19 @@ import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addContentToWatchHistory,
+  addContentToWatchList,
+  deleteContentFromWatchList,
   dislikeContent,
   likeContent,
 } from "../../store/contentSlice";
 import DetailsCard from "./DetailsCard";
-import { AiFillDislike, AiFillLike, AiOutlineArrowDown } from "react-icons/ai";
+import {
+  AiFillDislike,
+  AiFillLike,
+  AiOutlineArrowDown,
+  AiOutlineMinus,
+  AiOutlinePlus,
+} from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
 
 const PreviewCard = ({
@@ -25,12 +33,12 @@ const PreviewCard = ({
   isDisliked,
   releaseYear,
   contentDuration,
+  wachted,
 }) => {
   const userId = useSelector((state) => state.auth.userData._id);
-  const likeDisLikeLoading = useSelector(
-    (state) => state.content.likeDisLikeLoading
+  const { likeDisLikeLoading, watchHistoryLoading } = useSelector(
+    (state) => state.content
   );
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,10 +49,8 @@ const PreviewCard = ({
 
     if (media.paused) {
       media.play();
-      setIsVideoPlaying(true);
     } else {
       media.pause();
-      setIsVideoPlaying(false);
       media.load();
     }
   }
@@ -60,15 +66,24 @@ const PreviewCard = ({
   };
 
   const likeContentHanlder = () => {
-    dispatch(likeContent({ contentId, userId: userId }));
+    dispatch(likeContent({ contentId, userId }));
   };
 
   const dislikeContentHanlder = () => {
-    dispatch(dislikeContent({ contentId, userId: userId }));
+    dispatch(dislikeContent({ contentId, userId }));
+  };
+
+  const watchListHandler = () => {
+    if (wachted) {
+      dispatch(deleteContentFromWatchList(contentId));
+    } else {
+      dispatch(addContentToWatchList(contentId));
+    }
   };
 
   const handlePlay = (contentId) => {
     dispatch(addContentToWatchHistory(contentId));
+
     navigate(`/watch/${contentId}`);
   };
 
@@ -123,6 +138,17 @@ const PreviewCard = ({
                   isDisliked ? "text-red-500" : "text-white hover:text-red-500"
                 } text-xl`}
               />
+            </button>
+            <button
+              onClick={watchListHandler}
+              disabled={watchHistoryLoading}
+              className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+            >
+              {wachted ? (
+                <AiOutlineMinus className="text-xl" />
+              ) : (
+                <AiOutlinePlus className="text-xl" />
+              )}
             </button>
           </div>
           <button

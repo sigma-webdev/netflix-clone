@@ -8,6 +8,7 @@ import {
   fetchContentByMostLiked,
   fetchContentByTrending,
   fetchContentByWatchHistory,
+  fetchContentByWatchList,
 } from "../store/contentSlice";
 import { RiPlayMiniFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
@@ -24,13 +25,15 @@ const Browse = () => {
     latestContent,
     mostLikedContent,
     contentByCountryOrigin,
-    watchedContent,
+    watchHistoryContent,
+    watchListContent,
     loading,
     trendingContentLoading,
     latestContentLoading,
     mostLikedContentLoading,
     countryOriginContentLoading,
-    watchContentLoading,
+    watchHistoryLoading,
+    watchListLoading,
     searchLoading,
   } = useSelector((state) => state.content);
 
@@ -52,6 +55,7 @@ const Browse = () => {
       })
     );
     dispatch(fetchContentByWatchHistory(userId));
+    dispatch(fetchContentByWatchList(userId));
   }, [dispatch]);
 
   return (
@@ -59,7 +63,6 @@ const Browse = () => {
       <div id="content-details" className="relative"></div>
       <div id="browse-content">
         {/* browse search content */}
-
         {searchContent && (
           <div className="bg-netflix-blue pt-32 text-white">
             <div className="px-4 md:px-8">
@@ -115,18 +118,19 @@ const Browse = () => {
               )}
             </div>
 
-            {/* browse watch content */}
+            {/* browse watch list */}
             <ContentRow
               heading={"Watch List"}
-              loading={watchContentLoading}
-              content={watchedContent}
+              loading={watchListLoading}
+              content={watchListContent}
+              wachted={true}
             />
 
             {/* browse watch content */}
             <ContentRow
               heading={"Continue Watching"}
-              loading={watchContentLoading}
-              content={watchedContent}
+              loading={watchHistoryLoading}
+              content={watchHistoryContent}
             />
 
             {/* browse trending content */}
