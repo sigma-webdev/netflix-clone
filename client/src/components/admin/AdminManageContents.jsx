@@ -18,7 +18,7 @@ const AdminManageContents = () => {
     contentType: "",
     genres: [],
     director: "",
-    rating: "",
+    maturityRating: "",
     language: "",
     cast: [],
     releaseDate: "",
@@ -49,6 +49,7 @@ const AdminManageContents = () => {
     setIsOpen(val);
   };
 
+  console.log(allContents)
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "genres") {
@@ -107,14 +108,29 @@ const AdminManageContents = () => {
     }
   };
 
+
+  // add new content form submit handler function 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isLoading) {
+      toast.error("wait until the current ongoing process end");
+      return;
+    }
     if (newContentData.cast.length === 0) {
       toast.error("cast field cannot be empty field");
       return;
     }
-    if (isLoading) {
-      toast.error("wait until the current ongoing process end");
+
+    if (newContentData.name.length < 5) {
+      toast.error("please add name with atleast 5 characters");
+      return;
+    }
+    if (newContentData.contentType === "Series") {
+      toast.error("series feature will be coming soon, please add only content type movie");
+      return;
+    }
+    if(newContentData.language === "" || newContentData.genres === "" || newContentData.originCountry === "" || newContentData.maturityRating === ""){
+      toast.error("all the field must be filled");
       return;
     }
     setIsLoading(true);
@@ -125,7 +141,7 @@ const AdminManageContents = () => {
       contentType: "",
       genres: [],
       director: "",
-      rating: "",
+      maturityRating: "",
       language: "",
       cast: [],
       releaseDate: "",
@@ -142,7 +158,7 @@ const AdminManageContents = () => {
       contentType: "",
       genres: [],
       director: "",
-      rating: "",
+      maturityRating: "",
       language: "",
       cast: [],
       releaseDate: "",
@@ -273,15 +289,20 @@ const AdminManageContents = () => {
                 value={newContentData.director}
                 onChange={handleInputChange}
               />
-              <label htmlFor="rating"> Rating:</label>
-              <input
+              <label htmlFor="maturityRating"> Maturity Rating:</label>
+              <select
                 className="rounded border bg-transparent p-2"
-                type="text"
-                required
-                name="rating"
-                value={newContentData.rating}
+                name="maturityRating"
+                value={newContentData.maturityRating}
                 onChange={handleInputChange}
-              />
+              >
+                <option value="">Select an option</option>
+                <option value="U">U - suitable for children and persons of all ages</option>
+                <option value="U/A 7+">U/A 7+ - suitable for children 7 and above under parental guidance for persons under age of 7</option>
+                <option value="U/A 13+">U/A 13+ - Suitable for persons aged 13 and above and under parental guidance for people under age of 13</option>
+                <option value="U/A 16 +">U/A 16 + - Suitable for persons aged 16 and above and under parental guidance for people under age of 16</option>
+                <option value="A">A - Content restricted to adults</option>
+              </select>
               <label htmlFor="language"> Language:</label>
               <select
                 className="rounded border bg-transparent p-2"
@@ -328,7 +349,7 @@ const AdminManageContents = () => {
                 disabled={isLoading}
                 className="flex items-center justify-center gap-4 rounded bg-[#E50914] py-2 text-white hover:bg-[#d4252e]"
               >
-                Add Content{" "}
+                Add Content
                 {isLoading && (
                   <div role="status">
                     <svg
@@ -386,7 +407,7 @@ const AdminManageContents = () => {
           </div>
         </div>
 
-        {allContents.contents ? (
+        {allContents?.contents ? (
           <>
             <table className="w-5/6 table-auto overflow-scroll text-gray-200">
               <thead className="text-left">
