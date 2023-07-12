@@ -47,9 +47,9 @@ const cloudinaryFileUpload = async (files, next) => {
           }
         );
 
-        filesDetails["content"] = {
-          contentURL: contentTemp.secure_url,
-          contentID: contentTemp.public_id,
+        filesDetails["contentMovie"] = {
+          movieUrl: contentTemp.secure_url,
+          movieId: contentTemp.public_id,
         };
       }
     }
@@ -70,7 +70,7 @@ const cloudinaryFileUpload = async (files, next) => {
         filesDetails["thumbnail"] = [
           {
             thumbnailUrl: thumbnailTemp.secure_url,
-            thumbnailID: thumbnailTemp.public_id,
+            thumbnailId: thumbnailTemp.public_id,
           },
         ];
       }
