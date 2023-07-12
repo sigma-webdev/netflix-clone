@@ -63,9 +63,9 @@ const WatchShimmer = () => {
             </div>
 
             {/* fullscreen button */}
-            <div className="cursor-pointer">
+            <button className="cursor-pointer">
               <RiFullscreenFill className="text-3xl text-white md:text-4xl lg:text-5xl" />
-            </div>
+            </button>
           </div>
         </div>
       </div>
