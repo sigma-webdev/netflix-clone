@@ -1,4 +1,4 @@
-const PreviewShimmer = () => {
+const VideoShimmer = () => {
   return (
     <div
       role="status"
@@ -18,4 +18,4 @@ const PreviewShimmer = () => {
   );
 };
 
-export default PreviewShimmer;
+export default VideoShimmer;

@@ -1,16 +1,16 @@
 import { RiFullscreenFill } from "react-icons/ri";
-import PreviewShimmer from "./PreviewShimmer";
 import { BsFillPlayFill, BsVolumeUp } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { MdKeyboardBackspace } from "react-icons/md";
 import { AiOutlineBackward, AiOutlineForward } from "react-icons/ai";
+import VideoShimmer from "./VideoShimmer";
 
 const WatchShimmer = () => {
   return (
     <div className="relative h-screen w-full bg-netflix-black">
       {/* video */}
       <div className="absolute h-screen w-full">
-        <PreviewShimmer />
+        <VideoShimmer />
       </div>
 
       <div className="absolute z-10 box-border flex h-screen w-full flex-col justify-between p-4 opacity-0 transition delay-150 duration-300 ease-out hover:opacity-100">
