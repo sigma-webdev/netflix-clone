@@ -10,9 +10,9 @@ import {
   fetchContentByWatchHistory,
 } from "../store/contentSlice";
 import { RiPlayMiniFill } from "react-icons/ri";
-import PreviewShimmer from "../components/shimmer/PreviewShimmer";
 import { Link } from "react-router-dom";
 import ContentRow from "../components/ContentRow";
+import VideoShimmer from "../components/shimmer/VideoShimmer";
 
 const Browse = () => {
   const dispatch = useDispatch();
@@ -83,7 +83,7 @@ const Browse = () => {
 
               <div className="h-[400px] w-full md:h-[800px]">
                 {loading ? (
-                  <PreviewShimmer />
+                  <VideoShimmer />
                 ) : (
                   content &&
                   content.length !== 0 && (
