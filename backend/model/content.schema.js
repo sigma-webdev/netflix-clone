@@ -68,10 +68,19 @@ const contentSchema = new Schema(
       type: String,
       required: [true, "Director is required"],
     },
-    rating: {
+
+    /**
+     * U - suitable for children and persons of all ages
+     * U/A 7+  - suitable for children 7 and above under parental guidance for persons under age of 7
+     * U/A 13+ - Suitable for persons aged 13 and above and under parental guidance for people under age of 13
+     * U/A 16 + - Suitable for persons aged 16 and above and under parental guidance for people under age of 16
+     * A - Content restricted to adults
+     */
+    maturityRating: {
       type: String,
-      required: true,
+      enum: ["U", "U/A 7+", "U/A 13+", "U/A 16+", "A"],
     },
+
     language: {
       type: String,
       enum: [
@@ -123,6 +132,7 @@ const contentSchema = new Schema(
       type: String,
       enum: ["India", "USA", "Korea", "Japan", "German", "Spain"],
     },
+
     trending: {
       type: Number,
       default: 0,
@@ -132,8 +142,7 @@ const contentSchema = new Schema(
   { timestamps: true }
 );
 
-contentSchema.index("name");
-
+// mongoose pre method - to get likes and dislikes Count
 contentSchema.pre("save", function (next) {
   this.likesCount = this.likes.length;
   this.disLikesCount = this.dislikes.length;
@@ -141,5 +150,6 @@ contentSchema.pre("save", function (next) {
   return next();
 });
 
+// convert schema and change to Model and export
 const contentModel = mongoose.model("Content", contentSchema);
 module.exports = contentModel;
