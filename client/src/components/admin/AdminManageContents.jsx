@@ -386,7 +386,7 @@ const AdminManageContents = () => {
           </div>
         </div>
 
-        {allContents.contents ? (
+        {allContents?.contents ? (
           <>
             <table className="w-5/6 table-auto overflow-scroll text-gray-200">
               <thead className="text-left">
