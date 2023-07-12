@@ -1,63 +1,19 @@
-import { RiFullscreenFill } from "react-icons/ri";
-import PreviewShimmer from "./PreviewShimmer";
-import { IconContext } from "react-icons/lib";
-import { TbPlayerSkipForward } from "react-icons/tb";
-import { BsFillPlayFill, BsVolumeUp } from "react-icons/bs";
-import { Link } from "react-router-dom";
-import { MdKeyboardBackspace } from "react-icons/md";
-import { AiOutlineBackward, AiOutlineForward } from "react-icons/ai";
-
 const VideoShimmer = () => {
   return (
-    <div className="relative h-screen bg-netflix-black">
-      <div className="absolute z-10 m-auto box-border h-screen w-[98%] opacity-0 transition delay-150 duration-300 ease-out hover:opacity-100">
-        <div className="absolute left-4 top-4">
-          <IconContext.Provider value={{ size: "40px", color: "white" }}>
-            <Link to="/browse">
-              <MdKeyboardBackspace />
-            </Link>
-          </IconContext.Provider>
-        </div>
-        <div className="absolute bottom-16 left-4 h-1 w-full rounded bg-white">
-          <div className={`h-full w-[0px] rounded bg-slate-500`}></div>
-        </div>
-        <div className="absolute bottom-4 left-4 flex w-full items-center justify-between gap-4">
-          <div className="flex gap-4">
-            <IconContext.Provider value={{ size: "40px", color: "white" }}>
-              <div className="flex cursor-pointer items-center">
-                <BsFillPlayFill />
-              </div>
-              <div className="flex cursor-pointer items-center">
-                <AiOutlineBackward />
-              </div>
-              <div className="flex cursor-pointer items-center">
-                <AiOutlineForward />
-              </div>
-              <div className="flex cursor-pointer items-center">
-                <div>
-                  <BsVolumeUp />
-                </div>
-                <div>
-                  <input type="range" min="0" max="1" step=".1" />
-                </div>
-              </div>
-            </IconContext.Provider>
-          </div>
-
-          <div className="flex gap-4">
-            <IconContext.Provider value={{ size: "40px", color: "white" }}>
-              <div className="cursor-pointer">
-                <TbPlayerSkipForward />
-              </div>
-              <div className="cursor-pointer">
-                <RiFullscreenFill />
-              </div>
-            </IconContext.Provider>
-          </div>
-        </div>
-      </div>
-
-      <PreviewShimmer />
+    <div
+      role="status"
+      className="flex h-full w-full animate-pulse items-center justify-center rounded-lg bg-gray-400"
+    >
+      <svg
+        className="h-12 w-12 text-gray-200"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        fill="currentColor"
+        viewBox="0 0 384 512"
+      >
+        <path d="M361 215C375.3 223.8 384 239.3 384 256C384 272.7 375.3 288.2 361 296.1L73.03 472.1C58.21 482 39.66 482.4 24.52 473.9C9.377 465.4 0 449.4 0 432V80C0 62.64 9.377 46.63 24.52 38.13C39.66 29.64 58.21 29.99 73.03 39.04L361 215z" />
+      </svg>
+      <span className="sr-only">Loading...</span>
     </div>
   );
 };
