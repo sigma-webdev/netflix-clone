@@ -1,5 +1,5 @@
 const CustomError = require("../utils/customError.js");
-const contentModel = require("../model/content.schema.js");
+const contentModel = require("../models/content.model.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const getContentLength = require("../utils/getVideoLength.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
