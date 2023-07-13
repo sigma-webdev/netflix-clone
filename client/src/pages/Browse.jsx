@@ -123,7 +123,7 @@ const Browse = () => {
               heading={"Watch List"}
               loading={watchListLoading}
               content={watchListContent}
-              wachted={true}
+              watch={true}
             />
 
             {/* browse watch content */}

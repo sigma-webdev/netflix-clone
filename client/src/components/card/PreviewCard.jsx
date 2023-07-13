@@ -33,7 +33,7 @@ const PreviewCard = ({
   isDisliked,
   releaseYear,
   contentDuration,
-  wachted,
+  watch,
 }) => {
   const userId = useSelector((state) => state.auth.userData._id);
   const { likeDisLikeLoading, watchHistoryLoading } = useSelector(
@@ -74,15 +74,15 @@ const PreviewCard = ({
   };
 
   const watchListHandler = () => {
-    if (wachted) {
-      dispatch(deleteContentFromWatchList(contentId));
+    if (watch) {
+      dispatch(deleteContentFromWatchList({ contentId }));
     } else {
-      dispatch(addContentToWatchList(contentId));
+      dispatch(addContentToWatchList({ contentId }));
     }
   };
 
   const handlePlay = (contentId) => {
-    dispatch(addContentToWatchHistory(contentId));
+    dispatch(addContentToWatchHistory({ contentId }));
 
     navigate(`/watch/${contentId}`);
   };
@@ -144,7 +144,7 @@ const PreviewCard = ({
               disabled={watchHistoryLoading}
               className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
             >
-              {wachted ? (
+              {watch ? (
                 <AiOutlineMinus className="text-xl" />
               ) : (
                 <AiOutlinePlus className="text-xl" />
