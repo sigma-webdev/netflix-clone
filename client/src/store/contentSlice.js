@@ -253,8 +253,8 @@ export const addContentToWatchList = createAsyncThunk(
 );
 
 // delete content to watch list
-export const deleteContentFromWatchList = createAsyncThunk(
-  "content/deleteContentFromWatchList",
+export const removeContentFromWatchList = createAsyncThunk(
+  "content/removeContentFromWatchList",
   async ({ contentId }) => {
     try {
       await axiosInstance.delete(`/users/watch-list/${contentId}`);
@@ -504,19 +504,19 @@ export const contentSlice = createSlice({
       })
 
       // Delete watch list content
-      .addCase(deleteContentFromWatchList.pending, (state) => {
+      .addCase(removeContentFromWatchList.pending, (state) => {
         state.watchListLoading = true;
       })
-      .addCase(deleteContentFromWatchList.fulfilled, (state, action) => {
-        const deletedWatchContentId = action.payload;
+      .addCase(removeContentFromWatchList.fulfilled, (state, action) => {
+        const removedWatchContentId = action.payload;
 
         state.watchListContent = state?.watchListContent?.filter(
-          (item) => item.contentId !== deletedWatchContentId
+          (item) => item.contentId !== removedWatchContentId
         );
 
         state.watchListLoading = false;
       })
-      .addCase(deleteContentFromWatchList.rejected, (state) => {
+      .addCase(removeContentFromWatchList.rejected, (state) => {
         state.watchListContent = [];
         state.watchListLoading = false;
       })

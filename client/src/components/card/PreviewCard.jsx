@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addContentToWatchHistory,
   addContentToWatchList,
-  deleteContentFromWatchList,
+  removeContentFromWatchList,
   dislikeContent,
   likeContent,
 } from "../../store/contentSlice";
@@ -75,7 +75,7 @@ const PreviewCard = ({
 
   const watchListHandler = () => {
     if (watch) {
-      dispatch(deleteContentFromWatchList({ contentId }));
+      dispatch(removeContentFromWatchList({ contentId }));
     } else {
       dispatch(addContentToWatchList({ contentId }));
     }
