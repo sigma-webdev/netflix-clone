@@ -1,11 +1,11 @@
 const express = require("express");
 
 const {
-  httpPostContent,
-  httpGetContent,
-  httpGetContentById,
-  httpDeleteById,
-  httpUpdateById,
+  createContent,
+  getContent,
+  getContentById,
+  deleteContentById,
+  updateContentById,
   contentLikes,
 } = require("../controllers/content.controller.js");
 const jwtAuth = require("../middleware/jwtAuth.js");
@@ -24,14 +24,17 @@ contentRoute
   );
 
 // create and get content
+// making sure the user is authenticated with jwtAuth //middleware function
+// making sure the user is authorize with AuthorizeRoles //middleware function
+
 contentRoute
   .route("/")
-  .post(jwtAuth, authorizeRoles("ADMIN"), httpPostContent)
+  .post(jwtAuth, authorizeRoles("ADMIN"), createContent)
   .get(
     jwtAuth,
     authorizeRoles("ADMIN", "USER"),
     checkUserSubscription,
-    httpGetContent
+    getContent
   );
 
 // perform crud with the provided contentID
@@ -41,8 +44,8 @@ contentRoute
     jwtAuth,
     authorizeRoles("ADMIN", "USER"),
     checkUserSubscription,
-    httpGetContentById
+    getContentById
   )
-  .delete(jwtAuth, authorizeRoles("ADMIN"), httpDeleteById)
-  .put(jwtAuth, authorizeRoles("ADMIN"), httpUpdateById);
+  .delete(jwtAuth, authorizeRoles("ADMIN"), deleteContentById)
+  .put(jwtAuth, authorizeRoles("ADMIN"), updateContentById);
 module.exports = contentRoute;
