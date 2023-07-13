@@ -434,7 +434,7 @@ const AdminManageContents = () => {
               {isContentLoading ? (
                 <TableLoading colLength={7} />
               ) : (
-              allContents?.contents?.length !==0 ?
+             (allContents?.contents && allContents?.contents?.length !==0) ?
                 (
                   allContents.contents.map((content, index) => {
                     return (
