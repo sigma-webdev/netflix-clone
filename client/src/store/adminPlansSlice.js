@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 const initialState = {
   loading: false,
   updateLoader: false,
-  allPlans: [],
+  allPlans: { data: [] },
   updatePlan: false,
 };
 
