@@ -220,7 +220,7 @@ const AdminManagePlans = () => {
           <tbody>
             {loading ? (
               <TableLoading colLength={6} />
-            ) : allPlans?.data.length === 0 ? (
+            ) : allPlans?.data?.length === 0 ? (
               <tr>
                 <td className="px-2 py-6 text-center text-red-500" colSpan={5}>
                   No Plans Found
