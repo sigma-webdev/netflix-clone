@@ -19,7 +19,7 @@ const Browse = () => {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.userData._id);
   const {
-    filteredContent: content,
+    allContent,
     searchContent,
     trendingContent,
     latestContent,
@@ -38,10 +38,10 @@ const Browse = () => {
   } = useSelector((state) => state.content);
 
   useEffect(() => {
-    dispatch(fetchContent(userId));
-    dispatch(fetchContentByTrending(userId));
-    dispatch(fetchContentByLatest(userId));
-    dispatch(fetchContentByMostLiked(userId));
+    dispatch(fetchContent({ userId }));
+    dispatch(fetchContentByTrending({ userId }));
+    dispatch(fetchContentByLatest({ userId }));
+    dispatch(fetchContentByMostLiked({ userId }));
     dispatch(
       fetchContentByCountryOrigin({
         userId: userId,
@@ -54,8 +54,8 @@ const Browse = () => {
         countryOrigin: "India",
       })
     );
-    dispatch(fetchContentByWatchHistory(userId));
-    dispatch(fetchContentByWatchList(userId));
+    dispatch(fetchContentByWatchHistory({ userId }));
+    dispatch(fetchContentByWatchList({ userId }));
   }, [dispatch]);
 
   return (
@@ -88,14 +88,14 @@ const Browse = () => {
                 {loading ? (
                   <VideoShimmer />
                 ) : (
-                  content &&
-                  content.length !== 0 && (
+                  allContent &&
+                  allContent.length !== 0 && (
                     <>
                       <div className="absolute -bottom-1 h-[50px] w-full bg-gradient-to-b from-netflix-blue/0 to-netflix-blue/100 md:h-[100px] lg:h-[200px]"></div>
                       <video
                         className="mx-auto h-[400px] w-full object-cover md:h-[800px]"
-                        src={content[0].trailerUrl}
-                        poster={content[0].thumbnailUrl}
+                        src={allContent[0].trailerUrl}
+                        poster={allContent[0].thumbnailUrl}
                         autoPlay={true}
                         loop
                         muted
@@ -106,9 +106,9 @@ const Browse = () => {
               </div>
 
               {/* hero text */}
-              {!loading && content && content.length !== 0 && (
+              {!loading && allContent && allContent.length !== 0 && (
                 <div className="absolute bottom-6 left-6 flex cursor-pointer gap-2 md:bottom-12 md:left-12">
-                  <Link to={`/watch/${content[0].contentId}`}>
+                  <Link to={`/watch/${allContent[0].contentId}`}>
                     <div className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg ">
                       <RiPlayMiniFill className="text-xl lg:text-4xl" />
                       <div>Play</div>

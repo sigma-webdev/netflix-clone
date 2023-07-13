@@ -1,30 +1,24 @@
+// Convert duration to common format
 const getFormatedDuration = (contentDuration) => {
   let formatedTime = "";
 
-  if (contentDuration.hours && contentDuration.hours !== 0) {
+  if (contentDuration?.hours !== 0) {
     formatedTime = `${contentDuration.hours} hr`;
   }
 
-  if (contentDuration.minutes && contentDuration.minutes !== 0) {
+  if (contentDuration?.minutes !== 0) {
     formatedTime = `${formatedTime} ${contentDuration.minutes} mins`;
   }
 
-  if (contentDuration.seconds && contentDuration.seconds !== 0) {
+  if (contentDuration?.seconds !== 0) {
     formatedTime = `${formatedTime} ${contentDuration.seconds} secs`;
   }
 
   return formatedTime;
 };
 
+// Convert response to content object
 export const convertResponseToContentObject = (data, userId) => {
-  let isLiked = false;
-  let isDisliked = false;
-
-  if (userId) {
-    isLiked = data.likes.find((item) => item === userId) ? true : false;
-    isDisliked = data.dislikes.find((item) => item === userId) ? true : false;
-  }
-
   return {
     contentId: data._id,
     name: data.name,
@@ -37,8 +31,8 @@ export const convertResponseToContentObject = (data, userId) => {
     countryOrigin: data.originCountry,
     genres: data.genres,
     rating: data.maturityRating,
-    isLiked: isLiked,
-    isDisliked: isDisliked,
+    isLiked: data.likes.find((item) => item === userId) ? true : false,
+    isDisliked: data.dislikes.find((item) => item === userId) ? true : false,
     contentDuration: getFormatedDuration(data.contentMovie.movieDuration),
     releaseYear: new Date(data.releaseDate).getFullYear(),
   };
