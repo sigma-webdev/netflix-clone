@@ -6,7 +6,7 @@ const {
   getContentById,
   deleteContentById,
   updateContentById,
-  contentLikes,
+  contentLikesAndDisLikes,
 } = require("../controllers/content.controller.js");
 const jwtAuth = require("../middleware/jwtAuth.js");
 const authorizeRoles = require("../middleware/authorizeRoles.js");
@@ -20,7 +20,7 @@ contentRoute
     jwtAuth,
     authorizeRoles("ADMIN", "USER"),
     checkUserSubscription,
-    contentLikes
+    contentLikesAndDisLikes
   );
 
 // create and get content

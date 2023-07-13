@@ -416,8 +416,10 @@ const updateContentById = asyncHandler(async (req, res, next) => {
  * @return { Object } updated content object
  ********************/
 /******* User likes ****** */
-const contentLikes = asyncHandler(async (req, res, next) => {
+const contentLikesAndDisLikes = asyncHandler(async (req, res, next) => {
+  // get content Id and action value
   const { contentId, action } = req.params;
+  // get user Id
   const { id: userId } = req.user;
 
   const content = await contentModel.findById(contentId);
@@ -443,5 +445,5 @@ module.exports = {
   getContentById,
   deleteContentById,
   updateContentById,
-  contentLikes,
+  contentLikesAndDisLikes,
 };
