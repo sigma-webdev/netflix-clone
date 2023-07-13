@@ -1,4 +1,4 @@
-const userModel = require("../model/user.schema.js");
+const userModel = require("../models/user.models.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
