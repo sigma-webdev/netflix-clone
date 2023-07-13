@@ -49,7 +49,6 @@ const AdminManageContents = () => {
     setIsOpen(val);
   };
 
-  console.log(allContents)
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "genres") {
@@ -125,11 +124,19 @@ const AdminManageContents = () => {
       toast.error("please add name with atleast 5 characters");
       return;
     }
+    if (newContentData.description.length < 15) {
+      toast.error("description: Content description must be at least 15 characters ❗");
+      return;
+    }
+    if (newContentData.director.length < 3) {
+      toast.error("director: Content director must be at least 2 characters ❗");
+      return;
+    }
     if (newContentData.contentType === "Series") {
       toast.error("series feature will be coming soon, please add only content type movie");
       return;
     }
-    if(newContentData.language === "" || newContentData.genres === "" || newContentData.originCountry === "" || newContentData.maturityRating === ""){
+    if (newContentData.language === "" || newContentData.genres === "" || newContentData.originCountry === "" || newContentData.maturityRating === "") {
       toast.error("all the field must be filled");
       return;
     }
@@ -300,7 +307,7 @@ const AdminManageContents = () => {
                 <option value="U">U - suitable for children and persons of all ages</option>
                 <option value="U/A 7+">U/A 7+ - suitable for children 7 and above under parental guidance for persons under age of 7</option>
                 <option value="U/A 13+">U/A 13+ - Suitable for persons aged 13 and above and under parental guidance for people under age of 13</option>
-                <option value="U/A 16 +">U/A 16 + - Suitable for persons aged 16 and above and under parental guidance for people under age of 16</option>
+                <option value="U/A 16+">U/A 16 + - Suitable for persons aged 16 and above and under parental guidance for people under age of 16</option>
                 <option value="A">A - Content restricted to adults</option>
               </select>
               <label htmlFor="language"> Language:</label>
@@ -407,24 +414,26 @@ const AdminManageContents = () => {
           </div>
         </div>
 
-        {allContents?.contents ? (
-          <>
-            <table className="w-5/6 table-auto overflow-scroll text-gray-200">
-              <thead className="text-left">
-                <tr className="bg-[#E50914]">
-                  <th className="px-4 py-2">S. No</th>
-                  <th className="px-4 py-2 text-center">Name</th>
-                  <th className="px-4 py-2">Content Type</th>
-                  <th className="px-4 py-2">Language</th>
-                  <th className="px-4 py-2">Origin</th>
-                  <th className="px-4 py-2">Display</th>
-                  <th className="px-4 py-2 text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody className=" border-opacity-0">
-                {isContentLoading ? (
-                  <TableLoading colLength={7} />
-                ) : (
+
+        <>
+          <table className="w-5/6 table-auto overflow-scroll text-gray-200">
+            <thead className="text-left">
+              <tr className="bg-[#E50914]">
+                <th className="px-4 py-2">S. No</th>
+                <th className="px-4 py-2 text-center">Name</th>
+                <th className="px-4 py-2">Content Type</th>
+                <th className="px-4 py-2">Language</th>
+                <th className="px-4 py-2">Origin</th>
+                <th className="px-4 py-2">Display</th>
+                <th className="px-4 py-2 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody className=" border-opacity-0">
+              {isContentLoading ? (
+                <TableLoading colLength={7} />
+              ) : (
+             (allContents?.contents && allContents?.contents?.length !==0) ?
+                (
                   allContents.contents.map((content, index) => {
                     return (
                       <tr
@@ -473,39 +482,51 @@ const AdminManageContents = () => {
                         </td>
                       </tr>
                     );
-                  })
-                )}
-              </tbody>
-            </table>
-            <div className="mx-auto my-5 flex w-10/12 justify-between">
-              <button
-                className={
-                  allContents.previous === undefined
-                    ? "cursor-not-allowed  bg-[#e5091451]  px-2 py-1 text-white"
-                    : "bg-[#E50914] px-2 py-1  text-white hover:bg-[#d4252e]"
-                }
-                onClick={prevPage}
-              >
-                Previous Page
-              </button>
-              <div className=" rounded-full border-2 border-red-400 px-[10px] text-xl font-bold text-red-600 ">
-                Page {page} of {allContents.totalPages}
+                  })) :
+                  (
+
+                    <tr>
+                        <td className="px-4 py-3 text-black">
+                          No Data Found!
+                        </td>
+                    </tr>
+                  ) 
+              )}
+            </tbody>
+          </table>
+          {
+           ( !isContentLoading && allContents?.contents?.length !== 0) && (
+              <div className="mx-auto my-5 flex w-10/12 justify-between">
+                <button
+                  className={
+                    allContents?.previous === undefined
+                      ? "cursor-not-allowed  bg-[#e5091451]  px-2 py-1 text-white"
+                      : "bg-[#E50914] px-2 py-1  text-white hover:bg-[#d4252e]"
+                  }
+                  onClick={prevPage}
+                >
+                  Previous Page
+                </button>
+                <div className=" rounded-full border-2 border-red-400 px-[10px] text-xl font-bold text-red-600 ">
+                  Page {page} of {allContents?.totalPages || 0}
+                </div>
+                <button
+                  onClick={nextPage}
+                  className={
+                    allContents?.next === undefined
+                      ? "cursor-not-allowed  bg-[#e5091451]  px-2 py-1 text-white"
+                      : "bg-[#E50914] px-4 py-1  text-white hover:bg-[#d4252e]"
+                  }
+                >
+                  Next Page
+                </button>
               </div>
-              <button
-                onClick={nextPage}
-                className={
-                  allContents.next === undefined
-                    ? "cursor-not-allowed  bg-[#e5091451]  px-2 py-1 text-white"
-                    : "bg-[#E50914] px-4 py-1  text-white hover:bg-[#d4252e]"
-                }
-              >
-                Next Page
-              </button>
-            </div>
-          </>
-        ) : (
-          <h2 className="text-center">No Data Found</h2>
-        )}
+            )}
+
+        </>
+
+
+
       </div>
     </>
   );
