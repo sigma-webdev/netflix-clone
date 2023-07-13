@@ -546,6 +546,10 @@ export const contentSlice = createSlice({
           content.contentId === likedContent.contentId ? likedContent : content
         );
 
+        const newSearchedContent = state?.searchContent?.map((content) =>
+          content.contentId === likedContent.contentId ? likedContent : content
+        );
+
         const newContentByCountryOrigin = {};
         Object.keys(state.contentByCountryOrigin)?.map((countryOrigin) => {
           newContentByCountryOrigin[countryOrigin] =
@@ -574,6 +578,7 @@ export const contentSlice = createSlice({
         state.contentByCountryOrigin = newContentByCountryOrigin;
         state.watchHistoryContent = newWatchHistoryContent;
         state.watchListContent = newWatchListContent;
+        state.searchContent = newSearchedContent;
         state.likeDisLikeLoading = false;
       })
       .addCase(likeContent.rejected, (state) => {
@@ -611,6 +616,12 @@ export const contentSlice = createSlice({
             : content
         );
 
+        const newSearchedContent = state?.searchContent?.map((content) =>
+          content.contentId === dislikedContent.contentId
+            ? dislikedContent
+            : content
+        );
+
         const newContentByCountryOrigin = {};
         Object.keys(state.contentByCountryOrigin)?.map((countryOrigin) => {
           newContentByCountryOrigin[countryOrigin] =
@@ -641,6 +652,7 @@ export const contentSlice = createSlice({
         state.contentByCountryOrigin = newContentByCountryOrigin;
         state.watchHistoryContent = newWatchHistoryContent;
         state.watchListContent = newWatchListContent;
+        state.searchContent = newSearchedContent;
         state.likeDisLikeLoading = false;
       })
       .addCase(dislikeContent.rejected, (state) => {
