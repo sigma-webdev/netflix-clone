@@ -40,7 +40,6 @@ const AdminManageContents = () => {
   );
 
   useEffect(() => {
-    console.log('calledsdd')
     dispatch(fetchContentBySearch({ pageNo: page }));
   }, [page]);
 
@@ -50,7 +49,6 @@ const AdminManageContents = () => {
     setIsOpen(val);
   };
 
-  console.log(allContents)
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "genres") {
