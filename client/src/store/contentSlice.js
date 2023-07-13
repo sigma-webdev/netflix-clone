@@ -441,11 +441,11 @@ export const contentSlice = createSlice({
       .addCase(addContentToWatchHistory.fulfilled, (state, action) => {
         const watchContentId = action.payload;
 
-        const isExitWatchContent = state.watchHistoryContent?.find(
+        const isWatchContentExists = state.watchHistoryContent?.find(
           (item) => item?.contentId === watchContentId
         );
 
-        if (!isExitWatchContent) {
+        if (!isWatchContentExists) {
           const watchContent = state.allContent.find(
             (item) => item?.contentId === watchContentId
           );
@@ -482,11 +482,11 @@ export const contentSlice = createSlice({
       .addCase(addContentToWatchList.fulfilled, (state, action) => {
         const watchContentId = action.payload;
 
-        const isExitWatchContent = state?.watchListContent?.find(
+        const isWatchContentExists = state?.watchListContent?.find(
           (item) => item.contentId === watchContentId
         );
 
-        if (!isExitWatchContent) {
+        if (!isWatchContentExists) {
           const watchContent = state?.allContent?.find(
             (item) => item.contentId === watchContentId
           );
@@ -527,8 +527,6 @@ export const contentSlice = createSlice({
       })
       .addCase(likeContent.fulfilled, (state, action) => {
         const likedContent = action.payload;
-
-        console.log(likedContent);
 
         const newAllContent = state?.allContent?.map((content) =>
           content.contentId === likedContent.contentId ? likedContent : content
