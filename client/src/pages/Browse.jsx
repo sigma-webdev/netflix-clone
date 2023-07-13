@@ -82,8 +82,6 @@ const Browse = () => {
           <div>
             {/* hero container */}
             <div className="relative">
-              {/* hero video */}
-
               <div className="h-[400px] w-full md:h-[800px]">
                 {loading ? (
                   <VideoShimmer />
@@ -91,6 +89,7 @@ const Browse = () => {
                   allContent &&
                   allContent.length !== 0 && (
                     <>
+                      {/* hero video */}
                       <div className="absolute -bottom-1 h-[50px] w-full bg-gradient-to-b from-netflix-blue/0 to-netflix-blue/100 md:h-[100px] lg:h-[200px]"></div>
                       <video
                         className="mx-auto h-[400px] w-full object-cover md:h-[800px]"
@@ -100,22 +99,20 @@ const Browse = () => {
                         loop
                         muted
                       ></video>
+
+                      {/* hero text */}
+                      <div className="absolute bottom-6 left-6 flex cursor-pointer gap-2 md:bottom-12 md:left-12">
+                        <Link to={`/watch/${allContent[0].contentId}`}>
+                          <div className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg ">
+                            <RiPlayMiniFill className="text-xl lg:text-4xl" />
+                            <div>Play</div>
+                          </div>
+                        </Link>
+                      </div>
                     </>
                   )
                 )}
               </div>
-
-              {/* hero text */}
-              {!loading && allContent && allContent.length !== 0 && (
-                <div className="absolute bottom-6 left-6 flex cursor-pointer gap-2 md:bottom-12 md:left-12">
-                  <Link to={`/watch/${allContent[0].contentId}`}>
-                    <div className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg ">
-                      <RiPlayMiniFill className="text-xl lg:text-4xl" />
-                      <div>Play</div>
-                    </div>
-                  </Link>
-                </div>
-              )}
             </div>
 
             {/* browse watch list */}
