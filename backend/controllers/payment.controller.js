@@ -252,7 +252,7 @@ const updatePlan = asyncHandler(async (req, res, next) => {
 });
 
 /******************************************************
- * @updatePlan
+ * @deletePlan
  * @method DELETE
  * @route /api/v1/payment/plan
  * @description  delete the plan using planDocumentId
@@ -270,7 +270,7 @@ const deletePlan = asyncHandler(async (req, res, next) => {
     statusCode: 200,
     success: true,
     message: "Successfully deleted the plan",
-    data: null,
+    data: result,
   });
 });
 

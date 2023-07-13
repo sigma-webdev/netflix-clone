@@ -12,7 +12,7 @@ const {
   userExist,
   signOut,
   getUser,
-} = require("../controller/auth.controller.js");
+} = require("../controllers/auth.controller.js");
 
 authRoute.post("/signup", signUp);
 authRoute.post("/signin", signIn);
