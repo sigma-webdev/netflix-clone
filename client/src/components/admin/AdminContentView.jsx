@@ -58,9 +58,21 @@ const AdminContentView = () => {
       toast.error("wait until the current ongoing process end");
       return;
     }
+    if (editedContentData.contentType === "Series") {
+      toast.error("series feature will be coming soon, please add only content type movie");
+      return;
+    }
 
     if (editedContentData.cast.length === 0) {
       toast.error("cast cannot be empty field❗");
+      return;
+    }
+    if (editedContentData.description.length < 15) {
+      toast.error("description: Content description must be at least 15 characters ❗");
+      return;
+    }
+    if (editedContentData.director.length < 3) {
+      toast.error("director: Content director must be at least 2 characters ❗");
       return;
     }
 
@@ -187,8 +199,8 @@ const AdminContentView = () => {
                 </div>
                 {editedContentData.cast.length > 0 && (
                   <div className="flex flex-wrap">
-                    {editedContentData.cast.map((castname) => (
-                      <div className="relative m-2  rounded  bg-blue-200">
+                    {editedContentData.cast.map((castname, index) => (
+                      <div key={index} className="relative m-2  rounded  bg-blue-200">
                         <div
                           onClick={() => handleRemoveCast(castname)}
                           className="absolute -top-1 right-1 cursor-pointer"
@@ -236,15 +248,20 @@ const AdminContentView = () => {
                 value={editedContentData.director}
                 onChange={handleInputChange}
               />
-              <label htmlFor="rating"> Rating:</label>
-              <input
+              <label htmlFor="rating"> Maturity Rating:</label>
+              <select
                 className="rounded border bg-transparent p-2"
-                type="text"
-                required
-                name="rating"
-                value={editedContentData.rating}
+                name="maturityRating"
+                value={editedContentData.maturityRating}
                 onChange={handleInputChange}
-              />
+              >
+                <option value="">Select an option</option>
+                <option value="U">U - suitable for children and persons of all ages</option>
+                <option value="U/A 7+">U/A 7+ - suitable for children 7 and above under parental guidance for persons under age of 7</option>
+                <option value="U/A 13+">U/A 13+ - Suitable for persons aged 13 and above and under parental guidance for people under age of 13</option>
+                <option value="U/A 16+">U/A 16 + - Suitable for persons aged 16 and above and under parental guidance for people under age of 16</option>
+                <option value="A">A - Content restricted to adults</option>
+              </select>
               <label htmlFor="language"> Language:</label>
               <input
                 className="rounded border bg-transparent p-2"
@@ -353,8 +370,8 @@ const AdminContentView = () => {
                     onChange={(e) => handleFileChange(e, 'thumbnail')}
                   />
                   <img
-                    className="h-[450px] w-full transition hover:bg-black group-hover:opacity-40"
-                    src={contentData.thumbnail[0].thumbnailUrl}
+                    className="h-[450px] w-full transition hover:bg-gray-100 group-hover:opacity-40 object-contain"
+                    src={contentData.thumbnail[0]?.thumbnailUrl}
                     alt="thubmnail"
                   />
                   {!isThumbnailUploading ? <BsCloudUpload className="absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] text-8xl opacity-0 transition group-hover:opacity-100" />
@@ -387,15 +404,15 @@ const AdminContentView = () => {
                 {!isDetailsUploading ? (
                   <>
                     <div className="flex gap-2">
-                      <h3 className="text-gray-400">{contentData.rating}</h3>
+                      <h3 className="text-gray-400">{contentData.maturityRating}</h3>
                       <span className="text-2xl text-gray-400">/</span>
                       <h3 className="text-gray-400">{contentData.originCountry}</h3>
                       <span className="text-2xl text-gray-400">/</span>
-                      <h3 className="">{contentData.language}</h3>
+                      <h3 className="text-gray-400">{contentData.language}</h3>
                       <span className="text-2xl text-gray-400">/</span>
-                      <h3 className="">{contentData.genres[0]}</h3>
+                      <h3 className="text-gray-400">{contentData.genres[0]}</h3>
                       <span className="text-2xl text-gray-400">/</span>
-                      <h3 className="">{contentData.contentType}</h3>
+                      <h3 className="text-gray-400">{contentData.contentType}</h3>
                     </div>
 
                     <div className="my-4 flex gap-4">
@@ -490,7 +507,7 @@ const AdminContentView = () => {
                           />
                         </svg>
                         <span className="text-blue-600">Please wait... content trailer is uploading!</span>
-                        <span className="sr-only">Loading...</span>
+     
                       </div>)
                   }
                 </div>
@@ -504,7 +521,7 @@ const AdminContentView = () => {
                           <video
                             width="520"
                             height="440"
-                            src={contentData.content.contentURL}
+                            src={contentData.contentMovie.movieUrl}
                             controls
                           ></video>
                           <div>
