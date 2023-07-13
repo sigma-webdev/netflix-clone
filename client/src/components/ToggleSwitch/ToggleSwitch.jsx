@@ -11,7 +11,7 @@ const ToggleSwitch = ({ isOn, onToggle, loading }) => {
         type="checkbox"
         className={`${
           isOn ? "bg-red-600" : "bg-gray-300"
-        } toggle-checkbox absolute block h-6 w-6 cursor-pointer appearance-none rounded-full`}
+        } toggle-checkbox absolute block h-6 w-6 appearance-none rounded-full`}
         checked={isOn}
         onChange={onToggle}
       />
@@ -29,7 +29,7 @@ const ToggleSwitch = ({ isOn, onToggle, loading }) => {
           }}
           className={`${
             isOn ? "translate-x-4" : "translate-x-0"
-          } toggle-inner absolute  block h-6 w-6 transform rounded-full bg-white transition-transform duration-300`}
+          } toggle-inner absolute  block h-6 w-6 transform cursor-pointer rounded-full bg-white transition-transform duration-300`}
         />
       </label>
     </div>

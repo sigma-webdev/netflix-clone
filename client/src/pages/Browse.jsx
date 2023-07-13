@@ -1,11 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
-// components
-import Crousal from "../components/crousal/Crousal";
 import Layout from "../components/layout/Layout";
-
-// actions
 import {
   fetchContent,
   fetchContentByCountryOrigin,
@@ -15,11 +10,9 @@ import {
   fetchContentByWatchHistory,
 } from "../store/contentSlice";
 import { RiPlayMiniFill } from "react-icons/ri";
-import PreviewCard from "../components/card/PreviewCard";
-import RowContentShimmer from "../components/shimmer/RowContentShimmer";
-import PreviewShimmer from "../components/shimmer/PreviewShimmer";
 import { Link } from "react-router-dom";
 import ContentRow from "../components/ContentRow";
+import VideoShimmer from "../components/shimmer/VideoShimmer";
 
 const Browse = () => {
   const dispatch = useDispatch();
@@ -90,7 +83,7 @@ const Browse = () => {
 
               <div className="h-[400px] w-full md:h-[800px]">
                 {loading ? (
-                  <PreviewShimmer />
+                  <VideoShimmer />
                 ) : (
                   content &&
                   content.length !== 0 && (
@@ -102,6 +95,7 @@ const Browse = () => {
                         poster={content[0].thumbnailUrl}
                         autoPlay={true}
                         loop
+                        muted
                       ></video>
                     </>
                   )
@@ -117,10 +111,6 @@ const Browse = () => {
                       <div>Play</div>
                     </div>
                   </Link>
-                  {/* <div className="flex cursor-pointer items-center gap-2  rounded bg-black px-2 py-1 text-sm font-semibold text-white opacity-80 md:px-4 md:text-lg">
-                    <AiOutlineInfoCircle className="text-md lg:text-2xl" />
-                    More Info
-                  </div> */}
                 </div>
               )}
             </div>

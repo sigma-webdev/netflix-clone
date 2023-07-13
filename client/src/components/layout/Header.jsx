@@ -37,13 +37,17 @@ const Header = () => {
     return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
-  const handleSignInSignOut=async()=> {
+  useEffect(() => {
+    dispatch(fetchContentBySearch({ searchText, userId: user._id }));
+  }, []);
+
+  const handleSignInSignOut = async () => {
     if (!IS_LOGGED_IN) return navigate("/signin");
     const response = await dispatch(SIGN_OUT());
     if (response?.payload?.success) {
       navigate("/logout");
     }
-  }
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();

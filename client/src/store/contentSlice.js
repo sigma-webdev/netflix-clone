@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
 import { convertResponseToContentObject } from "../helpers/constants";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   currentContent: null,
@@ -23,7 +24,7 @@ const initialState = {
 
 export const fetchContent = createAsyncThunk(
   "content/fetchContent",
-  async (userId, { rejectWithValue }) => {
+  async (userId) => {
     try {
       const response = await axiosInstance.get("/contents?contentType=movie");
 
@@ -34,15 +35,16 @@ export const fetchContent = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
-      console.log(error);
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
-  async ({ contentId, userId }, { rejectWithValue }) => {
+  async ({ contentId, userId }) => {
     try {
       const response = await axiosInstance.get(`/contents/${contentId}`);
       const data = response.data.data;
@@ -50,14 +52,16 @@ export const fetchContentById = createAsyncThunk(
 
       return contentObject;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const fetchContentBySearch = createAsyncThunk(
   "content/fetchContentBySearch",
-  async ({ searchText, userId }, { rejectWithValue }) => {
+  async ({ searchText, userId }) => {
     try {
       const url = `/contents?search=${searchText}`;
       let contentsObject;
@@ -74,14 +78,16 @@ export const fetchContentBySearch = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const fetchContentByContentType = createAsyncThunk(
   "content/fetchContentByCategory",
-  async ({ contentType, userId }, { rejectWithValue }) => {
+  async ({ contentType, userId }) => {
     try {
       const response = await axiosInstance.get(
         `/contents?contentType=${contentType}`
@@ -95,15 +101,16 @@ export const fetchContentByContentType = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
-      console.log(error);
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const fetchContentByTrending = createAsyncThunk(
   "content/fetchContentByTrending",
-  async (userId, { rejectWithValue }) => {
+  async (userId) => {
     try {
       const response = await axiosInstance.get("/contents?trending=true");
 
@@ -114,14 +121,16 @@ export const fetchContentByTrending = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const fetchContentByLatest = createAsyncThunk(
   "content/fetchContentByLatest",
-  async (userId, { rejectWithValue }) => {
+  async (userId) => {
     try {
       const response = await axiosInstance.get("/contents?latest=true");
 
@@ -132,14 +141,16 @@ export const fetchContentByLatest = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const fetchContentByMostLiked = createAsyncThunk(
   "content/fetchContentByMostLiked",
-  async (userId, { rejectWithValue }) => {
+  async (userId) => {
     try {
       const response = await axiosInstance.get("/contents?mostLikes=true");
 
@@ -150,14 +161,16 @@ export const fetchContentByMostLiked = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const fetchContentByCountryOrigin = createAsyncThunk(
   "content/fetchContentByCountryOrigin",
-  async ({ countryOrigin, userId }, { rejectWithValue }) => {
+  async ({ countryOrigin, userId }) => {
     try {
       const response = await axiosInstance.get(
         `/contents?originCountry=${countryOrigin}`
@@ -170,14 +183,16 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
 
       return { countryOrigin, contentsObject };
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const fetchContentByWatchHistory = createAsyncThunk(
   "content/fetchContentByWatch",
-  async (userId, { rejectWithValue }) => {
+  async (userId) => {
     try {
       const response = await axiosInstance.get(`/users/watch-history`);
 
@@ -188,27 +203,31 @@ export const fetchContentByWatchHistory = createAsyncThunk(
 
       return contentsObject;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const addContentToWatchHistory = createAsyncThunk(
   "content/addContentByWatch",
-  async (contentId, { rejectWithValue }) => {
+  async (contentId) => {
     try {
       await axiosInstance.patch(`/users/watch-history/${contentId}`);
 
       return contentId;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const likeContent = createAsyncThunk(
   "content/likeContent",
-  async ({ contentId, userId }, { rejectWithValue }) => {
+  async ({ contentId, userId }) => {
     try {
       const response = await axiosInstance.patch(`/contents/${contentId}/like`);
 
@@ -219,14 +238,16 @@ export const likeContent = createAsyncThunk(
 
       return { contenId, contentObject };
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
 export const dislikeContent = createAsyncThunk(
   "content/dislikeContent",
-  async ({ contentId, userId }, { rejectWithValue }) => {
+  async ({ contentId, userId }) => {
     try {
       const response = await axiosInstance.patch(
         `/contents/${contentId}/dislike`
@@ -238,7 +259,9 @@ export const dislikeContent = createAsyncThunk(
 
       return { contenId, contentObject };
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );

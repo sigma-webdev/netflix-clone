@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
+import { toast } from "react-hot-toast";
+
 const initialState = {
   loading: false,
   moviesCount: 0,
@@ -15,7 +17,9 @@ export const getMoviesData = createAsyncThunk(
       const response = await axiosInstance.get("/admin/movies-stats");
       return response.data;
     } catch (error) {
-      //   return rejectWithValue(error);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
@@ -27,7 +31,9 @@ export const getSeriesData = createAsyncThunk(
       const response = await axiosInstance.get("/admin/series-stats");
       return response.data;
     } catch (error) {
-      //   return rejectWithValue(error);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
@@ -37,15 +43,14 @@ export const getUsersData = createAsyncThunk(
   async () => {
     try {
       const response = await axiosInstance.get("/admin/users-stats");
-
       return response.data;
     } catch (error) {
-      //   return rejectWithValue(error);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
-
-
 
 export const dashboardSlice = createSlice({
   name: "dashboard",
@@ -86,10 +91,8 @@ export const dashboardSlice = createSlice({
       })
       .addCase(getUsersData.rejected, (state) => {
         state.loading = false;
-      })
-     
+      });
   },
 });
 
-// export const {} = adminSlice.actions;
 export default dashboardSlice.reducer;
