@@ -61,7 +61,7 @@ const signUp = asyncHandler(async (req, res, next) => {
   if (!email || !password) {
     return next(new CustomError("Email and Password are required.", 400));
   }
-
+  // this regex will check the password has at-least 1 capital letter, one symbol , one number and must contain 6-10 characters
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
   if (!passwordRegex.test(password)) {
