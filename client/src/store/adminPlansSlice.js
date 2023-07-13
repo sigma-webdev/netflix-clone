@@ -5,8 +5,7 @@ import { toast } from "react-hot-toast";
 const initialState = {
   loading: false,
   updateLoader: false,
-  allPlans: { data: [] },
-  updatePlan: false,
+  allPlans: [],
 };
 
 export const getAllPlans = createAsyncThunk(
@@ -14,7 +13,8 @@ export const getAllPlans = createAsyncThunk(
   async () => {
     try {
       let response = await axiosInstance.get("/payment/plan/");
-      return response?.data;
+      console.log(response?.data?.data, "getAllPlans");
+      return response?.data?.data;
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -34,7 +34,8 @@ export const createPlan = createAsyncThunk(
         active,
       });
       dispatch(getAllPlans());
-      return response.data;
+      console.log(response.data.data);
+      return response?.data?.data;
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -46,14 +47,11 @@ export const createPlan = createAsyncThunk(
 export const updatePlanStatus = createAsyncThunk(
   "adminPlans/updatePlanStatus",
   async ({ id, active }, { dispatch }) => {
-    console.log(id, active);
     try {
       let response = await axiosInstance.patch("/payment/plan/" + id, {
         active,
       });
-      console.log(response);
-      dispatch(getAllPlans());
-      return response.data;
+      return response?.data?.data;
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -65,11 +63,11 @@ export const updatePlanStatus = createAsyncThunk(
 export const deletePlan = createAsyncThunk(
   "adminPlans/deletePlan",
   async (id, { dispatch }) => {
-    console.log(id);
     try {
       let response = axiosInstance.delete("/payment/plan/" + id);
-      dispatch(getAllPlans());
-      return response.data;
+      // dispatch(getAllPlans());
+      console.log(response, "delete");
+      return { res: response.data, id };
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -101,11 +99,14 @@ const adminPlansSlice = createSlice({
         state.updateLoader = true;
       })
       .addCase(updatePlanStatus.fulfilled, (state, action) => {
-        state.updatePlan = action.payload;
         state.updateLoader = false;
+        const updatedId = action.payload._id;
+        state.allPlans = state.allPlans.map((plan) =>
+          updatedId === plan._id ? action.payload : plan
+        );
         toast.success(
           `Plan ${
-            state?.updatePlan?.data?.active ? "enabled" : "disabled"
+            action?.payload?.active ? "enabled" : "disabled"
           } successfully`
         );
       })
@@ -117,8 +118,9 @@ const adminPlansSlice = createSlice({
       .addCase(createPlan.pending, (state) => {
         state.loading = true;
       })
-      .addCase(createPlan.fulfilled, (state) => {
+      .addCase(createPlan.fulfilled, (state, action) => {
         state.loading = false;
+        state.allPlans = [...state.allPlans, action.payload];
         toast.success("Plan Added Successfully");
       })
       .addCase(createPlan.rejected, (state) => {
@@ -128,8 +130,11 @@ const adminPlansSlice = createSlice({
       .addCase(deletePlan.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deletePlan.fulfilled, (state) => {
+      .addCase(deletePlan.fulfilled, (state, action) => {
         state.loading = false;
+        console.log(action.payload, "payload");
+        // const deleteId = action.payload.id;
+        // state.allPlans = state.allPlans.filter();
         toast.success("Plan Deleted Successfully");
       })
       .addCase(deletePlan.rejected, (state) => {
