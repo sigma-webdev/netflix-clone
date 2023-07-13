@@ -4,7 +4,7 @@ const validator = require("email-validator");
 const bcrypt = require("bcrypt");
 
 const asyncHandler = require("../middleware/asyncHandler.js");
-const userModel = require("../model/user.schema.js");
+const userModel = require("../models/user.model.js");
 const CustomError = require("../utils/customError.js");
 const cookieOptions = require("../utils/cookieOption.js");
 const transporter = require("../config/email.config.js");
