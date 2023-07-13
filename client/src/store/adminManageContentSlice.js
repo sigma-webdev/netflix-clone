@@ -3,7 +3,7 @@ import axiosInstance from "../helpers/axiosInstance";
 import toast from "react-hot-toast";
 
 const initialState = {
-  filteredContent: [],
+  filteredContent: {},
   currentContent: {},
   isLoading: false,
   isDetailsUploading: false,
@@ -207,7 +207,7 @@ export const adminSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addNewContent.fulfilled, (state, action) => {
-        state.allContent = [...state.allContent, action.payload];
+        state.allContent = [...state.filteredContent.contents, action.payload];
         state.isLoading = false;
         toast.success("content added successfully ✅");
       })
@@ -232,6 +232,7 @@ export const adminSlice = createSlice({
       .addCase(deleteContentById.rejected, (state) => {
         state.allContent = [];
         state.isLoading = false;
+        
       })
       // update toggle display content to user
       .addCase(ToggleDisplayContentToUser.pending, (state) => {
@@ -259,25 +260,27 @@ export const adminSlice = createSlice({
         toast.success("content details updated successfully ✅");
         const updatedContent = action.payload;
         state.currentContent = updatedContent;
-        state.filteredContent = state.filteredContent.contents.map((content) =>
+        const newContentArr = state.filteredContent.contents.map((content) =>
           content._id === updatedContent._id ? updatedContent : content
         );
+        state.filteredContent = {...state.filteredContent, contents: newContentArr}
         state.isDetailsUploading = false;
       })
       .addCase(updateContentDetailsById.rejected, (state) => {
         state.isDetailsUploading = false;
       })
 
-      // update content by id for thumbnail
+      // update content thumbnail by id
       .addCase(updateContentThumbnailById.pending, (state) => {
         state.isThumbnailUploading = true;
       })
       .addCase(updateContentThumbnailById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
         state.currentContent = updatedContent;
-        state.filteredContent = state.filteredContent.contents.map((content) =>
+        const newContentArr = state.filteredContent.contents.map((content) =>
           content._id === updatedContent._id ? updatedContent : content
         );
+        state.filteredContent = {...state.filteredContent, contents: newContentArr}
         toast.success("content thumbnail updated successfully ✅");
         state.isThumbnailUploading = false;
       })
@@ -292,9 +295,10 @@ export const adminSlice = createSlice({
       .addCase(updateContentVideoById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
         state.currentContent = updatedContent;
-        state.filteredContent = state.filteredContent.contents.map((content) =>
+        const newContentArr = state.filteredContent.contents.map((content) =>
           content._id === updatedContent._id ? updatedContent : content
         );
+        state.filteredContent = { ...state.filteredContent, contents: newContentArr}
         toast.success("content video updated successfully ✅");
         state.isContentUploading = false;
       })
@@ -309,9 +313,10 @@ export const adminSlice = createSlice({
       .addCase(updateContentTrailerById.fulfilled, (state, action) => {
         const updatedContent = action.payload;
         state.currentContent = updatedContent;
-        state.filteredContent = state.filteredContent.contents.map((content) =>
+        const newContentArr = state.filteredContent.contents.map((content) =>
           content._id === updatedContent._id ? updatedContent : content
         );
+        state.filteredContent = {...state.filteredContent, contents: newContentArr}
         toast.success("content trailer updated successfully ✅");
         state.isTrailerUploading = false;
       })
