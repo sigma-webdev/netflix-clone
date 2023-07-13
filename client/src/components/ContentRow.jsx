@@ -3,7 +3,7 @@ import RowContentShimmer from "./shimmer/RowContentShimmer";
 import Crousal from "./crousal/Crousal";
 import PreviewCard from "./card/PreviewCard";
 
-const ContentRow = ({ heading, loading, content, wachted = false }) => {
+const ContentRow = ({ heading, loading, content, watch = false }) => {
   return (
     <div className="bg-netflix-blue pt-4 text-white">
       <div className="px-4 md:px-8">
@@ -33,7 +33,7 @@ const ContentRow = ({ heading, loading, content, wachted = false }) => {
                         isDisliked={item.isDisliked}
                         releaseYear={item.releaseYear}
                         contentDuration={item.contentDuration}
-                        wachted={wachted}
+                        watch={watch}
                       />
                     );
                   })}
