@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 const initialState = {
   loading: false,
   updateLoader: false,
-  allPlans: [],
+  allPlans: { data: [] },
   updatePlan: false,
 };
 
@@ -67,8 +67,8 @@ export const deletePlan = createAsyncThunk(
   async (id, { dispatch }) => {
     console.log(id);
     try {
-      let response = axiosInstance.delete("/payment/plan/" + id);
-      dispatch(getAllPlans());
+      let response = await axiosInstance.delete("/payment/plan/" + id);
+      await dispatch(getAllPlans());
       return response.data;
     } catch (error) {
       error?.response?.data?.message

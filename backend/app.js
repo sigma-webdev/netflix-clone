@@ -20,11 +20,11 @@ const swaggerDocument = YAML.parse(file);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // routes
-const authRouter = require("./router/auth.router.js");
-const paymentRouter = require("./router/payment.router.js");
-const contentRoute = require("./router/content.router");
-const userRouter = require("./router/user.router.js");
-const miscRoute = require("./router/misc.router.js");
+const authRouter = require("./routes/auth.routes.js");
+const paymentRouter = require("./routes/payment.routes.js");
+const contentRoute = require("./routes/content.routes.js");
+const userRouter = require("./routes/user.routes.js");
+const miscRoute = require("./routes/misc.routes.js");
 
 // database connection
 require("./config/database.config.js");
