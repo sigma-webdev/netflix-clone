@@ -233,7 +233,7 @@ const getContent = asyncHandler(async (req, res, next) => {
 
 /********************
  * @getContentById
- * @route http://localhost:8081/api/v1/content/id
+ * @route http://localhost:8081/api/v1/contents/id
  * @description  controller to create the content
  * @parameters {Object id}
  * @return { Object } content object
