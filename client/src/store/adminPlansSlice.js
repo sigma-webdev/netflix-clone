@@ -13,7 +13,6 @@ export const getAllPlans = createAsyncThunk(
   async () => {
     try {
       let response = await axiosInstance.get("/payment/plan/");
-      console.log(response?.data?.data, "getAllPlans");
       return response?.data?.data;
     } catch (error) {
       error?.response?.data?.message
@@ -33,8 +32,6 @@ export const createPlan = createAsyncThunk(
         description,
         active,
       });
-      dispatch(getAllPlans());
-      console.log(response.data.data);
       return response?.data?.data;
     } catch (error) {
       error?.response?.data?.message
@@ -46,12 +43,12 @@ export const createPlan = createAsyncThunk(
 
 export const updatePlanStatus = createAsyncThunk(
   "adminPlans/updatePlanStatus",
-  async ({ id, active }, { dispatch }) => {
+  async ({ id, active, index }) => {
     try {
       let response = await axiosInstance.patch("/payment/plan/" + id, {
         active,
       });
-      return response?.data?.data;
+      return { response: response?.data?.data, index: index };
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -62,12 +59,10 @@ export const updatePlanStatus = createAsyncThunk(
 
 export const deletePlan = createAsyncThunk(
   "adminPlans/deletePlan",
-  async (id, { dispatch }) => {
+  async ({ id, index }) => {
     try {
-      let response = axiosInstance.delete("/payment/plan/" + id);
-      // dispatch(getAllPlans());
-      console.log(response, "delete");
-      return { res: response.data, id };
+      let response = await axiosInstance.delete("/payment/plan/" + id);
+      return { response: response?.data, index: index };
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -100,13 +95,10 @@ const adminPlansSlice = createSlice({
       })
       .addCase(updatePlanStatus.fulfilled, (state, action) => {
         state.updateLoader = false;
-        const updatedId = action.payload._id;
-        state.allPlans = state.allPlans.map((plan) =>
-          updatedId === plan._id ? action.payload : plan
-        );
+        state.allPlans.splice(action.payload.index, 1, action.payload.response);
         toast.success(
           `Plan ${
-            action?.payload?.active ? "enabled" : "disabled"
+            action?.payload?.response?.active ? "enabled" : "disabled"
           } successfully`
         );
       })
@@ -132,9 +124,7 @@ const adminPlansSlice = createSlice({
       })
       .addCase(deletePlan.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload, "payload");
-        // const deleteId = action.payload.id;
-        // state.allPlans = state.allPlans.filter();
+        state.allPlans.splice(action.payload.index, 1);
         toast.success("Plan Deleted Successfully");
       })
       .addCase(deletePlan.rejected, (state) => {
