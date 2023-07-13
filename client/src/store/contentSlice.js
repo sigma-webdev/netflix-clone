@@ -438,12 +438,18 @@ export const contentSlice = createSlice({
       .addCase(addContentToWatchHistory.fulfilled, (state, action) => {
         const watchContentId = action.payload;
 
-        const watchContent = state.filteredContent.find(
+        const isExitWatchContent = state.watchHistoryContent.find(
           (item) => item.contentId === watchContentId
         );
 
-        if (!watchContent) {
-          state.watchHistoryContent.push(watchContent);
+        if (!isExitWatchContent) {
+          const watchContent = state.filteredContent.find(
+            (item) => item.contentId === watchContentId
+          );
+
+          if (!watchContent) {
+            state.watchHistoryContent.push(watchContent);
+          }
         }
 
         state.watchHistoryLoading = false;
@@ -460,7 +466,6 @@ export const contentSlice = createSlice({
       .addCase(fetchContentByWatchList.fulfilled, (state, action) => {
         state.watchListContent = action.payload;
         state.watchListLoading = false;
-        console.log(state.watchListContent);
       })
       .addCase(fetchContentByWatchList.rejected, (state) => {
         state.watchListContent = [];
@@ -473,12 +478,19 @@ export const contentSlice = createSlice({
       })
       .addCase(addContentToWatchList.fulfilled, (state, action) => {
         const watchContentId = action.payload;
-        const watchContent = state.filteredContent.find(
+
+        const isExitWatchContent = state.watchListContent.find(
           (item) => item.contentId === watchContentId
         );
 
-        if (watchContent) {
-          state.watchListContent.push(watchContent);
+        if (!isExitWatchContent) {
+          const watchContent = state.filteredContent.find(
+            (item) => item.contentId === watchContentId
+          );
+
+          if (watchContent) {
+            state.watchListContent.push(watchContent);
+          }
         }
 
         state.watchListLoading = false;
