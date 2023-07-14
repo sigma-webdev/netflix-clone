@@ -91,6 +91,7 @@ const contentSchema = new Schema(
         "Tamil",
         "Spanish",
         "German",
+        "Malayalam",
       ],
     },
     thumbnail: [
