@@ -5,8 +5,7 @@ import { toast } from "react-hot-toast";
 const initialState = {
   loading: false,
   updateLoader: false,
-  allPlans: { data: [] },
-  updatePlan: false,
+  allPlans: [],
 };
 
 export const getAllPlans = createAsyncThunk(
@@ -14,7 +13,7 @@ export const getAllPlans = createAsyncThunk(
   async () => {
     try {
       let response = await axiosInstance.get("/payment/plan/");
-      return response?.data;
+      return response?.data?.data;
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -25,7 +24,7 @@ export const getAllPlans = createAsyncThunk(
 
 export const createPlan = createAsyncThunk(
   "adminPlans/createPlan",
-  async ({ planName, amount, description, active }, { dispatch }) => {
+  async ({ planName, amount, description, active }) => {
     try {
       let response = await axiosInstance.post("/payment/plan", {
         planName,
@@ -33,8 +32,7 @@ export const createPlan = createAsyncThunk(
         description,
         active,
       });
-      dispatch(getAllPlans());
-      return response.data;
+      return response?.data?.data;
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -45,15 +43,12 @@ export const createPlan = createAsyncThunk(
 
 export const updatePlanStatus = createAsyncThunk(
   "adminPlans/updatePlanStatus",
-  async ({ id, active }, { dispatch }) => {
-    console.log(id, active);
+  async ({ id, active, index }) => {
     try {
       let response = await axiosInstance.patch("/payment/plan/" + id, {
         active,
       });
-      console.log(response);
-      dispatch(getAllPlans());
-      return response.data;
+      return { response: response?.data?.data, index: index };
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -64,12 +59,10 @@ export const updatePlanStatus = createAsyncThunk(
 
 export const deletePlan = createAsyncThunk(
   "adminPlans/deletePlan",
-  async (id, { dispatch }) => {
-    console.log(id);
+  async ({ id, index }) => {
     try {
-      let response = await axiosInstance.delete("/payment/plan/" + id);
-      await dispatch(getAllPlans());
-      return response.data;
+      let response = axiosInstance.delete("/payment/plan/" + id);
+      return { response: response.data, index: index };
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -101,11 +94,11 @@ const adminPlansSlice = createSlice({
         state.updateLoader = true;
       })
       .addCase(updatePlanStatus.fulfilled, (state, action) => {
-        state.updatePlan = action.payload;
         state.updateLoader = false;
+        state.allPlans.splice(action.payload.index, 1, action.payload.response);
         toast.success(
           `Plan ${
-            state?.updatePlan?.data?.active ? "enabled" : "disabled"
+            action?.payload?.response?.active ? "enabled" : "disabled"
           } successfully`
         );
       })
@@ -117,8 +110,9 @@ const adminPlansSlice = createSlice({
       .addCase(createPlan.pending, (state) => {
         state.loading = true;
       })
-      .addCase(createPlan.fulfilled, (state) => {
+      .addCase(createPlan.fulfilled, (state, action) => {
         state.loading = false;
+        state.allPlans = [...state.allPlans, action.payload];
         toast.success("Plan Added Successfully");
       })
       .addCase(createPlan.rejected, (state) => {
@@ -128,8 +122,9 @@ const adminPlansSlice = createSlice({
       .addCase(deletePlan.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deletePlan.fulfilled, (state) => {
+      .addCase(deletePlan.fulfilled, (state, action) => {
         state.loading = false;
+        state.allPlans.splice(action.payload.index, 1);
         toast.success("Plan Deleted Successfully");
       })
       .addCase(deletePlan.rejected, (state) => {
