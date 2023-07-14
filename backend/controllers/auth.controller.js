@@ -4,7 +4,7 @@ const validator = require("email-validator");
 const bcrypt = require("bcrypt");
 
 const asyncHandler = require("../middleware/asyncHandler.js");
-const userModel = require("../model/user.schema.js");
+const userModel = require("../models/user.model.js");
 const CustomError = require("../utils/customError.js");
 const cookieOptions = require("../utils/cookieOption.js");
 const transporter = require("../config/email.config.js");
@@ -61,7 +61,7 @@ const signUp = asyncHandler(async (req, res, next) => {
   if (!email || !password) {
     return next(new CustomError("Email and Password are required.", 400));
   }
-
+  // this regex will check the password has at-least 1 capital letter, one symbol , one number and must contain 6-10 characters
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,60}$/;
   if (!passwordRegex.test(password)) {

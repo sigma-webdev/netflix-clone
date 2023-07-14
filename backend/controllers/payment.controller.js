@@ -1,11 +1,11 @@
 const crypto = require("crypto");
 
-const userModel = require("../model/user.schema.js");
+const userModel = require("../models/user.model.js");
 const razorpay = require("../config/razorpay.config.js");
-const paymentModel = require("../model/payment.schema.js");
+const paymentModel = require("../models/payment.model.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
-const subscriptionPlanModel = require("../model/subscriptionPlan.schema.js");
+const subscriptionPlanModel = require("../models/subscriptionPlan.model.js");
 
 /******************************************************
  * @createSubscription
@@ -252,7 +252,7 @@ const updatePlan = asyncHandler(async (req, res, next) => {
 });
 
 /******************************************************
- * @updatePlan
+ * @deletePlan
  * @method DELETE
  * @route /api/v1/payment/plan
  * @description  delete the plan using planDocumentId
@@ -270,7 +270,7 @@ const deletePlan = asyncHandler(async (req, res, next) => {
     statusCode: 200,
     success: true,
     message: "Successfully deleted the plan",
-    data: null,
+    data: result,
   });
 });
 

@@ -12,7 +12,7 @@ const {
   getWatchListContent,
   removeContentFromWatchList,
   addContentToWatchList,
-} = require("../controller/user.controller.js");
+} = require("../controllers/user.controller.js");
 const authorizeRoles = require("../middleware/authorizeRoles.js");
 
 userRouter
