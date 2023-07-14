@@ -11,6 +11,7 @@ const initialState = {
   isTrailerUploading: false,
   isContentUploading: false,
   isDisplayToggleLoading: false,
+  isDisplayToggleLoading: false,
 };
 
 // fetch All content and fetch content by search text
