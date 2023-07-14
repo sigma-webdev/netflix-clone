@@ -166,7 +166,7 @@ export const adminManageContentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //fetch all content
+      // fetch All content and fetch content by search text
       .addCase(fetchContents.pending, (state) => {
         state.isLoading = true;
       })
