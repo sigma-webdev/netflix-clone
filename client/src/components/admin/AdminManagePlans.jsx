@@ -8,6 +8,7 @@ import {
 } from "../../store/adminPlansSlice";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import TableLoading from "../loader/TableLoader";
+import { toast } from "react-hot-toast";
 
 const AdminManagePlans = () => {
   const dispatch = useDispatch();
@@ -56,6 +57,10 @@ const AdminManagePlans = () => {
     if (formData.planName.trim() === "") {
       newErrors.planName = "Plan Name is required";
       isValid = false;
+    } else if (formData.planName.length > 14) {
+      console.log(formData.planName.length, "length");
+      newErrors.planName = "planName must be less than 14 characters";
+      isValid = false;
     } else {
       newErrors.planName = "";
     }
@@ -70,7 +75,7 @@ const AdminManagePlans = () => {
     if (formData.amount.trim() === "") {
       newErrors.amount = "Plan Price is required";
       isValid = false;
-    } else if (Number(formData.amount) <= 0) {
+    } else if (formData.amount <= 0) {
       newErrors.amount = "Plan Price must be greater than zero";
       isValid = false;
     } else {
@@ -85,7 +90,6 @@ const AdminManagePlans = () => {
   const handleAddPlan = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form Data:", formData);
       dispatch(createPlan(formData));
       toggleModal(false);
       setFormData({
@@ -95,18 +99,18 @@ const AdminManagePlans = () => {
         active: false,
       });
     } else {
-      console.log("Form data is invalid:", errors);
+      toast.error("Form data is invalid");
     }
   };
 
   // to enable/disable plan status
-  const handleToggleStatus = (planId, event) => {
+  const handleToggleStatus = (planId, event, index) => {
     const active = event.target.checked;
-    dispatch(updatePlanStatus({ id: planId, active: active }));
+    dispatch(updatePlanStatus({ id: planId, active: active, index: index }));
   };
 
-  const handleDeletePlan = (id) => {
-    dispatch(deletePlan(id));
+  const handleDeletePlan = (id, index) => {
+    dispatch(deletePlan({ id, index }));
   };
 
   return (
@@ -115,7 +119,15 @@ const AdminManagePlans = () => {
         <div className="absolute z-20 flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
           <div className="relative w-96 rounded-lg bg-white px-4 py-12">
             <div
-              onClick={() => toggleModal(false)}
+              onClick={() => {
+                toggleModal(false);
+                setFormData({
+                  planName: "",
+                  description: "",
+                  amount: "",
+                  active: false,
+                });
+              }}
               className="absolute right-3 top-2 cursor-pointer text-3xl text-black"
             >
               &times;
@@ -159,7 +171,7 @@ const AdminManagePlans = () => {
                   type="number"
                   id="amount"
                   name="amount"
-                  value={parseInt(formData.amount)}
+                  value={formData.amount}
                   onChange={handleInputChange}
                 />
                 {errors.amount && (
@@ -220,15 +232,15 @@ const AdminManagePlans = () => {
           <tbody>
             {loading ? (
               <TableLoading colLength={6} />
-            ) : allPlans?.data?.length === 0 ? (
+            ) : allPlans?.length === 0 ? (
               <tr>
                 <td className="px-2 py-6 text-center text-red-500" colSpan={5}>
                   No Plans Found
                 </td>
               </tr>
             ) : (
-              allPlans?.data?.length > 0 &&
-              allPlans?.data?.map((plan, index) => {
+              allPlans?.length > 0 &&
+              allPlans?.map((plan, index) => {
                 return (
                   <tr
                     key={plan._id}
@@ -247,7 +259,7 @@ const AdminManagePlans = () => {
                         loading={updateLoader}
                         isOn={plan.active}
                         onToggle={(event) =>
-                          handleToggleStatus(plan._id, event)
+                          handleToggleStatus(plan._id, event, index)
                         }
                       />
                       {plan.active ? (
@@ -259,7 +271,7 @@ const AdminManagePlans = () => {
                     <td className="p-2 text-center">
                       <button
                         onClick={() => {
-                          handleDeletePlan(plan._id);
+                          handleDeletePlan(plan._id, index);
                         }}
                         className="rounded-lg bg-red-600 px-4 py-2 hover:bg-red-500"
                       >

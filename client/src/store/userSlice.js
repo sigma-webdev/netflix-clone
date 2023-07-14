@@ -6,6 +6,7 @@ const initialState = {
   allUsers: [],
   userById: {},
   loading: false,
+  modalLoading: false,
 };
 
 export const getAllUsers = createAsyncThunk(
@@ -60,15 +61,15 @@ const userSlice = createSlice({
 
       // get user by id
       .addCase(getUserById.pending, (state) => {
-        state.loading = true;
+        state.modalLoading = true;
       })
       .addCase(getUserById.fulfilled, (state, action) => {
         state.userById = action.payload;
-        state.loading = false;
+        state.modalLoading = false;
       })
       .addCase(getUserById.rejected, (state) => {
         state.userById = {};
-        state.loading = false;
+        state.modalLoading = false;
       });
   },
 });

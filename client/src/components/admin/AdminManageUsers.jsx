@@ -51,7 +51,7 @@ const AdminManageUsers = () => {
   return (
     <>
       {isOpen && (
-        <div className="absolute flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
+        <div className="absolute z-20 flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
           <div className="relative w-96 rounded-lg bg-white px-4 py-12">
             <div
               onClick={() => toggleModal(false)}
@@ -123,7 +123,7 @@ const AdminManageUsers = () => {
               <th className="px-4 py-2 text-center">Action</th>
             </tr>
           </thead>
-          <tbody className=" border-opacity-0  ">
+          <tbody className=" border-opacity-0">
             {loading ? (
               <TableLoading colLength={4} />
             ) : (
@@ -139,15 +139,15 @@ const AdminManageUsers = () => {
                     <td className="px-4 py-3">{(page - 1) * 10 + index + 1}</td>
                     <td className="px-4 py-3">{user?.email?.split("@")[0]}</td>
                     <td className="px-4 py-3">{user?.email}</td>
-                    <td className="px-4 py-2">
-                      <div
+                    <td className="px-4 py-2 text-center">
+                      <button
                         onClick={() => {
                           userById(user._id);
                         }}
-                        className=" rounded bg-red-600 py-2 text-center font-bold text-white hover:bg-red-500"
+                        className=" rounded bg-red-600 px-16 py-2 text-center font-bold text-white hover:bg-red-500"
                       >
                         View User
-                      </div>
+                      </button>
                     </td>
                   </tr>
                 );
