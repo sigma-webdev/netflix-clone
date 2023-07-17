@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers, getUserById } from "../../store/userSlice";
+import { getAllUsers, getUserById } from "../../store/adminUserSlice";
 import { HiSearch } from "react-icons/hi";
 import TableLoading from "../loader/TableLoader";
 

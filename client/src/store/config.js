@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import contentReducer from "./contentSlice";
-import userReducer from "./userSlice";
+import userReducer from "./adminUserSlice";
 import authReducer from "./authSlice.js";
 import razorpayReducer from "./razorpaySlice";
 import adminManageContentsSlice from "./adminManageContentsSlice";

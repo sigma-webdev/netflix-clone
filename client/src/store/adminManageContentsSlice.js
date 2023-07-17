@@ -13,7 +13,6 @@ const initialState = {
   isDisplayToggleLoading: false,
 };
 
-
 // fetch All content and fetch content by search text
 export const fetchContents = createAsyncThunk(
   "content/fetchContentBySearch",
@@ -33,7 +32,6 @@ export const fetchContents = createAsyncThunk(
   }
 );
 
-
 // fetch content by id
 export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
@@ -48,8 +46,6 @@ export const fetchContentById = createAsyncThunk(
     }
   }
 );
-
-
 
 //  add new content
 export const addNewContent = createAsyncThunk(
@@ -135,7 +131,6 @@ export const updateContentTrailerById = createAsyncThunk(
     try {
       const response = await axiosInstance.put(`/contents/${id}`, newData);
       return response?.data?.data;
-
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -175,7 +170,7 @@ export const adminManageContentsSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(fetchContents.rejected, (state) => {
-        state.filteredContent = {}
+        state.filteredContent = {};
         state.isLoading = false;
       })
 
@@ -197,7 +192,11 @@ export const adminManageContentsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addNewContent.fulfilled, (state, action) => {
-        state.filteredContent = {...state.filteredContent, contents:[...state.filteredContent.contents, action.payload]}
+        state.filteredContent = {
+          ...state.filteredContent,
+          contents: [...state.filteredContent.contents, action.payload],
+        };
+
         state.isLoading = false;
         toast.success("content added successfully ✅");
       })
@@ -225,7 +224,7 @@ export const adminManageContentsSlice = createSlice({
         state.allContent = [];
         state.isLoading = false;
       })
-      
+
       // update toggle: display content to user
       .addCase(ToggleDisplayContentToUser.pending, (state) => {
         state.isDisplayToggleLoading = true;
