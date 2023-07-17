@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiSearchAlt2 } from "react-icons/bi";
 import {
   addNewContent,
-  fetchContentBySearch,
+  fetchContents,
   ToggleDisplayContentToUser,
-} from "../../store/adminManageContentSlice";
+} from "../../store/adminManageContentsSlice";
 import { Link } from "react-router-dom";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import TableLoading from "../loader/TableLoader";
@@ -32,15 +32,13 @@ const AdminManageContents = () => {
 
   const dispatch = useDispatch();
 
-  const allContents = useSelector((state) => state.admin.filteredContent);
+  const allContents = useSelector((state) => state.adminManageContents.filteredContent);
+  const isContentLoading = useSelector((state) => state.adminManageContents.isLoading);
+  const isDisplayToggleLoading = useSelector((state) => state.adminManageContents.isDisplayToggleLoading);
   const [searchTerm, setSearchTerm] = useState("");
-  const isContentLoading = useSelector((state) => state.admin.isLoading);
-  const isDisplayToggleLoading = useSelector(
-    (state) => state.admin.isDisplayToggleLoading
-  );
 
   useEffect(() => {
-    dispatch(fetchContentBySearch({ pageNo: page }));
+    dispatch(fetchContents({ pageNo: page }));
   }, [page]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -88,7 +86,7 @@ const AdminManageContents = () => {
 
   const getSearch = (e) => {
     e.preventDefault();
-    dispatch(fetchContentBySearch({ searchText: searchTerm }));
+    dispatch(fetchContents({ searchText: searchTerm }));
     setSearchTerm("");
   };
 
@@ -341,9 +339,10 @@ const AdminManageContents = () => {
                 <option value="">Select an option</option>
                 <option value="English">English</option>
                 <option value="Hindi">Hindi</option>
+                <option value="Malayalam">Malayalam</option>
+                <option value="Tamil">Tamil</option>
                 <option value="Korean">Korean</option>
                 <option value="Japan">Japanese</option>
-                <option value="Tamil">Tamil</option>
                 <option value="Spanish">Spanish</option>
                 <option value="German">German</option>
               </select>
