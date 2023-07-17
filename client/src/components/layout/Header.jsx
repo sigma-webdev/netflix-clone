@@ -1,16 +1,17 @@
-import netflixLogo from "./../../assets/netflix_logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaSignOutAlt } from "react-icons/fa";
+import { RiAdminFill } from "react-icons/ri";
 
 import Menu from "../menu/Menu";
-import netflixAvatar from "../../assets/netflix-avtar.jpg";
+import CircularLoader from "../loader/CircularLoader";
 import { SIGN_OUT } from "../../store/authSlice.js";
 import { fetchContentBySearch } from "../../store/contentSlice";
-import { RiAdminFill } from "react-icons/ri";
-import CircularLoader from "../loader/CircularLoader";
+
+import netflixLogo from "./../../assets/logos/netflix_logo.png";
+import netflixAvatar from "../../assets/icons/netflix-avtar.jpg";
 
 const Header = () => {
   const navigate = useNavigate();
