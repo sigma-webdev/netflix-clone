@@ -8,9 +8,9 @@ const {
   updateContentById,
   contentLikesAndDisLikes,
 } = require("../controllers/content.controller.js");
-const jwtAuth = require("../middleware/jwtAuth.js");
-const authorizeRoles = require("../middleware/authorizeRoles.js");
-const checkUserSubscription = require("../middleware/checkUserSubscription.js");
+const jwtAuth = require("../middlewares/jwtAuth.js");
+const authorizeRoles = require("../middlewares/authorizeRoles.js");
+const checkUserSubscription = require("../middlewares/checkUserSubscription.js");
 
 const contentRoute = express.Router();
 // like & dislike routes --
