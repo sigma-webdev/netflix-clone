@@ -11,7 +11,6 @@ const initialState = {
   isTrailerUploading: false,
   isContentUploading: false,
   isDisplayToggleLoading: false,
-  isDisplayToggleLoading: false,
 };
 
 // fetch All content and fetch content by search text
@@ -132,7 +131,6 @@ export const updateContentTrailerById = createAsyncThunk(
     try {
       const response = await axiosInstance.put(`/contents/${id}`, newData);
       return response?.data?.data;
-
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
