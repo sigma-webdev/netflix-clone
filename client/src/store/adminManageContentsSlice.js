@@ -10,16 +10,21 @@ const initialState = {
   isThumbnailUploading: false,
   isTrailerUploading: false,
   isContentUploading: false,
-  isDisplyToggleLoading: false,
+  isDisplayToggleLoading: false,
 };
 
-// fetch all content
-export const fetchAllContent = createAsyncThunk(
-  "content/fetchContent",
-  async () => {
+
+// fetch All content and fetch content by search text
+export const fetchContents = createAsyncThunk(
+  "content/fetchContentBySearch",
+  async ({ pageNo, searchText }) => {
     try {
-      const response = await axiosInstance.get("/contents?contentType=movie");
-      return response?.data?.data;
+      const url = searchText
+        ? `/contents?search=${searchText}`
+        : `/contents?page=${pageNo}&limit=5`;
+      const response = await axiosInstance.get(url);
+      const data = response?.data?.data;
+      return data;
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -27,6 +32,7 @@ export const fetchAllContent = createAsyncThunk(
     }
   }
 );
+
 
 // fetch content by id
 export const fetchContentById = createAsyncThunk(
@@ -43,25 +49,7 @@ export const fetchContentById = createAsyncThunk(
   }
 );
 
-// fetch content by search text
-export const fetchContentBySearch = createAsyncThunk(
-  "content/fetchContentBySearch",
-  async ({ pageNo, searchText }) => {
-    try {
-      const url = searchText
-        ? `/contents?search=${searchText}`
-        : `/contents?page=${pageNo}&limit=5`;
-      const response = await axiosInstance.get(url);
-      const data = response?.data?.data;
-      localStorage.setItem("filteredContent", JSON.stringify(data));
-      return data;
-    } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
-    }
-  }
-);
+
 
 //  add new content
 export const addNewContent = createAsyncThunk(
@@ -92,6 +80,7 @@ export const updateContentDetailsById = createAsyncThunk(
     }
   }
 );
+
 // update toggle display content to user
 export const ToggleDisplayContentToUser = createAsyncThunk(
   "content/ToggleDisplayContentToUser",
@@ -146,6 +135,7 @@ export const updateContentTrailerById = createAsyncThunk(
     try {
       const response = await axiosInstance.put(`/contents/${id}`, newData);
       return response?.data?.data;
+
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -170,22 +160,22 @@ export const deleteContentById = createAsyncThunk(
   }
 );
 
-export const adminSlice = createSlice({
-  name: "admin",
+export const adminManageContentsSlice = createSlice({
+  name: "manageContents",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //fetch all content
-      .addCase(fetchContentBySearch.pending, (state) => {
+      // fetch All content and fetch content by search text
+      .addCase(fetchContents.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchContentBySearch.fulfilled, (state, action) => {
+      .addCase(fetchContents.fulfilled, (state, action) => {
         state.filteredContent = action.payload;
         state.isLoading = false;
       })
-      .addCase(fetchContentBySearch.rejected, (state) => {
-        state.filteredContent = [];
+      .addCase(fetchContents.rejected, (state) => {
+        state.filteredContent = {}
         state.isLoading = false;
       })
 
@@ -207,12 +197,11 @@ export const adminSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addNewContent.fulfilled, (state, action) => {
-        state.allContent = [...state.filteredContent.contents, action.payload];
+        state.filteredContent = {...state.filteredContent, contents:[...state.filteredContent.contents, action.payload]}
         state.isLoading = false;
         toast.success("content added successfully ✅");
       })
       .addCase(addNewContent.rejected, (state) => {
-        state.currentContent = null;
         state.isLoading = false;
       })
 
@@ -222,21 +211,24 @@ export const adminSlice = createSlice({
       })
       .addCase(deleteContentById.fulfilled, (state, action) => {
         const deletedContentId = action.payload.contentId;
-        const filteredContent = state.allContent.filter(
-          (item) => item._id !== deletedContentId
+        const newContentArr = state.filteredContent.contents.filter(
+          (content) => content._id !== deletedContentId
         );
+        state.filteredContent = {
+          ...state.filteredContent,
+          contents: newContentArr,
+        };
         toast.success("content deleted successfully ✅");
-        state.allContent = filteredContent;
         state.isLoading = false;
       })
       .addCase(deleteContentById.rejected, (state) => {
         state.allContent = [];
         state.isLoading = false;
-        
       })
-      // update toggle display content to user
+      
+      // update toggle: display content to user
       .addCase(ToggleDisplayContentToUser.pending, (state) => {
-        state.isDisplyToggleLoading = true;
+        state.isDisplayToggleLoading = true;
       })
       .addCase(ToggleDisplayContentToUser.fulfilled, (state, action) => {
         const updatedArr = state.filteredContent.contents.map((content) =>
@@ -246,10 +238,10 @@ export const adminSlice = createSlice({
           ...state.filteredContent,
           contents: updatedArr,
         };
-        state.isDisplyToggleLoading = false;
+        state.isDisplayToggleLoading = false;
       })
       .addCase(ToggleDisplayContentToUser.rejected, (state) => {
-        state.isDisplyToggleLoading = false;
+        state.isDisplayToggleLoading = false;
       })
 
       // update content by id for details
@@ -263,7 +255,10 @@ export const adminSlice = createSlice({
         const newContentArr = state.filteredContent.contents.map((content) =>
           content._id === updatedContent._id ? updatedContent : content
         );
-        state.filteredContent = {...state.filteredContent, contents: newContentArr}
+        state.filteredContent = {
+          ...state.filteredContent,
+          contents: newContentArr,
+        };
         state.isDetailsUploading = false;
       })
       .addCase(updateContentDetailsById.rejected, (state) => {
@@ -280,7 +275,10 @@ export const adminSlice = createSlice({
         const newContentArr = state.filteredContent.contents.map((content) =>
           content._id === updatedContent._id ? updatedContent : content
         );
-        state.filteredContent = {...state.filteredContent, contents: newContentArr}
+        state.filteredContent = {
+          ...state.filteredContent,
+          contents: newContentArr,
+        };
         toast.success("content thumbnail updated successfully ✅");
         state.isThumbnailUploading = false;
       })
@@ -298,7 +296,10 @@ export const adminSlice = createSlice({
         const newContentArr = state.filteredContent.contents.map((content) =>
           content._id === updatedContent._id ? updatedContent : content
         );
-        state.filteredContent = { ...state.filteredContent, contents: newContentArr}
+        state.filteredContent = {
+          ...state.filteredContent,
+          contents: newContentArr,
+        };
         toast.success("content video updated successfully ✅");
         state.isContentUploading = false;
       })
@@ -316,7 +317,10 @@ export const adminSlice = createSlice({
         const newContentArr = state.filteredContent.contents.map((content) =>
           content._id === updatedContent._id ? updatedContent : content
         );
-        state.filteredContent = {...state.filteredContent, contents: newContentArr}
+        state.filteredContent = {
+          ...state.filteredContent,
+          contents: newContentArr,
+        };
         toast.success("content trailer updated successfully ✅");
         state.isTrailerUploading = false;
       })
@@ -326,4 +330,4 @@ export const adminSlice = createSlice({
   },
 });
 
-export default adminSlice.reducer;
+export default adminManageContentsSlice.reducer;
