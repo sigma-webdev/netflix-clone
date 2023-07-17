@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //components
-import Layout from "../../components/layout/Layout";
+import HomeLayout from "../../components/layout/home/HomeLayout";
 // packages
 import { Link, useNavigate } from "react-router-dom";
 // thunk
@@ -28,7 +28,7 @@ const SignIn = () => {
   };
 
   return (
-    <Layout bgcolor="bg-[#00081D]" padding="py-20">
+    <HomeLayout bgcolor="bg-[#00081D]" padding="py-20">
       <div className="flex h-screen w-full items-center justify-center bg-netflix-home bg-cover bg-no-repeat">
         <div className="my-60 h-fit rounded-lg bg-black bg-opacity-90 px-16 py-12">
           <div className="text-3xl text-white">Sign In</div>
@@ -98,7 +98,7 @@ const SignIn = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </HomeLayout>
   );
 };
 
