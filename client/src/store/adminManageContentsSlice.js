@@ -132,6 +132,7 @@ export const updateContentTrailerById = createAsyncThunk(
     try {
       const response = await axiosInstance.put(`/contents/${id}`, newData);
       return response?.data?.data;
+
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -197,6 +198,7 @@ export const adminManageContentsSlice = createSlice({
           ...state.filteredContent,
           contents: [...state.filteredContent.contents, action.payload],
         };
+
         state.isLoading = false;
         toast.success("content added successfully ✅");
       })
