@@ -1,6 +1,6 @@
 const CustomError = require("../utils/customError.js");
 const contentModel = require("../models/content.model.js");
-const asyncHandler = require("../middleware/asyncHandler.js");
+const asyncHandler = require("../middlewares/asyncHandler.js");
 const getContentLength = require("../utils/getVideoLength.js");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary.js");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary.js");
@@ -10,8 +10,9 @@ const likeAndDislike = require("../utils/likeDislike.js");
  * @createContent
  * @route http://localhost:8081/api/v1/content/
  * @description  controller to create the content
- * @parameters {request body object}
+ * @body { Object } required contain fields
  * @return { Object } content object
+ * @access ADMIN only
  ********************/
 const createContent = asyncHandler(async (req, res, next) => {
   // get required field from body
@@ -120,8 +121,9 @@ const createContent = asyncHandler(async (req, res, next) => {
  * @getContent
  * @route http://localhost:8081/api/v1/contents/
  * @description  controller to get all the contents that are store in the database
- * @parameters {string, object, enum, array}
+ * @query {string, object, enum, array}
  * @return { Object } content object
+ * @access USERS and ADMIN
  ********************/
 const getContent = asyncHandler(async (req, res, next) => {
   const {
@@ -235,9 +237,10 @@ const getContent = asyncHandler(async (req, res, next) => {
 /********************
  * @getContentById
  * @route http://localhost:8081/api/v1/contents/id
- * @description  controller to create the content
+ * @description create the content
  * @parameters {Object id}
  * @return { Object } content object
+ * @access USERS and ADMIN
  ********************/
 const getContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
@@ -268,6 +271,7 @@ const getContentById = asyncHandler(async (req, res, next) => {
  * @description  controller to delete the content
  * @parameters {Object id}
  * @return { Object } content object
+ * @access ADMIN only
  ********************/
 const deleteContentById = asyncHandler(async (req, res, next) => {
   // extract id
@@ -316,6 +320,7 @@ const deleteContentById = asyncHandler(async (req, res, next) => {
  * @description  controller to update the content
  * @parameters {Object id}
  * @return { Object } content object
+ * @access ADMIN only
  ********************/
 const updateContentById = asyncHandler(async (req, res, next) => {
   const { contentId } = req.params;
@@ -414,10 +419,13 @@ const updateContentById = asyncHandler(async (req, res, next) => {
  * @description  controller to like and dislike content
  * @parameters {user id , content id}
  * @return { Object } updated content object
+ * @access USERS and ADMIN
  ********************/
 /******* User likes ****** */
-const contentLikes = asyncHandler(async (req, res, next) => {
+const contentLikesAndDisLikes = asyncHandler(async (req, res, next) => {
+  // get content Id and action value
   const { contentId, action } = req.params;
+  // get user Id
   const { id: userId } = req.user;
 
   const content = await contentModel.findById(contentId);
@@ -443,5 +451,5 @@ module.exports = {
   getContentById,
   deleteContentById,
   updateContentById,
-  contentLikes,
+  contentLikesAndDisLikes,
 };

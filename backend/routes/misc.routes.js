@@ -1,13 +1,13 @@
 const express = require("express");
 
-const jwtAuth = require("../middleware/jwtAuth.js");
+const jwtAuth = require("../middlewares/jwtAuth.js");
 const {
   getUsersStatistics,
   getMoviesStatistics,
   getSeriesStatistics,
   getPaymentStatistics,
 } = require("../controllers/misc.controller.js");
-const authorizeRoles = require("../middleware/authorizeRoles.js");
+const authorizeRoles = require("../middlewares/authorizeRoles.js");
 
 const miscRoute = express.Router();
 

@@ -1,5 +1,5 @@
 const userModel = require("../models/user.model.js");
-const asyncHandler = require("../middleware/asyncHandler.js");
+const asyncHandler = require("../middlewares/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 
 /******************************************************
