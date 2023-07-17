@@ -256,8 +256,8 @@ const AdminManageContents = () => {
               </div>
               {newContentData.cast.length > 0 && (
                 <div className="flex flex-wrap">
-                  {newContentData.cast.map((castname) => (
-                    <div className="relative m-2  rounded  bg-blue-200">
+                  {newContentData.cast.map((castname, index) => (
+                    <div key={index} className="relative m-2  rounded  bg-blue-200">
                       <div
                         onClick={() => handleRemoveCast(castname)}
                         className="absolute -top-1 right-1 cursor-pointer"
