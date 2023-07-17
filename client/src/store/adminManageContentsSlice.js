@@ -32,21 +32,6 @@ export const fetchContents = createAsyncThunk(
   }
 );
 
-// fetch content by id
-export const fetchContentById = createAsyncThunk(
-  "content/fetchContentById",
-  async ({ contentId }) => {
-    try {
-      const response = await axiosInstance.get(`/contents/${contentId}`);
-      return response?.data?.data;
-    } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
-    }
-  }
-);
-
 //  add new content
 export const addNewContent = createAsyncThunk(
   "content/addNewContent",
@@ -62,13 +47,29 @@ export const addNewContent = createAsyncThunk(
   }
 );
 
-//  update content by id
-export const updateContentDetailsById = createAsyncThunk(
-  "content/updateContentDetailsById",
-  async ({ id, newData }) => {
+// fetch content by id
+export const fetchContentById = createAsyncThunk(
+  "content/fetchContentById",
+  async ({ contentId }) => {
     try {
-      const response = await axiosInstance.put(`/contents/${id}`, newData);
+      const response = await axiosInstance.get(`/contents/${contentId}`);
       return response?.data?.data;
+    } catch (error) {
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
+    }
+  }
+);
+
+// delete content by id
+export const deleteContentById = createAsyncThunk(
+  "content/deleteContentById",
+  async (contentId) => {
+    try {
+      const response = await axiosInstance.delete(`/contents/${contentId}`);
+      const data = response.data.contentData;
+      return { data, contentId };
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -94,9 +95,39 @@ export const ToggleDisplayContentToUser = createAsyncThunk(
   }
 );
 
+//  update content details by id
+export const updateContentDetailsById = createAsyncThunk(
+  "content/updateContentDetailsById",
+  async ({ id, newData }) => {
+    try {
+      const response = await axiosInstance.put(`/contents/${id}`, newData);
+      return response?.data?.data;
+    } catch (error) {
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
+    }
+  }
+);
+
 //  update content thumbnail by id
 export const updateContentThumbnailById = createAsyncThunk(
   "content/updateContentThumbnailById",
+  async ({ id, newData }) => {
+    try {
+      const response = await axiosInstance.put(`/contents/${id}`, newData);
+      return response?.data?.data;
+    } catch (error) {
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
+    }
+  }
+);
+
+//  update content trailer by id
+export const updateContentTrailerById = createAsyncThunk(
+  "content/updateContentTrailerById",
   async ({ id, newData }) => {
     try {
       const response = await axiosInstance.put(`/contents/${id}`, newData);
@@ -124,37 +155,12 @@ export const updateContentVideoById = createAsyncThunk(
   }
 );
 
-//  update content video by id
-export const updateContentTrailerById = createAsyncThunk(
-  "content/updateContentTrailerById",
-  async ({ id, newData }) => {
-    try {
-      const response = await axiosInstance.put(`/contents/${id}`, newData);
-      return response?.data?.data;
-    } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
-    }
-  }
-);
 
-// delete content by id
-export const deleteContentById = createAsyncThunk(
-  "content/deleteContentById",
-  async (contentId) => {
-    try {
-      const response = await axiosInstance.delete(`/contents/${contentId}`);
-      const data = response.data.contentData;
-      return { data, contentId };
-    } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
-    }
-  }
-);
 
+
+
+
+// admin manage content slice
 export const adminManageContentsSlice = createSlice({
   name: "manageContents",
   initialState,
@@ -170,7 +176,20 @@ export const adminManageContentsSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(fetchContents.rejected, (state) => {
-        state.filteredContent = {};
+        state.filteredContent = {}
+        state.isLoading = false;
+      })
+
+      // add new content
+      .addCase(addNewContent.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addNewContent.fulfilled, (state, action) => {
+        state.filteredContent = {...state.filteredContent, contents:[...state.filteredContent.contents, action.payload]}
+        state.isLoading = false;
+        toast.success("content added successfully ✅");
+      })
+      .addCase(addNewContent.rejected, (state) => {
         state.isLoading = false;
       })
 
@@ -187,22 +206,6 @@ export const adminManageContentsSlice = createSlice({
         state.isLoading = false;
       })
 
-      // add new content
-      .addCase(addNewContent.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(addNewContent.fulfilled, (state, action) => {
-        state.filteredContent = {
-          ...state.filteredContent,
-          contents: [...state.filteredContent.contents, action.payload],
-        };
-
-        state.isLoading = false;
-        toast.success("content added successfully ✅");
-      })
-      .addCase(addNewContent.rejected, (state) => {
-        state.isLoading = false;
-      })
 
       // delete content by id
       .addCase(deleteContentById.pending, (state) => {
@@ -217,11 +220,11 @@ export const adminManageContentsSlice = createSlice({
           ...state.filteredContent,
           contents: newContentArr,
         };
+        state.currentContent = {}
         toast.success("content deleted successfully ✅");
         state.isLoading = false;
       })
       .addCase(deleteContentById.rejected, (state) => {
-        state.allContent = [];
         state.isLoading = false;
       })
 
@@ -285,6 +288,27 @@ export const adminManageContentsSlice = createSlice({
         state.isThumbnailUploading = false;
       })
 
+        // update content trailer by id
+        .addCase(updateContentTrailerById.pending, (state) => {
+          state.isTrailerUploading = true;
+        })
+        .addCase(updateContentTrailerById.fulfilled, (state, action) => {
+          const updatedContent = action.payload;
+          state.currentContent = updatedContent;
+          const newContentArr = state.filteredContent.contents.map((content) =>
+            content._id === updatedContent._id ? updatedContent : content
+          );
+          state.filteredContent = {
+            ...state.filteredContent,
+            contents: newContentArr,
+          };
+          toast.success("content trailer updated successfully ✅");
+          state.isTrailerUploading = false;
+        })
+        .addCase(updateContentTrailerById.rejected, (state) => {
+          state.isTrailerUploading = false;
+        })
+
       // update content video by id
       .addCase(updateContentVideoById.pending, (state) => {
         state.isContentUploading = true;
@@ -306,26 +330,7 @@ export const adminManageContentsSlice = createSlice({
         state.isContentUploading = false;
       })
 
-      // update content trailer by id
-      .addCase(updateContentTrailerById.pending, (state) => {
-        state.isTrailerUploading = true;
-      })
-      .addCase(updateContentTrailerById.fulfilled, (state, action) => {
-        const updatedContent = action.payload;
-        state.currentContent = updatedContent;
-        const newContentArr = state.filteredContent.contents.map((content) =>
-          content._id === updatedContent._id ? updatedContent : content
-        );
-        state.filteredContent = {
-          ...state.filteredContent,
-          contents: newContentArr,
-        };
-        toast.success("content trailer updated successfully ✅");
-        state.isTrailerUploading = false;
-      })
-      .addCase(updateContentTrailerById.rejected, (state) => {
-        state.isTrailerUploading = false;
-      });
+    
   },
 });
 
