@@ -4,8 +4,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        "netflix-home": "url('/src/assets/netflixbg.png')",
-        "netflix-signUp": "url('/src/assets/images/netflix-signup.jpg')",
+        "netflix-home": "url('/src/assets/images/netflixbg.png')",
       },
       backgroundColor: {
         "netflix-blue": "#00081D",
