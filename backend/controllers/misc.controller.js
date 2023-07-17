@@ -1,5 +1,5 @@
 const razorpay = require("../config/razorpay.config.js");
-const asyncHandler = require("../middleware/asyncHandler.js");
+const asyncHandler = require("../middlewares/asyncHandler.js");
 const contentModel = require("../models/content.model.js");
 const userModel = require("../models/user.model.js");
 
