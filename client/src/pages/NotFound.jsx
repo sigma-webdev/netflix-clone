@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/netflix_logo.png";
+import logo from "../assets/logos/netflix_logo.png";
 import { Link, useRouteError } from "react-router-dom";
 
 const NotFound = () => {

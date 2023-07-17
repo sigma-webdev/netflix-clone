@@ -1,7 +1,7 @@
 const express = require("express");
 const userRouter = express.Router();
-const jwtAuth = require("../middleware/jwtAuth.js");
-const checkUserSubscription = require("../middleware/checkUserSubscription.js");
+const jwtAuth = require("../middlewares/jwtAuth.js");
+const checkUserSubscription = require("../middlewares/checkUserSubscription.js");
 
 const {
   getUser,
@@ -13,7 +13,7 @@ const {
   removeContentFromWatchList,
   addContentToWatchList,
 } = require("../controllers/user.controller.js");
-const authorizeRoles = require("../middleware/authorizeRoles.js");
+const authorizeRoles = require("../middlewares/authorizeRoles.js");
 
 userRouter
   .route("/watch-history")

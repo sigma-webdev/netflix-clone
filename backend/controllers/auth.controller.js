@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const validator = require("email-validator");
 const bcrypt = require("bcrypt");
 
-const asyncHandler = require("../middleware/asyncHandler.js");
+const asyncHandler = require("../middlewares/asyncHandler.js");
 const userModel = require("../models/user.model.js");
 const CustomError = require("../utils/customError.js");
 const cookieOptions = require("../utils/cookieOption.js");

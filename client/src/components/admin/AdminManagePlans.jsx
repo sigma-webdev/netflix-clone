@@ -9,6 +9,7 @@ import {
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import TableLoading from "../loader/TableLoader";
 import { toast } from "react-hot-toast";
+import Dialog from "../dialogbox/Dialog";
 
 const AdminManagePlans = () => {
   const dispatch = useDispatch();
@@ -115,6 +116,79 @@ const AdminManagePlans = () => {
 
   return (
     <>
+      <Dialog
+        title="Add Plan"
+        isOpen={isOpen}
+        closeModal={() => {
+          toggleModal(false);
+        }}
+      >
+        <form onSubmit={handleAddPlan} className=" space-y-4 text-black">
+          <div>
+            <label htmlFor="">Plan Name:</label>
+            <input
+              className="w-full border px-2 py-2 outline-none"
+              type="text"
+              id="planName"
+              name="planName"
+              value={formData.planName}
+              onChange={handleInputChange}
+            />
+            {errors.planName && (
+              <span className="text-red-600">{errors.planName}</span>
+            )}
+          </div>
+          <div>
+            <label htmlFor="">Description :</label>
+            <input
+              className="w-full border px-2 py-2 outline-none"
+              type="text"
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+            />
+            {errors.description && (
+              <span className="text-red-600">{errors.description}</span>
+            )}
+          </div>
+          <div>
+            <label htmlFor="">Plan Price :</label>
+            <input
+              className="w-full border px-2 py-2 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              type="number"
+              id="amount"
+              name="amount"
+              value={formData.amount}
+              onChange={handleInputChange}
+            />
+            {errors.amount && (
+              <span className="text-red-600">{errors.amount}</span>
+            )}
+          </div>
+          <div className="flex items-center">
+            <label htmlFor="">Active Status :</label>
+            <ToggleSwitch
+              id="active"
+              name="active"
+              isOn={formData.active}
+              onToggle={() =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  active: !prevFormData.active,
+                }))
+              }
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full rounded bg-red-600 py-2 text-white hover:bg-red-700"
+            disabled={loading ? true : false}
+          >
+            Add Plan
+          </button>
+        </form>
+      </Dialog>
       {isOpen && (
         <div className="absolute z-20 flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
           <div className="relative w-96 rounded-lg bg-white px-4 py-12">
@@ -132,74 +206,6 @@ const AdminManagePlans = () => {
             >
               &times;
             </div>
-            <form onSubmit={handleAddPlan} className=" space-y-4 text-black">
-              <div>
-                <h3 className="text-center font-bold text-red-600">Add Plan</h3>
-              </div>
-              <div>
-                <label htmlFor="">Plan Name:</label>
-                <input
-                  className="w-full border px-2 py-2 outline-none"
-                  type="text"
-                  id="planName"
-                  name="planName"
-                  value={formData.planName}
-                  onChange={handleInputChange}
-                />
-                {errors.planName && (
-                  <span className="text-red-600">{errors.planName}</span>
-                )}
-              </div>
-              <div>
-                <label htmlFor="">Description :</label>
-                <input
-                  className="w-full border px-2 py-2 outline-none"
-                  type="text"
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                />
-                {errors.description && (
-                  <span className="text-red-600">{errors.description}</span>
-                )}
-              </div>
-              <div>
-                <label htmlFor="">Plan Price :</label>
-                <input
-                  className="w-full border px-2 py-2 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                  type="number"
-                  id="amount"
-                  name="amount"
-                  value={formData.amount}
-                  onChange={handleInputChange}
-                />
-                {errors.amount && (
-                  <span className="text-red-600">{errors.amount}</span>
-                )}
-              </div>
-              <div className="flex items-center">
-                <label htmlFor="">Active Status :</label>
-                <ToggleSwitch
-                  id="active"
-                  name="active"
-                  isOn={formData.active}
-                  onToggle={() =>
-                    setFormData((prevFormData) => ({
-                      ...prevFormData,
-                      active: !prevFormData.active,
-                    }))
-                  }
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full rounded bg-red-600 py-2 text-white hover:bg-red-700"
-                disabled={loading ? true : false}
-              >
-                Add Plan
-              </button>
-            </form>
           </div>
         </div>
       )}
