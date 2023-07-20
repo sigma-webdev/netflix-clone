@@ -37,14 +37,14 @@ const DetailsCard = ({
   };
 
   return (
-    <div className=" tranistion relative mx-auto w-[90%] rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[650px]">
+    <div className="tranistion no-scrollbar relative mx-auto h-[500px] w-[90%] overflow-y-scroll rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[650px]">
       <div className="relative">
         {/* preview video*/}
         <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[100px] lg:h-[150px]"></div>
         <div className="w-full">
           <video
             ref={videoRef}
-            className="h-[250px] w-full rounded-tl rounded-tr object-cover"
+            className="h-[350px] w-full rounded-tl rounded-tr object-cover"
             poster={thumbnailURL}
             src={trailerUrl}
             loop
