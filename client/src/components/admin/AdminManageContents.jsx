@@ -73,7 +73,13 @@ const AdminManageContents = () => {
       toast.error("genre is already added");
       return;
     }
-     
+    if(newContentData.genres.length > 2){
+      toast.error("genres cannot be more than 3 ");
+        return;
+    }
+    const newGenersArr = [...newContentData.genres, genreInput];
+    setNewContentData({ ...newContentData, genres: newGenersArr });
+    setGenreInput("");
   };
 
   
