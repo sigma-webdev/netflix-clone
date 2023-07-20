@@ -33,7 +33,7 @@ const PreviewCard = ({
   isDisliked,
   releaseYear,
   contentDuration,
-  watch,
+  toWatch,
 }) => {
   const userId = useSelector((state) => state.auth.userData._id);
   const { likeDisLikeLoading, watchHistoryLoading } = useSelector(
@@ -44,16 +44,20 @@ const PreviewCard = ({
   const navigate = useNavigate();
   const videoRef = useRef(null);
 
-  function playPauseMedia() {
+  const playVideo = () => {
     const media = videoRef.current;
-
     if (media.paused) {
       media.play();
-    } else {
+    }
+  };
+
+  const pauseVideo = () => {
+    const media = videoRef.current;
+    if (!media.paused) {
       media.pause();
       media.load();
     }
-  }
+  };
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
@@ -74,7 +78,7 @@ const PreviewCard = ({
   };
 
   const watchListHandler = () => {
-    if (watch) {
+    if (toWatch) {
       dispatch(removeContentFromWatchList({ contentId }));
     } else {
       dispatch(addContentToWatchList({ contentId }));
@@ -90,8 +94,8 @@ const PreviewCard = ({
   return (
     <div
       className="my-8 w-48 scale-100 rounded bg-netflix-black drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-4 hover:scale-125 hover:opacity-100 md:w-64"
-      onMouseLeave={() => playPauseMedia()}
-      onMouseEnter={() => playPauseMedia()}
+      onMouseLeave={() => pauseVideo()}
+      onMouseEnter={() => playVideo()}
     >
       {/* preview video*/}
       <div className="w-48 md:w-64">
@@ -117,34 +121,40 @@ const PreviewCard = ({
                 <BsFillPlayFill className="text-xl" />
               </button>
             </div>
-            <button
-              onClick={likeContentHanlder}
-              className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
-              disabled={likeDisLikeLoading}
-            >
-              <AiFillLike
-                className={`${
-                  isLiked ? "text-green-500" : "text-white hover:text-green-500"
-                } text-xl`}
-              />
-            </button>
-            <button
-              onClick={dislikeContentHanlder}
-              className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
-              disabled={likeDisLikeLoading}
-            >
-              <AiFillDislike
-                className={`${
-                  isDisliked ? "text-red-500" : "text-white hover:text-red-500"
-                } text-xl`}
-              />
-            </button>
+            <div>
+              <button
+                onClick={likeContentHanlder}
+                className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+                disabled={likeDisLikeLoading}
+              >
+                <AiFillLike
+                  className={`${
+                    isLiked
+                      ? "text-green-500"
+                      : "text-white hover:text-green-500"
+                  } text-xl`}
+                />
+              </button>
+              <button
+                onClick={dislikeContentHanlder}
+                className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+                disabled={likeDisLikeLoading}
+              >
+                <AiFillDislike
+                  className={`${
+                    isDisliked
+                      ? "text-red-500"
+                      : "text-white hover:text-red-500"
+                  } text-xl`}
+                />
+              </button>
+            </div>
             <button
               onClick={watchListHandler}
               disabled={watchHistoryLoading}
               className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
             >
-              {watch ? (
+              {toWatch ? (
                 <AiOutlineMinus className="text-xl" />
               ) : (
                 <AiOutlinePlus className="text-xl" />
