@@ -14,12 +14,12 @@ const {
   getUser,
 } = require("../controllers/auth.controller.js");
 
-authRoute.post("/signup", signUp);
-authRoute.post("/signin", signIn);
-authRoute.post("/forgot-password", forgotPassword);
-authRoute.post("/reset-password/:token", resetPassword);
-authRoute.post("/user-exist", userExist);
-authRoute.get("/signout", jwtAuth, signOut);
-authRoute.get("/user", jwtAuth, getUser);
+authRoute.route("/signup").post(signUp);
+authRoute.route("/signin").post(signIn);
+authRoute.route("/forgot-password").post(forgotPassword);
+authRoute.route("/reset-password/:token").post(resetPassword);
+authRoute.route("/user-exist").post(userExist);
+authRoute.route("/signout").get(jwtAuth, signOut);
+authRoute.route("/user").get(jwtAuth, getUser);
 
 module.exports = authRoute;
