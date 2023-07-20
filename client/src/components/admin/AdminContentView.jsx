@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { BsCloudUpload } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import AdminCircularLoader from "./AdminLoader";
+import AdminCircularLoader from "../loader/AdminLoader";
 import {
   fetchContentById,
   deleteContentById,
@@ -22,6 +22,7 @@ const AdminContentView = () => {
   const isTrailerUploading = useSelector((state) => state.adminManageContents.isTrailerUploading)
   const isContentUploading = useSelector((state) => state.adminManageContents.isContentUploading)
   const [castInput, setCastInput] = useState('')
+  const [genreInput, setGenreInput] = useState('');
   const fileInputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [editedContentData, setEditedContentData] = useState({});
@@ -62,11 +63,15 @@ const AdminContentView = () => {
       toast.error("cast cannot be empty field❗");
       return;
     }
+    if (editedContentData.genres.length === 0) {
+      toast.error("genres cannot be empty field❗");
+      return;
+    }
     if (editedContentData.description.length < 15) {
       toast.error("description: Content description must be at least 15 characters ❗");
       return;
     }
-    if (editedContentData.director.length < 3) {
+    if (editedContentData.director.length < 2) {
       toast.error("director: Content director must be at least 2 characters ❗");
       return;
     }
@@ -83,12 +88,43 @@ const AdminContentView = () => {
   // edit content local state handling function
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    if (name === "genres") {
+      setGenreInput(value)
+      return;
+    }
     if (name === "cast") {
       setCastInput(value)
     } else {
       setEditedContentData({ ...editedContentData, [name]: value })
     }
   };
+
+  const handleAddGenres = () => {
+    if (genreInput === "") {
+      toast.error("please select a valid input");
+      return;
+    }
+    if(editedContentData.genres.length > 2){
+      toast.error("genres cannot be more than 3 ");
+        return;
+    }
+    if(editedContentData.genres.includes(genreInput)){
+      toast.error("genre is already added");
+      return;
+    }
+    const newGenersArr = [...editedContentData.genres, genreInput];
+    setEditedContentData({ ...editedContentData, genres: newGenersArr });
+    setGenreInput("");
+  };
+  
+  const handleRemoveGenres = (genre) => {
+    const indexOfCastToBeRemoved = editedContentData.genres.indexOf(genre);
+    const newGeners = editedContentData.genres.filter(
+      (item, index) => index !== indexOfCastToBeRemoved
+    );
+    setEditedContentData({ ...editedContentData, genres: newGeners });
+  };
+
 
 
   // cast array add handling function
@@ -162,12 +198,14 @@ const AdminContentView = () => {
                 onChange={handleInputChange}
               />
               <label htmlFor="genres">Genres:</label>
+              <div>
               <select
-                className="rounded border bg-transparent p-2"
+                className="rounded w-[88%] border bg-transparent p-2 mr-4"
                 name="genres"
-                value={editedContentData.genres[0]}
+                value={genreInput}
                 onChange={handleInputChange}
               >
+                <option value="">Select an option</option>
                 <option value="Action">Action</option>
                 <option value="Anime">Anime</option>
                 <option value="Children & Family">Children & Family</option>
@@ -181,6 +219,28 @@ const AdminContentView = () => {
                 <option value="Sports">Sports</option>
                 <option value="Thrillers">Thrillers</option>
               </select>
+                <div
+                  onClick={handleAddGenres}
+                  className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
+                >
+                  Add
+                </div>
+              {editedContentData.genres.length > 0 && (
+                <div className="flex flex-wrap">
+                  {editedContentData.genres.map((genre, index) => (
+                    <div key={index} className="relative m-2 rounded bg-blue-200">
+                      <div
+                        onClick={() => handleRemoveGenres(genre)}
+                        className="absolute -top-1 right-1 cursor-pointer"
+                      >
+                        x
+                      </div>
+                      <p className=" w-fit px-3 py-2">{genre}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              </div>
 
               <label htmlFor="text">Description:</label>
               <input
@@ -413,7 +473,8 @@ const AdminContentView = () => {
                       <span className="text-2xl text-gray-400">/</span>
                       <h3 className="text-gray-400">{contentData.language}</h3>
                       <span className="text-2xl text-gray-400">/</span>
-                      <h3 className="text-gray-400">{contentData.genres[0]}</h3>
+                         {contentData.genres.map(genre=> <h3 className="text-gray-400 ">•{genre}</h3>)}
+                      
                       <span className="text-2xl text-gray-400">/</span>
                       <h3 className="text-gray-400">{contentData.contentType}</h3>
                     </div>
