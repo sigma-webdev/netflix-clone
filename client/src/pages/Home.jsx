@@ -9,11 +9,11 @@ import {
 } from "react-icons/md";
 
 import Accordian from "../components/accordian/Accordian";
-import Layout from "../components/layout/Layout";
 import FeatureCard from "../components/card/FeatureCard";
 import AccordianItem from "../components/accordian/AccordianItem.jsx";
 import { IS_USER_EXIST } from "../store/authSlice.js";
 import { faqs, features } from "../data";
+import HomeLayout from "../components/layout/home/HomeLayout";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -40,7 +40,7 @@ const Home = () => {
   };
 
   return (
-    <Layout>
+    <HomeLayout>
       <div className="relative bg-[#000000] text-white">
         {/* hero section */}
         <section className="mx-auto w-full">
@@ -208,7 +208,7 @@ const Home = () => {
           )}
         </section>
       </div>
-    </Layout>
+    </HomeLayout>
   );
 };
 

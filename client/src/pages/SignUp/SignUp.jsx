@@ -1,7 +1,7 @@
 import React from "react";
 import SignUpLayout from "./SignUpLayout";
 import { Link } from "react-router-dom";
-import Devices from "../../assets/Devices.png";
+import Devices from "../../assets/icons/Devices.png";
 
 const SignUp = () => {
   return (

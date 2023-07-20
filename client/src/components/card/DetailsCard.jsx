@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { dislikeContent, likeContent } from "../../store/contentSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -25,21 +25,8 @@ const DetailsCard = ({
   contentDuration,
 }) => {
   const userId = useSelector((state) => state.auth.userData._id);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef(null);
   const dispatch = useDispatch();
-
-  function playPauseMedia() {
-    const media = videoRef.current;
-
-    if (media.paused) {
-      media.play();
-      setIsVideoPlaying(true);
-    } else {
-      media.pause();
-      setIsVideoPlaying(false);
-    }
-  }
 
   const likeContentHanlder = () => {
     dispatch(likeContent({ contentId, userId: userId }));
@@ -50,17 +37,18 @@ const DetailsCard = ({
   };
 
   return (
-    <div className=" tranistion relative mx-auto w-[90%] rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[800px]">
+    <div className="tranistion no-scrollbar relative mx-auto h-[500px] w-[90%] overflow-y-scroll rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[650px]">
       <div className="relative">
         {/* preview video*/}
         <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[100px] lg:h-[150px]"></div>
         <div className="w-full">
           <video
             ref={videoRef}
-            className="w-full rounded-tl rounded-tr"
+            className="h-[350px] w-full rounded-tl rounded-tr object-cover"
             poster={thumbnailURL}
             src={trailerUrl}
             loop
+            autoPlay
           ></video>
         </div>
 
@@ -74,10 +62,7 @@ const DetailsCard = ({
 
         {/* hero text */}
         <div className="absolute bottom-6 left-6 flex cursor-pointer items-center gap-2 md:bottom-8 md:left-12">
-          <button
-            className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg "
-            onClick={playPauseMedia}
-          >
+          <button className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg ">
             <BsFillPlayFill className="text-2xl lg:text-4xl" />
             Play
           </button>

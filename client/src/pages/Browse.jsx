@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Layout from "../components/layout/Layout";
+import BrowseLayout from "../components/layout/browse/BrowseLayout";
 import {
   fetchContent,
   fetchContentByCountryOrigin,
@@ -59,7 +59,7 @@ const Browse = () => {
   }, [dispatch]);
 
   return (
-    <Layout isLogin={true}>
+    <BrowseLayout isLogin={true}>
       <div id="content-details" className="relative"></div>
       <div id="browse-content">
         {/* browse search content */}
@@ -120,7 +120,7 @@ const Browse = () => {
               heading={"Watch List"}
               loading={watchListLoading}
               content={watchListContent}
-              watch={true}
+              toWatch={true}
             />
 
             {/* browse watch content */}
@@ -179,7 +179,7 @@ const Browse = () => {
           </div>
         )}
       </div>
-    </Layout>
+    </BrowseLayout>
   );
 };
 
