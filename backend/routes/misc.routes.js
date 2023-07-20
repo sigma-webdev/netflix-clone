@@ -11,29 +11,17 @@ const authorizeRoles = require("../middlewares/authorizeRoles.js");
 
 const miscRoute = express.Router();
 
-miscRoute.get(
-  "/admin/users-stats",
-  jwtAuth,
-  authorizeRoles("ADMIN"),
-  getUsersStatistics
-);
-miscRoute.get(
-  "/admin/movies-stats",
-  jwtAuth,
-  authorizeRoles("ADMIN"),
-  getMoviesStatistics
-);
-miscRoute.get(
-  "/admin/series-stats",
-  jwtAuth,
-  authorizeRoles("ADMIN"),
-  getSeriesStatistics
-);
-miscRoute.get(
-  "/admin/sales-stats",
-  jwtAuth,
-  authorizeRoles("ADMIN"),
-  getPaymentStatistics
-);
+miscRoute
+  .route("/admin/users-stats")
+  .get(jwtAuth, authorizeRoles("ADMIN"), getUsersStatistics);
+miscRoute
+  .route("/admin/movies-stats")
+  .get(jwtAuth, authorizeRoles("ADMIN"), getMoviesStatistics);
+miscRoute
+  .route("/admin/series-stats")
+  .get(jwtAuth, authorizeRoles("ADMIN"), getSeriesStatistics);
+miscRoute
+  .route("/admin/sales-stats")
+  .get(jwtAuth, authorizeRoles("ADMIN"), getPaymentStatistics);
 
 module.exports = miscRoute;
