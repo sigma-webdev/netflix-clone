@@ -16,7 +16,6 @@ const transporter = require("../config/email.config.js");
  * @body email
  * @returns object with isUserExist boolean value
  ******************************************************/
-
 const userExist = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
 
