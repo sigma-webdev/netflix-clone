@@ -33,7 +33,7 @@ const PreviewCard = ({
   isDisliked,
   releaseYear,
   contentDuration,
-  watch,
+  toWatch,
 }) => {
   const userId = useSelector((state) => state.auth.userData._id);
   const { likeDisLikeLoading, watchHistoryLoading } = useSelector(
@@ -74,7 +74,7 @@ const PreviewCard = ({
   };
 
   const watchListHandler = () => {
-    if (watch) {
+    if (toWatch) {
       dispatch(removeContentFromWatchList({ contentId }));
     } else {
       dispatch(addContentToWatchList({ contentId }));
@@ -144,7 +144,7 @@ const PreviewCard = ({
               disabled={watchHistoryLoading}
               className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
             >
-              {watch ? (
+              {toWatch ? (
                 <AiOutlineMinus className="text-xl" />
               ) : (
                 <AiOutlinePlus className="text-xl" />
