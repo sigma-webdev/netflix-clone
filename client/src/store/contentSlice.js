@@ -31,8 +31,8 @@ export const fetchContent = createAsyncThunk(
     try {
       const response = await axiosInstance.get("/contents");
 
-      const contentResponseArray = response.data.data.contents;
-      const contentNormalizedArray = contentResponseArray.map((item) => {
+      const contentResponseArray = response.data?.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
@@ -78,8 +78,8 @@ export const fetchContentBySearch = createAsyncThunk(
       const response = await axiosInstance.get(
         `/contents?search=${searchText}`
       );
-      const contentResponseArray = response.data.data.contents;
-      const contentNormalizedArray = contentResponseArray.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
@@ -99,8 +99,8 @@ export const fetchContentByTrending = createAsyncThunk(
     try {
       const response = await axiosInstance.get("/contents?trending=true");
 
-      const contentResponseArray = response.data.data.contents;
-      const contentNormalizedArray = contentResponseArray.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
@@ -120,8 +120,8 @@ export const fetchContentByLatest = createAsyncThunk(
     try {
       const response = await axiosInstance.get("/contents?latest=true");
 
-      const contentResponseArray = response.data.data.contents;
-      const contentNormalizedArray = contentResponseArray.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
@@ -141,8 +141,8 @@ export const fetchContentByMostLiked = createAsyncThunk(
     try {
       const response = await axiosInstance.get("/contents?mostLikes=true");
 
-      const contentResponseArray = response.data.data.contents;
-      const contentNormalizedArray = contentResponseArray.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
@@ -164,8 +164,8 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
         `/contents?originCountry=${countryOrigin}`
       );
 
-      const contentResponseArray = response.data.data.contents;
-      const contentNormalizedArray = contentResponseArray.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
@@ -185,8 +185,8 @@ export const fetchContentByWatchHistory = createAsyncThunk(
     try {
       const response = await axiosInstance.get(`/users/watch-history`);
 
-      const contentResponseArray = response.data.data.contents;
-      const contentNormalizedArray = contentResponseArray.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
@@ -222,8 +222,8 @@ export const fetchContentByWatchList = createAsyncThunk(
     try {
       const response = await axiosInstance.get(`/users/watch-list`);
 
-      const contentResponseArray = response.data.data.contents;
-      const contentNormalizedArray = contentResponseArray.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
@@ -404,9 +404,9 @@ export const contentSlice = createSlice({
         state.countryOriginContentLoading = true;
       })
       .addCase(fetchContentByCountryOrigin.fulfilled, (state, action) => {
-        const countryOrigin = action.payload.countryOrigin;
+        const countryOrigin = action.payload?.countryOrigin;
         const currentContent = state.contentByCountryOrigin;
-        const updatedOriginContent = action.payload.contentNormalizedArray;
+        const updatedOriginContent = action.payload?.contentNormalizedArray;
 
         const updatedContent = {
           ...currentContent,
@@ -441,12 +441,12 @@ export const contentSlice = createSlice({
       .addCase(addContentToWatchHistory.fulfilled, (state, action) => {
         const watchContentId = action.payload;
 
-        const isWatchContentExists = state.watchHistoryContent.find(
+        const isWatchContentExists = state.watchHistoryContentM?.find(
           (item) => item.contentId === watchContentId
         );
 
         if (!isWatchContentExists) {
-          const watchContent = state.allContent.find(
+          const watchContent = state.allContent?.find(
             (item) => item.contentId === watchContentId
           );
 
@@ -482,12 +482,12 @@ export const contentSlice = createSlice({
       .addCase(addContentToWatchList.fulfilled, (state, action) => {
         const watchContentId = action.payload;
 
-        const isWatchContentExists = state.watchListContent.find(
+        const isWatchContentExists = state.watchListContent?.find(
           (item) => item.contentId === watchContentId
         );
 
         if (!isWatchContentExists) {
-          const watchContent = state.allContent.find(
+          const watchContent = state.allContent?.find(
             (item) => item.contentId === watchContentId
           );
 
@@ -528,44 +528,44 @@ export const contentSlice = createSlice({
       .addCase(likeContent.fulfilled, (state, action) => {
         const likedContent = action.payload;
 
-        const newAllContent = state.allContent.map((content) =>
+        const newAllContent = state.allContent?.map((content) =>
           content.contentId === likedContent.contentId ? likedContent : content
         );
 
-        const newLatestContent = state.latestContent.map((content) =>
+        const newLatestContent = state.latestContent?.map((content) =>
           content.contentId === likedContent.contentId ? likedContent : content
         );
 
-        const newtrendingContent = state.trendingContent.map((content) =>
+        const newtrendingContent = state.trendingContent?.map((content) =>
           content.contentId === likedContent.contentId ? likedContent : content
         );
 
-        const newMostLikedContent = state.mostLikedContent.map((content) =>
+        const newMostLikedContent = state.mostLikedContent?.map((content) =>
           content.contentId === likedContent.contentId ? likedContent : content
         );
 
-        const newSearchedContent = state.searchContent.map((content) =>
+        const newSearchedContent = state.searchContent?.map((content) =>
           content.contentId === likedContent.contentId ? likedContent : content
         );
 
         const newContentByCountryOrigin = {};
-        Object.keys(state.contentByCountryOrigin).map((countryOrigin) => {
+        Object.keys(state.contentByCountryOrigin)?.map((countryOrigin) => {
           newContentByCountryOrigin[countryOrigin] =
-            state.contentByCountryOrigin[countryOrigin].map((content) =>
+            state.contentByCountryOrigin[countryOrigin]?.map((content) =>
               content.contentId === likedContent.contentId
                 ? likedContent
                 : content
             );
         });
 
-        const newWatchHistoryContent = state?.watchHistoryContent.map(
+        const newWatchHistoryContent = state.watchHistoryContent?.map(
           (content) =>
             content.contentId === likedContent.contentId
               ? likedContent
               : content
         );
 
-        const newWatchListContent = state?.watchListContent.map((content) =>
+        const newWatchListContent = state?.watchListContent?.map((content) =>
           content.contentId === likedContent.contentId ? likedContent : content
         );
 
@@ -590,54 +590,54 @@ export const contentSlice = createSlice({
       .addCase(dislikeContent.fulfilled, (state, action) => {
         const dislikedContent = action.payload;
 
-        const newallContent = state.allContent.map((content) =>
+        const newallContent = state.allContent?.map((content) =>
           content.contentId === dislikedContent.contentId
             ? dislikedContent
             : content
         );
 
-        const newLatestContent = state.latestContent.map((content) =>
+        const newLatestContent = state.latestContent?.map((content) =>
           content.contentId === dislikedContent.contentId
             ? dislikedContent
             : content
         );
 
-        const newtrendingContent = state.trendingContent.map((content) =>
+        const newtrendingContent = state.trendingContent?.map((content) =>
           content.contentId === dislikedContent.contentId
             ? dislikedContent
             : content
         );
 
-        const newMostLikedContent = state.mostLikedContent.map((content) =>
+        const newMostLikedContent = state.mostLikedContent?.map((content) =>
           content.contentId === dislikedContent.contentId
             ? dislikedContent
             : content
         );
 
-        const newSearchedContent = state.searchContent.map((content) =>
+        const newSearchedContent = state.searchContent?.map((content) =>
           content.contentId === dislikedContent.contentId
             ? dislikedContent
             : content
         );
 
         const newContentByCountryOrigin = {};
-        Object.keys(state.contentByCountryOrigin).map((countryOrigin) => {
+        Object.keys(state.contentByCountryOrigin)?.map((countryOrigin) => {
           newContentByCountryOrigin[countryOrigin] =
-            state.contentByCountryOrigin[countryOrigin].map((content) =>
+            state.contentByCountryOrigin[countryOrigin]?.map((content) =>
               content.contentId === dislikedContent.contentId
                 ? dislikedContent
                 : content
             );
         });
 
-        const newWatchHistoryContent = state.watchHistoryContent.map(
+        const newWatchHistoryContent = state.watchHistoryContent?.map(
           (content) =>
             content.contentId === dislikedContent.contentId
               ? dislikedContent
               : content
         );
 
-        const newWatchListContent = state.watchListContent.map((content) =>
+        const newWatchListContent = state.watchListContent?.map((content) =>
           content.contentId === dislikedContent.contentId
             ? dislikedContent
             : content
