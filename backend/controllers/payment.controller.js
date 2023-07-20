@@ -2,7 +2,6 @@ const crypto = require("crypto");
 
 const userModel = require("../models/user.model.js");
 const razorpay = require("../config/razorpay.config.js");
-const paymentModel = require("../models/payment.model.js");
 const asyncHandler = require("../middlewares/asyncHandler.js");
 const CustomError = require("../utils/customError.js");
 const subscriptionPlanModel = require("../models/subscriptionPlan.model.js");
