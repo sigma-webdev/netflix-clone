@@ -8,7 +8,6 @@ import {
 } from "../../store/adminPlansSlice";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import TableLoading from "../loader/TableLoader";
-import { toast } from "react-hot-toast";
 import Dialog from "../dialogbox/Dialog";
 
 const AdminManagePlans = () => {
@@ -17,19 +16,23 @@ const AdminManagePlans = () => {
   const updateLoader = useSelector((state) => state.plans.updateLoader);
   const loading = useSelector((state) => state.plans.loading);
 
+  const initialFormState = {
+    values: {
+      planName: "",
+      description: "",
+      amount: "",
+      active: false,
+    },
+    errors: {
+      planName: "",
+      description: "",
+      amount: "",
+    },
+  };
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    planName: "",
-    description: "",
-    amount: "",
-    active: false,
-  });
+  const [formState, setFormState] = useState(initialFormState);
 
-  const [errors, setErrors] = useState({
-    planName: "",
-    description: "",
-    amount: "",
-  });
+  const { values, errors } = formState;
 
   useEffect(() => {
     dispatch(getAllPlans());
@@ -43,46 +46,51 @@ const AdminManagePlans = () => {
     const { name, value, type, checked } = event.target;
     const inputValue = type === "checkbox" ? checked : value;
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: inputValue,
+    setFormState((prevFormState) => ({
+      ...prevFormState,
+      values: {
+        ...prevFormState.values,
+        [name]: inputValue,
+      },
     }));
   };
 
   // form validation for new plan
   const validateForm = () => {
     let isValid = true;
-    const newErrors = { ...errors };
+    const newErrors = { ...formState.errors };
 
     // perform validation for each form field
-    if (formData.planName.trim() === "") {
+    if (values.planName.trim() === "") {
       newErrors.planName = "Plan Name is required";
       isValid = false;
-    } else if (formData.planName.length > 14) {
-      console.log(formData.planName.length, "length");
+    } else if (values.planName.length > 14) {
       newErrors.planName = "planName must be less than 14 characters";
       isValid = false;
     } else {
       newErrors.planName = "";
     }
 
-    if (formData.description.trim() === "") {
+    if (values.description.trim() === "") {
       newErrors.description = "Descrioption is required";
       isValid = false;
     } else {
       newErrors.description = "";
     }
 
-    if (formData.amount.trim() === "") {
+    if (values.amount.trim() === "") {
       newErrors.amount = "Plan Price is required";
       isValid = false;
-    } else if (formData.amount <= 0) {
+    } else if (values.amount <= 0) {
       newErrors.amount = "Plan Price must be greater than zero";
       isValid = false;
     } else {
       newErrors.amount = "";
     }
-    setErrors(newErrors);
+    setFormState((prevFormState) => ({
+      ...prevFormState,
+      errors: newErrors,
+    }));
 
     return isValid;
   };
@@ -91,16 +99,17 @@ const AdminManagePlans = () => {
   const handleAddPlan = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      dispatch(createPlan(formData));
+      dispatch(createPlan(formState.values));
       toggleModal(false);
-      setFormData({
-        planName: "",
-        description: "",
-        amount: "",
-        active: false,
-      });
-    } else {
-      toast.error("Form data is invalid");
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        values: {
+          planName: "",
+          description: "",
+          amount: "",
+          active: false,
+        },
+      }));
     }
   };
 
@@ -121,61 +130,74 @@ const AdminManagePlans = () => {
         isOpen={isOpen}
         closeModal={() => {
           toggleModal(false);
+          setFormState(initialFormState);
         }}
       >
         <form onSubmit={handleAddPlan} className=" space-y-4 text-black">
           <div>
-            <label htmlFor="">Plan Name:</label>
+            <label htmlFor="">
+              Plan Name<span className="text-red-600">*</span> :
+            </label>
             <input
               className="w-full border px-2 py-2 outline-none"
               type="text"
               id="planName"
               name="planName"
-              value={formData.planName}
+              value={values.planName}
               onChange={handleInputChange}
             />
-            {errors.planName && (
-              <span className="text-red-600">{errors.planName}</span>
-            )}
+            <div>
+              {errors.planName && (
+                <span className="text-red-600">{errors.planName}</span>
+              )}
+            </div>
           </div>
           <div>
-            <label htmlFor="">Description :</label>
+            <label htmlFor="">
+              Description<span className="text-red-600">*</span> :
+            </label>
             <input
               className="w-full border px-2 py-2 outline-none"
               type="text"
               id="description"
               name="description"
-              value={formData.description}
+              value={values.description}
               onChange={handleInputChange}
             />
-            {errors.description && (
-              <span className="text-red-600">{errors.description}</span>
-            )}
+            <div>
+              {errors.description && (
+                <span className="text-red-600">{errors.description}</span>
+              )}
+            </div>
           </div>
           <div>
-            <label htmlFor="">Plan Price :</label>
+            <label htmlFor="">
+              Plan Price<span className="text-red-600">*</span> :
+            </label>
             <input
               className="w-full border px-2 py-2 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               type="number"
               id="amount"
               name="amount"
-              value={formData.amount}
+              value={values.amount}
               onChange={handleInputChange}
             />
-            {errors.amount && (
-              <span className="text-red-600">{errors.amount}</span>
-            )}
+            <div>
+              {errors.amount && (
+                <span className="text-red-600">{errors.amount}</span>
+              )}
+            </div>
           </div>
           <div className="flex items-center">
             <label htmlFor="">Active Status :</label>
             <ToggleSwitch
               id="active"
               name="active"
-              isOn={formData.active}
+              isOn={values.active}
               onToggle={() =>
-                setFormData((prevFormData) => ({
+                setFormState((prevFormData) => ({
                   ...prevFormData,
-                  active: !prevFormData.active,
+                  values: { active: !prevFormData.active },
                 }))
               }
             />
@@ -189,26 +211,6 @@ const AdminManagePlans = () => {
           </button>
         </form>
       </Dialog>
-      {isOpen && (
-        <div className="absolute z-20 flex h-full w-full items-center justify-center bg-gray-600 bg-opacity-5">
-          <div className="relative w-96 rounded-lg bg-white px-4 py-12">
-            <div
-              onClick={() => {
-                toggleModal(false);
-                setFormData({
-                  planName: "",
-                  description: "",
-                  amount: "",
-                  active: false,
-                });
-              }}
-              className="absolute right-3 top-2 cursor-pointer text-3xl text-black"
-            >
-              &times;
-            </div>
-          </div>
-        </div>
-      )}
       <div className="w-10/12 py-5 ">
         <div className="mx-auto flex w-10/12 justify-between">
           <h3 className="rounded-t-md bg-red-600 px-3 text-white">
