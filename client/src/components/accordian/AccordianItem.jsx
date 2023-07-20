@@ -1,5 +1,4 @@
-import { CrossIcon } from "../icons";
-import { PlusIcon } from "../icons";
+import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 
 const AccordianItem = ({
   accordianHandler,
@@ -8,6 +7,7 @@ const AccordianItem = ({
   answer,
   id,
 }) => {
+  // open and close accordian handler
   const tabHandler = () => {
     if (!isActive) {
       accordianHandler(id);
@@ -18,15 +18,21 @@ const AccordianItem = ({
 
   return (
     <li onClick={tabHandler}>
-      <h5 className="text-md sm:lg flex justify-between bg-[#132144] px-6 py-4 hover:bg-[#223362] sm:py-5 md:py-6 md:text-2xl">
-        <button>{question}</button>
-        <span>{!isActive ? <PlusIcon /> : <CrossIcon />}</span>
+      {/* accordian heading */}
+      <h5 className="text-md sm:lg flex cursor-pointer items-center justify-between bg-blue-950/80 px-6 py-4 hover:bg-blue-950/70 sm:py-5 md:py-6 md:text-2xl">
+        {question}
+
+        {!isActive ? (
+          <AiOutlinePlus className="text-xl md:text-2xl lg:text-4xl" />
+        ) : (
+          <AiOutlineClose className="text-xl md:text-2xl lg:text-4xl" />
+        )}
       </h5>
+
+      {/* accordian description */}
       <p
         className={`${
-          isActive
-            ? "text-md bg-[#132144] p-6 sm:text-lg md:text-2xl"
-            : "hidden"
+          isActive ? "text-md bg-blue-950 p-6 sm:text-lg md:text-2xl" : "hidden"
         } `}
       >
         {answer}

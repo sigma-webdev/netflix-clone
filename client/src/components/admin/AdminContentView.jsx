@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { BsCloudUpload } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
+import AdminCircularLoader from "./AdminLoader";
 import {
   fetchContentById,
   deleteContentById,
@@ -9,22 +10,22 @@ import {
   updateContentDetailsById,
   updateContentVideoById,
   updateContentTrailerById
-} from "../../store/adminManageContentSlice";
+} from "../../store/adminManageContentsSlice";
+import toast from "react-hot-toast";
 
 const AdminContentView = () => {
   const dispatch = useDispatch();
-  const contentData = useSelector((state) => state.admin.currentContent);
-  const isLoading = useSelector((state) => state.admin.isLoading);
-  const isThumbnailUploading = useSelector((state) => state.admin.isThumbnailUploading)
-  const isDetailsUploading = useSelector((state) => state.admin.isDetailsUploading)
-  const isTrailerUploading = useSelector((state) => state.admin.isTrailerUploading)
-  const isContentUploading = useSelector((state) => state.admin.isContentUploading)
+  const contentData = useSelector((state) => state.adminManageContents.currentContent);
+  const isLoading = useSelector((state) => state.adminManageContents.isLoading);
+  const isThumbnailUploading = useSelector((state) => state.adminManageContents.isThumbnailUploading)
+  const isDetailsUploading = useSelector((state) => state.adminManageContents.isDetailsUploading)
+  const isTrailerUploading = useSelector((state) => state.adminManageContents.isTrailerUploading)
+  const isContentUploading = useSelector((state) => state.adminManageContents.isContentUploading)
   const [castInput, setCastInput] = useState('')
   const fileInputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [editedContentData, setEditedContentData] = useState({});
   const params = useParams();
-  console.log(params.contentId);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,50 +37,50 @@ const AdminContentView = () => {
     setEditedContentData(contentData);
   }, [contentData]);
 
-
+  // delete content function 
   const handleDelete = () => {
-    console.log("delete this");
-    // redirect('/admin/managecontents/')
     dispatch(deleteContentById(params.contentId));
     navigate("/admin/managecontents");
-    //   redirect('/admin/managecontents')
   };
 
 
-  const handleRemoveCast = (castname) => {
-    console.log(castname, '///castname')
-    const indexOfCastToBeRemoved = editedContentData.cast.indexOf(castname)
-    console.log(indexOfCastToBeRemoved)
-    const newCast = editedContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
-    console.log(newCast)
-    setEditedContentData({ ...editedContentData, cast: newCast })
-    console.log(editedContentData, '//edittweeer')
-  };
 
-
+  // form submit handling function
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isLoading) {
-      console.log(
-        "please wait till the first submisson got fullfiled or rejected"
-      );
+      toast.error("wait until the current ongoing process end");
+      return;
+    }
+    if (editedContentData.contentType === "Series") {
+      toast.error("series feature will be coming soon, please add only content type movie");
       return;
     }
 
     if (editedContentData.cast.length === 0) {
-      console.log('cast cannot be empty field')
+      toast.error("cast cannot be empty field❗");
       return;
     }
-    console.log(editedContentData, '///new data to be updated')
+    if (editedContentData.description.length < 15) {
+      toast.error("description: Content description must be at least 15 characters ❗");
+      return;
+    }
+    if (editedContentData.director.length < 3) {
+      toast.error("director: Content director must be at least 2 characters ❗");
+      return;
+    }
 
-    dispatch(updateContentDetailsById({ id: params.contentId, newData: editedContentData }))
+    dispatch(updateContentDetailsById({ id: params.contentId, newData: editedContentData })) 
     toggleModal(false)
   };
 
+  // edit form modal open and closing handle function
   const toggleModal = (val) => {
     setIsOpen(val);
   };
 
+  // edit content local state handling function
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "cast") {
@@ -89,9 +90,11 @@ const AdminContentView = () => {
     }
   };
 
+
+  // cast array add handling function
   const handleAddCast = () => {
     if(castInput === "" || castInput.length < 2){
-      //add toster
+      toast.error("please enter a valid input");
       return
     }
     const newCastArr = [...editedContentData.cast, castInput]
@@ -100,17 +103,25 @@ const AdminContentView = () => {
 
   }
 
-  const uploadContent = () => {
+    // cast array remove handling function
+    const handleRemoveCast = (castname) => {
+      const indexOfCastToBeRemoved = editedContentData.cast.indexOf(castname)
+      const newCast = editedContentData.cast.filter((item, index) => index !== indexOfCastToBeRemoved);
+      setEditedContentData({ ...editedContentData, cast: newCast })
+    };
+
+
+  const uploadThumbnail = () => {
     fileInputRef.current.click();
   };
 
+
+  // handle fiile uploads
   const handleFileChange = (event, name) => {
     if (isThumbnailUploading || isContentUploading || isTrailerUploading || isDetailsUploading) {
-      // add toster
+      toast.error("wait until the current uploading data process end");
       return;
     }
-
-    console.log("handle select callled");
     const file = event.target.files[0];
     const sentFormData = new FormData();
     sentFormData.append(name, file);
@@ -154,7 +165,7 @@ const AdminContentView = () => {
               <select
                 className="rounded border bg-transparent p-2"
                 name="genres"
-                value={editedContentData.genres}
+                value={editedContentData.genres[0]}
                 onChange={handleInputChange}
               >
                 <option value="Action">Action</option>
@@ -191,15 +202,14 @@ const AdminContentView = () => {
                 />
                 <div
                   onClick={handleAddCast}
-                  // onClick
                   className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
                 >
                   Add
                 </div>
                 {editedContentData.cast.length > 0 && (
                   <div className="flex flex-wrap">
-                    {editedContentData.cast.map((castname) => (
-                      <div className="relative m-2  rounded  bg-blue-200">
+                    {editedContentData.cast.map((castname, index) => (
+                      <div key={index} className="relative m-2  rounded  bg-blue-200">
                         <div
                           onClick={() => handleRemoveCast(castname)}
                           className="absolute -top-1 right-1 cursor-pointer"
@@ -247,24 +257,37 @@ const AdminContentView = () => {
                 value={editedContentData.director}
                 onChange={handleInputChange}
               />
-              <label htmlFor="rating"> Rating:</label>
-              <input
+              <label htmlFor="rating"> Maturity Rating:</label>
+              <select
                 className="rounded border bg-transparent p-2"
-                type="text"
-                required
-                name="rating"
-                value={editedContentData.rating}
+                name="maturityRating"
+                value={editedContentData.maturityRating}
                 onChange={handleInputChange}
-              />
+              >
+                <option value="">Select an option</option>
+                <option value="U">U - suitable for children and persons of all ages</option>
+                <option value="U/A 7+">U/A 7+ - suitable for children 7 and above under parental guidance for persons under age of 7</option>
+                <option value="U/A 13+">U/A 13+ - Suitable for persons aged 13 and above and under parental guidance for people under age of 13</option>
+                <option value="U/A 16+">U/A 16 + - Suitable for persons aged 16 and above and under parental guidance for people under age of 16</option>
+                <option value="A">A - Content restricted to adults</option>
+              </select>
               <label htmlFor="language"> Language:</label>
-              <input
+              <select
                 className="rounded border bg-transparent p-2"
-                type="text"
-                required
                 name="language"
                 value={editedContentData.language}
                 onChange={handleInputChange}
-              />
+              >
+                <option value="">Select an option</option>
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Malayalam">Malayalam</option>
+                <option value="Tamil">Tamil</option>
+                <option value="Korean">Korean</option>
+                <option value="Japan">Japanese</option>
+                <option value="Spanish">Spanish</option>
+                <option value="German">German</option>
+              </select>
               <label htmlFor="releaseDate"> Release Date:</label>
               <input
                 className="rounded border bg-transparent p-2"
@@ -335,9 +358,8 @@ const AdminContentView = () => {
                 fill="currentFill"
               />
             </svg>
-            <span className="sr-only">Loading...</span>
           </div>
-        ) : (Object.keys(contentData).length !== 0 ? (
+        ) : (contentData && Object.keys(contentData).length !== 0 ? (
           <>
             <div className="flex w-full gap-4 px-4 py-8">
               <button
@@ -351,7 +373,7 @@ const AdminContentView = () => {
               <form>
 
                 <div
-                  onClick={uploadContent}
+                  onClick={uploadThumbnail}
                   title="upload thumbnial"
                   className="group relative cursor-pointer"
                 >
@@ -364,30 +386,17 @@ const AdminContentView = () => {
                     onChange={(e) => handleFileChange(e, 'thumbnail')}
                   />
                   <img
-                    className="h-[450px] w-full transition hover:bg-black group-hover:opacity-40"
-                    src={contentData.thumbnail[0].thumbnailUrl}
+                    className="h-[450px] w-full transition hover:bg-gray-100 group-hover:opacity-40 object-contain"
+                    src={contentData.thumbnail[0]?.thumbnailUrl}
                     alt="thubmnail"
                   />
                   {!isThumbnailUploading ? <BsCloudUpload className="absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] text-8xl opacity-0 transition group-hover:opacity-100" />
-                    : (<div className=" absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] " role="status">
-                      <svg
-                        aria-hidden="true"
-                        className="mr-2 h-14 w-14 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
-                        viewBox="0 0 100 101"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                          fill="currentColor"
-                        />
-                        <path
-                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                          fill="currentFill"
-                        />
-                      </svg>
-                      <span className="sr-only">Loading...</span>
-                    </div>)}
+                    : (
+                      <div className=" absolute left-[50%] top-[50%] z-10 -translate-x-[50%] -translate-y-[50%] " role="status">
+                    <AdminCircularLoader />
+                    </div>
+                    )
+                  }
                 </div>
                 <div
                   onClick={() => toggleModal(true)}
@@ -398,15 +407,15 @@ const AdminContentView = () => {
                 {!isDetailsUploading ? (
                   <>
                     <div className="flex gap-2">
-                      <h3 className="text-gray-400">{contentData.rating}</h3>
+                      <h3 className="text-gray-400">{contentData.maturityRating}</h3>
                       <span className="text-2xl text-gray-400">/</span>
                       <h3 className="text-gray-400">{contentData.originCountry}</h3>
                       <span className="text-2xl text-gray-400">/</span>
-                      <h3 className="">{contentData.language}</h3>
+                      <h3 className="text-gray-400">{contentData.language}</h3>
                       <span className="text-2xl text-gray-400">/</span>
-                      <h3 className="">{contentData.genres[0]}</h3>
+                      <h3 className="text-gray-400">{contentData.genres[0]}</h3>
                       <span className="text-2xl text-gray-400">/</span>
-                      <h3 className="">{contentData.contentType}</h3>
+                      <h3 className="text-gray-400">{contentData.contentType}</h3>
                     </div>
 
                     <div className="my-4 flex gap-4">
@@ -442,22 +451,7 @@ const AdminContentView = () => {
                     </div>
                   </>
                 ) : (<div className="mx-auto" role="status">
-                  <svg
-                    aria-hidden="true"
-                    className="mr-2 h-12 w-12 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
-                    viewBox="0 0 100 101"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                      fill="currentFill"
-                    />
-                  </svg>
+                  <AdminCircularLoader />
                   <span className="text-blue-600">Please wait... Details are uploading!</span>
                   <span className="sr-only">Loading...</span>
                 </div>)
@@ -484,24 +478,9 @@ const AdminContentView = () => {
                       </>
                       :
                       (<div className="" role="status">
-                        <svg
-                          aria-hidden="true"
-                          className="mr-2 h-10 w-10 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
-                          viewBox="0 0 100 101"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                            fill="currentColor"
-                          />
-                          <path
-                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                            fill="currentFill"
-                          />
-                        </svg>
+                        <AdminCircularLoader />
                         <span className="text-blue-600">Please wait... content trailer is uploading!</span>
-                        <span className="sr-only">Loading...</span>
+     
                       </div>)
                   }
                 </div>
@@ -515,7 +494,7 @@ const AdminContentView = () => {
                           <video
                             width="520"
                             height="440"
-                            src={contentData.content.contentURL}
+                            src={contentData.contentMovie.movieUrl}
                             controls
                           ></video>
                           <div>
@@ -528,25 +507,8 @@ const AdminContentView = () => {
                         </>)
                       : (
                         <div >      
-                        <svg
-                          aria-hidden="true"
-                          className=" h-10 w-10 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
-                          viewBox="0 0 100 101"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                            fill="currentColor"
-                          />
-                          <path
-                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                            fill="currentFill"
-                          />
-                        </svg>
-                            
+                       <AdminCircularLoader />
                         <span className="text-blue-600">Please wait... content video is uploading!</span>
-                   
                         </div>
                         
                          )
@@ -559,7 +521,7 @@ const AdminContentView = () => {
             </div>
           </>
         ) : (
-          <h2 className="text-white">no data found</h2>
+          <h2>no data found</h2>
         ))}
       </div>
     </>

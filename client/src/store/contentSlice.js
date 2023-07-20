@@ -1,261 +1,332 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
+import { toast } from "react-hot-toast";
 import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
   currentContent: null,
   searchContent: null,
-  filteredContent: [],
+  allContent: [],
   trendingContent: [],
   latestContent: [],
   mostLikedContent: [],
   contentByCountryOrigin: {},
-  watchedContent: [],
+  watchHistoryContent: [],
+  watchListContent: [],
   loading: false,
   searchLoading: false,
   trendingContentLoading: false,
   latestContentLoading: false,
   mostLikedContentLoading: false,
   countryOriginContentLoading: false,
-  watchContentLoading: false,
+  watchHistoryLoading: false,
+  watchListLoading: false,
   likeDisLikeLoading: false,
 };
 
+// fetch all content
 export const fetchContent = createAsyncThunk(
   "content/fetchContent",
-  async (userId, { rejectWithValue }) => {
+  async ({ userId }) => {
     try {
-      const response = await axiosInstance.get("/contents?contentType=movie");
+      const response = await axiosInstance.get("/contents");
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
+      const contentResponseArray = response.data?.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
-      return contentsObject;
+      return contentNormalizedArray;
     } catch (error) {
-      console.log(error);
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// fetch content by id
 export const fetchContentById = createAsyncThunk(
   "content/fetchContentById",
-  async ({ contentId, userId }, { rejectWithValue }) => {
+  async ({ contentId, userId }) => {
     try {
       const response = await axiosInstance.get(`/contents/${contentId}`);
-      const data = response.data.data;
-      const contentObject = convertResponseToContentObject(data, userId);
-
-      return contentObject;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const fetchContentBySearch = createAsyncThunk(
-  "content/fetchContentBySearch",
-  async ({ searchText, userId }, { rejectWithValue }) => {
-    try {
-      const url = `/contents?search=${searchText}`;
-      let contentsObject;
-
-      if (!searchText) {
-        return null;
-      } else {
-        const response = await axiosInstance.get(url);
-        const data = response.data.data.contents;
-        contentsObject = data.map((item) => {
-          return convertResponseToContentObject(item, userId);
-        });
-      }
-
-      return contentsObject;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const fetchContentByContentType = createAsyncThunk(
-  "content/fetchContentByCategory",
-  async ({ contentType, userId }, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get(
-        `/contents?contentType=${contentType}`
+      const contentResponseObject = response.data.data;
+      const contentNormalizedObject = convertResponseToContentObject(
+        contentResponseObject,
+        userId
       );
 
-      const data = response.data.data.contents;
+      return contentNormalizedObject;
+    } catch (error) {
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
+    }
+  }
+);
 
-      const contentsObject = data.map((item) => {
+// fetch content by search text
+export const fetchContentBySearch = createAsyncThunk(
+  "content/fetchContentBySearch",
+  async ({ searchText, userId }) => {
+    try {
+      if (!searchText) {
+        return null;
+      }
+
+      const response = await axiosInstance.get(
+        `/contents?search=${searchText}`
+      );
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
-      return contentsObject;
+      return contentNormalizedArray;
     } catch (error) {
-      console.log(error);
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// fetch trending content
 export const fetchContentByTrending = createAsyncThunk(
   "content/fetchContentByTrending",
-  async (userId, { rejectWithValue }) => {
+  async ({ userId }) => {
     try {
       const response = await axiosInstance.get("/contents?trending=true");
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
-      return contentsObject;
+      return contentNormalizedArray;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// fetch latest content
 export const fetchContentByLatest = createAsyncThunk(
   "content/fetchContentByLatest",
-  async (userId, { rejectWithValue }) => {
+  async ({ userId }) => {
     try {
       const response = await axiosInstance.get("/contents?latest=true");
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
-      return contentsObject;
+      return contentNormalizedArray;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// fetch mostLiked content
 export const fetchContentByMostLiked = createAsyncThunk(
   "content/fetchContentByMostLiked",
-  async (userId, { rejectWithValue }) => {
+  async ({ userId }) => {
     try {
       const response = await axiosInstance.get("/contents?mostLikes=true");
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
-      return contentsObject;
+      return contentNormalizedArray;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// fetch content by country origin
 export const fetchContentByCountryOrigin = createAsyncThunk(
   "content/fetchContentByCountryOrigin",
-  async ({ countryOrigin, userId }, { rejectWithValue }) => {
+  async ({ countryOrigin, userId }) => {
     try {
       const response = await axiosInstance.get(
         `/contents?originCountry=${countryOrigin}`
       );
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
-      return { countryOrigin, contentsObject };
+      return { countryOrigin, contentNormalizedArray };
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// fetch watch history content
 export const fetchContentByWatchHistory = createAsyncThunk(
-  "content/fetchContentByWatch",
-  async (userId, { rejectWithValue }) => {
+  "content/fetchContentByWatchHistory",
+  async ({ userId }) => {
     try {
       const response = await axiosInstance.get(`/users/watch-history`);
 
-      const data = response.data.data.contents;
-      const contentsObject = data.map((item) => {
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
 
-      return contentsObject;
+      return contentNormalizedArray;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// add content to watch history
 export const addContentToWatchHistory = createAsyncThunk(
-  "content/addContentByWatch",
-  async (contentId, { rejectWithValue }) => {
+  "content/addContentToWatchHistory",
+  async ({ contentId }) => {
     try {
       await axiosInstance.patch(`/users/watch-history/${contentId}`);
 
       return contentId;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// fetch watch list content
+export const fetchContentByWatchList = createAsyncThunk(
+  "content/fetchContentByWatchList",
+  async ({ userId }) => {
+    try {
+      const response = await axiosInstance.get(`/users/watch-list`);
+
+      const contentResponseArray = response.data.data?.contents;
+      const contentNormalizedArray = contentResponseArray?.map((item) => {
+        return convertResponseToContentObject(item, userId);
+      });
+
+      return contentNormalizedArray;
+    } catch (error) {
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
+    }
+  }
+);
+
+// add content to watch list
+export const addContentToWatchList = createAsyncThunk(
+  "content/addContentToWatchList",
+  async ({ contentId }) => {
+    try {
+      await axiosInstance.patch(`/users/watch-list/${contentId}`);
+
+      return contentId;
+    } catch (error) {
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
+    }
+  }
+);
+
+// delete content to watch list
+export const removeContentFromWatchList = createAsyncThunk(
+  "content/removeContentFromWatchList",
+  async ({ contentId }) => {
+    try {
+      await axiosInstance.delete(`/users/watch-list/${contentId}`);
+
+      return contentId;
+    } catch (error) {
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
+    }
+  }
+);
+
+// like content
 export const likeContent = createAsyncThunk(
   "content/likeContent",
-  async ({ contentId, userId }, { rejectWithValue }) => {
+  async ({ contentId, userId }) => {
     try {
       const response = await axiosInstance.patch(`/contents/${contentId}/like`);
 
-      const data = response.data.data;
+      const contentResponseObject = response.data.data;
+      const contentNormalizedObject = convertResponseToContentObject(
+        contentResponseObject,
+        userId
+      );
 
-      const contentObject = convertResponseToContentObject(data, userId);
-      const contenId = data._id;
-
-      return { contenId, contentObject };
+      return contentNormalizedObject;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+// dislike content
 export const dislikeContent = createAsyncThunk(
   "content/dislikeContent",
-  async ({ contentId, userId }, { rejectWithValue }) => {
+  async ({ contentId, userId }) => {
     try {
       const response = await axiosInstance.patch(
         `/contents/${contentId}/dislike`
       );
 
-      const data = response.data.data;
-      const contentObject = convertResponseToContentObject(data, userId);
-      const contenId = data._id;
+      const contentResponseObject = response.data.data;
+      const contentNormalizedObject = convertResponseToContentObject(
+        contentResponseObject,
+        userId
+      );
 
-      return { contenId, contentObject };
+      return contentNormalizedObject;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      error?.response?.data?.message
+        ? toast.error(error?.response?.data?.message)
+        : toast.error("Failed to load data");
     }
   }
 );
 
+//content slice
 export const contentSlice = createSlice({
   name: "content",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //fetch all content
+      // Store all content
       .addCase(fetchContent.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchContent.fulfilled, (state, action) => {
         state.allContent = action.payload;
-        state.filteredContent = action.payload;
         state.loading = false;
       })
       .addCase(fetchContent.rejected, (state) => {
@@ -263,7 +334,7 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
-      //fetch content by id
+      // Store content by id
       .addCase(fetchContentById.pending, (state) => {
         state.loading = true;
       })
@@ -276,20 +347,7 @@ export const contentSlice = createSlice({
         state.loading = false;
       })
 
-      //fetch content by contentType
-      .addCase(fetchContentByContentType.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchContentByContentType.fulfilled, (state, action) => {
-        state.filteredContent = action.payload;
-        state.loading = false;
-      })
-      .addCase(fetchContentByContentType.rejected, (state) => {
-        state.filteredContent = [];
-        state.loading = false;
-      })
-
-      //fetch content by search
+      // Store search content
       .addCase(fetchContentBySearch.pending, (state) => {
         state.searchLoading = true;
       })
@@ -302,7 +360,7 @@ export const contentSlice = createSlice({
         state.searchLoading = false;
       })
 
-      //fetch content by trending
+      // Store trending content
       .addCase(fetchContentByTrending.pending, (state) => {
         state.trendingContentLoading = true;
       })
@@ -315,7 +373,7 @@ export const contentSlice = createSlice({
         state.trendingContentLoading = false;
       })
 
-      //fetch content by latest
+      // Store latest content
       .addCase(fetchContentByLatest.pending, (state) => {
         state.latestContentLoading = true;
       })
@@ -328,7 +386,7 @@ export const contentSlice = createSlice({
         state.latestContentLoading = false;
       })
 
-      //fetch content by most liked
+      // Store mostliked content
       .addCase(fetchContentByMostLiked.pending, (state) => {
         state.mostLikedContentLoading = true;
       })
@@ -341,17 +399,18 @@ export const contentSlice = createSlice({
         state.mostLikedContentLoading = false;
       })
 
-      //fetch content by country origin
+      // Store country origin content
       .addCase(fetchContentByCountryOrigin.pending, (state) => {
         state.countryOriginContentLoading = true;
       })
       .addCase(fetchContentByCountryOrigin.fulfilled, (state, action) => {
-        const countryOrigin = action.payload.countryOrigin;
+        const countryOrigin = action.payload?.countryOrigin;
         const currentContent = state.contentByCountryOrigin;
+        const updatedOriginContent = action.payload?.contentNormalizedArray;
 
         const updatedContent = {
           ...currentContent,
-          [countryOrigin]: action.payload.contentsObject,
+          [countryOrigin]: updatedOriginContent,
         };
 
         state.contentByCountryOrigin = updatedContent;
@@ -362,133 +421,236 @@ export const contentSlice = createSlice({
         state.countryOriginContentLoading = false;
       })
 
-      //fetch watch content
+      // Store watch history content
       .addCase(fetchContentByWatchHistory.pending, (state) => {
-        state.watchContentLoading = true;
+        state.watchHistoryLoading = true;
       })
       .addCase(fetchContentByWatchHistory.fulfilled, (state, action) => {
-        state.watchedContent = action.payload;
-        state.watchContentLoading = false;
+        state.watchHistoryContent = action.payload;
+        state.watchHistoryLoading = false;
       })
       .addCase(fetchContentByWatchHistory.rejected, (state) => {
-        state.watchedContent = [];
-        state.watchContentLoading = false;
+        state.watchHistoryContent = [];
+        state.watchHistoryLoading = false;
       })
 
-      //add watch content
+      // Add watch history content
       .addCase(addContentToWatchHistory.pending, (state) => {
-        state.watchContentLoading = true;
+        state.watchHistoryLoading = true;
       })
       .addCase(addContentToWatchHistory.fulfilled, (state, action) => {
         const watchContentId = action.payload;
 
-        const watchContent = state.watchedContent.find(
+        const isWatchContentExists = state.watchHistoryContentM?.find(
           (item) => item.contentId === watchContentId
         );
 
-        if (!watchContent) {
-          state.watchedContent.push(watchContent);
+        if (!isWatchContentExists) {
+          const watchContent = state.allContent?.find(
+            (item) => item.contentId === watchContentId
+          );
+
+          if (!watchContent) {
+            state.watchHistoryContent.push(watchContent);
+          }
         }
 
-        state.watchedContent = state.watchContentLoading = false;
+        state.watchHistoryLoading = false;
       })
       .addCase(addContentToWatchHistory.rejected, (state) => {
-        state.watchedContent = [];
-        state.watchContentLoading = false;
+        state.watchHistoryContent = [];
+        state.watchHistoryLoading = false;
       })
 
-      //like content
+      // Store watch list content
+      .addCase(fetchContentByWatchList.pending, (state) => {
+        state.watchListLoading = true;
+      })
+      .addCase(fetchContentByWatchList.fulfilled, (state, action) => {
+        state.watchListContent = action.payload;
+        state.watchListLoading = false;
+      })
+      .addCase(fetchContentByWatchList.rejected, (state) => {
+        state.watchListContent = [];
+        state.watchListLoading = false;
+      })
+
+      // Add watch list content
+      .addCase(addContentToWatchList.pending, (state) => {
+        state.watchListLoading = true;
+      })
+      .addCase(addContentToWatchList.fulfilled, (state, action) => {
+        const watchContentId = action.payload;
+
+        const isWatchContentExists = state.watchListContent?.find(
+          (item) => item.contentId === watchContentId
+        );
+
+        if (!isWatchContentExists) {
+          const watchContent = state.allContent?.find(
+            (item) => item.contentId === watchContentId
+          );
+
+          if (watchContent) {
+            state.watchListContent.push(watchContent);
+          }
+        }
+
+        state.watchListLoading = false;
+      })
+      .addCase(addContentToWatchList.rejected, (state) => {
+        state.watchListContent = [];
+        state.watchListLoading = false;
+      })
+
+      // Delete watch list content
+      .addCase(removeContentFromWatchList.pending, (state) => {
+        state.watchListLoading = true;
+      })
+      .addCase(removeContentFromWatchList.fulfilled, (state, action) => {
+        const removedWatchContentId = action.payload;
+
+        state.watchListContent = state.watchListContent.filter(
+          (item) => item.contentId !== removedWatchContentId
+        );
+
+        state.watchListLoading = false;
+      })
+      .addCase(removeContentFromWatchList.rejected, (state) => {
+        state.watchListContent = [];
+        state.watchListLoading = false;
+      })
+
+      // Update liked content in store
       .addCase(likeContent.pending, (state) => {
         state.likeDisLikeLoading = true;
       })
       .addCase(likeContent.fulfilled, (state, action) => {
-        const likedContentId = action.payload.contenId;
-        const likedContent = action.payload.contentObject;
+        const likedContent = action.payload;
 
-        const newFilteredContent = state.filteredContent.map((content) =>
-          content.contentId === likedContentId ? likedContent : content
+        const newAllContent = state.allContent?.map((content) =>
+          content.contentId === likedContent.contentId ? likedContent : content
         );
 
-        const newLatestContent = state.latestContent.map((content) =>
-          content.contentId === likedContentId ? likedContent : content
+        const newLatestContent = state.latestContent?.map((content) =>
+          content.contentId === likedContent.contentId ? likedContent : content
         );
 
-        const newtrendingContent = state.trendingContent.map((content) =>
-          content.contentId === likedContentId ? likedContent : content
+        const newtrendingContent = state.trendingContent?.map((content) =>
+          content.contentId === likedContent.contentId ? likedContent : content
         );
 
-        const newMostLikedContent = state.mostLikedContent.map((content) =>
-          content.contentId === likedContentId ? likedContent : content
+        const newMostLikedContent = state.mostLikedContent?.map((content) =>
+          content.contentId === likedContent.contentId ? likedContent : content
+        );
+
+        const newSearchedContent = state.searchContent?.map((content) =>
+          content.contentId === likedContent.contentId ? likedContent : content
         );
 
         const newContentByCountryOrigin = {};
-        Object.keys(state.contentByCountryOrigin).map((countryOrigin) => {
+        Object.keys(state.contentByCountryOrigin)?.map((countryOrigin) => {
           newContentByCountryOrigin[countryOrigin] =
-            state.contentByCountryOrigin[countryOrigin].map((content) =>
-              content.contentId === likedContentId ? likedContent : content
+            state.contentByCountryOrigin[countryOrigin]?.map((content) =>
+              content.contentId === likedContent.contentId
+                ? likedContent
+                : content
             );
         });
 
-        const newWatchedContent = state.watchedContent.map((content) =>
-          content.contentId === likedContentId ? likedContent : content
+        const newWatchHistoryContent = state.watchHistoryContent?.map(
+          (content) =>
+            content.contentId === likedContent.contentId
+              ? likedContent
+              : content
         );
 
-        state.filteredContent = newFilteredContent;
+        const newWatchListContent = state?.watchListContent?.map((content) =>
+          content.contentId === likedContent.contentId ? likedContent : content
+        );
+
+        state.allContent = newAllContent;
         state.latestContent = newLatestContent;
         state.trendingContent = newtrendingContent;
         state.mostLikedContent = newMostLikedContent;
         state.contentByCountryOrigin = newContentByCountryOrigin;
-        state.watchedContent = newWatchedContent;
+        state.watchHistoryContent = newWatchHistoryContent;
+        state.watchListContent = newWatchListContent;
+        state.searchContent = newSearchedContent;
         state.likeDisLikeLoading = false;
       })
       .addCase(likeContent.rejected, (state) => {
         state.likeDisLikeLoading = false;
       })
 
-      //dislike content
+      // Update disliked content in store
       .addCase(dislikeContent.pending, (state) => {
         state.likeDisLikeLoading = true;
       })
       .addCase(dislikeContent.fulfilled, (state, action) => {
-        const dislikedContentId = action.payload.contenId;
-        const dislikedContent = action.payload.contentObject;
+        const dislikedContent = action.payload;
 
-        const newFilteredContent = state.filteredContent.map((content) =>
-          content.contentId === dislikedContentId ? dislikedContent : content
+        const newallContent = state.allContent?.map((content) =>
+          content.contentId === dislikedContent.contentId
+            ? dislikedContent
+            : content
         );
 
-        const newLatestContent = state.latestContent.map((content) =>
-          content.contentId === dislikedContentId ? dislikedContent : content
+        const newLatestContent = state.latestContent?.map((content) =>
+          content.contentId === dislikedContent.contentId
+            ? dislikedContent
+            : content
         );
 
-        const newtrendingContent = state.trendingContent.map((content) =>
-          content.contentId === dislikedContentId ? dislikedContent : content
+        const newtrendingContent = state.trendingContent?.map((content) =>
+          content.contentId === dislikedContent.contentId
+            ? dislikedContent
+            : content
         );
 
-        const newMostLikedContent = state.mostLikedContent.map((content) =>
-          content.contentId === dislikedContentId ? dislikedContent : content
+        const newMostLikedContent = state.mostLikedContent?.map((content) =>
+          content.contentId === dislikedContent.contentId
+            ? dislikedContent
+            : content
+        );
+
+        const newSearchedContent = state.searchContent?.map((content) =>
+          content.contentId === dislikedContent.contentId
+            ? dislikedContent
+            : content
         );
 
         const newContentByCountryOrigin = {};
-        Object.keys(state.contentByCountryOrigin).map((countryOrigin) => {
+        Object.keys(state.contentByCountryOrigin)?.map((countryOrigin) => {
           newContentByCountryOrigin[countryOrigin] =
-            state.contentByCountryOrigin[countryOrigin].map((content) =>
-              content.contentId === dislikedContentId
+            state.contentByCountryOrigin[countryOrigin]?.map((content) =>
+              content.contentId === dislikedContent.contentId
                 ? dislikedContent
                 : content
             );
         });
 
-        const newWatchedContent = state.watchedContent.map((content) =>
-          content.contentId === dislikedContentId ? dislikedContent : content
+        const newWatchHistoryContent = state.watchHistoryContent?.map(
+          (content) =>
+            content.contentId === dislikedContent.contentId
+              ? dislikedContent
+              : content
         );
 
-        state.filteredContent = newFilteredContent;
+        const newWatchListContent = state.watchListContent?.map((content) =>
+          content.contentId === dislikedContent.contentId
+            ? dislikedContent
+            : content
+        );
+
+        state.allContent = newallContent;
         state.latestContent = newLatestContent;
         state.trendingContent = newtrendingContent;
         state.mostLikedContent = newMostLikedContent;
         state.contentByCountryOrigin = newContentByCountryOrigin;
-        state.watchedContent = newWatchedContent;
+        state.watchHistoryContent = newWatchHistoryContent;
+        state.watchListContent = newWatchListContent;
+        state.searchContent = newSearchedContent;
         state.likeDisLikeLoading = false;
       })
       .addCase(dislikeContent.rejected, (state) => {

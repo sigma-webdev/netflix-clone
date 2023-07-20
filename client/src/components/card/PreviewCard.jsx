@@ -4,11 +4,20 @@ import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addContentToWatchHistory,
+  addContentToWatchList,
+  removeContentFromWatchList,
   dislikeContent,
   likeContent,
 } from "../../store/contentSlice";
-import { DisLikeIcon, DownArrowIcon, LikeIcon, PlayIcon } from "../icons";
 import DetailsCard from "./DetailsCard";
+import {
+  AiFillDislike,
+  AiFillLike,
+  AiOutlineArrowDown,
+  AiOutlineMinus,
+  AiOutlinePlus,
+} from "react-icons/ai";
+import { BsFillPlayFill } from "react-icons/bs";
 
 const PreviewCard = ({
   contentId,
@@ -24,29 +33,31 @@ const PreviewCard = ({
   isDisliked,
   releaseYear,
   contentDuration,
+  toWatch,
 }) => {
   const userId = useSelector((state) => state.auth.userData._id);
-  const likeDisLikeLoading = useSelector(
-    (state) => state.content.likeDisLikeLoading
+  const { likeDisLikeLoading, watchHistoryLoading } = useSelector(
+    (state) => state.content
   );
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isOpenDetails, setIsOpenDetatils] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const videoRef = useRef(null);
 
-  function playPauseMedia() {
+  const playVideo = () => {
     const media = videoRef.current;
-
     if (media.paused) {
       media.play();
-      setIsVideoPlaying(true);
-    } else {
+    }
+  };
+
+  const pauseVideo = () => {
+    const media = videoRef.current;
+    if (!media.paused) {
       media.pause();
-      setIsVideoPlaying(false);
       media.load();
     }
-  }
+  };
 
   const openCloseDetails = () => {
     setIsOpenDetatils(!isOpenDetails);
@@ -59,23 +70,32 @@ const PreviewCard = ({
   };
 
   const likeContentHanlder = () => {
-    dispatch(likeContent({ contentId, userId: userId }));
+    dispatch(likeContent({ contentId, userId }));
   };
 
   const dislikeContentHanlder = () => {
-    dispatch(dislikeContent({ contentId, userId: userId }));
+    dispatch(dislikeContent({ contentId, userId }));
+  };
+
+  const watchListHandler = () => {
+    if (toWatch) {
+      dispatch(removeContentFromWatchList({ contentId }));
+    } else {
+      dispatch(addContentToWatchList({ contentId }));
+    }
   };
 
   const handlePlay = (contentId) => {
-    dispatch(addContentToWatchHistory(contentId));
+    dispatch(addContentToWatchHistory({ contentId }));
+
     navigate(`/watch/${contentId}`);
   };
 
   return (
     <div
       className="my-8 w-48 scale-100 rounded bg-netflix-black drop-shadow-lg transition duration-300 ease-in-out hover:z-10 hover:ml-4 hover:scale-125 hover:opacity-100 md:w-64"
-      onMouseLeave={() => playPauseMedia()}
-      onMouseEnter={() => playPauseMedia()}
+      onMouseLeave={() => pauseVideo()}
+      onMouseEnter={() => playVideo()}
     >
       {/* preview video*/}
       <div className="w-48 md:w-64">
@@ -94,28 +114,59 @@ const PreviewCard = ({
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div className="cursor-pointer">
-              <button onClick={() => handlePlay(contentId)}>
-                <PlayIcon />
+              <button
+                onClick={() => handlePlay(contentId)}
+                className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+              >
+                <BsFillPlayFill className="text-xl" />
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={likeContentHanlder}
+                className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+                disabled={likeDisLikeLoading}
+              >
+                <AiFillLike
+                  className={`${
+                    isLiked
+                      ? "text-green-500"
+                      : "text-white hover:text-green-500"
+                  } text-xl`}
+                />
+              </button>
+              <button
+                onClick={dislikeContentHanlder}
+                className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+                disabled={likeDisLikeLoading}
+              >
+                <AiFillDislike
+                  className={`${
+                    isDisliked
+                      ? "text-red-500"
+                      : "text-white hover:text-red-500"
+                  } text-xl`}
+                />
               </button>
             </div>
             <button
-              onClick={likeContentHanlder}
-              className="cursor-pointer"
-              disabled={likeDisLikeLoading}
+              onClick={watchListHandler}
+              disabled={watchHistoryLoading}
+              className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
             >
-              <LikeIcon isLiked={isLiked} />
-            </button>
-            <button
-              onClick={dislikeContentHanlder}
-              className="cursor-pointer"
-              disabled={likeDisLikeLoading}
-            >
-              <DisLikeIcon isDisliked={isDisliked} />
+              {toWatch ? (
+                <AiOutlineMinus className="text-xl" />
+              ) : (
+                <AiOutlinePlus className="text-xl" />
+              )}
             </button>
           </div>
-          <div onClick={openCloseDetails} className="cursor-pointer">
-            <DownArrowIcon />
-          </div>
+          <button
+            onClick={openCloseDetails}
+            className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+          >
+            <AiOutlineArrowDown className="text-xl" />
+          </button>
         </div>
 
         <div className="flex items-center gap-2">
@@ -130,6 +181,7 @@ const PreviewCard = ({
         <div className="text-white">{geners.join(" . ")}</div>
       </div>
 
+      {/* modal for video description */}
       {isOpenDetails &&
         createPortal(
           <div className="fixed top-0 z-50 flex h-full w-full items-center overflow-hidden bg-black/60 ">

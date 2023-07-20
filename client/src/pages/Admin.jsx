@@ -1,16 +1,19 @@
 import React, { useEffect } from "react";
 import AdminNav from "../components/admin/AdminNav";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 const Admin = () => {
   const navigate = useNavigate();
-  // sending the user to admin dashboard once he visit admin
+  const location = useLocation();
+
   useEffect(() => {
-    navigate("/admin/dashboard");
-  }, []);
+    if (location.pathname === "/admin") {
+      navigate("/admin/dashboard");
+    }
+  }, [location]);
 
   return (
-    <div className="flex  ">
+    <div className="flex">
       <AdminNav />
       <Outlet />
     </div>
