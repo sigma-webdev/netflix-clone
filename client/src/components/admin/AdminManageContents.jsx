@@ -25,6 +25,7 @@ const AdminManageContents = () => {
     originCountry: "",
   });
   const [castInput, setCastInput] = useState("");
+  const [genreInput, setGenreInput] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -50,11 +51,7 @@ const AdminManageContents = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "genres") {
-      setNewContentData({
-        ...newContentData,
-        genres: [...newContentData.genres, value],
-      });
-
+      setGenreInput(value)
       return;
     }
     if (name === "cast") {
@@ -65,6 +62,33 @@ const AdminManageContents = () => {
       ...prevDetails,
       [name]: value,
     }));
+  };
+
+  const handleAddGenres = () => {
+    if (genreInput === "") {
+      toast.error("please select a valid input");
+      return;
+    }
+    if(newContentData.genres.includes(genreInput)){
+      toast.error("genre is already added");
+      return;
+    }
+    if(newContentData.genres.length > 2){
+      toast.error("genres cannot be more than 3 ");
+        return;
+    }
+    const newGenersArr = [...newContentData.genres, genreInput];
+    setNewContentData({ ...newContentData, genres: newGenersArr });
+    setGenreInput("");
+  };
+
+  
+  const handleRemoveGenres = (genre) => {
+    const indexOfCastToBeRemoved = newContentData.genres.indexOf(genre);
+    const newGeners = newContentData.genres.filter(
+      (item, index) => index !== indexOfCastToBeRemoved
+    );
+    setNewContentData({ ...newContentData, genres: newGeners });
   };
 
   const handleAddCast = () => {
@@ -83,6 +107,8 @@ const AdminManageContents = () => {
     );
     setNewContentData({ ...newContentData, cast: newCast });
   };
+
+  
 
   const getSearch = (e) => {
     e.preventDefault();
@@ -116,6 +142,10 @@ const AdminManageContents = () => {
       toast.error("cast field cannot be empty field");
       return;
     }
+    if (newContentData.genres.length === 0) {
+      toast.error("genres cannot be empty field❗");
+      return;
+    }
 
     if (newContentData.name.length < 5) {
       toast.error("please add name with atleast 5 characters");
@@ -127,7 +157,7 @@ const AdminManageContents = () => {
       );
       return;
     }
-    if (newContentData.director.length < 3) {
+    if (newContentData.director.length < 2) {
       toast.error(
         "director: Content director must be at least 2 characters ❗"
       );
@@ -208,10 +238,11 @@ const AdminManageContents = () => {
                 onChange={handleInputChange}
               />
               <label htmlFor="genres">Genres:</label>
+              <div>
               <select
-                className="rounded border bg-transparent p-2"
+                className="rounded w-[88%] border bg-transparent p-2 mr-4"
                 name="genres"
-                value={newContentData.genres[0]}
+                value={genreInput}
                 onChange={handleInputChange}
               >
                 <option value="">Select an option</option>
@@ -228,6 +259,28 @@ const AdminManageContents = () => {
                 <option value="Sports">Sports</option>
                 <option value="Thrillers">Thrillers</option>
               </select>
+                <div
+                  onClick={handleAddGenres}
+                  className="inline-block cursor-pointer rounded bg-[#E50914] px-4 py-2 text-white hover:bg-[#d4252e]"
+                >
+                  Add
+                </div>
+              {newContentData.genres.length > 0 && (
+                <div className="flex flex-wrap">
+                  {newContentData.genres.map((genre, index) => (
+                    <div key={index} className="relative m-2 rounded bg-blue-200">
+                      <div
+                        onClick={() => handleRemoveGenres(genre)}
+                        className="absolute -top-1 right-1 cursor-pointer"
+                      >
+                        x
+                      </div>
+                      <p className=" w-fit px-3 py-2">{genre}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              </div>
 
               <label htmlFor="text">Description:</label>
               <input
@@ -253,7 +306,6 @@ const AdminManageContents = () => {
                 >
                   Add
                 </div>
-              </div>
               {newContentData.cast.length > 0 && (
                 <div className="flex flex-wrap">
                   {newContentData.cast.map((castname, index) => (
@@ -269,6 +321,7 @@ const AdminManageContents = () => {
                   ))}
                 </div>
               )}
+              </div>
 
               <label htmlFor="contentType"> Content Type:</label>
 
