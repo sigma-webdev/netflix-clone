@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
     plan: {
       type: String,
       default: "NONE",
-      maxLength: [15, "Plan must be less than 50 characters"],
+      enum: ["PREMIUM", "STANDARD", "BASIC", "MOBILE", "NONE"],
     },
     watchHistory: [
       {
