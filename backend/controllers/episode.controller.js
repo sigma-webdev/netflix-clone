@@ -1,8 +1,8 @@
-const asyncHandler = require("../middleware/asyncHandler");
-const contentModel = require("../model/content.schema");
+const asyncHandler = require("../middlewares/asyncHandler");
+const contentModel = require("../models/content.model");
 
-const episodeModel = require("../model/episode.schema");
-const seasonModel = require("../model/season.schema");
+const episodeModel = require("../models/episode.schema");
+const seasonModel = require("../models/season.schema");
 const CustomError = require("../utils/customError");
 const { cloudinaryFileDelete } = require("../utils/fileDelete.cloudinary");
 const cloudinaryFileUpload = require("../utils/fileUpload.cloudinary");

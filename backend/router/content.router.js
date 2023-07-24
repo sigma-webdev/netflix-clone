@@ -63,7 +63,11 @@ contentRoute
   .delete(jwtAuth, authorizeRoles("ADMIN"), httpDeleteById)
   .put(jwtAuth, authorizeRoles("ADMIN"), httpUpdateById);
 
-// ---- season routes ---- //
+/***
+   * 
+/*--- season routes ---- //
+
+  */
 // create and read
 contentRoute
   .route("/:seriesId/seasons")

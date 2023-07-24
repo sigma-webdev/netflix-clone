@@ -1,6 +1,6 @@
-const asyncHandler = require("../middleware/asyncHandler");
-const contentModel = require("../model/content.schema");
-const seasonModel = require("../model/season.schema");
+const asyncHandler = require("../middlewares/asyncHandler");
+const contentModel = require("../models/content.model");
+const seasonModel = require("../models/season.schema");
 const CustomError = require("../utils/customError");
 
 /********************
@@ -40,7 +40,7 @@ const createSeason = asyncHandler(async (req, res, next) => {
 
   // read season and check for duplicate season number
   // check for series duplicates and add--
-  if (contentSeries.length > 0) {
+  if (contentSeries?.length > 0) {
     for (const season of contentSeries) {
       if (season.seasonNumber == seasonNumber) {
         return next(
@@ -70,7 +70,7 @@ const createSeason = asyncHandler(async (req, res, next) => {
   }
 
   ////// add the season to series //////
-  if (!seriesData.contentSeries.includes(seasonData._id)) {
+  if (!seriesData?.contentSeries?.includes(seasonData._id)) {
     seriesData.contentSeries.push(seasonData._id);
     await seriesData.save();
   } else {
