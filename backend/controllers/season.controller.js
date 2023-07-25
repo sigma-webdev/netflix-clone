@@ -234,9 +234,7 @@ const updateSeason = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // handle season duplicate number
-  let seasonPresent = false;
-
+  // check for duplicate of season number
   for (const season of seasonData) {
     if (season.seasonNumber === seasonNumber) {
       seasonPresent = true;
@@ -244,16 +242,11 @@ const updateSeason = asyncHandler(async (req, res, next) => {
     }
   }
 
-  let seasons;
-
-  // if not duplicate
-  if (!seasonPresent) {
-    seasons = await seasonModel.findByIdAndUpdate(
-      seasonId,
-      { $set: { seasonNumber: seasonNumber, seasonSummary: seasonSummary } },
-      { new: true }
-    );
-  }
+  let seasons = await seasonModel.findByIdAndUpdate(
+    seasonId,
+    { $set: { seasonNumber: seasonNumber, seasonSummary: seasonSummary } },
+    { new: true }
+  );
 
   if (!seasons) {
     return next(new CustomError("Season not able to update", 400));
