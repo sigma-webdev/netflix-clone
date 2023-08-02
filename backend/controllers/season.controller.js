@@ -134,7 +134,7 @@ const getSeasonsById = asyncHandler(async (req, res, next) => {
     return next(
       new CustomError(
         "Seasons data not able to fetch! for the given season Id",
-        400
+        404
       )
     );
   }
@@ -249,12 +249,12 @@ const updateSeason = asyncHandler(async (req, res, next) => {
   );
 
   if (!seasons) {
-    return next(new CustomError("Season not able to update", 400));
+    return next(new CustomError("Season not able to update", 500));
   }
 
   return res.status(200).json({
     statusCode: 200,
-    message: "update Successfully",
+    message: "updated Successfully",
     success: true,
     data: seasons,
   });

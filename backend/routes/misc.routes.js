@@ -1,6 +1,7 @@
 const express = require("express");
 
 const jwtAuth = require("../middlewares/jwtAuth.js");
+
 const {
   getUsersStatistics,
   getMoviesStatistics,
