@@ -138,6 +138,12 @@ const contentSchema = new Schema(
       type: Number,
       default: 0,
     },
+    contentSeries: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Season",
+      },
+    ],
   },
 
   { timestamps: true }

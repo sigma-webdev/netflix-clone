@@ -6,6 +6,7 @@ const cloudinaryFileUpload = async (files, next) => {
   const tailersFolder = "trailers";
   const contentsFolder = "contents";
   const thumbnailsFolder = "thumbnails";
+  const episodeFolder = "episodeFolder";
 
   // template for content data, thumbnail to add urlId
   const filesDetails = {};
@@ -73,6 +74,25 @@ const cloudinaryFileUpload = async (files, next) => {
             thumbnailId: thumbnailTemp.public_id,
           },
         ];
+      }
+    }
+
+    if (files.episodeVideo) {
+      if (Object.keys(files).includes("episodeVideo")) {
+        const episodeTemp = await cloudinary.uploader.upload(
+          files.episodeVideo.tempFilePath,
+          { resource_type: "video", folder: episodeFolder },
+          (error) => {
+            if (error) {
+              return next(new CustomError(`File upload Error - ${error}`));
+            }
+          }
+        );
+
+        filesDetails["episodeVideo"] = {
+          episodeVideoPublicUrl: episodeTemp.secure_url,
+          episodeVideoPublicId: episodeTemp.public_id,
+        };
       }
     }
 

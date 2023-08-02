@@ -22,9 +22,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // routes
 const authRouter = require("./routes/auth.routes.js");
 const paymentRouter = require("./routes/payment.routes.js");
-const contentRoute = require("./routes/content.routes.js");
+const contentRouter = require("./routes/content.routes.js");
 const userRouter = require("./routes/user.routes.js");
-const miscRoute = require("./routes/misc.routes.js");
+const miscRouter = require("./routes/misc.routes.js");
 
 // database connection
 require("./config/database.config.js");
@@ -52,10 +52,10 @@ app.use(
 
 // routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/contents", contentRoute);
+app.use("/api/v1/contents", contentRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/payment", paymentRouter);
-app.use("/api/v1", miscRoute);
+app.use("/api/v1", miscRouter);
 app.get("/health-check", (req, res) => {
   return res.status(200).json({
     success: true,
