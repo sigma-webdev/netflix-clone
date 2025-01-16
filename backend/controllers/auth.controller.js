@@ -188,14 +188,14 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
   const resetUrl = `${req.protocol}://${req.get(
     "host"
-  )}/reset-password/${resetToken}`;
+  )}/api/v1/auth/reset-password/${resetToken}`;
 
   // create mail content
   const mailOptions = {
     from: process.env.EMAIL_ID,
     to: user.email,
     subject: "Complete your password reset request",
-    html: `<b>Hello ${user.name}</b><br>
+    html: `<b>Hello ${user.name ? user.name : ""}</b><br>
                <a href="${resetUrl}" target ="_blank" >Click here to reset password</a>`,
   };
 
