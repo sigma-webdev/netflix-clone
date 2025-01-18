@@ -19,7 +19,7 @@ paymentRouter.route("/rasorpaykey").get(jwtAuth, getRazorpayApiKey);
 
 paymentRouter
   .route("/verify-subscription")
-  .post(jwtAuth, authorizeRoles("USER , ADMIN"), verifySubscription);
+  .post(jwtAuth, authorizeRoles("USER", "ADMIN"), verifySubscription);
 
 paymentRouter
   .route("/plan")
