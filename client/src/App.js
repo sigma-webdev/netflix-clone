@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     dispatch(GET_USER());
-  }, []);
+  });
 
   return (
     <>

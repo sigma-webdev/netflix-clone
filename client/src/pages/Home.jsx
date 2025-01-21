@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import validator from "email-validator";
 import toast from "react-hot-toast";
@@ -21,6 +21,12 @@ const Home = () => {
   const navigate = useNavigate();
   const { IS_LOGGED_IN, loading } = useSelector((state) => state.auth);
   const USER_DATA = useSelector((state) => state.auth.userData);
+
+  useEffect(() => {
+    if (USER_DATA) {
+      navigate("/browse");
+    }
+  }, [USER_DATA, navigate]);
 
   // handler for accordion
   const accordianHandler = (id) => {
@@ -101,7 +107,7 @@ const Home = () => {
                         </div>
                         <div>
                           <button
-                            className="md:text-md flex h-10 items-center rounded bg-red-600  px-2 text-sm font-bold text-white hover:bg-red-700  md:h-12 md:px-4 lg:h-14 lg:px-6 lg:text-lg"
+                            className="md:text-md flex h-10 items-center rounded bg-red-600 px-2 text-sm font-bold text-white hover:bg-red-700 md:h-12 md:px-4 lg:h-14 lg:px-6 lg:text-lg"
                             type="submit"
                           >
                             Get Started <MdKeyboardArrowRight />
@@ -196,7 +202,7 @@ const Home = () => {
                   </div>
                   <div>
                     <button
-                      className="md:text-md flex h-10 items-center rounded bg-red-600  px-2 text-sm font-bold text-white hover:bg-red-700  md:h-12 md:px-4 lg:h-14 lg:px-6 lg:text-lg"
+                      className="md:text-md flex h-10 items-center rounded bg-red-600 px-2 text-sm font-bold text-white hover:bg-red-700 md:h-12 md:px-4 lg:h-14 lg:px-6 lg:text-lg"
                       type="submit"
                     >
                       Get Started <MdKeyboardArrowRight />
