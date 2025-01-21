@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Link, useNavigate } from "react-router-dom";
 import { SIGN_OUT } from "../../../store/authSlice";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -66,9 +67,9 @@ const BrowseHeader = () => {
       </div>
 
       <div className="flex h-fit items-center gap-3">
-        <div className="flex border-2 border-white  text-white">
+        <div className="flex border-2 border-white text-white">
           <div
-            className="flex cursor-pointer items-center gap-2 bg-black/50  px-1 py-1 text-white"
+            className="flex cursor-pointer items-center gap-2 bg-black/50 px-1 py-1 text-white"
             onClick={handleSearch}
           >
             <AiOutlineSearch className="text-2xl" />

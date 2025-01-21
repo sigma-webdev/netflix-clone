@@ -56,6 +56,7 @@ const Browse = () => {
     );
     dispatch(fetchContentByWatchHistory({ userId }));
     dispatch(fetchContentByWatchList({ userId }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   return (

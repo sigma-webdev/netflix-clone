@@ -7,17 +7,18 @@ const PaymentSuccess = () => {
   useEffect(() => {
     const redirect = setTimeout(() => navigate("/"), 30000);
     return () => clearTimeout(redirect);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <SignUpLayout>
-      <div className=" w-[460px] p-10 shadow-xl flex flex-col bg-[#f3f3f3] m-auto my-10">
+      <div className=" m-auto my-10 flex w-[460px] flex-col bg-[#f3f3f3] p-10 shadow-xl">
         <h2 className="mb-5">payment successful</h2>
-        <p className=" text-lg mb-2"></p>
-        <p className=" text-lg mb-2">
+        <p className="mb-2 text-lg "></p>
+        <p className="mb-2 text-lg ">
           You’ll be redirected to Home page in 30 seconds.
         </p>
         <Link to="/">
-          <button className="   w-full text-lg  text-white h-10  font-semibold bg-[#017bf5] hover:bg-[#2490fd]   ">
+          <button className="   h-10 w-full  bg-[#017bf5] text-lg  font-semibold text-white hover:bg-[#2490fd]   ">
             Go Now
           </button>
         </Link>

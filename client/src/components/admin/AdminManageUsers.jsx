@@ -15,6 +15,7 @@ const AdminManageUsers = () => {
 
   useEffect(() => {
     dispatch(getAllUsers({ pageNo: page }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const toggleModal = (val) => {
@@ -94,7 +95,7 @@ const AdminManageUsers = () => {
           </div>
         </div>
       )}
-      <div className=" max-h-screen w-10/12 overflow-y-scroll bg-slate-100 py-10">
+      <div className="max-h-screen w-10/12 overflow-y-scroll bg-slate-100 py-10">
         <div className="mx-auto flex w-5/6 justify-between">
           <h3 className="rounded-t-md bg-red-600 px-3 text-white">
             Manage Users
@@ -108,13 +109,13 @@ const AdminManageUsers = () => {
                 value={searchText}
                 type="text"
                 placeholder="Search user"
-                className=" w-full px-2 outline-none"
+                className="w-full px-2 outline-none "
               />
             </form>
             <HiSearch className="text-4xl" />
           </div>
         </div>
-        <table className="mx-auto w-5/6 table-auto overflow-scroll  text-gray-200">
+        <table className="mx-auto w-5/6 table-auto overflow-scroll text-gray-200">
           <thead className="text-left">
             <tr className="bg-red-600 text-white">
               <th className="px-4 py-2">Sr. No.</th>
@@ -123,7 +124,7 @@ const AdminManageUsers = () => {
               <th className="px-4 py-2 text-center">Action</th>
             </tr>
           </thead>
-          <tbody className=" border-opacity-0">
+          <tbody className="border-opacity-0 ">
             {loading ? (
               <TableLoading colLength={4} />
             ) : (
@@ -144,7 +145,7 @@ const AdminManageUsers = () => {
                         onClick={() => {
                           userById(user._id);
                         }}
-                        className=" rounded bg-red-600 px-16 py-2 text-center font-bold text-white hover:bg-red-500"
+                        className="rounded bg-red-600 px-16 py-2 text-center font-bold text-white hover:bg-red-500"
                       >
                         View User
                       </button>

@@ -10,6 +10,7 @@ const Admin = () => {
     if (location.pathname === "/admin") {
       navigate("/admin/dashboard");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return (

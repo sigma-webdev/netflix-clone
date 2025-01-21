@@ -8,17 +8,16 @@ import {
 
 const VideoPreview = () => {
   return (
-    <div className="overflow-hidden  rounded-md bg-netflix-black drop-shadow-lg">
-      <div>
-        <video ref={videoRef} src={sampleVideo} loop></video>
-      </div>
+    <div className="overflow-hidden rounded-md bg-netflix-black drop-shadow-lg">
+      {/* TODO: fix- videoRef adn sampleVideo not found */}
+      <div>{/* <video ref={videoRef} src={sampleVideo} loop></video> */}</div>
 
       <div className="space-y-4 p-4">
         <div className="flex justify-between">
           <div className="flex gap-2">
-            <div onClick={playPauseMedia} className="cursor-pointer">
+            {/* <div onClick={playPauseMedia} className="cursor-pointer">
               {!isVideoPlaying ? <PlayIcon /> : <PauseIcon />}
-            </div>
+            </div> */}
             <div>
               <AddIcon />
             </div>
