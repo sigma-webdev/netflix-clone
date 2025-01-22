@@ -24,6 +24,13 @@ const SignIn = () => {
         message: response?.payload?.message,
       });
     }
+
+    // Check if the plan is NONE
+    if (response.payload.data.plan === "NONE") {
+      return navigate("/signup/planform", { replace: true });
+    }
+
+    // Redirect to the browse page for valid sign-ins
     return navigate("/browse");
   };
 

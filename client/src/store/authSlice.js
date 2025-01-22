@@ -108,11 +108,12 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(SIGN_IN.fulfilled, (state, action) => {
-        localStorage.setItem("token", action?.payload?.token);
-        state.userData = action?.payload?.data;
-        state.isLoggedIn = true;
+        if (action?.payload?.token) {
+          localStorage.setItem("token", action?.payload?.token);
+          state.userData = action?.payload?.data;
+          state.isLoggedIn = true;
+        }
         state.loading = false;
-        toast.success("Logged in successfully");
       })
       .addCase(SIGN_IN.rejected, (state, action) => {
         state.loading = false;
@@ -122,13 +123,10 @@ const authSlice = createSlice({
       .addCase(SIGN_UP.pending, (state) => {
         state.loading = true;
       })
-      // .addCase(SIGN_UP.fulfilled, (state, action) => {
-      //   localStorage.setItem("token", action?.payload?.token);
-      //   state.userData = action?.payload?.data;
-      //   state.isLoggedIn = true;
-      //   state.loading = false;
-      //   toast.success("Logged in successfully");
-      // })
+      .addCase(SIGN_UP.fulfilled, (state, action) => {
+        localStorage.setItem("token", action?.payload?.token);
+      })
+
       // .addCase(SIGN_UP.rejected, (state, action) => {
       //   state.loading = false;
       // })
