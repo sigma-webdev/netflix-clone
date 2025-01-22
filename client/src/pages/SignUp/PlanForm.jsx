@@ -15,7 +15,7 @@ const PlanForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [plan, setPlan] = useState("PREMIUM");
+  const [plan, setPlan] = useState("plan_PkVeacUfjYvgHO");
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const RAZORPAY_KEY = useSelector((state) => state.razorpay.razorpaykey);
@@ -111,7 +111,7 @@ const PlanForm = () => {
           {/* PREMIUM */}
           <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg "
-            onClick={() => setPlan("PREMIUM")}
+            onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
             <div
               className={
@@ -147,7 +147,7 @@ const PlanForm = () => {
           {/* STANDARD */}
           <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
-            onClick={() => setPlan("STANDARD")}
+            onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
             <div
               className={
@@ -183,7 +183,7 @@ const PlanForm = () => {
           {/* BASIC */}
           <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
-            onClick={() => setPlan("BASIC")}
+            onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
             <div
               className={
@@ -219,7 +219,7 @@ const PlanForm = () => {
           {/* MOBILE */}
           <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
-            onClick={() => setPlan("MOBILE")}
+            onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
             <div
               className={

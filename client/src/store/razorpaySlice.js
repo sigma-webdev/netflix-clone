@@ -15,7 +15,7 @@ export const GET_RAZORPAY_KEY = createAsyncThunk(
   "payment/razorpaykey",
   async (data) => {
     try {
-      const response = await axiosInstance.get("payment/razorpaykey");
+      const response = await axiosInstance.get("/payment/rasorpaykey");
       return response.data;
     } catch (error) {
       error?.response?.data?.message
@@ -30,7 +30,10 @@ export const CREATE_SUBSCRIPTION = createAsyncThunk(
   async (data) => {
     // data = {planeName : planeName}
     try {
-      const response = await axiosInstance.post("payment/subscribe", data);
+      const response = await axiosInstance.post(
+        `/payment/subscribe/${data.planName}`,
+        data
+      );
       return response.data;
     } catch (error) {
       error?.response?.data?.message
@@ -68,6 +71,7 @@ const razoreSlice = createSlice({
         state.razorpayKeyLoading = true;
       })
       .addCase(GET_RAZORPAY_KEY.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.razorpaykey = action.payload.key;
         state.razorpayKeyLoading = false;
       })
