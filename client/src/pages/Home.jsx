@@ -21,12 +21,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { IS_LOGGED_IN, loading } = useSelector((state) => state.auth);
   const USER_DATA = useSelector((state) => state.auth.userData);
-
-  useEffect(() => {
-    if (USER_DATA) {
-      navigate("/browse");
-    }
-  }, [USER_DATA, navigate]);
+  const email = localStorage.getItem("netflixCloneEmail");
 
   // handler for accordion
   const accordianHandler = (id) => {
@@ -44,6 +39,14 @@ const Home = () => {
       navigate("/signup");
     }
   };
+
+  useEffect(() => {
+    if (email) {
+      navigate("/browse");
+    } else {
+      navigate("/");
+    }
+  }, [email, navigate]);
 
   return (
     <HomeLayout>

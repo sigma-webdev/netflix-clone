@@ -32,9 +32,10 @@ export const SIGN_IN = createAsyncThunk("auth/signin", async (data) => {
   }
 });
 
-export const SIGN_UP = createAsyncThunk("auth/signup", async (data) => {
+export const SIGN_UP = createAsyncThunk("/auth/signup", async (data) => {
   try {
     const response = await axiosInstance.post("/auth/signup", data);
+
     return response.data;
   } catch (error) {
     error?.response?.data?.message
@@ -45,7 +46,7 @@ export const SIGN_UP = createAsyncThunk("auth/signup", async (data) => {
 
 export const SIGN_OUT = createAsyncThunk("/auth/signout", async () => {
   try {
-    const response = await axiosInstance.get("auth/signout");
+    const response = await axiosInstance.get("/auth/signout");
     return response.data;
   } catch (error) {
     error?.response?.data?.message
@@ -121,16 +122,16 @@ const authSlice = createSlice({
       .addCase(SIGN_UP.pending, (state) => {
         state.loading = true;
       })
-      .addCase(SIGN_UP.fulfilled, (state, action) => {
-        state.userData = action?.payload?.data;
-        state.isLoggedIn = true;
-        state.loading = false;
-        localStorage.removeItem("netflixCloneEmail");
-        toast.success("Account created successfully");
-      })
-      .addCase(SIGN_UP.rejected, (state, action) => {
-        state.loading = false;
-      })
+      // .addCase(SIGN_UP.fulfilled, (state, action) => {
+      //   localStorage.setItem("token", action?.payload?.token);
+      //   state.userData = action?.payload?.data;
+      //   state.isLoggedIn = true;
+      //   state.loading = false;
+      //   toast.success("Logged in successfully");
+      // })
+      // .addCase(SIGN_UP.rejected, (state, action) => {
+      //   state.loading = false;
+      // })
 
       // get user
       .addCase(GET_USER.pending, (state) => {

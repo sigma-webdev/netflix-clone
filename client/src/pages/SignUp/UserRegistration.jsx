@@ -10,26 +10,62 @@ import SignUpLayout from "./SignUpLayout.jsx";
 const UserRegistration = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState(localStorage.getItem("netflixCloneEmail"));
-  const { loading } = useSelector((state) => state.auth);
+
+  const [signUpData, setSignUpData] = useState({
+    email: localStorage.getItem("netflixCloneEmail") || "",
+    password: "",
+  });
+
+  const loading = useSelector((state) => state.auth.loading);
+
+  // function to set the signup data
+  const handleUserInput = (event) => {
+    const { name, value } = event.target;
+
+    setSignUpData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // form submit
   const handleSubmit = async (e) => {
+    console.log("calling function submit");
     e.preventDefault();
-    const isEmailValid = validator.validate(e?.target?.email?.value);
-    if (!isEmailValid) return toast.error("please enter valid email 📩");
-    const formData = new FormData(e.target);
-    const response = await dispatch(SIGN_UP(formData));
-    if (response.payload.success) {
-      navigate("/signup/checkplan");
+
+    // Validate input fields
+    if (!signUpData.email || !signUpData?.password) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+
+    // Validate email
+    const isEmailValid = validator.validate(signUpData.email);
+    if (!isEmailValid) {
+      toast.error("Please enter a valid email 📩");
+      return;
+    }
+
+    try {
+      // Dispatch SIGN_UP action
+      const response = await dispatch(SIGN_UP(signUpData));
+
+      // Check for success in the response payload
+      if (response?.payload?.success) {
+        console.log("Signup successful!");
+        navigate("/signup/checkplan");
+      } else {
+        toast.error(
+          response?.payload?.message || "Signup failed. Please try again."
+        );
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
     }
   };
   return (
     <SignUpLayout>
-      <form
-        onSubmit={(e) => {
-          handleSubmit(e);
-        }}
-        className="   m-auto  my-10 max-w-[440px]"
-      >
+      <form onSubmit={handleSubmit} className="   m-auto  my-10 max-w-[440px]">
         <p className="text-[#333]">
           STEP <span className="font-bold">1</span> OF {""}
           <span className="font-bold">3</span>
@@ -44,13 +80,13 @@ const UserRegistration = () => {
         {/* email */}
         <div className="border-gray group relative z-0 mb-4 w-full border-[1px] ">
           <input
-            // type="email"
+            type="email"
             name="email"
             id="floating_email"
             className="peer m-3  block w-full appearance-none border-gray-300  bg-transparent px-0 py-2.5   text-sm font-semibold    text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-0"
             required
-            defaultValue={email}
-            onChange={(e) => setEmail(e.target.value)}
+            defaultValue={signUpData.email}
+            onChange={handleUserInput}
             placeholder=" "
           />
           <label
@@ -72,6 +108,7 @@ const UserRegistration = () => {
             placeholder=" "
             minLength={6}
             maxLength={60}
+            onChange={handleUserInput}
           />
           <label
             htmlFor="floating_password"
