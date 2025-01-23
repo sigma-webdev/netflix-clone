@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { BsGlobe } from "react-icons/bs";
 
 const HomeFooter = () => {
@@ -53,7 +54,7 @@ const HomeFooter = () => {
       <div className="mx-auto max-w-[80vw]">
         <div className="flex h-fit w-fit items-center gap-2 rounded border-2 border-white bg-black px-3 py-1 text-white">
           <BsGlobe />
-          <select className="rounded bg-transparent  " defaultValue={"English"}>
+          <select className="rounded bg-transparent " defaultValue={"English"}>
             <option value="English">English</option>
             <option value="Hindi">Hindi</option>
           </select>

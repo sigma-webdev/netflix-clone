@@ -15,6 +15,7 @@ const Watch = () => {
 
   useEffect(() => {
     dispatch(fetchContentById({ contentId, userId }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, contentId]);
 
   return (

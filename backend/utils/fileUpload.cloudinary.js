@@ -62,7 +62,9 @@ const cloudinaryFileUpload = async (files, next) => {
           { folder: thumbnailsFolder },
           (error) => {
             if (error) {
-              return next(CustomError(`Thumbnail fail to upload--- ${error}`));
+              return next(
+                new CustomError(`Thumbnail fail to upload--- ${error}`)
+              );
             }
           }
         );

@@ -15,7 +15,7 @@ const PlanForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [plan, setPlan] = useState("PREMIUM");
+  const [plan, setPlan] = useState("plan_PkVeacUfjYvgHO");
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const RAZORPAY_KEY = useSelector((state) => state.razorpay.razorpaykey);
@@ -38,7 +38,7 @@ const PlanForm = () => {
     razorpay_signature: "",
   };
 
-  const handlesubmit = async (e) => {
+  const handleSubmit = async (e) => {
     await dispatch(GET_RAZORPAY_KEY());
     await dispatch(CREATE_SUBSCRIPTION({ planName: plan }));
   };
@@ -83,6 +83,7 @@ const PlanForm = () => {
     if (!buttonLoading && RAZORPAY_KEY && SUBSCRIPTION_ID) {
       razorpayPaymentModel();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [RAZORPAY_KEY, SUBSCRIPTION_ID, buttonLoading]);
 
   return (
@@ -110,7 +111,7 @@ const PlanForm = () => {
           {/* PREMIUM */}
           <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg "
-            onClick={() => setPlan("PREMIUM")}
+            onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
             <div
               className={
@@ -133,20 +134,20 @@ const PlanForm = () => {
               </div>
             </div>
             <ul className="p-4">
-              <li className=" text-sm font-semibold">
+              <li className="text-sm font-semibold ">
                 Our best video quality in 4K and HDR
               </li>
-              <li className=" text-sm font-semibold">
+              <li className="text-sm font-semibold ">
                 Watch on your TV, computer, mobile phone and tablet
               </li>
-              <li className=" text-sm font-semibold">Downloads available</li>
+              <li className="text-sm font-semibold ">Downloads available</li>
             </ul>
           </div>
           {/* PREMIUM END */}
           {/* STANDARD */}
           <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
-            onClick={() => setPlan("STANDARD")}
+            onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
             <div
               className={
@@ -182,7 +183,7 @@ const PlanForm = () => {
           {/* BASIC */}
           <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
-            onClick={() => setPlan("BASIC")}
+            onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
             <div
               className={
@@ -218,7 +219,7 @@ const PlanForm = () => {
           {/* MOBILE */}
           <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
-            onClick={() => setPlan("MOBILE")}
+            onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
             <div
               className={
@@ -266,7 +267,7 @@ const PlanForm = () => {
 
         <div className="flex justify-center">
           <button
-            onClick={() => handlesubmit()}
+            onClick={() => handleSubmit()}
             className="mt-3  flex h-16  w-full  max-w-[440px] items-center justify-center rounded-md bg-[#e50914]  text-xl font-semibold text-white hover:bg-[#f6121d]"
           >
             {buttonLoading ? <BiLoader /> : "Next"}

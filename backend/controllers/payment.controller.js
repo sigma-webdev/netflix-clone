@@ -74,7 +74,7 @@ const createSubscription = asyncHandler(async (req, res, next) => {
 /******************************************************
  * @getRazorpayApiKey
  * @method POST
- * @route /api/v1/payment/rasorpaykey
+ * @route /api/v1/payment/razorpayKey
  * @description send razorPay api key
  * @returns Razorpay Api Key
  ******************************************************/
@@ -121,7 +121,9 @@ const verifySubscription = asyncHandler(async (req, res, next) => {
 
   // Check if generated signature and signature received from the frontend is the same or not
   if (generatedSignature !== razorpaySignature) {
-    return next(new AppError("Payment not verified, please try again.", 400));
+    return next(
+      new CustomError("Payment not verified, please try again.", 400)
+    );
   }
 
   // If they match create payment and store it in the DB
