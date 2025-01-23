@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   CREATE_SUBSCRIPTION,
+  GET_PLANS,
   GET_RAZORPAY_KEY,
   VERIFY_SUBSCRIPTION,
 } from "../../store/razorpaySlice.js";
@@ -27,6 +28,9 @@ const PlanForm = () => {
     (state) => state.razorpay.createSbuscriptionLoading
   );
 
+  const PLANS = useSelector((state) => state.plan);
+  dispatch(GET_PLANS());
+
   useEffect(() => {
     setButtonLoading(RASORPAY_KEY_LOADING || CREATE_SUBSCRIPTION_LOADING);
   }, [RASORPAY_KEY_LOADING, CREATE_SUBSCRIPTION_LOADING]);
@@ -39,10 +43,14 @@ const PlanForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    console.log("GET RAZORPAY KEY", GET_RAZORPAY_KEY);
+    console.log("Sucribption KEY", SUBSCRIPTION_ID);
+
     await dispatch(GET_RAZORPAY_KEY());
     await dispatch(CREATE_SUBSCRIPTION({ planName: plan }));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   function razorpayPaymentModel() {
     const options = {
       key: RAZORPAY_KEY,
@@ -79,12 +87,12 @@ const PlanForm = () => {
     paymentObject.open();
   }
 
+  // console.log(PLANS);
   useEffect(() => {
     if (!buttonLoading && RAZORPAY_KEY && SUBSCRIPTION_ID) {
       razorpayPaymentModel();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [RAZORPAY_KEY, SUBSCRIPTION_ID, buttonLoading]);
+  }, [RAZORPAY_KEY, SUBSCRIPTION_ID, buttonLoading, razorpayPaymentModel]);
 
   return (
     <SignUpLayout>

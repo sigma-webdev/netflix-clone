@@ -6,34 +6,50 @@ const initialState = {
   razorpaykey: null,
   razorpayKeyLoading: false,
   subscriptionId: null,
-  createSbuscriptionLoading: false,
+  createSubScriptionLoading: false,
   verifySubscriptionLoading: false,
   isPaymentVerified: false,
 };
 
 export const GET_RAZORPAY_KEY = createAsyncThunk(
-  "payment/razorpaykey",
-  async (data) => {
+  "/payment/razorpaykey",
+  async () => {
     try {
-      const response = await axiosInstance.get("/payment/rasorpaykey");
+      let response = axiosInstance.get("/payment/rasorpaykey");
+      toast.promise(response, {
+        loading: "Please wait! while we get your razorpay key",
+        success: (data) => {
+          return data?.data?.message;
+        },
+        error: "Failed to gets Plan",
+      });
+      response = await response;
       return response.data;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errorMassage = error?.response?.data?.message;
+      toast.error(errorMassage);
     }
   }
 );
 
+// pass the plan id
 export const CREATE_SUBSCRIPTION = createAsyncThunk(
   "payment/subscribe",
   async (data) => {
     // data = {planeName : planeName}
     try {
-      const response = await axiosInstance.post(
+      let response = axiosInstance.post(
         `/payment/subscribe/${data.planName}`,
         data
       );
+      toast.promise(response, {
+        loading: "Creating the subscription",
+        success: (data) => {
+          return data?.data?.message;
+        },
+        error: "Failed to get subscription",
+      });
+      response = await response;
       return response.data;
     } catch (error) {
       error?.response?.data?.message
@@ -43,14 +59,44 @@ export const CREATE_SUBSCRIPTION = createAsyncThunk(
   }
 );
 
+//
+export const GET_PLANS = createAsyncThunk("payment/plan", async (data) => {
+  try {
+    let response = axiosInstance.get(`/payment/plan/`, data);
+
+    toast.promise(response, {
+      loading: "Fetching the plans",
+      success: (data) => {
+        return data?.data?.message;
+      },
+      error: "Failed to get plans",
+    });
+    response = await response;
+    return response.data;
+  } catch (error) {
+    error?.response?.data?.message
+      ? toast.error(error?.response?.data?.message)
+      : toast.error("Failed to create subscription");
+  }
+});
+
 export const VERIFY_SUBSCRIPTION = createAsyncThunk(
   "payment/verifysubscription",
   async (data) => {
     try {
-      const response = await axiosInstance.post(
+      let response = await axiosInstance.post(
         "payment/verifysubscription",
         data
       );
+
+      toast.promise(response, {
+        loading: "Verifying the subscription plan",
+        success: (data) => {
+          return data?.data?.message;
+        },
+        error: "Failed to get plans",
+      });
+      response = await response;
       return response.data;
     } catch (error) {
       error?.response?.data?.message
@@ -71,12 +117,24 @@ const razoreSlice = createSlice({
         state.razorpayKeyLoading = true;
       })
       .addCase(GET_RAZORPAY_KEY.fulfilled, (state, action) => {
-        console.log(action.payload);
-        state.razorpaykey = action.payload.key;
+        console.log(action.payload?.planId);
+        state.razorpaykey = action.payload.planId;
         state.razorpayKeyLoading = false;
       })
       .addCase(GET_RAZORPAY_KEY.rejected, (state, action) => {
         state.razorpayKeyLoading = false;
+      })
+      // get plan
+      .addCase(GET_PLANS.pending, (state, action) => {
+        state.getPlanLoading = true;
+      })
+      .addCase(GET_PLANS.fulfilled, (state, action) => {
+        console.log(action.payload.data);
+        state.plan = action.payload.data;
+        state.getPlanLoading = false;
+      })
+      .addCase(GET_PLANS.rejected, (state, action) => {
+        state.getPlanLoading = false;
       })
 
       // create subscription
