@@ -11,7 +11,7 @@ export const IS_USER_EXIST = createAsyncThunk(
   "auth/userexist",
   async (data) => {
     try {
-      let response = await axiosInstance.post("auth/user-exist", data);
+      let response = await axiosInstance.post("/auth/user-exist", data);
       return response.data;
     } catch (error) {
       error?.response?.data?.message
@@ -23,8 +23,16 @@ export const IS_USER_EXIST = createAsyncThunk(
 
 export const SIGN_IN = createAsyncThunk("auth/signin", async (data) => {
   try {
-    const response = await axiosInstance.post("/auth/signin", data);
-    return response.data;
+    let response = axiosInstance.post("/auth/signin", data);
+    toast.promise(response, {
+      loading: "Please wait! Signing to your account!",
+      success: (data) => {
+        return data?.data?.message;
+      },
+      error: "Failed to signin",
+    });
+    response = await response;
+    return response?.data;
   } catch (error) {
     error?.response?.data?.message
       ? toast.error(error?.response?.data?.message)
@@ -125,11 +133,12 @@ const authSlice = createSlice({
       })
       .addCase(SIGN_UP.fulfilled, (state, action) => {
         localStorage.setItem("token", action?.payload?.token);
+        state.loading = false;
       })
 
-      // .addCase(SIGN_UP.rejected, (state, action) => {
-      //   state.loading = false;
-      // })
+      .addCase(SIGN_UP.rejected, (state, action) => {
+        state.loading = false;
+      })
 
       // get user
       .addCase(GET_USER.pending, (state) => {
