@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 const initialState = {
   isLoggedIn: false,
   userData: {},
-  loading: false,
+  loading: false
 };
 
 export const IS_USER_EXIST = createAsyncThunk(
@@ -29,7 +29,7 @@ export const SIGN_IN = createAsyncThunk("auth/signin", async (data) => {
       success: (data) => {
         return data?.data?.message;
       },
-      error: "Failed to signin",
+      error: "Failed to signin"
     });
     response = await response;
     return response?.data;
@@ -63,10 +63,18 @@ export const SIGN_OUT = createAsyncThunk("/auth/signout", async () => {
   }
 });
 
-export const GET_USER = createAsyncThunk("/auth/user", async () => {
+export const GET_USER = createAsyncThunk("auth/user", async () => {
   try {
-    const response = await axiosInstance.get("/auth/user");
-    return response.data;
+    let response = axiosInstance.get("/auth/user");
+    toast.promise(response, {
+      loading: "fetching user data",
+      success: (data) => {
+        return data?.data?.message;
+      },
+      error: "Failed to fetch user data"
+    });
+    response = await response;
+    return response;
   } catch (error) {
     error?.response?.data?.message
       ? toast.error(error?.response?.data?.message)
@@ -204,7 +212,7 @@ const authSlice = createSlice({
       .addCase(IS_USER_EXIST.rejected, (state) => {
         state.loading = false;
       });
-  },
+  }
 });
 
 export default authSlice.reducer;

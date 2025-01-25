@@ -6,7 +6,7 @@ import {
   CREATE_SUBSCRIPTION,
   GET_PLANS,
   GET_RAZORPAY_KEY,
-  VERIFY_SUBSCRIPTION,
+  VERIFY_SUBSCRIPTION
 } from "../../store/razorpaySlice.js";
 import { AiOutlineCheck, AiOutlineCheckCircle } from "react-icons/ai";
 import { BiLoader } from "react-icons/bi";
@@ -16,20 +16,28 @@ const PlanForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [plan, setPlan] = useState("plan_PkVeacUfjYvgHO");
   const [buttonLoading, setButtonLoading] = useState(false);
-
-  const RAZORPAY_KEY = useSelector((state) => state.razorpay.razorpaykey);
+  const [selectedPlan, setSelectedPlan] = useState({});
+  const RAZORPAY_KEY = useSelector((state) => state.razorpay.razorPayKey);
   const SUBSCRIPTION_ID = useSelector((state) => state.razorpay.subscriptionId);
+  const PLANS = useSelector((state) => state.razorpay.plan);
   const RASORPAY_KEY_LOADING = useSelector(
     (state) => state.razorpay.razorpayKeyLoading
   );
   const CREATE_SUBSCRIPTION_LOADING = useSelector(
-    (state) => state.razorpay.createSbuscriptionLoading
+    (state) => state.razorpay.createSubscriptionLoading
+  );
+  const GET_PLANS_LOADING = useSelector(
+    (state) => state.razorpay.getPlanLoading
   );
 
-  const PLANS = useSelector((state) => state.plan);
-  dispatch(GET_PLANS());
+  useEffect(() => {
+    dispatch(GET_PLANS());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setSelectedPlan(PLANS[0]);
+  }, [PLANS]);
 
   useEffect(() => {
     setButtonLoading(RASORPAY_KEY_LOADING || CREATE_SUBSCRIPTION_LOADING);
@@ -39,15 +47,12 @@ const PlanForm = () => {
   const paymentDetails = {
     razorpay_payment_id: "",
     razorpay_subscription_id: "",
-    razorpay_signature: "",
+    razorpay_signature: ""
   };
 
-  const handleSubmit = async (e) => {
-    console.log("GET RAZORPAY KEY", GET_RAZORPAY_KEY);
-    console.log("Sucribption KEY", SUBSCRIPTION_ID);
-
-    await dispatch(GET_RAZORPAY_KEY());
-    await dispatch(CREATE_SUBSCRIPTION({ planName: plan }));
+  const handleSubmit = () => {
+    dispatch(GET_RAZORPAY_KEY());
+    dispatch(CREATE_SUBSCRIPTION({ planId: selectedPlan.planId }));
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,7 +60,7 @@ const PlanForm = () => {
     const options = {
       key: RAZORPAY_KEY,
       subscription_id: SUBSCRIPTION_ID,
-      name: `Netflix clone ${plan}`,
+      name: `Netflix clone ${selectedPlan.planName}`,
       description: "Monthly Subscription",
       handler: async function (response) {
         paymentDetails.razorpayPaymentId = response.razorpay_payment_id;
@@ -65,29 +70,32 @@ const PlanForm = () => {
 
         // verifying the payment
         const verifySubscription = await dispatch(
-          VERIFY_SUBSCRIPTION({ ...paymentDetails, plan })
+          VERIFY_SUBSCRIPTION({
+            ...paymentDetails,
+            plan: selectedPlan.planName
+          })
         );
-        const isPaymentVerified = verifySubscription.payload.success;
+
+        const isPaymentVerified = verifySubscription.payload.data.success;
 
         // redirecting the user according to the verification status
         if (isPaymentVerified) {
-          toast.success(verifySubscription.payload.message);
+          toast.success(verifySubscription.payload.data.message);
           navigate("/signup/paymentSuccess");
         } else {
-          toast.error(verifySubscription.payload.message);
+          toast.error(verifySubscription.payload.data.message);
           navigate("/signup/paymentfail");
         }
       },
       theme: {
-        color: "#e50914",
-      },
+        color: "#e50914"
+      }
     };
 
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
   }
 
-  // console.log(PLANS);
   useEffect(() => {
     if (!buttonLoading && RAZORPAY_KEY && SUBSCRIPTION_ID) {
       razorpayPaymentModel();
@@ -117,7 +125,51 @@ const PlanForm = () => {
         </ul>
         <div className="my-5 flex items-center justify-between gap-4">
           {/* PREMIUM */}
-          <div
+
+          {GET_PLANS_LOADING === false ? (
+            PLANS?.map((e) => {
+              return (
+                <div key={e._id}>
+                  <div
+                    className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg "
+                    onClick={() => setSelectedPlan(e)}
+                  >
+                    <div
+                      className={
+                        selectedPlan.planName === e.planName
+                          ? "flex h-[76]  gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-red-600 to-purple-600 px-3  py-4"
+                          : "flex h-[76] gap-3 rounded-t-md border-gray-200 bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-4"
+                      }
+                    >
+                      {selectedPlan.planName === e.planName ? (
+                        <AiOutlineCheckCircle />
+                      ) : null}
+                      <div>
+                        <p
+                          className={
+                            selectedPlan.planName === e.planName
+                              ? "text-xl font-bold text-white "
+                              : "text-xl font-bold"
+                          }
+                        >
+                          {e.planName} <br /> {e.amount}/mo.
+                        </p>
+                      </div>
+                    </div>
+                    <ul className="p-4">
+                      <li className="text-sm font-semibold ">
+                        {e.description}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <AiOutlineCheckCircle />
+          )}
+
+          {/* <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg "
             onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
@@ -150,10 +202,10 @@ const PlanForm = () => {
               </li>
               <li className="text-sm font-semibold ">Downloads available</li>
             </ul>
-          </div>
+          </div> */}
           {/* PREMIUM END */}
           {/* STANDARD */}
-          <div
+          {/* <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
             onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
@@ -186,10 +238,10 @@ const PlanForm = () => {
               </li>
               <li className="text-sm font-semibold">Downloads available</li>
             </ul>
-          </div>
+          </div> */}
           {/* STANDARD END */}
           {/* BASIC */}
-          <div
+          {/* <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
             onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
@@ -222,10 +274,10 @@ const PlanForm = () => {
               </li>
               <li className="text-sm font-semibold">Downloads available</li>
             </ul>
-          </div>
+          </div> */}
           {/* BASIC END */}
           {/* MOBILE */}
-          <div
+          {/* <div
             className="h-[262px]  cursor-pointer rounded-md border-[1px] border-gray-200 shadow-lg"
             onClick={() => setPlan("plan_PkVeacUfjYvgHO")}
           >
@@ -258,7 +310,7 @@ const PlanForm = () => {
               </li>
               <li className="text-sm font-semibold">Downloads available</li>
             </ul>
-          </div>
+          </div> */}
           {/* MOBILE END */}
         </div>
 
