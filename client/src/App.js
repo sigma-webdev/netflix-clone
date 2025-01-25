@@ -10,7 +10,8 @@ function App() {
 
   useEffect(() => {
     dispatch(GET_USER());
-  });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>

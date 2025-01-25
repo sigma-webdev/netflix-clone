@@ -2,10 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import validator from "email-validator";
+import { GET_USER } from "../store/authSlice.js";
+
 import toast from "react-hot-toast";
 import {
   MdKeyboardArrowRight,
-  MdOutlineKeyboardArrowRight,
+  MdOutlineKeyboardArrowRight
 } from "react-icons/md";
 
 import Accordian from "../components/accordian/Accordian";
@@ -58,7 +60,7 @@ const Home = () => {
               className="bg-[rgb(0 0 0 / 40%)] flex h-full w-full items-center justify-center"
               style={{
                 backgroundImage:
-                  "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%)",
+                  "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%)"
               }}
             >
               <div className="space-y-4">
