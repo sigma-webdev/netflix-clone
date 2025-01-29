@@ -100,7 +100,7 @@ const BrowseHeader = () => {
                   />
                 </div>
 
-                <div>Mangesh Thakare</div>
+                <div>{user.email}</div>
               </li>
               <hr className="my-4" />
               {IS_LOGGED_IN && user?.role === "ADMIN" && (
