@@ -19,6 +19,7 @@ const Browse = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.userData._id);
+
   const {
     allContent,
     searchContent,
@@ -50,6 +51,7 @@ const Browse = () => {
     if (!token) {
       navigate("/signin");
     }
+    window.document.body.style.overflow = "scroll";
   }, [navigate]);
 
   // Check for user subscription and redirect if not subscribed
@@ -83,7 +85,7 @@ const Browse = () => {
   }, [dispatch]);
 
   return (
-    <BrowseLayout isLogin={true}>
+    <BrowseLayout className="h-screen overflow-y-auto">
       <div id="content-details" className="relative"></div>
       <div id="browse-content">
         {/* browse search content */}
