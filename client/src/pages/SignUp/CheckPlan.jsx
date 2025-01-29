@@ -4,37 +4,38 @@ import { AiOutlineCheck, AiOutlineCheckCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 const CheckPlan = () => {
+  console.log("CheckPlan - signup successfully");
   return (
     <SignUpLayout>
-      <div className="w-96 m-auto my-40">
+      <div className="m-auto my-40 w-96">
         <div className="space-y-3">
-          <div className="w-fit m-auto text-red-500">
+          <div className="m-auto w-fit text-red-500">
             <AiOutlineCheckCircle size={"50px"} />
           </div>
-          <p className="text-[#333] text-center">
+          <p className="text-center text-[#333]">
             STEP <span className="font-bold">1</span> OF {""}
             <span className="font-bold">3</span>
           </p>
-          <p className="text-[#333] text-3xl  mb-5 font-bold text-center">
+          <p className="mb-5 text-center  text-3xl font-bold text-[#333]">
             Choose your plan.
           </p>
           <ul>
-            <li className="text-xl text-[#333]   font-semibold mb-2 flex gap-2">
+            <li className="mb-2 flex   gap-2 text-xl font-semibold text-[#333]">
               <AiOutlineCheck className="text-red-500" size={"30px"} /> No
               commitments, cancel anytime.{" "}
             </li>
-            <li className="text-xl text-[#333] mb-2 flex gap-2 font-semibold">
+            <li className="mb-2 flex gap-2 text-xl font-semibold text-[#333]">
               <AiOutlineCheck className="text-red-500" size={"30px"} />{" "}
               Everything on Netflix for one low price.
             </li>
-            <li className="text-xl text-[#333] mb-2 flex gap-2 font-semibold">
+            <li className="mb-2 flex gap-2 text-xl font-semibold text-[#333]">
               <AiOutlineCheck className="text-red-500" size={"30px"} /> No ads
               and no extra fees. Ever.
             </li>
           </ul>
         </div>
         <Link to="/signup/planform">
-          <button className="mt-6 bg-[#e50914]  rounded-md  h-16 w-full hover:bg-[#f6121d] text-white font-semibold  text-xl">
+          <button className="mt-6 h-16  w-full  rounded-md bg-[#e50914] text-xl font-semibold text-white  hover:bg-[#f6121d]">
             Next
           </button>
         </Link>

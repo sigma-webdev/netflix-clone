@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
 import toast from "react-hot-toast";
+import isEqual from "lodash/isEqual";
 const initialState = {
   isLoggedIn: false,
   userData: {},
@@ -9,88 +10,101 @@ const initialState = {
 
 export const IS_USER_EXIST = createAsyncThunk(
   "auth/userexist",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       let response = await axiosInstance.post("/auth/user-exist", data);
       return response.data;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Something went wrong");
+      let errMessage = error?.response?.data?.message
+        ? error?.response?.data?.message
+        : "Something went wrong";
+      return rejectWithValue(errMessage);
     }
   }
 );
 
-export const SIGN_IN = createAsyncThunk("auth/signin", async (data) => {
-  try {
-    let response = axiosInstance.post("/auth/signin", data);
-    toast.promise(response, {
-      loading: "Please wait! Signing to your account!",
-      success: (data) => {
-        return data?.data?.message;
-      },
-      error: "Failed to signin",
-    });
-    response = await response;
-    return response?.data;
-  } catch (error) {
-    error?.response?.data?.message
-      ? toast.error(error?.response?.data?.message)
-      : toast.error("Failed to login");
+export const SIGN_IN = createAsyncThunk(
+  "/auth/signin",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("/auth/signin", data);
+      if (response?.data) {
+        return response.data;
+      }
+    } catch (error) {
+      let errMessage = error?.response?.data?.message
+        ? error?.response?.data?.message
+        : "Failed to login";
+      return rejectWithValue(errMessage);
+    }
   }
-});
+);
 
-export const SIGN_UP = createAsyncThunk("/auth/signup", async (data) => {
-  try {
-    const response = await axiosInstance.post("/auth/signup", data);
-
-    return response.data;
-  } catch (error) {
-    error?.response?.data?.message
-      ? toast.error(error?.response?.data?.message)
-      : toast.error("Failed to create account");
+export const SIGN_UP = createAsyncThunk(
+  "/auth/signup",
+  async (data, { rejectWithValue }) => {
+    try {
+      let response = await axiosInstance.post("/auth/signup", data);
+      console.log(response.data);
+      if (response.data) {
+        return response?.data;
+      }
+    } catch (error) {
+      let errorMessage = error?.response?.data?.message
+        ? error?.response?.data?.message
+        : "Failed to create account";
+      return rejectWithValue(errorMessage); // Return error for rejection handling
+    }
   }
-});
+);
 
-export const SIGN_OUT = createAsyncThunk("/auth/signout", async () => {
-  try {
-    const response = await axiosInstance.get("/auth/signout");
-    return response.data;
-  } catch (error) {
-    error?.response?.data?.message
-      ? toast.error(error?.response?.data?.message)
-      : toast.error("Failed to logout");
+export const SIGN_OUT = createAsyncThunk(
+  "/auth/signout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/auth/signout");
+      return response.data;
+    } catch (error) {
+      let errMessage = error?.response?.data?.message
+        ? error?.response?.data?.message
+        : "Failed to logout";
+      toast.error(errMessage);
+      return rejectWithValue(errMessage);
+    }
   }
-});
+);
 
-export const GET_USER = createAsyncThunk("/auth/user", async () => {
-  try {
-    const response = await axiosInstance.get("/auth/user");
-    return response.data;
-  } catch (error) {
-    error?.response?.data?.message
-      ? toast.error(error?.response?.data?.message)
-      : toast.error("Failed to load data");
+export const GET_USER = createAsyncThunk(
+  "auth/user",
+  async (_, { rejectWithValue }) => {
+    try {
+      let response = await axiosInstance.get("/auth/user");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue("Failed to fetch user data");
+    }
   }
-});
+);
 
 export const FORGOT_PASSWORD = createAsyncThunk(
   "/auth/forgotpassword",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/auth/forgot-password", data);
       return response.data;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to forget password");
+      let errMessage = error?.response?.data?.message
+        ? error?.response?.data?.message
+        : "Failed to forget password";
+      toast.error(errMessage);
+      return rejectWithValue(errMessage);
     }
   }
 );
 
 export const RESET_PASSWORD = createAsyncThunk(
   `/auth/resetpassword`,
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
         `/auth/reset-password/${data.token}`,
@@ -98,9 +112,11 @@ export const RESET_PASSWORD = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to reset password");
+      let errMessage = error?.response?.data?.message
+        ? error?.response?.data?.message
+        : "Failed to reset password";
+      toast.error(errMessage);
+      return rejectWithValue(errMessage);
     }
   }
 );
@@ -112,16 +128,30 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       //   signIn
-      .addCase(SIGN_IN.pending, (state) => {
+      .addCase(SIGN_IN.pending, (state, action) => {
         state.loading = true;
       })
       .addCase(SIGN_IN.fulfilled, (state, action) => {
-        if (action?.payload?.token) {
-          localStorage.setItem("token", action?.payload?.token);
-          state.userData = action?.payload?.data;
-          state.isLoggedIn = true;
+        try {
+          if (action?.payload?.token) {
+            const newToken = action.payload.token;
+            const newUserData = action.payload.data;
+
+            if (
+              !isEqual(state.userData, newUserData) ||
+              localStorage.getItem("token") !== newToken
+            ) {
+              localStorage.setItem("token", newToken);
+              state.userData = newUserData;
+              if (state.isLoggedIn === false) {
+                state.isLoggedIn = true;
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error setting token in localStorage:", error);
         }
-        state.loading = false;
+        state.loading = false; // Ensure loading is set regardless
       })
       .addCase(SIGN_IN.rejected, (state, action) => {
         state.loading = false;
@@ -132,12 +162,11 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(SIGN_UP.fulfilled, (state, action) => {
-        localStorage.setItem("token", action?.payload?.token);
-        state.loading = false;
+        state.loading = false; // Ensure loading is set regardless
       })
-
       .addCase(SIGN_UP.rejected, (state, action) => {
         state.loading = false;
+        console.error("Signup Error:", action.payload);
       })
 
       // get user
@@ -145,13 +174,16 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(GET_USER.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.userData = action?.payload?.data;
+        const newUserData = action.payload?.data;
+        if (!isEqual(state.userData, newUserData)) {
+          state.userData = newUserData; // Update only if data changes
           state.isLoggedIn = true;
         }
         state.loading = false;
       })
+
       .addCase(GET_USER.rejected, (state, action) => {
+        state.userData = null;
         state.loading = false;
       })
 
@@ -168,6 +200,7 @@ const authSlice = createSlice({
       })
       .addCase(SIGN_OUT.rejected, (state) => {
         state.loading = false;
+        state.userData = null;
       })
 
       // forgotPassword

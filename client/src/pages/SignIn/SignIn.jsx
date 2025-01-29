@@ -14,24 +14,23 @@ const SignIn = () => {
   const [signInError, setSignInError] = useState({ error: false, message: "" });
   const signInLoading = useSelector((state) => state.auth.loading);
 
+  const [userData, setUserData] = useState({ email: "", password: "" });
+
   const handleSignIn = async (e) => {
+    console.log(userData);
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const response = await dispatch(SIGN_IN(formData));
+    const response = await dispatch(SIGN_IN(userData));
     if (!response?.payload?.success) {
+      console.log("Error in Signin");
       return setSignInError({
         error: true,
         message: response?.payload?.message,
       });
     }
 
-    // Check if the plan is NONE
-    if (response.payload.data.plan === "NONE") {
-      return navigate("/signup/planform", { replace: true });
-    }
-
+    console.log("Signin Successfully");
     // Redirect to the browse page for valid sign-ins
-    return navigate("/browse");
+    navigate("/browse");
   };
 
   return (
@@ -47,16 +46,23 @@ const SignIn = () => {
 
           <form
             className="mb-10 flex flex-col"
-            onSubmit={(e) => handleSignIn(e)}
+            // onSubmit={(e) => handleSignIn(e)}
           >
             <div className="group relative z-0 my-6 w-full ">
               <input
                 type="email"
                 name="email"
                 id="floating_email"
+                value={userData.email}
                 className="peer block w-[300px] appearance-none rounded bg-[#333333] px-4 pb-2 pt-4 text-white focus:outline-none focus:ring-0 dark:text-white"
                 required
                 placeholder=""
+                onChange={(e) =>
+                  setUserData({
+                    ...userData,
+                    email: e.target.value,
+                  })
+                }
               />
               <label
                 htmlFor="floating_email"
@@ -73,6 +79,13 @@ const SignIn = () => {
                 className="peer block w-[300px] appearance-none rounded bg-[#333333] px-4 pb-2  pt-4 text-white focus:outline-none focus:ring-0 dark:text-white"
                 required
                 placeholder=" "
+                value={userData.password}
+                onChange={(e) =>
+                  setUserData({
+                    ...userData,
+                    password: e.target.value,
+                  })
+                }
               />
               <label
                 htmlFor="floating_password"
@@ -83,7 +96,7 @@ const SignIn = () => {
             </div>
 
             <button
-              type="submit"
+              onClick={(e) => handleSignIn(e)}
               className="w-[300px] rounded bg-[#e50914] py-2 text-white"
             >
               {signInLoading ? <CircularLoader /> : "Sign In"}

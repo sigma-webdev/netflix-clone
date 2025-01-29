@@ -18,7 +18,7 @@ paymentRouter.route("/subscribe/:planId").post(jwtAuth, createSubscription);
 paymentRouter.route("/rasorpaykey").get(jwtAuth, getRazorpayApiKey);
 
 paymentRouter
-  .route("/verify-subscription")
+  .route("/verifySubscription")
   .post(jwtAuth, authorizeRoles("USER", "ADMIN"), verifySubscription);
 
 paymentRouter

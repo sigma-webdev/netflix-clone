@@ -3,12 +3,14 @@ import axiosInstance from "../helpers/axiosInstance";
 import { toast } from "react-hot-toast";
 
 const initialState = {
-  razorpaykey: null,
+  razorPayKey: null,
   razorpayKeyLoading: false,
   subscriptionId: null,
-  createSubScriptionLoading: false,
+  createSubscriptionLoading: false,
   verifySubscriptionLoading: false,
   isPaymentVerified: false,
+  getPlanLoading: true,
+  plan: [{}],
 };
 
 export const GET_RAZORPAY_KEY = createAsyncThunk(
@@ -37,20 +39,25 @@ export const CREATE_SUBSCRIPTION = createAsyncThunk(
   "payment/subscribe",
   async (data) => {
     // data = {planeName : planeName}
+    console.log(data);
     try {
-      let response = axiosInstance.post(
-        `/payment/subscribe/${data.planName}`,
+      let response = await axiosInstance.post(
+        `/payment/subscribe/${data.planId}`,
         data
       );
-      toast.promise(response, {
-        loading: "Creating the subscription",
-        success: (data) => {
-          return data?.data?.message;
-        },
-        error: "Failed to get subscription",
-      });
-      response = await response;
-      return response.data;
+      // toast.promise(response, {
+      //   loading: "Creating the subscription",
+      //   success: (data) => {
+      //     return data?.data?.message;
+      //   },
+      //   error: "Failed to get subscription",
+      // });
+      // response = await response;
+      // console.log(response.data);
+
+      if (response.data.success) {
+        return response.data;
+      }
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -62,16 +69,8 @@ export const CREATE_SUBSCRIPTION = createAsyncThunk(
 //
 export const GET_PLANS = createAsyncThunk("payment/plan", async (data) => {
   try {
-    let response = axiosInstance.get(`/payment/plan/`, data);
-
-    toast.promise(response, {
-      loading: "Fetching the plans",
-      success: (data) => {
-        return data?.data?.message;
-      },
-      error: "Failed to get plans",
-    });
-    response = await response;
+    let response = await axiosInstance.get(`/payment/plan/`, data);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     error?.response?.data?.message
@@ -81,27 +80,29 @@ export const GET_PLANS = createAsyncThunk("payment/plan", async (data) => {
 });
 
 export const VERIFY_SUBSCRIPTION = createAsyncThunk(
-  "payment/verifysubscription",
+  "payment/verifySubscription",
   async (data) => {
     try {
       let response = await axiosInstance.post(
-        "payment/verifysubscription",
+        "payment/verifySubscription",
         data
       );
 
-      toast.promise(response, {
-        loading: "Verifying the subscription plan",
-        success: (data) => {
-          return data?.data?.message;
-        },
-        error: "Failed to get plans",
-      });
+      // toast.promise(response, {
+      //   loading: "Verifying the subscription plan",
+      //   success: (data) => {
+      //     return data?.data?.message;
+      //   },
+      //   error: "Failed to get plans"
+      // });
       response = await response;
-      return response.data;
+      return response;
     } catch (error) {
+      console.log("error", error);
       error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to verify subscription");
+        ? // ? toast.error(error?.response?.data?.message)
+          toast.error("Failed to verify subscription1")
+        : toast.error("Failed to verify subscription2");
     }
   }
 );
@@ -117,8 +118,7 @@ const razoreSlice = createSlice({
         state.razorpayKeyLoading = true;
       })
       .addCase(GET_RAZORPAY_KEY.fulfilled, (state, action) => {
-        console.log(action.payload?.planId);
-        state.razorpaykey = action.payload.planId;
+        state.razorPayKey = action.payload?.data?.key;
         state.razorpayKeyLoading = false;
       })
       .addCase(GET_RAZORPAY_KEY.rejected, (state, action) => {
@@ -129,7 +129,6 @@ const razoreSlice = createSlice({
         state.getPlanLoading = true;
       })
       .addCase(GET_PLANS.fulfilled, (state, action) => {
-        console.log(action.payload.data);
         state.plan = action.payload.data;
         state.getPlanLoading = false;
       })
@@ -139,11 +138,13 @@ const razoreSlice = createSlice({
 
       // create subscription
       .addCase(CREATE_SUBSCRIPTION.pending, (state, action) => {
-        state.createSbuscriptionLoading = true;
+        state.createSubscriptionLoading = true;
       })
       .addCase(CREATE_SUBSCRIPTION.fulfilled, (state, action) => {
-        state.subscriptionId = action.payload.subscription_id;
-        state.createSbuscriptionLoading = false;
+        console.log(action.payload);
+
+        state.subscriptionId = action?.payload?.data?.subscription_id;
+        state.createSubscriptionLoading = false;
       })
       .addCase(CREATE_SUBSCRIPTION.rejected, (state, action) => {
         state.createSbuscriptionLoading = false;
@@ -154,7 +155,8 @@ const razoreSlice = createSlice({
         state.verifySubscriptionLoading = true;
       })
       .addCase(VERIFY_SUBSCRIPTION.fulfilled, (state, action) => {
-        state.isPaymentVerified = action.payload.success;
+        console.log("acton", action);
+        state.isPaymentVerified = action.payload?.data?.success;
         state.verifySubscriptionLoading = false;
       })
       .addCase(VERIFY_SUBSCRIPTION.rejected, (state, action) => {

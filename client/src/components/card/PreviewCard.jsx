@@ -27,7 +27,7 @@ const PreviewCard = ({
   director,
   thumbnailUrl,
   trailerUrl,
-  geners,
+  genre,
   rating,
   isLiked,
   isDisliked,
@@ -178,7 +178,7 @@ const PreviewCard = ({
             HD
           </div>
         </div>
-        <div className="text-white">{geners.join(" . ")}</div>
+        <div className="text-white">{genre.join(" . ")}</div>
       </div>
 
       {/* modal for video description */}
@@ -193,7 +193,7 @@ const PreviewCard = ({
               director={director}
               thumbnailURL={thumbnailUrl}
               trailerUrl={trailerUrl}
-              geners={geners}
+              genres={genre}
               rating={rating}
               handleClose={openCloseDetails}
               releaseYear={releaseYear}

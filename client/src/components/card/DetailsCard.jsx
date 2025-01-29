@@ -7,13 +7,15 @@ import {
   AiOutlineCloseCircle,
 } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
+import { addContentToWatchHistory } from "../../store/contentSlice";
+import { useNavigate } from "react-router-dom";
 
 const DetailsCard = ({
   contentId,
   name,
   thumbnailURL,
   trailerUrl,
-  geners,
+  genres,
   rating,
   description,
   cast,
@@ -27,6 +29,7 @@ const DetailsCard = ({
   const userId = useSelector((state) => state.auth.userData._id);
   const videoRef = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const likeContentHanlder = () => {
     dispatch(likeContent({ contentId, userId: userId }));
@@ -36,8 +39,13 @@ const DetailsCard = ({
     dispatch(dislikeContent({ contentId, userId: userId }));
   };
 
+  const handlePlay = (contentId) => {
+    dispatch(addContentToWatchHistory({ contentId }));
+    navigate(`/watch/${contentId}`);
+  };
+
   return (
-    <div className="tranistion no-scrollbar relative mx-auto h-[500px] w-[90%] overflow-y-scroll rounded bg-netflix-black drop-shadow-lg duration-300 ease-in-out md:w-[650px]">
+    <div className="no-scrollbar relative mx-auto h-[500px] w-[90%] overflow-y-scroll rounded bg-netflix-black drop-shadow-lg transition duration-300 ease-in-out md:w-[650px]">
       <div className="relative">
         {/* preview video*/}
         <div className="absolute -bottom-1 h-[25px] w-full bg-gradient-to-b from-netflix-black/0 to-netflix-black/100 md:h-[100px] lg:h-[150px]"></div>
@@ -62,9 +70,11 @@ const DetailsCard = ({
 
         {/* hero text */}
         <div className="absolute bottom-6 left-6 flex cursor-pointer items-center gap-2 md:bottom-8 md:left-12">
-          <button className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg ">
-            <BsFillPlayFill className="text-2xl lg:text-4xl" />
-            Play
+          <button onClick={() => handlePlay(contentId)}>
+            <div className="flex cursor-pointer items-center gap-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black md:px-4 md:text-lg ">
+              <BsFillPlayFill className="text-xl lg:text-4xl" />
+              <div>Play</div>
+            </div>
           </button>
           <button
             onClick={likeContentHanlder}
@@ -113,7 +123,7 @@ const DetailsCard = ({
             </div>
             <div>
               <span className="text-gray-400">Genres:</span>
-              {geners.join(" . ")}
+              {genres.join(" . ")}
             </div>
             <div>
               <span className="text-gray-400">Maturity Rating:</span>

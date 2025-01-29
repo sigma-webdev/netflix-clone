@@ -36,3 +36,12 @@ netflix-clone-v.0.0.2
 9. After review, it will be merged to main branch
 
 ---
+
+## TODO:
+
+- check/fix the video duration - of undefined
+- check/fix for any hardcoded code
+- Run/check through all the Features from the frontend
+- Document of the project.
+
+- Missing feature user profile update.
