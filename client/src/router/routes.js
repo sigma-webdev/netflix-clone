@@ -48,22 +48,7 @@ const router = createBrowserRouter([
         path: "/signup/registration",
         element: <UserRegistration />,
       },
-      {
-        path: "/signup/checkplan",
-        element: <CheckPlan />,
-      },
-      {
-        path: "/signup/planform",
-        element: <PlanForm />,
-      },
-      {
-        path: "/signup/paymentSuccess",
-        element: <PaymentSuccess />,
-      },
-      {
-        path: "/signup/paymentfail",
-        element: <PaymentFail />,
-      },
+
       {
         path: "/signin",
         element: <SignIn />,
@@ -91,6 +76,22 @@ const router = createBrowserRouter([
   {
     element: <RequireAuth allowedRoles={["ADMIN", "USER"]} />,
     children: [
+      {
+        path: "/signup/checkplan",
+        element: <CheckPlan />,
+      },
+      {
+        path: "/signup/planform",
+        element: <PlanForm />,
+      },
+      {
+        path: "/signup/paymentSuccess",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/signup/paymentfail",
+        element: <PaymentFail />,
+      },
       {
         path: "/browse",
         element: <Browse />,

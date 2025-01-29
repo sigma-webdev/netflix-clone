@@ -6,7 +6,7 @@ import {
   CREATE_SUBSCRIPTION,
   GET_PLANS,
   GET_RAZORPAY_KEY,
-  VERIFY_SUBSCRIPTION
+  VERIFY_SUBSCRIPTION,
 } from "../../store/razorpaySlice.js";
 import { AiOutlineCheck, AiOutlineCheckCircle } from "react-icons/ai";
 import { BiLoader } from "react-icons/bi";
@@ -32,7 +32,15 @@ const PlanForm = () => {
   );
 
   useEffect(() => {
-    dispatch(GET_PLANS());
+    const fetchPlans = async () => {
+      try {
+        await dispatch(GET_PLANS()).unwrap();
+        toast.success("Please subscribe first");
+      } catch (error) {
+        toast.error("Failed to fetch plans");
+      }
+    };
+    fetchPlans();
   }, [dispatch]);
 
   useEffect(() => {
@@ -47,7 +55,7 @@ const PlanForm = () => {
   const paymentDetails = {
     razorpay_payment_id: "",
     razorpay_subscription_id: "",
-    razorpay_signature: ""
+    razorpay_signature: "",
   };
 
   const handleSubmit = () => {
@@ -72,7 +80,7 @@ const PlanForm = () => {
         const verifySubscription = await dispatch(
           VERIFY_SUBSCRIPTION({
             ...paymentDetails,
-            plan: selectedPlan.planName
+            plan: selectedPlan.planName,
           })
         );
 
@@ -88,8 +96,8 @@ const PlanForm = () => {
         }
       },
       theme: {
-        color: "#e50914"
-      }
+        color: "#e50914",
+      },
     };
 
     const paymentObject = new window.Razorpay(options);
@@ -112,6 +120,7 @@ const PlanForm = () => {
         <p className="mb-3 text-3xl  font-bold text-[#333]">
           Choose the plan that’s right for you
         </p>
+        <p> You don't have active plan, Please subscribe first!</p>
         <ul>
           <li className="mb-2 flex   gap-2 text-lg font-semibold text-[#333]">
             <AiOutlineCheck /> Watch all you want. Ad-free..{" "}

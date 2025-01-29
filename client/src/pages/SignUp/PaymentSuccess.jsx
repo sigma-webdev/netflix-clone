@@ -5,7 +5,7 @@ import SignUpLayout from "./SignUpLayout";
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    const redirect = setTimeout(() => navigate("/"), 30000);
+    const redirect = setTimeout(() => navigate("/browse"), 30000);
     return () => clearTimeout(redirect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

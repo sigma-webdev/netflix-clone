@@ -39,20 +39,25 @@ export const CREATE_SUBSCRIPTION = createAsyncThunk(
   "payment/subscribe",
   async (data) => {
     // data = {planeName : planeName}
+    console.log(data);
     try {
-      let response = axiosInstance.post(
+      let response = await axiosInstance.post(
         `/payment/subscribe/${data.planId}`,
         data
       );
-      toast.promise(response, {
-        loading: "Creating the subscription",
-        success: (data) => {
-          return data?.data?.message;
-        },
-        error: "Failed to get subscription",
-      });
-      response = await response;
-      return response.data;
+      // toast.promise(response, {
+      //   loading: "Creating the subscription",
+      //   success: (data) => {
+      //     return data?.data?.message;
+      //   },
+      //   error: "Failed to get subscription",
+      // });
+      // response = await response;
+      // console.log(response.data);
+
+      if (response.data.success) {
+        return response.data;
+      }
     } catch (error) {
       error?.response?.data?.message
         ? toast.error(error?.response?.data?.message)
@@ -64,16 +69,8 @@ export const CREATE_SUBSCRIPTION = createAsyncThunk(
 //
 export const GET_PLANS = createAsyncThunk("payment/plan", async (data) => {
   try {
-    let response = axiosInstance.get(`/payment/plan/`, data);
-
-    toast.promise(response, {
-      loading: "Fetching the plans",
-      success: (data) => {
-        return data?.data?.message;
-      },
-      error: "Failed to get plans",
-    });
-    response = await response;
+    let response = await axiosInstance.get(`/payment/plan/`, data);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     error?.response?.data?.message
@@ -144,7 +141,9 @@ const razoreSlice = createSlice({
         state.createSubscriptionLoading = true;
       })
       .addCase(CREATE_SUBSCRIPTION.fulfilled, (state, action) => {
-        state.subscriptionId = action.payload.data.subscription_id;
+        console.log(action.payload);
+
+        state.subscriptionId = action?.payload?.data?.subscription_id;
         state.createSubscriptionLoading = false;
       })
       .addCase(CREATE_SUBSCRIPTION.rejected, (state, action) => {

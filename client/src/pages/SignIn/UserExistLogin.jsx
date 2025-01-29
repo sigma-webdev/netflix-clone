@@ -27,14 +27,9 @@ const UserExistLogin = () => {
     // if not active redirect to subscription plane choose page
     // finally if there is any error or user send wrong credentials for sign-in show error message
     //  from extra reducers rejected state
-    if (userData.success && userData.data.subscription.status === "active") {
-      navigate("/browse");
-    } else if (
-      userData?.success &&
-      userData?.data?.subscription?.status !== "active"
-    ) {
-      navigate("/signup/checkplan");
-    } else if (!userData.success) return;
+    if (userData.success) {
+      return navigate("/browse");
+    }
   };
 
   return (

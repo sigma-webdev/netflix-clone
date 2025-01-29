@@ -13,7 +13,7 @@ const DetailsCard = ({
   name,
   thumbnailURL,
   trailerUrl,
-  geners,
+  genres,
   rating,
   description,
   cast,
@@ -113,7 +113,7 @@ const DetailsCard = ({
             </div>
             <div>
               <span className="text-gray-400">Genres:</span>
-              {geners.join(" . ")}
+              {genres.join(" . ")}
             </div>
             <div>
               <span className="text-gray-400">Maturity Rating:</span>

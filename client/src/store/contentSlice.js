@@ -38,9 +38,12 @@ export const fetchContent = createAsyncThunk(
 
       return contentNormalizedArray;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message || "Failed to load content data";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -59,9 +62,12 @@ export const fetchContentById = createAsyncThunk(
 
       return contentNormalizedObject;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      const errMessage =
+        error?.response?.data?.message || "Failed to load content data by id";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -85,9 +91,13 @@ export const fetchContentBySearch = createAsyncThunk(
 
       return contentNormalizedArray;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message ||
+        "Failed to load content data by search";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -106,9 +116,12 @@ export const fetchContentByTrending = createAsyncThunk(
 
       return contentNormalizedArray;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message || "Failed to load trending content";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -127,9 +140,12 @@ export const fetchContentByLatest = createAsyncThunk(
 
       return contentNormalizedArray;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message || "Failed to load latest content";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -148,9 +164,12 @@ export const fetchContentByMostLiked = createAsyncThunk(
 
       return contentNormalizedArray;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message || "Failed to load Most Like content";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -171,9 +190,13 @@ export const fetchContentByCountryOrigin = createAsyncThunk(
 
       return { countryOrigin, contentNormalizedArray };
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message ||
+        "Failed to load country origin content";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -192,9 +215,13 @@ export const fetchContentByWatchHistory = createAsyncThunk(
 
       return contentNormalizedArray;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message ||
+        "Failed to load watch history content";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -208,9 +235,13 @@ export const addContentToWatchHistory = createAsyncThunk(
 
       return contentId;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message ||
+        "Failed to add content to watch history";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -229,9 +260,12 @@ export const fetchContentByWatchList = createAsyncThunk(
 
       return contentNormalizedArray;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message || "Failed to fetch watch list content";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -245,9 +279,12 @@ export const addContentToWatchList = createAsyncThunk(
 
       return contentId;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message || "Failed to add content to watch list";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -261,9 +298,13 @@ export const removeContentFromWatchList = createAsyncThunk(
 
       return contentId;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message ||
+        "Failed to remove content from watch list";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -283,9 +324,12 @@ export const likeContent = createAsyncThunk(
 
       return contentNormalizedObject;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message || "Failed to like content";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );
@@ -307,9 +351,12 @@ export const dislikeContent = createAsyncThunk(
 
       return contentNormalizedObject;
     } catch (error) {
-      error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to load data");
+      let errMessage =
+        error?.response?.data?.message || "Failed to dislike content";
+      console.log(errMessage);
+      return errMessage;
+      // ? toast.error(error?.response?.data?.message)
+      // : toast.error("Failed to load data");
     }
   }
 );

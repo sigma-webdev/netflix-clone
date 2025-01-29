@@ -11,12 +11,13 @@ import {
   fetchContentByWatchList,
 } from "../store/contentSlice";
 import { RiPlayMiniFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ContentRow from "../components/ContentRow";
 import VideoShimmer from "../components/shimmer/VideoShimmer";
 
 const Browse = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.userData._id);
   const {
     allContent,
@@ -37,8 +38,27 @@ const Browse = () => {
     searchLoading,
   } = useSelector((state) => state.content);
 
+  const userSubscription = useSelector(
+    (state) => state.auth.userData.subscription
+  );
+
   // TODO: -> check subscription -> if no then planform(subscription) -> if yes browse
   const userData = useSelector((state) => state.auth.userData);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/signin");
+    }
+  }, [navigate]);
+
+  // Check for user subscription and redirect if not subscribed
+  console.log(userData);
+  useEffect(() => {
+    if (userId && !userSubscription && userData.role !== "ADMIN") {
+      navigate("/signup/planform");
+    }
+  }, [userId, userSubscription, navigate, userData.role]);
 
   useEffect(() => {
     dispatch(fetchContent({ userId }));
