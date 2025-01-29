@@ -37,6 +37,9 @@ const Browse = () => {
     searchLoading,
   } = useSelector((state) => state.content);
 
+  // TODO: -> check subscription -> if no then planform(subscription) -> if yes browse
+  const userData = useSelector((state) => state.auth.userData);
+
   useEffect(() => {
     dispatch(fetchContent({ userId }));
     dispatch(fetchContentByTrending({ userId }));

@@ -77,7 +77,7 @@ const UserExistLogin = () => {
             </label>
           </div>
           <Link to="/password/forget">
-            <p className="  w-fit  border-b-2  border-white  text-blue-600 hover:border-blue-600">
+            <p className="w-fit border-b-2 border-white text-blue-600 hover:border-blue-600">
               Forgot your password?
             </p>
           </Link>

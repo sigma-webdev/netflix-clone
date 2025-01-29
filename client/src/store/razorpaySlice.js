@@ -10,7 +10,7 @@ const initialState = {
   verifySubscriptionLoading: false,
   isPaymentVerified: false,
   getPlanLoading: true,
-  plan: [{}]
+  plan: [{}],
 };
 
 export const GET_RAZORPAY_KEY = createAsyncThunk(
@@ -23,7 +23,7 @@ export const GET_RAZORPAY_KEY = createAsyncThunk(
         success: (data) => {
           return data?.data?.message;
         },
-        error: "Failed to gets Plan"
+        error: "Failed to gets Plan",
       });
       response = await response;
       return response.data;
@@ -49,7 +49,7 @@ export const CREATE_SUBSCRIPTION = createAsyncThunk(
         success: (data) => {
           return data?.data?.message;
         },
-        error: "Failed to get subscription"
+        error: "Failed to get subscription",
       });
       response = await response;
       return response.data;
@@ -71,7 +71,7 @@ export const GET_PLANS = createAsyncThunk("payment/plan", async (data) => {
       success: (data) => {
         return data?.data?.message;
       },
-      error: "Failed to get plans"
+      error: "Failed to get plans",
     });
     response = await response;
     return response.data;
@@ -103,8 +103,9 @@ export const VERIFY_SUBSCRIPTION = createAsyncThunk(
     } catch (error) {
       console.log("error", error);
       error?.response?.data?.message
-        ? toast.error(error?.response?.data?.message)
-        : toast.error("Failed to verify subscription");
+        ? // ? toast.error(error?.response?.data?.message)
+          toast.error("Failed to verify subscription1")
+        : toast.error("Failed to verify subscription2");
     }
   }
 );
@@ -162,7 +163,7 @@ const razoreSlice = createSlice({
       .addCase(VERIFY_SUBSCRIPTION.rejected, (state, action) => {
         state.verifySubscriptionLoading = false;
       });
-  }
+  },
 });
 
 export default razoreSlice.reducer;
