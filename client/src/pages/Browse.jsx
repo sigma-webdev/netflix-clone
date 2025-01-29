@@ -43,7 +43,6 @@ const Browse = () => {
     (state) => state.auth.userData.subscription
   );
 
-  // TODO: -> check subscription -> if no then planform(subscription) -> if yes browse
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
@@ -55,7 +54,6 @@ const Browse = () => {
   }, [navigate]);
 
   // Check for user subscription and redirect if not subscribed
-  console.log(userData);
   useEffect(() => {
     if (userId && !userSubscription && userData.role !== "ADMIN") {
       navigate("/signup/planform");
