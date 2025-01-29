@@ -17,18 +17,15 @@ const SignIn = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
 
   const handleSignIn = async (e) => {
-    console.log(userData);
     e.preventDefault();
     const response = await dispatch(SIGN_IN(userData));
     if (!response?.payload?.success) {
-      console.log("Error in Signin");
       return setSignInError({
         error: true,
         message: response?.payload?.message,
       });
     }
 
-    console.log("Signin Successfully");
     // Redirect to the browse page for valid sign-ins
     navigate("/browse");
   };

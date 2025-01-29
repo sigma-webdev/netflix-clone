@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import validator from "email-validator";
@@ -44,8 +44,6 @@ const UserRegistration = () => {
       toast.error("Please enter a valid email 📩");
       return;
     }
-
-    console.log(isEmailValid);
 
     try {
       // Dispatch SIGN_UP action
