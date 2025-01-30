@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { RESET_PASSWORD } from "../../store/authSlice.js";
 import SignUpLayout from "../SignUp/SignUpLayout.jsx";
 import { RxCross2 } from "react-icons/rx";
-import { AiOutlineLoading } from "react-icons/ai";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error, setError] = useState({ error: false, message: "" });
   const { token } = useParams();
-  const loading = useSelector((state) => state.auth.loading);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +28,7 @@ const ResetPassword = () => {
       <div className="my-20 flex items-center justify-center">
         <form
           onSubmit={(e) => handleSubmit(e)}
-          className=" mx-4 flex w-fit flex-col gap-3  p-10 shadow-xl"
+          className="mx-4 flex w-fit flex-col gap-3 p-10 shadow-xl"
         >
           <h2 className="font-bold">Change your password</h2>
           {error.error ? (
@@ -41,7 +39,7 @@ const ResetPassword = () => {
               >
                 <RxCross2 />
               </div>
-              <p className="  mx-6 font-bold text-white">{error.message}</p>
+              <p className="mx-6 font-bold text-white ">{error.message}</p>
             </div>
           ) : null}
           <p className="my-2  text-lg text-[#333333]">
@@ -92,10 +90,9 @@ const ResetPassword = () => {
           <div>
             <button
               type="submit"
-              disabled={loading}
               className="mx-2 my-4 h-12  min-w-[110px] bg-[#007efa] px-4  text-lg font-bold  text-white hover:bg-[#2490fd]"
             >
-              {loading ? <AiOutlineLoading /> : "Update"}
+              Update
             </button>
             <Link to="/">
               <button

@@ -129,7 +129,7 @@ const getContent = asyncHandler(async (req, res, next) => {
   const {
     search,
     contentType,
-    genre,
+    genres,
     display,
     page,
     limit,
@@ -157,7 +157,7 @@ const getContent = asyncHandler(async (req, res, next) => {
   }
 
   // contents with specific genre
-  if (genre) query["genres"] = new RegExp(genre, "i");
+  if (genres) query["genres"] = new RegExp(genres, "i");
 
   // get latest move - release date -
   const sorting = {};

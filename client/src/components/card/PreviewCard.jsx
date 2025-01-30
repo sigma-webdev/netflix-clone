@@ -27,7 +27,7 @@ const PreviewCard = ({
   director,
   thumbnailUrl,
   trailerUrl,
-  genre,
+  genres = [],
   rating,
   isLiked,
   isDisliked,
@@ -152,7 +152,7 @@ const PreviewCard = ({
             <button
               onClick={watchListHandler}
               disabled={watchHistoryLoading}
-              className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+              className="h-[40px] cursor-pointer rounded-full border-2 p-[0.35rem] md:h-auto"
             >
               {toWatch ? (
                 <AiOutlineMinus className="text-xl" />
@@ -163,7 +163,7 @@ const PreviewCard = ({
           </div>
           <button
             onClick={openCloseDetails}
-            className="cursor-pointer rounded-full border-2 border-white p-[0.35rem]"
+            className="h-[40px] cursor-pointer rounded-full border-2 border-white p-[0.35rem] md:h-auto"
           >
             <AiOutlineArrowDown className="text-xl" />
           </button>
@@ -178,7 +178,7 @@ const PreviewCard = ({
             HD
           </div>
         </div>
-        <div className="text-white">{genre.join(" . ")}</div>
+        <div className="text-white">{genres.join(" , ")}</div>
       </div>
 
       {/* modal for video description */}
@@ -193,7 +193,7 @@ const PreviewCard = ({
               director={director}
               thumbnailURL={thumbnailUrl}
               trailerUrl={trailerUrl}
-              genres={genre}
+              genres={genres}
               rating={rating}
               handleClose={openCloseDetails}
               releaseYear={releaseYear}

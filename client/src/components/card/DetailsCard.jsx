@@ -43,6 +43,7 @@ const DetailsCard = ({
     dispatch(addContentToWatchHistory({ contentId }));
     navigate(`/watch/${contentId}`);
   };
+  console.log(contentDuration);
 
   return (
     <div className="no-scrollbar relative mx-auto h-[500px] w-[90%] overflow-y-scroll rounded bg-netflix-black drop-shadow-lg transition duration-300 ease-in-out md:w-[650px]">

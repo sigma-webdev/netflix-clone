@@ -37,11 +37,10 @@ netflix-clone-v.0.0.2
 
 ---
 
-## TODO:
+---
 
-- check/fix the video duration - of undefined
-- check/fix for any hardcoded code
-- Run/check through all the Features from the frontend
-- Document of the project.
+### Future possible work
 
-- Missing feature user profile update.
+- Implement profile customization features.
+- Introduce a series category.
+- Offer different plans with varying specifications.

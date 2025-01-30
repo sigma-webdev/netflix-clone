@@ -48,17 +48,17 @@ const Browse = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/signin");
+      navigate("/");
     }
     window.document.body.style.overflow = "scroll";
   }, [navigate]);
 
   // Check for user subscription and redirect if not subscribed
   useEffect(() => {
-    if (userId && !userSubscription && userData.role !== "ADMIN") {
+    if (!userSubscription && userData.role === "USER") {
       navigate("/signup/planform");
     }
-  }, [userId, userSubscription, navigate, userData.role]);
+  }, [userId, userSubscription, navigate, userData.role, userData]);
 
   useEffect(() => {
     dispatch(fetchContent({ userId }));
