@@ -51,6 +51,7 @@ const userSchema = new mongoose.Schema(
       expiryDate: Date,
     },
     role: {
+      required: [true, "Role is required"],
       type: String,
       default: "USER",
       enum: ["ADMIN", "USER"],

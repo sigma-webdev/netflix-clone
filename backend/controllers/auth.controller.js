@@ -55,10 +55,10 @@ const userExist = asyncHandler(async (req, res, next) => {
  * @returns user object and jwtToken in cookie
  ******************************************************/
 const signUp = asyncHandler(async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
-  if (!email || !password) {
-    return next(new CustomError("Email and Password are required.", 400));
+  if (!email || !password || !role) {
+    return next(new CustomError("all fields are required.", 400));
   }
   // this regex will check the password has at-least 1 capital letter, one symbol , one number and must contain 6-10 characters
   const passwordRegex =
@@ -84,7 +84,7 @@ const signUp = asyncHandler(async (req, res, next) => {
       new CustomError(`user with email: ${email} already exist`, 409)
     );
 
-  const userInfo = userModel({ email, password });
+  const userInfo = userModel({ email, password, role: role.toUpperCase() });
 
   const result = await userInfo.save();
   result.password = undefined;
