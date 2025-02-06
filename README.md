@@ -44,3 +44,4 @@ netflix-clone-v.0.0.2
 - Implement profile customization features.
 - Introduce a series category.
 - Offer different plans with varying specifications.
+- API documentation with swagger doc

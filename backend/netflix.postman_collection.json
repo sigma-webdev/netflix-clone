@@ -1,0 +1,489 @@
+{
+	"info": {
+		"_postman_id": "28cf856e-413d-41ce-b904-93494a9f6eb1",
+		"name": "netflix",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "11737909",
+		"_collection_link": "https://eimitech-inn-team.postman.co/workspace/Team-Workspace~d0875930-170f-4966-8158-8f79fa64bab7/collection/11737909-28cf856e-413d-41ce-b904-93494a9f6eb1?action=share&source=collection_link&creator=11737909"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":  \"testwo@gmail.com\",\r\n    \"password\": \"Password1@\",\r\n    \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/auth/signup"
+					},
+					"response": []
+				},
+				{
+					"name": "user-exist",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":  \"testone@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/auth/user-exist"
+					},
+					"response": []
+				},
+				{
+					"name": "signin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":  \"testone@gmail.com\",\r\n    \"password\": \"Password1@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/auth/signin"
+					},
+					"response": []
+				},
+				{
+					"name": "signout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/auth/signout"
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/auth/user"
+					},
+					"response": []
+				},
+				{
+					"name": "/forgot-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODhjMWZmOWRmNmY2MjZlYjg1MjFjMCIsImVtYWlsIjoidGVzdG9uZUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTczNzAxOTA4OSwiZXhwIjoxNzM3MTA1NDg5fQ.91diS46m7Ox9N-gkGbzk956mXW6wW1mkwGw0plDKPnQ"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"testone@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/auth/forgot-password"
+					},
+					"response": []
+				},
+				{
+					"name": "reset-password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"Password1@1\",\r\n    \"confirmPassword\": \"Password1@1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/reset-password/0f0e37339f08f1c6edc1407865031aec1522e625"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get users",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/users"
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/users/6449234224ef06e2f22d8836"
+					},
+					"response": []
+				},
+				{
+					"name": "watch-list/:contentId",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/users/watch-history/67885e0507f6667346ad82dd"
+					},
+					"response": []
+				},
+				{
+					"name": "removeContentFromWatchHistory",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/users/watch-history/67885e0507f6667346ad82dd"
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8081/api/v1/users/watch-list",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/users/watch-list"
+					},
+					"response": []
+				},
+				{
+					"name": "addContentToWatchList",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/users/watch-list/67885e0507f6667346ad82dd"
+					},
+					"response": []
+				},
+				{
+					"name": "removeContentFromWatchList",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/users/watch-list/67885e0507f6667346ad82dd"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "contents",
+			"item": [
+				{
+					"name": "contents",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/contents"
+					},
+					"response": []
+				},
+				{
+					"name": "getContentById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/contents/67891cf8bd338043e12df708"
+					},
+					"response": []
+				},
+				{
+					"name": "post content",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"October\",\r\n    \"description\":\"The film follows the life of a hotel-management intern who takes care of his comatose fellow intern in an unconditional and unconventional manner.\",\r\n    \"releaseDate\":\"2018-04-13\",\r\n    \"contentType\":\"Movie\",\r\n    \"genres\":[\"Dramas\" , \"Romantic\"],\r\n    \"maturityRating\":\"U\",\r\n    \"language\":\"Hindi\",\r\n    \"cast\":[\"varun, banita\"],\r\n    \"director\":\"Shoojit Sircar\",\r\n    \"originCountry\":\"India\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/contents"
+					},
+					"response": []
+				},
+				{
+					"name": "get contents",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/contents"
+					},
+					"response": []
+				},
+				{
+					"name": "updateContentById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"OCtober\",\r\n    \"description\":\"The film follows the life of a hotel-management intern who takes care of his comatose fellow intern in an unconditional and unconventional manner.\",\r\n    \"releaseDate\":\"2018-04-13\",\r\n    \"contentType\":\"Movie\",\r\n    \"genres\":[\"Dramas\" , \"Romantic\"],\r\n    \"maturityRating\":\"U\",\r\n    \"language\":\"Hindi\",\r\n    \"cast\":[\"varun, banita\"],\r\n    \"director\":\"Shoojit Sircar\",\r\n    \"originCountry\":\"India\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/contents/67885e0507f6667346ad82dd"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteContentById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/contents/67885bd107f6667346ad82be"
+					},
+					"response": []
+				},
+				{
+					"name": "contentLikesAndDisLikes",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/contents/67885e0507f6667346ad82dd/true"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "payment",
+			"item": [
+				{
+					"name": "createSubscription",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/payment/subscribe/plan_MAS8Yy7SzXyhwk"
+					},
+					"response": []
+				},
+				{
+					"name": "getRazorpayApiKey",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/payment/rasorpaykey"
+					},
+					"response": []
+				},
+				{
+					"name": "createPlan",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"planName\" :\"RAZORPAY_PREMIUM_PLAN\", \r\n    \"amount\":100, \r\n    \"description\":\"Great video quality. Watch in 1080p (Full HD). Downloads available. Watch on your TV, computer, mobile phone and tablet.\", \r\n\"active\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/payment/plan"
+					},
+					"response": []
+				},
+				{
+					"name": "getPlans",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/payment/plan/67886d22b190842ac32b096e"
+					},
+					"response": []
+				},
+				{
+					"name": "updatePlan",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\":200,\r\n    \"active\": true\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/payment/plan/678a516bf5554f3d7ae98ff1"
+					},
+					"response": []
+				},
+				{
+					"name": "deletePlan",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/payment/plan/67886d22b190842ac32b096e"
+					},
+					"response": []
+				},
+				{
+					"name": "verify-subscription",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8081/api/v1/payment/verify-subscription"
+					},
+					"response": []
+				},
+				{
+					"name": "get rasorpaykey",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8081/api/v1/payment/rasorpaykey"
+					},
+					"response": []
+				},
+				{
+					"name": "getPlanbyId",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
