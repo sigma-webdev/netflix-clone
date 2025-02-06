@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axiosInstance";
-import { toast } from "react-hot-toast";
 import { convertResponseToContentObject } from "../helpers/constants";
 
 const initialState = {
@@ -32,6 +31,7 @@ export const fetchContent = createAsyncThunk(
       const response = await axiosInstance.get("/contents");
 
       const contentResponseArray = response.data?.data?.contents;
+      console.log(contentResponseArray);
       const contentNormalizedArray = contentResponseArray?.map((item) => {
         return convertResponseToContentObject(item, userId);
       });
@@ -596,6 +596,7 @@ export const contentSlice = createSlice({
         );
 
         const newContentByCountryOrigin = {};
+        // eslint-disable-next-line array-callback-return
         Object.keys(state.contentByCountryOrigin)?.map((countryOrigin) => {
           newContentByCountryOrigin[countryOrigin] =
             state.contentByCountryOrigin[countryOrigin]?.map((content) =>
@@ -668,6 +669,7 @@ export const contentSlice = createSlice({
         );
 
         const newContentByCountryOrigin = {};
+        // eslint-disable-next-line array-callback-return
         Object.keys(state.contentByCountryOrigin)?.map((countryOrigin) => {
           newContentByCountryOrigin[countryOrigin] =
             state.contentByCountryOrigin[countryOrigin]?.map((content) =>

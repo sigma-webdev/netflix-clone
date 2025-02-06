@@ -4,7 +4,6 @@ import { AiOutlineCheck, AiOutlineCheckCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 const CheckPlan = () => {
-  console.log("CheckPlan - signup successfully");
   return (
     <SignUpLayout>
       <div className="m-auto my-40 w-96">

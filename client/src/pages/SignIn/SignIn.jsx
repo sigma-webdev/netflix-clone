@@ -17,18 +17,15 @@ const SignIn = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
 
   const handleSignIn = async (e) => {
-    console.log(userData);
     e.preventDefault();
     const response = await dispatch(SIGN_IN(userData));
     if (!response?.payload?.success) {
-      console.log("Error in Signin");
       return setSignInError({
         error: true,
-        message: response?.payload?.message,
+        message: response?.payload || "Invalid credentials",
       });
     }
 
-    console.log("Signin Successfully");
     // Redirect to the browse page for valid sign-ins
     navigate("/browse");
   };
@@ -39,15 +36,12 @@ const SignIn = () => {
         <div className="my-60 h-fit rounded-lg bg-black bg-opacity-90 px-16 py-12">
           <div className="text-3xl text-white">Sign In</div>
           {signInError.error ? (
-            <div className="mt-4 max-w-[300px] rounded-lg bg-[#e87c03] p-3">
+            <div className="mt-4 h-auto max-w-[300px] rounded-lg bg-[#e87c03] p-3">
               <p className="text-white">{signInError.message}</p>
             </div>
           ) : null}
 
-          <form
-            className="mb-10 flex flex-col"
-            // onSubmit={(e) => handleSignIn(e)}
-          >
+          <form className="mb-10 flex flex-col">
             <div className="group relative z-0 my-6 w-full ">
               <input
                 type="email"

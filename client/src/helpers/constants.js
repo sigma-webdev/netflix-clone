@@ -1,20 +1,16 @@
 // Convert duration to common format
 const getFormatedDuration = (contentDuration) => {
-  let formatedTime = "";
+  // console.log(contentDuration); // { hours: 0, minutes: 0, secs: 5 }
 
-  if (contentDuration?.hours !== 0) {
-    formatedTime = `${contentDuration.hours} hr`;
+  if (contentDuration) {
+    const { hours, minutes, secs } = contentDuration;
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m ${secs}s`;
+  } else {
+    return "0m 0s";
   }
-
-  if (contentDuration?.minutes !== 0) {
-    formatedTime = `${formatedTime} ${contentDuration.minutes} mins`;
-  }
-
-  if (contentDuration?.seconds !== 0) {
-    formatedTime = `${formatedTime} ${contentDuration.seconds} secs`;
-  }
-
-  return formatedTime;
 };
 
 // Convert response to content object

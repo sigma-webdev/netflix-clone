@@ -45,7 +45,6 @@ export const SIGN_UP = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       let response = await axiosInstance.post("/auth/signup", data);
-      console.log(response.data);
       if (response.data) {
         return response?.data;
       }

@@ -43,24 +43,22 @@ const Browse = () => {
     (state) => state.auth.userData.subscription
   );
 
-  // TODO: -> check subscription -> if no then planform(subscription) -> if yes browse
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/signin");
+      navigate("/");
     }
     window.document.body.style.overflow = "scroll";
   }, [navigate]);
 
   // Check for user subscription and redirect if not subscribed
-  console.log(userData);
   useEffect(() => {
-    if (userId && !userSubscription && userData.role !== "ADMIN") {
+    if (!userSubscription && userData.role === "USER") {
       navigate("/signup/planform");
     }
-  }, [userId, userSubscription, navigate, userData.role]);
+  }, [userId, userSubscription, navigate, userData.role, userData]);
 
   useEffect(() => {
     dispatch(fetchContent({ userId }));

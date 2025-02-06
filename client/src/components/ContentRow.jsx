@@ -23,7 +23,7 @@ const ContentRow = ({ heading, loading, content, toWatch = false }) => {
                         name={item.name}
                         thumbnailUrl={item.thumbnailUrl}
                         trailerUrl={item.trailerUrl}
-                        genre={item.genres}
+                        genres={item.genres}
                         contentId={item.contentId}
                         rating={item.rating}
                         description={item.description}

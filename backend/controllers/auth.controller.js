@@ -186,9 +186,8 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   // create the url for reset password which we will send on user email-id
   // this url will help user to reset the password
 
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/auth/reset-password/${resetToken}`;
+  // http://localhost:3000/reset-password/14cfec1c8321578d10a00430ab94c0fe958645dd
+  const resetUrl = `${process.env.CLIENT}/reset-password/${resetToken}`;
 
   // create mail content
   const mailOptions = {

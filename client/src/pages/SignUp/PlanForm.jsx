@@ -35,7 +35,6 @@ const PlanForm = () => {
     const fetchPlans = async () => {
       try {
         await dispatch(GET_PLANS()).unwrap();
-        toast.success("Please subscribe first");
       } catch (error) {
         toast.error("Failed to fetch plans");
       }
@@ -62,6 +61,14 @@ const PlanForm = () => {
     dispatch(GET_RAZORPAY_KEY());
     dispatch(CREATE_SUBSCRIPTION({ planId: selectedPlan.planId }));
   };
+
+  const userData = useSelector((state) => state.auth.userData);
+
+  useEffect(() => {
+    if (userData?.subscription?.status === "active") {
+      navigate("/browse");
+    }
+  }, [navigate, userData?.subscription?.status]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function razorpayPaymentModel() {
@@ -108,7 +115,8 @@ const PlanForm = () => {
     if (!buttonLoading && RAZORPAY_KEY && SUBSCRIPTION_ID) {
       razorpayPaymentModel();
     }
-  }, [RAZORPAY_KEY, SUBSCRIPTION_ID, buttonLoading, razorpayPaymentModel]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [RAZORPAY_KEY, SUBSCRIPTION_ID, buttonLoading]);
 
   return (
     <SignUpLayout>

@@ -83,18 +83,15 @@ export const VERIFY_SUBSCRIPTION = createAsyncThunk(
   "payment/verifySubscription",
   async (data) => {
     try {
-      let response = await axiosInstance.post(
-        "payment/verifySubscription",
-        data
-      );
+      let response = axiosInstance.post("payment/verifySubscription", data);
 
-      // toast.promise(response, {
-      //   loading: "Verifying the subscription plan",
-      //   success: (data) => {
-      //     return data?.data?.message;
-      //   },
-      //   error: "Failed to get plans"
-      // });
+      toast.promise(response, {
+        loading: "Verifying the subscription plan",
+        success: (data) => {
+          return data?.data?.message;
+        },
+        error: "Failed to get plans",
+      });
       response = await response;
       return response;
     } catch (error) {
